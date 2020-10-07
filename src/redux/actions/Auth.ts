@@ -13,11 +13,11 @@ import {
   SIGNIN_WITH_GOOGLE_AUTHENTICATED,
   SIGNIN_WITH_FACEBOOK,
   SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
-  HIDE_LOADING,
+  HIDE_LOADING, VALIDATE_USER,
 } from "../constants/Auth";
 import axios from "axios";
 import {} from "../../constants/ApiConstant";
-import {message} from "antd";
+import {message, Modal} from "antd";
 
 export const signIn = (user) => ({
   type: SIGNIN,
@@ -82,6 +82,8 @@ export const hideLoading = () => ({
   type: HIDE_LOADING,
 });
 
+
+
 export const authorizeUser = (userData) => {
   return (dispatch) => {
     axios
@@ -102,15 +104,20 @@ export const authorizeUser = (userData) => {
   };
 };
 
-export const registerCompany = (companyData) => {
+export const registerCompany = (companyData, history) => {
   return dispatch => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)
       .then(res => {
         dispatch(hideLoading());
         if (res.data["ErrorCode"] === 0) {
-          message.success("You've successfully registered, check your email for further confirmation!", 5)
+          message.loading("You'll be redirected in a few seconds...", 1.5);
+          dispatch({ type: VALIDATE_USER, payload: res.data['Token']});
+          setTimeout(() => {
+            history.push('/auth/validate')
+          }, 1500)
         } else{
+          console.log(res.data)
           message.error("Something went wrong, try again!", 5);
         }
       })
@@ -131,6 +138,7 @@ export const resetPassword = (email) => {
       })
   }
 }
+
 
 
 

@@ -120,7 +120,8 @@ export const RegisterForm = (props) => {
     authenticated,
     allowRedirect,
     hideLoading,
-    registerCompany
+    registerCompany,
+    history
   } = props;
   const [form] = Form.useForm();
 
@@ -162,7 +163,7 @@ export const RegisterForm = (props) => {
         }
         showLoading();
         setTimeout(() => {
-          registerCompany(newCompanyData);
+          registerCompany(newCompanyData, history);
         }, 1500);
       })
       .catch((info) => {

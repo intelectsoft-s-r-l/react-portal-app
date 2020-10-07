@@ -10,6 +10,8 @@ const backgroundStyle = {
   minHeight: "100vh",
 };
 
+// Use RegisterOne if it's Admin Portal App
+
 // const RegisterOne = (props) => {
 //   return (
 //     <div className="" style={backgroundStyle}>

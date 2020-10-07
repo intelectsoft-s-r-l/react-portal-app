@@ -5,8 +5,6 @@ import {signOut} from "../../redux/actions/Auth";
 
 export const AuthViews = ({ match }) => {
 
-
-
   return (
     <Suspense fallback={<Loading cover="page" />}>
       <Switch>
@@ -23,8 +21,12 @@ export const AuthViews = ({ match }) => {
           component={lazy(() => import(`./authentication/forgot-password`))}
         />
         <Route
-          path={`${match.url}/error`}
+          path={`${match.url}/404`}
           component={lazy(() => import(`./errors/error-page-1`))}
+        />
+        <Route
+          path={`${match.url}/validate`}
+          component={lazy(() => import(`./authentication/validate`))}
         />
         {/*<Route*/}
         {/*  path={`${match.url}/error-2`}*/}

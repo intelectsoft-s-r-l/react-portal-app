@@ -7,6 +7,7 @@ const backgroundStyle = {
 	backgroundRepeat: "no-repeat",
 	backgroundSize: "cover",
 };
+// Use LoginOne if it's Admin Portal App
 
 // const LoginOne = (props) => {
 //   return (

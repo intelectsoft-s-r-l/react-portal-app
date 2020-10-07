@@ -9,7 +9,7 @@ import {
   SIGNUP,
   SIGNIN_WITH_GOOGLE_AUTHENTICATED,
   SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
-  HIDE_LOADING,
+  HIDE_LOADING, VALIDATE_USER,
 } from "../constants/Auth";
 
 const initState = {
@@ -20,6 +20,7 @@ const initState = {
   token: "",
   refreshToken: "",
   isAuth: false,
+  RegistrationToken: ""
 };
 
 const auth = (state = initState, action) => {
@@ -97,6 +98,12 @@ const auth = (state = initState, action) => {
         token: action.token,
       };
     }
+    case VALIDATE_USER:
+      return {
+        ...state,
+        RegistrationToken: action.payload
+      }
+
     default:
       return state;
   }
