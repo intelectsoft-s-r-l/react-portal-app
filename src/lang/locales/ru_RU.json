@@ -67,6 +67,10 @@
   "account.ChangePassword.NewPassword": "Новый Пароль",
   "account.ChangePassword.ConfirmPassword": "Подтверждение Пароля",
   "account.ChangePassword.ChangePassword": "Сменить пароль",
+  "account.ChangePassword.ChangePasswordProcess": "Сменяется пароль...",
+  "account.ChangePassword.Success": "Пароль изменен!",
+  "account.ChangePassword.Error": "Что-то пошло не так...",
+
 
   "account.Billing.Title": "Оплата",
   "account.Billing.PleaseAddCreditCard": "Пожалуйста добавьте кредитную карту!",

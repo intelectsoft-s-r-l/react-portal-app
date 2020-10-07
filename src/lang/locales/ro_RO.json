@@ -64,6 +64,9 @@
   "account.ChangePassword.NewPassword": "Parola nouă",
   "account.ChangePassword.ConfirmPassword": "Confirmă parola",
   "account.ChangePassword.ChangePassword": "Schimbă parola",
+  "account.ChangePassword.ChangePasswordProcess": "Se schimbă parola...",
+  "account.ChangePassword.Success": "Parola a fost schimbată!",
+  "account.ChangePassword.Error": "Oops! Ceva nu e în regulă...",
 
   "account.Billing.Title": "Facturare",
   "account.Billing.PleaseAddCreditCard": "Vă rugăm să adăugați un card nou!",

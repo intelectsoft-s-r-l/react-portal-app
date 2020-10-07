@@ -54,7 +54,7 @@ const LoginForm = ({
     };
     showLoading();
     setTimeout(() => {
-      authorizeUser(onLoginSettingsObject);
+      authorizeUser(onLoginSettingsObject, history);
     }, 1000);
   };
 

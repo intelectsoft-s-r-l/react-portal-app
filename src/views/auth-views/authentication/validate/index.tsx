@@ -4,16 +4,18 @@ import { MailOutlined } from "@ant-design/icons";
 import { API_IS_AUTH_SERVICE } from "../../../../constants/ApiConstant";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
+import {VALIDATE_USER} from "../../../../redux/constants/Auth";
 const backgroundStyle = {
   backgroundImage: `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`,
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
 };
 
-const Validate = ({ RegistrationToken }) => {
+const Validate = ({ RegistrationToken, history }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const onSend = ({ Code }) => {
     setLoading(true);
@@ -22,11 +24,23 @@ const Validate = ({ RegistrationToken }) => {
       axios
         .get(`${API_IS_AUTH_SERVICE}/ActivateUser`, {
           params: {
-            Token: RegistrationToken, Code
+            Token: RegistrationToken, Code: Code
           }
         })
         .then(response => {
           console.log(response.data);
+          if (response.data['ErrorCode'] === 0) {
+            dispatch({type: VALIDATE_USER, payload: null});
+            message.loading("You've successfully registered. Redirecting in a few seconds", 3);
+            setTimeout(() => {
+              history.push('/auth/login')
+            }, 3000);
+          } else if (response.data['ErrorCode'] === 117) {
+            // IS NOT NEW REGISTRATION
+            message.error("Something went wrong...")
+          } else if (response.data["ErrorCode"] === 109) {
+            message.error("Invalid confirmation code!")
+          }
         })
     }, 1500);
   };

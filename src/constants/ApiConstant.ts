@@ -1,4 +1,7 @@
-export const API_IS_AUTH_SERVICE = "https://api.edi.md/ISAuthService/json";
+export const API_IS_AUTH_SERVICE = "https://dev.edi.md/ISAuthService/json";
+
+// https://api.edi.md/ISAuthService/json PRODUCTION
+// https://dev.edi.md/ISAuthService DEVELOPMENT
 
 export const API_AUTHORIZE_USER =
   "https://api.edi.md/ISAuthService/json/AuthorizeUser"; // POST Email, password

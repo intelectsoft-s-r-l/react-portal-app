@@ -84,7 +84,7 @@ export const hideLoading = () => ({
 
 
 
-export const authorizeUser = (userData) => {
+export const authorizeUser = (userData, history) => {
   return (dispatch) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, userData)
@@ -98,6 +98,9 @@ export const authorizeUser = (userData) => {
           dispatch(
             showAuthMessage("Incorrect username or password. Try again...")
           )
+        } else if (response.data['ErrorCode'] === 108) {
+          /* Inform user about redirecting him to confirmation modal */
+          history.push('/auth/validate');
         }
       })
       .catch((e) => dispatch(hideLoading()));
@@ -110,7 +113,8 @@ export const registerCompany = (companyData, history) => {
       .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)
       .then(res => {
         dispatch(hideLoading());
-        if (res.data["ErrorCode"] === 0) {
+        console.log(res.data);
+        if (res.data["ErrorCode"] === 108) {
           message.loading("You'll be redirected in a few seconds...", 1.5);
           dispatch({ type: VALIDATE_USER, payload: res.data['Token']});
           setTimeout(() => {

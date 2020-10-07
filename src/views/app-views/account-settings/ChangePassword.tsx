@@ -1,12 +1,61 @@
 import React, { Component } from "react";
 import { Form, Button, Input, Row, Col, message } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
+import { connect } from "react-redux";
+import Utils from "../../../utils";
+import { API_IS_AUTH_SERVICE } from "../../../constants/ApiConstant";
+import axios from "axios";
+import { IntlProvider } from "react-intl";
+import AppLocale from "../../../lang";
 
 export class ChangePassword extends Component {
   private changePasswordFormRef = React.createRef<any>();
 
-  onFinish = () => {
-    message.success({ content: "Password Changed!", duration: 2 });
+  state = {
+    loading: false,
+  };
+
+  onFinish = ({ currentPassword, newPassword }) => {
+    const currentAppLocale = AppLocale[this.props["locale"]];
+    this.setState({ loading: true });
+    setTimeout(() => {
+      this.setState({ loading: false });
+      axios
+        .post(`${API_IS_AUTH_SERVICE}/ChangePassword`, {
+          NewPassword: newPassword,
+          OldPassword: currentPassword,
+          Token: this.props["token"],
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data["ErrorCode"] === 0) {
+            message.success({
+              content: (
+                <IntlProvider
+                  locale={currentAppLocale.locale}
+                  messages={currentAppLocale.messages}
+                >
+                  <IntlMessage id={"account.ChangePassword.Success"} />
+                </IntlProvider>
+              ),
+              duration: 3,
+            });
+          } else {
+            message.error({
+              content: (
+                <IntlProvider
+                  locale={currentAppLocale.locale}
+                  messages={currentAppLocale.messages}
+                >
+                  <IntlMessage id={"account.ChangePassword.Error"} />
+                </IntlProvider>
+              ),
+              duration: 2,
+            });
+          }
+        });
+    }, 1500);
+
     this.onReset();
   };
 
@@ -52,6 +101,10 @@ export class ChangePassword extends Component {
                     required: true,
                     message: "Please enter your new password!",
                   },
+                  {
+                    min: 8,
+                    message: "Please enter at least 8 characters!"
+                  }
                 ]}
               >
                 <Input.Password />
@@ -78,8 +131,18 @@ export class ChangePassword extends Component {
               >
                 <Input.Password />
               </Form.Item>
-              <Button type="primary" htmlType="submit">
-                <IntlMessage id={"account.ChangePassword.ChangePassword"} />
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={this.state.loading}
+              >
+                {this.state.loading ? (
+                  <IntlMessage
+                    id={"account.ChangePassword.ChangePasswordProcess"}
+                  />
+                ) : (
+                  <IntlMessage id={"account.ChangePassword.ChangePassword"} />
+                )}
               </Button>
             </Form>
           </Col>
@@ -89,4 +152,9 @@ export class ChangePassword extends Component {
   }
 }
 
-export default ChangePassword;
+const mapStateToProps = ({ auth, theme }) => {
+  const { token } = auth;
+  const { locale } = theme;
+  return { token, locale };
+};
+export default connect(mapStateToProps, null)(ChangePassword);
