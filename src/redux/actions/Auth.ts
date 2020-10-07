@@ -125,19 +125,7 @@ export const registerCompany = (companyData, history) => {
   }
 }
 
-export const resetPassword = (email) => {
-  return dispatch => {
-    axios
-      .post(`${API_IS_AUTH_SERVICE}/ResetPassword`, { Email: email })
-      .then((response) => {
-        if (response.data["ErrorCode"] === 0) {
-          message.success("New password has been sent to your email!");
-        } else if (response.data["ErrorCode"] === 106 ) {
-          message.error("The email you've inserted probably does not exist!");
-        }
-      })
-  }
-}
+
 
 
 

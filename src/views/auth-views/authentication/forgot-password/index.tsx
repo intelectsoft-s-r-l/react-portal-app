@@ -4,15 +4,16 @@ import { MailOutlined } from "@ant-design/icons";
 import { API_IS_AUTH_SERVICE } from "../../../../constants/ApiConstant";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import {connect} from "react-redux";
-import {resetPassword} from "../../../../redux/actions/Auth";
+import { connect } from "react-redux";
+
+
 const backgroundStyle = {
   backgroundImage: `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`,
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
 };
 
-const ForgotPassword = ({ resetPassword }) => {
+const ForgotPassword = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +21,15 @@ const ForgotPassword = ({ resetPassword }) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      resetPassword(email);
+      axios
+        .post(`${API_IS_AUTH_SERVICE}/ResetPassword`, { Email: email })
+        .then((response) => {
+          if (response.data["ErrorCode"] === 0) {
+            message.success("New password has been sent to your email!");
+          } else if (response.data["ErrorCode"] === 106) {
+            message.error("The email you've inserted probably does not exist!");
+          }
+        });
     }, 1500);
   };
 
@@ -32,7 +41,11 @@ const ForgotPassword = ({ resetPassword }) => {
             <Card>
               <div className="my-2">
                 <div className="text-center">
-                  <img className="img-fluid" src={process.env.PUBLIC_URL + '/img/is-logo-dark.png'} alt="" />
+                  <img
+                    className="img-fluid"
+                    src={process.env.PUBLIC_URL + "/img/is-logo-dark.png"}
+                    alt=""
+                  />
                   <h3 className="mt-3 font-weight-bold">Forgot Password?</h3>
                   <p className="mb-4">Enter your Email to reset password</p>
                 </div>
@@ -85,8 +98,6 @@ const ForgotPassword = ({ resetPassword }) => {
   );
 };
 
-const mapDispatchToProps = {
-  resetPassword
-}
 
-export default connect(null, mapDispatchToProps)(ForgotPassword)
+
+export default connect(null, null)(ForgotPassword);
