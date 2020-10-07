@@ -1,0 +1,2 @@
+export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+export const REMOVE_AVATAR = "REMOVE_AVATAR";

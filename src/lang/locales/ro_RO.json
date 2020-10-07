@@ -1,0 +1,81 @@
+{
+  "sidenav.home": "Acasă",
+  "sidenav.dashboard": "Dashboard",
+
+  "sidenav.catalog": "Catalog",
+  "sidenav.catalog.companies": "Companii",
+  "sidenav.catalog.group": "Grupuri",
+  "sidenav.catalog.users": "Utilizatori",
+  "sidenav.settings": "Setări",
+
+  "sidenav.security": "Securitate",
+  "sidenav.security.history": "Istorie",
+  "sidenav.security.rules": "Reguli",
+
+
+
+
+
+  "sidenav.audit": "Audit",
+  "sidenav.audit.All": "Toate",
+  "sidenav.audit.loginHistory": "Istoria autentificărilor",
+  "sidenav.audit.actions": "Acțiuni",
+
+  "sidenav.reports": "Rapoarte",
+
+  "sidenav.payment": "Plată",
+  "sidenav.payment.invoices": "Facturi",
+
+  "header.logout.message": "Sunteți sigur că doriți să vă deconectați?",
+  "header.logout.button": "Deconectați-vă",
+  "header.applications": "Aplicații",
+
+  "header.profile.AccountSettings": "Setările Contului",
+  "header.profile.HelpCenter": "Ajutor",
+  "header.profile.SignOut": "Deconectați-vă",
+
+  "message.language.success": "Ați schimbat limba cu succes!",
+  "message.AccountSettings.Uploading": "Se încarcă...",
+  "message.AccountSettings.Uploaded": "Încărcat!",
+  "message.AccountSettings.Updating": "Se actualizează...",
+  "message.AccountSettings.Done": "Succes!",
+  "message.AccountSettings.Error": "A apărut o problemă! Încercați din nou!",
+
+  "account.sidenav.EditProfile": "Editează Profilul",
+  "account.sidenav.ChangePassword": "Schimbă Parola",
+  "account.sidenav.Billing": "Facturare",
+  "account.sidenav.Notification": "Notificări",
+  "account.EditProfile.Name": "Nume",
+  "account.EditProfile.UserName": "Nume de utilizator",
+  "account.EditProfile.Email": "Email",
+  "account.EditProfile.DateOfBirth": "Data nașterii",
+  "account.EditProfile.PhoneNumber": "Numărul de telefon",
+  "account.EditProfile.Website": "Site-ul web",
+  "account.EditProfile.Address": "Adresă",
+  "account.EditProfile.City": "Oraș",
+  "account.EditProfile.PostCode": "Cod poștal",
+  "account.EditProfile.SaveChange": "Salvează",
+  "account.EditProfile.ChangeAvatar": "Schimbă avatar",
+  "account.EditProfile.Remove": "Elimină",
+
+
+  "account.ChangePassword.CurrentPassword": "Parola curentă",
+  "account.ChangePassword.Title": "Schimbă Parola",
+  "account.ChangePassword.NewPassword": "Parola nouă",
+  "account.ChangePassword.ConfirmPassword": "Confirmă parola",
+  "account.ChangePassword.ChangePassword": "Schimbă parola",
+
+  "account.Billing.Title": "Facturare",
+  "account.Billing.PleaseAddCreditCard": "Vă rugăm să adăugați un card nou!",
+  "account.Billing.CardType": "Tipul cardului",
+  "account.Billing.CardNumber": "Numărul cardului",
+  "account.Billing.ExpiresOn": "Expiră pe",
+  "account.Billing.AddNewCard": "Adaugă un card nou",
+  "account.Billing.Modal.Title": "Adaugă card nou",
+  "account.Billing.Modal.CardHolderName": "Numele deținătorului",
+  "account.Billing.Modal.CardNumber": "Numărul cardului",
+  "account.Billing.Modal.ExpiryDate": "Data expirării",
+  "account.Billing.Modal.CVVCode": "Cod CVV",
+  "account.Billing.Modal.SaveCard": "Salvează card"
+
+}

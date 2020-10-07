@@ -1,0 +1,83 @@
+{
+	"sidenav.home": "Home",
+	"sidenav.dashboard": "Dashboard",
+
+	"sidenav.catalog": "Catalog",
+	"sidenav.catalog.companies": "Companies",
+	"sidenav.catalog.group": "Groups",
+	"sidenav.catalog.users": "Users",
+
+	"sidenav.security": "Security",
+	"sidenav.security.history": "History",
+	"sidenav.security.rules": "Rules",
+
+	"sidenav.payment": "Payment",
+	"sidenav.payment.invoices": "Invoices",
+
+	"sidenav.settings": "Settings",
+
+
+	"sidenav.audit": "Audit",
+	"sidenav.audit.All": "All",
+	"sidenav.audit.loginHistory": "Login History",
+	"sidenav.audit.actions": "Actions",
+
+	"sidenav.reports": "Reports",
+
+
+
+	"header.logout.message": "Are you sure you want to log out?",
+	"header.logout.button": "Log out",
+	"header.applications": "Applications",
+
+	"header.profile.AccountSettings": "Account Settings",
+	"header.profile.HelpCenter": "Help Center",
+	"header.profile.SignOut": "Sign Out",
+
+	"message.language.success": "You've changed your language successfully!",
+	"message.AccountSettings.Uploading": "Uploading...",
+	"message.AccountSettings.Uploaded": "Uploaded!",
+	"message.AccountSettings.Updating": "Updating...",
+	"message.AccountSettings.Done": "Done!",
+	"message.AccountSettings.Error": "Something went wrong! Try again!",
+
+
+	"account.sidenav.EditProfile": "Edit Profile",
+	"account.sidenav.ChangePassword": "Change Password",
+	"account.sidenav.Billing": "Billing",
+	"account.sidenav.Notification": "Notification",
+
+	"account.EditProfile.Name": "Name",
+	"account.EditProfile.UserName": "Username",
+	"account.EditProfile.Email": "Email",
+	"account.EditProfile.DateOfBirth": "Date of birth",
+	"account.EditProfile.PhoneNumber": "Phone Number",
+	"account.EditProfile.Website": "Website",
+	"account.EditProfile.Address": "Address",
+	"account.EditProfile.City": "City",
+	"account.EditProfile.PostCode": "Post code",
+	"account.EditProfile.SaveChange": "Save Change",
+	"account.EditProfile.ChangeAvatar": "Change Avatar",
+	"account.EditProfile.Remove": "Remove",
+
+
+	"account.ChangePassword.CurrentPassword": "Current Password",
+	"account.ChangePassword.Title": "Change Password",
+	"account.ChangePassword.NewPassword": "New Password",
+	"account.ChangePassword.ConfirmPassword": "Confirm Password",
+	"account.ChangePassword.ChangePassword": "Change password",
+
+	"account.Billing.Title": "Billing",
+	"account.Billing.PleaseAddCreditCard": "Please add a credit card!",
+	"account.Billing.CardType": "Card type",
+	"account.Billing.CardNumber": "Card Number",
+	"account.Billing.ExpiresOn": "Expires on",
+	"account.Billing.AddNewCard": "Add new card",
+	"account.Billing.Modal.Title": "Add new card",
+	"account.Billing.Modal.CardHolderName": "Card holder name",
+	"account.Billing.Modal.CardNumber": "Card number",
+	"account.Billing.Modal.ExpiryDate": "Expiry date",
+	"account.Billing.Modal.CVVCode": "CVV code",
+	"account.Billing.Modal.SaveCard": "Save card"
+
+}

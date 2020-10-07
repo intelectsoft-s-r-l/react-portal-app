@@ -1,0 +1,19 @@
+{
+  "lang": [
+    {
+      "langId": "en",
+      "langName": "English",
+      "icon": "en"
+    },
+    {
+      "langId": "ro",
+      "langName": "Română",
+      "icon": "ro"
+    },
+    {
+      "langId": "ru",
+      "langName": "Русский",
+      "icon": "ru"
+    }
+  ]
+}

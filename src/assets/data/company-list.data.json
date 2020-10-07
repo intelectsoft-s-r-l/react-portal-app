@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "CommercialName": "IntelectSoft",
+    "Email": "edi@info.md",
+    "OfficeAddress": "str. Alba Iulia 154"
+  },
+  {
+    "id": 2,
+    "CommercialName": "Tecsol",
+    "Email": "tecsol@info.md",
+    "OfficeAddress": "str. Alba Iulia 154"
+  },
+  {
+    "id": 3,
+    "CommercialName": "Petrol",
+    "Email": "petrol@info.md",
+    "OfficeAddress": "sos. Muncesti"
+  }
+]

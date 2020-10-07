@@ -1,0 +1,85 @@
+{
+  "sidenav.home": "Главная",
+  "sidenav.dashboard": "Панель",
+
+  "sidenav.catalog": "Каталог",
+  "sidenav.catalog.companies": "Компании",
+  "sidenav.catalog.group": "Группы",
+  "sidenav.catalog.users": "Пользователи",
+  "sidenav.settings": "Настройки",
+
+  "sidenav.security": "Безопасность",
+  "sidenav.security.history": "История",
+  "sidenav.security.rules": "Правила",
+
+  "sidenav.payment": "Платежи",
+  "sidenav.payment.invoices": "Счета",
+
+
+
+  "sidenav.audit": "Аудит",
+  "sidenav.audit.All": "Все",
+  "sidenav.audit.loginHistory": "История аутентификации",
+  "sidenav.audit.actions": "Действия",
+
+  "sidenav.reports": "Отчеты",
+
+  "header.logout.message": "Вы уверены что хотите выйти?",
+  "header.logout.button": "Выйти",
+  "header.applications": "Приложения",
+
+
+  "header.profile.AccountSettings": "Настройки Аккаунта",
+  "header.profile.HelpCenter": "Помощь",
+  "header.profile.SignOut": "Выйти",
+
+
+  "message.language.success": "Вы успешно сменили язык!",
+  "message.AccountSettings.Uploading": "Загружается...",
+  "message.AccountSettings.Uploaded": "Загрузилось!",
+  "message.AccountSettings.Updating": "Обновляется...",
+  "message.AccountSettings.Done": "Готово!",
+  "message.AccountSettings.Error": "Что-то пошло не так! Попробуйте еще раз!",
+
+
+
+  "account.sidenav.EditProfile": "Редактирование Профиля",
+  "account.sidenav.ChangePassword": "Сменить Пароль",
+  "account.sidenav.Billing": "Оплата",
+  "account.sidenav.Notification": "Уведомления",
+
+  "account.EditProfile.Name": "Имя",
+  "account.EditProfile.UserName": "Имя пользователя",
+  "account.EditProfile.Email": "Электронная почта",
+  "account.EditProfile.DateOfBirth": "Дата рождения",
+  "account.EditProfile.PhoneNumber": "Номер телефона",
+  "account.EditProfile.Website": "Веб-сайт",
+  "account.EditProfile.Address": "Адрес",
+  "account.EditProfile.City": "Город",
+  "account.EditProfile.PostCode": "Почтовый индекс",
+  "account.EditProfile.SaveChange": "Сохранить Изменения",
+  "account.EditProfile.ChangeAvatar": "Сменить Аватар",
+  "account.EditProfile.Remove": "Удалить",
+
+
+  "account.ChangePassword.CurrentPassword": "Текущий Пароль",
+  "account.ChangePassword.Title": "Сменить Пароль",
+  "account.ChangePassword.NewPassword": "Новый Пароль",
+  "account.ChangePassword.ConfirmPassword": "Подтверждение Пароля",
+  "account.ChangePassword.ChangePassword": "Сменить пароль",
+
+  "account.Billing.Title": "Оплата",
+  "account.Billing.PleaseAddCreditCard": "Пожалуйста добавьте кредитную карту!",
+  "account.Billing.CardType": "Тип карты",
+  "account.Billing.CardNumber": "Номер карты",
+  "account.Billing.ExpiresOn": "Истекает",
+  "account.Billing.AddNewCard": "Добавить новую карту",
+  "account.Billing.Modal.Title": "Добавить новую карту",
+  "account.Billing.Modal.CardHolderName": "Имя держателя карты",
+  "account.Billing.Modal.CardNumber": "Номер карты",
+  "account.Billing.Modal.ExpiryDate": "Истекает",
+  "account.Billing.Modal.CVVCode": "Код CVV",
+  "account.Billing.Modal.SaveCard": "Сохранить карту"
+
+
+}
