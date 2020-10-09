@@ -3,14 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="bcd00017-c4bf-44d3-a15f-685b1ebb0d61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/ApiConstant.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/ApiConstant.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lang/locales/en_US.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/en_US.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lang/locales/ro_RO.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/ro_RO.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lang/locales/ru_RU.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/ru_RU.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/Auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/Auth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/store/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/app-views/account-settings/ChangePassword.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/account-settings/ChangePassword.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/auth-views/authentication/validate/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/authentication/validate/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/auth-views/components/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/components/LoginForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/auth-views/authentication/register/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/authentication/register/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/auth-views/components/RegisterForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/components/RegisterForm.tsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,7 +39,7 @@
     <property name="node.js.selected.package.standard" value="$USER_HOME$/AppData/Roaming/npm/node_modules/standard" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\natha\AppData\Roaming\npm\node_modules\prettier" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
     <property name="ts.external.directory.path" value="C:\Users\natha\projects\client_app_ts\node_modules\typescript\lib" />
   </component>
   <component name="RecentsManager">
@@ -94,7 +94,7 @@
       <workItem from="1601897730985" duration="237000" />
       <workItem from="1601897997222" duration="3153000" />
       <workItem from="1601905542064" duration="38461000" />
-      <workItem from="1602054104737" duration="15146000" />
+      <workItem from="1602054104737" duration="38570000" />
     </task>
     <servers />
   </component>

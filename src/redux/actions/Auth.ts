@@ -13,11 +13,12 @@ import {
   SIGNIN_WITH_GOOGLE_AUTHENTICATED,
   SIGNIN_WITH_FACEBOOK,
   SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
-  HIDE_LOADING, VALIDATE_USER,
+  HIDE_LOADING,
+  VALIDATE_USER,
 } from "../constants/Auth";
 import axios from "axios";
 import {} from "../../constants/ApiConstant";
-import {message, Modal} from "antd";
+import { message, Modal } from "antd";
 
 export const signIn = (user) => ({
   type: SIGNIN,
@@ -82,8 +83,6 @@ export const hideLoading = () => ({
   type: HIDE_LOADING,
 });
 
-
-
 export const authorizeUser = (userData, history) => {
   return (dispatch) => {
     axios
@@ -97,10 +96,10 @@ export const authorizeUser = (userData, history) => {
         } else if (response.data["ErrorCode"] === 102) {
           dispatch(
             showAuthMessage("Incorrect username or password. Try again...")
-          )
-        } else if (response.data['ErrorCode'] === 108) {
+          );
+        } else if (response.data["ErrorCode"] === 108) {
           /* Inform user about redirecting him to confirmation modal */
-          history.push('/auth/validate');
+          history.push("/auth/validate");
         }
       })
       .catch((e) => dispatch(hideLoading()));
@@ -108,33 +107,27 @@ export const authorizeUser = (userData, history) => {
 };
 
 export const registerCompany = (companyData, history) => {
-  return dispatch => {
+  return (dispatch) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)
-      .then(res => {
+      .then((res) => {
         dispatch(hideLoading());
         console.log(res.data);
         if (res.data["ErrorCode"] === 108) {
           message.loading("You'll be redirected in a few seconds...", 1.5);
-          dispatch({ type: VALIDATE_USER, payload: res.data['Token']});
+          dispatch({ type: VALIDATE_USER, payload: res.data["Token"] });
           setTimeout(() => {
-            history.push('/auth/validate')
-          }, 1500)
-        } else{
-          console.log(res.data)
+            history.push("/auth/validate");
+          }, 1500);
+        } else if (res.data["ErrorCode"] === 115) {
+          message.error("Email already used!", 5);
+        } else {
           message.error("Something went wrong, try again!", 5);
         }
       })
-      .catch(e => dispatch(hideLoading()))
-  }
-}
-
-
-
-
-
-
-
+      .catch((e) => dispatch(hideLoading()));
+  };
+};
 
 // const registerUser = (userData) => {
 //   return (dispatch) => {

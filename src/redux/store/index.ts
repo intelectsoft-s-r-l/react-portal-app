@@ -11,12 +11,12 @@ declare global {
 }
 
 function configureStore(preLoadedState) {
-  const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  // const composeEnhancers =
+  //   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   return createStore(
     reducers,
     preLoadedState,
-    composeEnhancers(applyMiddleware(thunk))
+    compose(applyMiddleware(thunk))
   );
 }
 

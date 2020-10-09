@@ -70,6 +70,7 @@
   "account.ChangePassword.ChangePasswordProcess": "Сменяется пароль...",
   "account.ChangePassword.Success": "Пароль изменен!",
   "account.ChangePassword.Error": "Что-то пошло не так...",
+  "account.ChangePassword.IncorrectPassword": "Неправильный введенный пароль! Попробуйте снова!",
 
 
   "account.Billing.Title": "Оплата",

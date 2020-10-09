@@ -3,27 +3,34 @@ import { Form, Button, Input, Row, Col, message } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { connect } from "react-redux";
 import Utils from "../../../utils";
-import { API_IS_AUTH_SERVICE } from "../../../constants/ApiConstant";
+import {
+  API_IS_AUTH_SERVICE,
+  API_PUBLIC_KEY,
+} from "../../../constants/ApiConstant";
 import axios from "axios";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
 
 export class ChangePassword extends Component {
   private changePasswordFormRef = React.createRef<any>();
-
   state = {
     loading: false,
   };
 
   onFinish = ({ currentPassword, newPassword }) => {
+    console.log({
+      NewPassword: Utils.encryptInput(newPassword, API_PUBLIC_KEY),
+      OldPassword: Utils.encryptInput(currentPassword, API_PUBLIC_KEY),
+      Token: this.props["token"],
+    });
     const currentAppLocale = AppLocale[this.props["locale"]];
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState({ loading: false });
       axios
         .post(`${API_IS_AUTH_SERVICE}/ChangePassword`, {
-          NewPassword: newPassword,
-          OldPassword: currentPassword,
+          NewPassword: Utils.encryptInput(newPassword, API_PUBLIC_KEY),
+          OldPassword: Utils.encryptInput(currentPassword, API_PUBLIC_KEY),
           Token: this.props["token"],
         })
         .then((res) => {
@@ -40,7 +47,22 @@ export class ChangePassword extends Component {
               ),
               duration: 3,
             });
-          } else {
+          } else if (res.data["ErrorCode"] === 118) { /* Token expired */
+            // TOKEN IS NOT VALID ANYMORE, LED THE USER TO THE LOGIN PAGE
+          } else if (res.data['ErrorCode'] === 119) { /* Incorect oldpassword */
+            message.error({
+              content: (
+                <IntlProvider
+                  locale={currentAppLocale.locale}
+                  messages={currentAppLocale.messages}
+                >
+                  <IntlMessage id={"account.ChangePassword.IncorrectPassword"} />
+                </IntlProvider>
+              ),
+              duration: 2,
+            });
+          }
+          else {
             message.error({
               content: (
                 <IntlProvider
@@ -103,8 +125,8 @@ export class ChangePassword extends Component {
                   },
                   {
                     min: 8,
-                    message: "Please enter at least 8 characters!"
-                  }
+                    message: "Please enter at least 8 characters!",
+                  },
                 ]}
               >
                 <Input.Password />

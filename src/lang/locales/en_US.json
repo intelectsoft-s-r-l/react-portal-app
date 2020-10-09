@@ -69,6 +69,7 @@
 	"account.ChangePassword.ChangePasswordProcess": "Changing password...",
 	"account.ChangePassword.Success": "Password Changed!",
 	"account.ChangePassword.Error": "Something went wrong!",
+	"account.ChangePassword.IncorrectPassword": "Incorrect password! Try again!",
 
 	"account.Billing.Title": "Billing",
 	"account.Billing.PleaseAddCreditCard": "Please add a credit card!",
