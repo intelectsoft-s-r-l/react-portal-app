@@ -1,9 +1,43 @@
 {
+	"auth.SignIn": "Sign In",
+	"auth.DontHaveAnAccountYet": "Don't have an account yet?",
+	"auth.SignUp": "Register",
+	"auth.Email": "Email",
+	"auth.Password": "Password",
+	"auth.MessageInsertEmail": "Please input your email!",
+	"auth.MessageInsertJuridicalName": "Please input your juridical name!",
+	"auth.MessageInsertIDNO": "Please input your IDNO!",
+	"auth.MessageInsertVATCode": "Please input your VAT Code!",
+	"auth.MessageInsertValidEmail": "Please enter an valid email!",
+	"auth.MessageInsertPassword": "Please input your password!",
+	"auth.MessageInsertConfirmPassword": "Please confirm your password!",
+	"auth.MessagePasswordsMatch": "Password do not match!",
+	"auth.MessageInsertValidPassword": "Your password should have at least 8 characters!",
+	"auth.ForgotPassword": "Forgot your password?",
+	"auth.ForgotPasswordMessage": "Enter your email to reset the password",
+	"auth.GoBack": "Go back",
+	"auth.Send": "Send",
+	"auth.Sending": "Sending",
+	"auth.AlreadyHaveAnAccount": "Already have an account?",
+	"auth.JuridicalName": "Juridical Name",
+	"auth.VATCode": "VAT Code",
+	"auth.IDNO": "IDNO",
+	"auth.NotVATPayer": "Not VAT Payer",
+	"auth.VATPayer": "VAT Payer",
+	"auth.ConfirmPassword": "Confirm Password",
+	"auth.WelcomeMessage": "Welcome to IntelectSoft",
+	"auth.Terms&Conditions": "Terms & Conditions",
+	"auth.Privacy&Policy": "Privacy & Policy",
+	"auth.Rights": "All rights reserved.",
+	"auth.ConfirmRegistration": "Confirm registration",
+	"auth.ConfirmRegistrationTitle": "Enter the confirmation code that we've sent to your email",
+	"auth.MessageInsertCode": "Please insert the code from your email!",
+	"auth.MessageRedirect": "You'll be redirected in a few seconds...",
 	"sidenav.home": "Home",
 	"sidenav.dashboard": "Dashboard",
 
 	"sidenav.catalog": "Catalog",
-	"sidenav.catalog.companies": "Companies",
+	"sidenav.catalog.company": "Company",
 	"sidenav.catalog.group": "Groups",
 	"sidenav.catalog.users": "Users",
 
@@ -23,6 +57,9 @@
 	"sidenav.audit.actions": "Actions",
 
 	"sidenav.reports": "Reports",
+
+
+
 
 
 
@@ -82,6 +119,20 @@
 	"account.Billing.Modal.CardNumber": "Card number",
 	"account.Billing.Modal.ExpiryDate": "Expiry date",
 	"account.Billing.Modal.CVVCode": "CVV code",
-	"account.Billing.Modal.SaveCard": "Save card"
+	"account.Billing.Modal.SaveCard": "Save card",
+
+	"theme.Title": "Theme Config",
+	"theme.Navigation": "Navigation",
+	"theme.HeaderNavColor": "Header Nav Color",
+	"theme.TopNavColor": "Top Nav Color",
+	"theme.NavigationType": "Navigation Type",
+	"theme.SideNavColor": "Side Nav Color",
+	"theme.SideNavCollapse": "Side Nav Collapse",
+	"theme.Side": "Side",
+	"theme.Top": "Top",
+	"theme.Light": "Light",
+	"theme.Dark": "Dark",
+	"theme.Locale": "Locale",
+	"theme.Language": "Language"
 
 }

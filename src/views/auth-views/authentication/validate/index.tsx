@@ -6,6 +6,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import {connect, useDispatch} from "react-redux";
 import {VALIDATE_USER} from "../../../../redux/constants/Auth";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
 const backgroundStyle = {
   backgroundImage: `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`,
   backgroundRepeat: "no-repeat",
@@ -54,8 +55,8 @@ const Validate = ({ RegistrationToken, history }) => {
               <div className="my-2">
                 <div className="text-center">
                   <img className="img-fluid" src={process.env.PUBLIC_URL + '/img/is-logo-dark.png'} alt="" />
-                  <h3 className="mt-3 font-weight-bold">Confirm registration</h3>
-                  <p className="mb-4">Enter the confirmation code from your email</p>
+                  <h3 className="mt-3 font-weight-bold"><IntlMessage id={"auth.ConfirmRegistration"} /></h3>
+                  <p className="mb-4"><IntlMessage id={"auth.ConfirmRegistrationTitle"} /></p>
                 </div>
                 <Row justify="center">
                   <Col xs={24} sm={24} md={20} lg={20}>
@@ -70,7 +71,7 @@ const Validate = ({ RegistrationToken, history }) => {
                         rules={[
                           {
                             required: true,
-                            message: "Please input your code",
+                            message: <IntlMessage id={"auth.MessageInsertCode"} />,
                           },
                         ]}
                       >
@@ -86,10 +87,10 @@ const Validate = ({ RegistrationToken, history }) => {
                           htmlType="submit"
                           block
                         >
-                          {loading ? "Sending" : "Send"}
+                          {" "}{loading ? (<IntlMessage id={"auth.Sending"} />) : <IntlMessage id={"auth.Send"} />}
                         </Button>
                       </Form.Item>
-                      <NavLink to={"auth/login"}>Go back</NavLink>
+                      <NavLink to={"auth/login"}><IntlMessage id={"auth.GoBack"} /></NavLink>
                     </Form>
                   </Col>
                 </Row>

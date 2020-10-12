@@ -5,6 +5,7 @@ import { API_IS_AUTH_SERVICE } from "../../../../constants/ApiConstant";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
 
 
 const backgroundStyle = {
@@ -25,12 +26,14 @@ const ForgotPassword = () => {
         .post(`${API_IS_AUTH_SERVICE}/ResetPassword`, { Email: email })
         .then((response) => {
           if (response.data["ErrorCode"] === 0) {
+            /* Use response.data['ErrorMessage'] when the API will be able to handle error messages correctly  */
             message.success("New password has been sent to your email!");
-          } else if (response.data["ErrorCode"] === 106) {
-            message.error("The email you've inserted probably does not exist!");
+          } else {
+            message.error(response.data['ErrorMessage']);
           }
         });
     }, 1500);
+    form.resetFields();
   };
 
   return (
@@ -46,8 +49,8 @@ const ForgotPassword = () => {
                     src={process.env.PUBLIC_URL + "/img/is-logo-dark.png"}
                     alt=""
                   />
-                  <h3 className="mt-3 font-weight-bold">Forgot Password?</h3>
-                  <p className="mb-4">Enter your Email to reset password</p>
+                  <h3 className="mt-3 font-weight-bold"><IntlMessage id={"auth.ForgotPassword"} /></h3>
+                  <p className="mb-4"><IntlMessage id={"auth.ForgotPasswordMessage"} /></p>
                 </div>
                 <Row justify="center">
                   <Col xs={24} sm={24} md={20} lg={20}>
@@ -62,11 +65,11 @@ const ForgotPassword = () => {
                         rules={[
                           {
                             required: true,
-                            message: "Please input your email address",
+                            message: <IntlMessage id={"auth.MessageInsertEmail"} />,
                           },
                           {
                             type: "email",
-                            message: "Please enter a validate email!",
+                            message: <IntlMessage id={"auth.MessageInsertValidEmail"} />,
                           },
                         ]}
                       >
@@ -82,10 +85,10 @@ const ForgotPassword = () => {
                           htmlType="submit"
                           block
                         >
-                          {loading ? "Sending" : "Send"}
+                          {" "}{loading ? <IntlMessage id={"auth.Sending"} /> : <IntlMessage id={"auth.Send"} />}
                         </Button>
                       </Form.Item>
-                      <NavLink to={"auth/login"}>Go back</NavLink>
+                      <NavLink to={"auth/login"}><IntlMessage id={"auth.GoBack"} /></NavLink>
                     </Form>
                   </Col>
                 </Row>

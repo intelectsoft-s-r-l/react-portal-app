@@ -6,8 +6,6 @@ import AuthLayout from "../layouts/auth-layout";
 import AppLocale from "../lang";
 import { IntlProvider } from "react-intl";
 import { ConfigProvider } from "antd";
-import store from "../redux/store";
-import {SIGNOUT} from "../redux/constants/Auth";
 import {signOut} from "../redux/actions/Auth";
 
 export const Views = (props) => {

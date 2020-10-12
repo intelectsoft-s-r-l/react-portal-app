@@ -1,9 +1,17 @@
 import React from "react";
 import { CheckOutlined, GlobalOutlined, DownOutlined } from "@ant-design/icons";
 import { Menu, Dropdown } from "antd";
-import { connect } from "react-redux";
+import {connect } from "react-redux";
 import { lang } from "../../assets/data/language.data.json";
 import { onLocaleChange } from "../../redux/actions/Theme";
+
+
+interface NavLanguageProps {
+  locale?: string;
+  configDisplay?: any;
+  onLocaleChange?: any;
+  triggerType: "click" | "hover";
+}
 
 function getLanguageDetail(locale) {
   const data = lang.filter((elm) => elm.langId === locale);
@@ -28,7 +36,7 @@ const SelectedLanguage = ({ locale }) => {
   );
 };
 
-const NavLanguage = ({ locale, configDisplay, onLocaleChange }) => {
+const NavLanguage = ({ locale, configDisplay, onLocaleChange, triggerType }: NavLanguageProps) => {
   const languageOption = (
     <Menu>
       {lang.map((elm) => {
@@ -63,18 +71,16 @@ const NavLanguage = ({ locale, configDisplay, onLocaleChange }) => {
     <Dropdown
       placement="bottomRight"
       overlay={languageOption}
-      trigger={["click"]}
+      trigger={[triggerType]}
     >
       {configDisplay ? (
         <a href="#/" className="text-gray" onClick={(e) => e.preventDefault()}>
           <SelectedLanguage locale={locale} />
         </a>
       ) : (
-        <Menu mode="horizontal">
+        <Menu style={{border: 'none', }} >
           <Menu.Item>
-            <a href="#/" onClick={(e) => e.preventDefault()}>
-              <GlobalOutlined className="nav-icon mr-0" />
-            </a>
+            <GlobalOutlined className="nav-icon mr-0"/>
           </Menu.Item>
         </Menu>
       )}

@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { LockOutlined, MailOutlined, WarningOutlined } from "@ant-design/icons";
-import {Button, Form, Input, Alert, Tooltip, Radio, Row, Col, Select} from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Alert,
+  Tooltip,
+  Radio,
+  Row,
+  Col,
+  Select,
+} from "antd";
 import {
   showAuthMessage,
   showLoading,
@@ -17,93 +27,61 @@ import axios from "axios";
 import DocumentEvents from "react-document-events";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
+import IntlMessage from "../../../components/util-components/IntlMessage";
 
 const rules = {
-  CommercialName: [
-    {
-      required: true,
-      message: "Please input your commercial name",
-    },
-  ],
   JuridicalName: [
     {
       required: true,
-      message: "Please input your juridical name",
+      message: <IntlMessage id={"auth.MessageInsertJuridicalName"} />,
     },
   ],
   IDNO: [
     {
       required: true,
-      message: "Please input your IDNO",
+      message: <IntlMessage id={"auth.MessageInsertIDNO"} />,
     },
   ],
-  JuridicalAddress: [
-    {
-      required: true,
-      message: "Please input your juridical address",
-    },
-  ],
-  OfficeAddress: [
-    {
-      required: true,
-      message: "Please input your office address",
-    },
-  ],
-  Bank: [
-    {
-      required: true,
-      message: "Please input your bank",
-    },
-  ],
-  IBAN: [
-    {
-      required: true,
-      message: "Please input your IBAN",
-    },
-  ],
-  BIC: [
-    {
-      required: true,
-      message: "Please input your IBAN",
-    },
-  ],
+
   VATCode: [
     {
       required: true,
-      message: "Please input your VAT code",
+      message: <IntlMessage id={"auth.MessageInsertVATCode"} />,
     },
   ],
   email: [
     {
       required: true,
-      message: "Please input your email",
+      message: <IntlMessage id={"auth.MessageInsertEmail"} />,
     },
     {
       type: "email",
-      message: "Please enter a validate email!",
+      message: <IntlMessage id={"auth.MessageInsertValidEmail"} />,
     },
   ],
   password: [
     {
       required: true,
-      message: "Please input your password",
+      message: <IntlMessage id={"auth.MessageInsertPassword"} />,
     },
     {
       min: 8,
-      message: "Password must be minimum 8 characters",
+      message: <IntlMessage id={"auth.MessageInsertValidPassword"} />,
     },
   ],
   confirm: [
     {
       required: true,
-      message: "Please confirm your password!",
+      message: <IntlMessage id={"auth.MessageInsertConfirmPassword"} />,
     },
     ({ getFieldValue }) => ({
       validator(rule, value) {
         if (!value || getFieldValue("password") === value) {
           return Promise.resolve();
         }
-        return Promise.reject("Passwords do not match!");
+        return Promise.reject(
+          <IntlMessage id={"auth.MessagePasswordsMatch"} />
+        );
       },
     }),
   ],
@@ -122,6 +100,7 @@ export const RegisterForm = (props) => {
     allowRedirect,
     hideLoading,
     registerCompany,
+    locale,
     history,
   } = props;
   const [form] = Form.useForm();
@@ -144,7 +123,7 @@ export const RegisterForm = (props) => {
     form
       .validateFields()
       .then((values) => {
-        const oldCompanyData = {
+        /*        const oldCompanyData = {
           Company: {
             BIC: values.BIC,
             Bank: values.Bank,
@@ -161,17 +140,18 @@ export const RegisterForm = (props) => {
           },
           UsrEmail: values.email,
           UsrPassword: Utils.encryptInput(values.password, API_PUBLIC_KEY),
-        };
+        };*/
         const newCompanyData = {
           IDNO: values.IDNO,
           JuridicalName: values.JuridicalName,
+          UiLanguage: locale === "ro" ? 0 : locale === "ru" ? 1 : 2,
           VATCode: isVATPayer ? values.VATCode : "",
           UsrEmail: values.email,
           UsrPassword: Utils.encryptInput(values.password, API_PUBLIC_KEY),
         };
         showLoading();
         setTimeout(() => {
-          registerCompany(newCompanyData, history);
+          registerCompany(newCompanyData, history, <IntlMessage id={"auth.MessageRedirect"}/>);
         }, 1500);
       })
       .catch((info) => {
@@ -209,47 +189,29 @@ export const RegisterForm = (props) => {
         name="register-form"
         onFinish={onSignUp}
       >
-        <Form.Item name="email" label="Email" rules={rules.email} hasFeedback>
-          <Input prefix={<MailOutlined className={"text-primary"} />} />
-        </Form.Item>
+
         <Form.Item
           name="JuridicalName"
-          label="Juridical Name"
+          label={<IntlMessage id={"auth.JuridicalName"} />}
           rules={rules.JuridicalName}
           hasFeedback
         >
           <Input prefix={<MailOutlined className={"text-primary"} />} />
         </Form.Item>
-        <Form.Item name="IDNO" label="IDNO" rules={rules.IDNO} hasFeedback>
+        <Form.Item name="IDNO" label={<IntlMessage id={"auth.IDNO"} />} rules={rules.IDNO} hasFeedback>
           <Input prefix={<MailOutlined className={"text-primary"} />} />
         </Form.Item>
 
-        <Row gutter={100}>
-          <Col>
-            <Form.Item>
-              <Radio.Group
-                defaultValue={false}
-                onChange={() => setIsVATPayer(!isVATPayer)}
-              >
-                <Radio.Button value={false}>Not a VAT Payer</Radio.Button>
-                <Radio.Button value={true}>VAT Payer</Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col>
-            <Select defaultValue={"0"}>
-              <Option value={"0"}>
-                Romanian
-              </Option>
-              <Option value={"1"}>
-                Russian
-              </Option>
-              <Option value={"2"}>
-                English
-              </Option>
-            </Select>
-          </Col>
-        </Row>
+        <Form.Item>
+          <Radio.Group
+            defaultValue={false}
+            onChange={() => setIsVATPayer(!isVATPayer)}
+          >
+            <Radio.Button value={false}>{<IntlMessage id={"auth.NotVATPayer"} />}</Radio.Button>
+            <Radio.Button value={true}>{<IntlMessage id={"auth.VATPayer"} />}</Radio.Button>
+          </Radio.Group>
+        </Form.Item>
+
         <motion.div
           initial={{
             display: "none",
@@ -262,11 +224,11 @@ export const RegisterForm = (props) => {
         >
           <Form.Item
             name="VATCode"
-            label="VAT Code"
+            label={<IntlMessage id={"auth.VATCode"} />}
             rules={[
               {
                 required: isVATPayer,
-                message: "Please insert your VAT Code",
+                message: <IntlMessage id={"auth.MessageInsertVATCode"} />,
               },
             ]}
             hasFeedback
@@ -274,10 +236,12 @@ export const RegisterForm = (props) => {
             <Input prefix={<MailOutlined className={"text-primary"} />} />
           </Form.Item>
         </motion.div>
-
+        <Form.Item name="email" label={<IntlMessage id={"auth.Email"} />} rules={rules.email} hasFeedback>
+          <Input prefix={<MailOutlined className={"text-primary"} />} />
+        </Form.Item>
         <Form.Item
           name="password"
-          label="Password"
+          label={<IntlMessage id={"auth.Password"} />}
           rules={rules.password}
           hasFeedback
         >
@@ -299,7 +263,7 @@ export const RegisterForm = (props) => {
         </Form.Item>
         <Form.Item
           name="confirm"
-          label="Confirm Password"
+          label={<IntlMessage id={"auth.ConfirmPassword"} />}
           rules={rules.confirm}
           hasFeedback
         >
@@ -320,7 +284,7 @@ export const RegisterForm = (props) => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={loading}>
-            Sign Up
+            {" "}{<IntlMessage id={"auth.SignUp"} />}
           </Button>
         </Form.Item>
         <DocumentEvents onKeyDown={handleDocumentKeyDown} />
@@ -329,9 +293,10 @@ export const RegisterForm = (props) => {
   );
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, theme }) => {
   const { loading, message, showMessage, token, redirect } = auth;
-  return { loading, message, showMessage, token, redirect };
+  const { locale } = theme;
+  return { loading, message, showMessage, token, redirect, locale };
 };
 
 const mapDispatchToProps = {

@@ -18,6 +18,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import { hideLoading } from "../../../redux/actions/Auth";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
+import IntlMessage from "../../../components/util-components/IntlMessage";
 
 const LoginForm = ({
   otherSignIn,
@@ -54,7 +55,7 @@ const LoginForm = ({
     };
     showLoading();
     setTimeout(() => {
-      authorizeUser(onLoginSettingsObject, history);
+      authorizeUser(onLoginSettingsObject, history, <IntlMessage id={"auth.MessageRedirect"}/>);
     }, 1000);
   };
 
@@ -118,15 +119,15 @@ const LoginForm = ({
       <Form layout="vertical" name="login-form" onFinish={onLogin}>
         <Form.Item
           name="email"
-          label="Email"
+          label={<IntlMessage id={"auth.Email"} />}
           rules={[
             {
               required: true,
-              message: "Please input your email",
+              message: <IntlMessage id={"auth.MessageInsertEmail"} />,
             },
             {
               type: "email",
-              message: "Please enter a validate email!",
+              message: <IntlMessage id={"auth.MessageInsertValidEmail"} />,
             },
           ]}
         >
@@ -142,7 +143,7 @@ const LoginForm = ({
                   : ""
               }`}
             >
-              <span>Password</span>
+              <span><IntlMessage id={"auth.Password"} /></span>
               {showForgetPassword && (
                 <span
                   onClick={() => onForgetPasswordClick}
@@ -156,7 +157,7 @@ const LoginForm = ({
           rules={[
             {
               required: true,
-              message: "Please input your password",
+              message: <IntlMessage id={"auth.MessageInsertPassword"} />,
             },
           ]}
         >
@@ -165,11 +166,11 @@ const LoginForm = ({
 
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={loading}>
-            Sign In
+            {" "}<IntlMessage id={"auth.SignIn"} />
           </Button>
         </Form.Item>
         <NavLink to={"/auth/forgot-password"} className={"text-right"}>
-          Forgot your password?
+          <IntlMessage id={"auth.ForgotPassword"} />
         </NavLink>
         {/*{otherSignIn ? renderOtherSignIn : null}*/}
         {otherSignIn || renderOtherSignIn}

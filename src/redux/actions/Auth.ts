@@ -17,8 +17,7 @@ import {
   VALIDATE_USER,
 } from "../constants/Auth";
 import axios from "axios";
-import {} from "../../constants/ApiConstant";
-import { message, Modal } from "antd";
+import { message,  } from "antd";
 
 export const signIn = (user) => ({
   type: SIGNIN,
@@ -88,41 +87,49 @@ export const authorizeUser = (userData, history) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, userData)
       .then((response) => {
+        const { ErrorCode, ErrorMessage, Token, RefreshToken } = response.data;
         dispatch(hideLoading());
-        if (response.data["ErrorCode"] === 0) {
-          dispatch(
-            authenticated(response.data["Token"], response.data["RefreshToken"])
-          );
-        } else if (response.data["ErrorCode"] === 102) {
-          dispatch(
-            showAuthMessage("Incorrect username or password. Try again...")
-          );
-        } else if (response.data["ErrorCode"] === 108) {
+        if (ErrorCode === 0) {
+          dispatch(authenticated(Token, RefreshToken));
+        } else if (ErrorCode === 102) {
+          dispatch(showAuthMessage(ErrorMessage));
+        } else if (ErrorCode === 108) {
           /* Inform user about redirecting him to confirmation modal */
-          history.push("/auth/validate");
+          message.loading(
+            "You'll be redirected in a few seconds...",
+            1.5
+          );
+          setTimeout(() => {
+            history.push("/auth/validate");
+          }, 1500);
         }
       })
       .catch((e) => dispatch(hideLoading()));
   };
 };
 
-export const registerCompany = (companyData, history) => {
+export const registerCompany = (
+  companyData,
+  history,
+) => {
   return (dispatch) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)
       .then((res) => {
+        const { ErrorCode, ErrorMessage, Token } = res.data;
         dispatch(hideLoading());
         console.log(res.data);
-        if (res.data["ErrorCode"] === 108) {
-          message.loading("You'll be redirected in a few seconds...", 1.5);
-          dispatch({ type: VALIDATE_USER, payload: res.data["Token"] });
+        if (ErrorCode === 108) {
+          message.loading(
+            "You'll be redirected in a few seconds...",
+            1.5
+          );
+          dispatch({ type: VALIDATE_USER, payload: Token });
           setTimeout(() => {
             history.push("/auth/validate");
           }, 1500);
-        } else if (res.data["ErrorCode"] === 115) {
-          message.error("Email already used!", 5);
         } else {
-          message.error("Something went wrong, try again!", 5);
+          message.error(ErrorMessage, 5);
         }
       })
       .catch((e) => dispatch(hideLoading()));

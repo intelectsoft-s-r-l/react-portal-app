@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Button, Input, Row, Col, message } from "antd";
+import { Form, Button, Input, Row, Col } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { connect } from "react-redux";
 import Utils from "../../../utils";
@@ -8,8 +8,8 @@ import {
   API_PUBLIC_KEY,
 } from "../../../constants/ApiConstant";
 import axios from "axios";
-import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
+import ChangePasswordErrorHandler from "../../../error_handling/ChangePasswordErrorHandler";
 
 export class ChangePassword extends Component {
   private changePasswordFormRef = React.createRef<any>();
@@ -34,53 +34,11 @@ export class ChangePassword extends Component {
           Token: this.props["token"],
         })
         .then((res) => {
-          console.log(res.data);
-          if (res.data["ErrorCode"] === 0) {
-            message.success({
-              content: (
-                <IntlProvider
-                  locale={currentAppLocale.locale}
-                  messages={currentAppLocale.messages}
-                >
-                  <IntlMessage id={"account.ChangePassword.Success"} />
-                </IntlProvider>
-              ),
-              duration: 3,
-            });
-          } else if (res.data["ErrorCode"] === 118) { /* Token expired */
-            // TOKEN IS NOT VALID ANYMORE, LED THE USER TO THE LOGIN PAGE
-          } else if (res.data['ErrorCode'] === 119) { /* Incorect oldpassword */
-            message.error({
-              content: (
-                <IntlProvider
-                  locale={currentAppLocale.locale}
-                  messages={currentAppLocale.messages}
-                >
-                  <IntlMessage id={"account.ChangePassword.IncorrectPassword"} />
-                </IntlProvider>
-              ),
-              duration: 2,
-            });
-          }
-          else {
-            message.error({
-              content: (
-                <IntlProvider
-                  locale={currentAppLocale.locale}
-                  messages={currentAppLocale.messages}
-                >
-                  <IntlMessage id={"account.ChangePassword.Error"} />
-                </IntlProvider>
-              ),
-              duration: 2,
-            });
-          }
+          ChangePasswordErrorHandler(res.data["ErrorCode"], currentAppLocale);
         });
     }, 1500);
-
     this.onReset();
   };
-
   onReset = () => {
     this.changePasswordFormRef.current!.resetFields();
   };
@@ -158,7 +116,7 @@ export class ChangePassword extends Component {
                 htmlType="submit"
                 loading={this.state.loading}
               >
-                {this.state.loading ? (
+                {" "}{this.state.loading ? (
                   <IntlMessage
                     id={"account.ChangePassword.ChangePasswordProcess"}
                   />

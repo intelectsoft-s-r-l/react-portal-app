@@ -1,5 +1,5 @@
 import React from "react";
-import UserList from "../companies/CompanyList";
+import UserList from "../company/CompanyList";
 
 const Users = () => {
   return <UserList />;

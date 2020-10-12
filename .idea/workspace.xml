@@ -2,15 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bcd00017-c4bf-44d3-a15f-685b1ebb0d61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/error_handling/ChangePasswordErrorHandler.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout-components/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout-components/Footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout-components/NavLanguage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout-components/NavLanguage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout-components/NavPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout-components/NavPanel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layout-components/ThemeConfigurator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout-components/ThemeConfigurator.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configs/NavigationConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/configs/NavigationConfig.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lang/locales/en_US.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/en_US.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lang/locales/ro_RO.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/ro_RO.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lang/locales/ru_RU.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/lang/locales/ru_RU.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/Auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/Auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/store/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/store/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/app-views/account-settings/ChangePassword.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/account-settings/ChangePassword.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/companies/CompanyList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/company/CompanyList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/companies/CompanyView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/company/CompanyView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/companies/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/company/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/users/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/users/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/auth-views/authentication/forgot-password/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/authentication/forgot-password/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/auth-views/authentication/login/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/authentication/login/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/auth-views/authentication/register/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/authentication/register/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/auth-views/authentication/validate/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/authentication/validate/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/auth-views/components/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/components/LoginForm.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/auth-views/components/RegisterForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/components/RegisterForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/index.tsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,6 +47,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/rc-field-form/lib/interface.d.ts" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../react-redux-course-vladilen" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -94,7 +112,9 @@
       <workItem from="1601897730985" duration="237000" />
       <workItem from="1601897997222" duration="3153000" />
       <workItem from="1601905542064" duration="38461000" />
-      <workItem from="1602054104737" duration="38570000" />
+      <workItem from="1602054104737" duration="66332000" />
+      <workItem from="1602421017365" duration="598000" />
+      <workItem from="1602483569022" duration="4498000" />
     </task>
     <servers />
   </component>

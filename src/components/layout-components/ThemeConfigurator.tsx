@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactNode, ReactText} from "react";
 import { connect } from "react-redux";
 import { Radio, Switch, Button, message } from "antd";
 import {
@@ -17,9 +17,11 @@ import {
   NAV_TYPE_TOP,
   SIDE_NAV_DARK,
 } from "../../constants/ThemeConstant";
+import AppLocale from "../../lang";
+import IntlMessage from "../util-components/IntlMessage";
 
-interface IListOption {
-  name?: string;
+export interface IListOption {
+  name?: string | ReactNode;
   selector?: any;
   disabled?: boolean;
   vertical?: boolean;
@@ -58,6 +60,7 @@ const ThemeConfigurator = ({
   onHeaderNavColorChange,
 }) => {
   const isNavTop = navType === NAV_TYPE_TOP;
+  const AppCurrentLocale = AppLocale[locale];
   const isCollapse = navCollapsed;
   const ontopNavColorClick = (value) => {
     if (value === white) {
@@ -92,10 +95,10 @@ const ThemeConfigurator = ({
   return (
     <>
       <div className="mb-5">
-        <h4 className="mb-3 font-weight-bold">Navigation</h4>
+        <h4 className="mb-3 font-weight-bold"><IntlMessage id={"theme.Navigation"}/></h4>
         {isNavTop ? (
           <ListOption
-            name="Top Nav Color:"
+            name={<IntlMessage id={"theme.TopNavColor"}/>}
             vertical
             selector={
               <Radio.Group
@@ -121,7 +124,7 @@ const ThemeConfigurator = ({
           />
         ) : (
           <ListOption
-            name="Header Nav Color:"
+            name={<IntlMessage id={"theme.HeaderNavColor"}/>}
             vertical
             selector={
               <Radio.Group
@@ -148,20 +151,20 @@ const ThemeConfigurator = ({
         )}
 
         <ListOption
-          name="Navigation Type:"
+          name={<IntlMessage id={"theme.NavigationType"}/>}
           selector={
             <Radio.Group
               size="small"
               onChange={(e) => onNavTypeClick(e.target.value)}
               value={navType}
             >
-              <Radio.Button value={NAV_TYPE_SIDE}>Side</Radio.Button>
-              <Radio.Button value={NAV_TYPE_TOP}>Top</Radio.Button>
+              <Radio.Button value={NAV_TYPE_SIDE}>{<IntlMessage id={"theme.Side"}/>}</Radio.Button>
+              <Radio.Button value={NAV_TYPE_TOP}>{<IntlMessage id={"theme.Top"}/>}</Radio.Button>
             </Radio.Group>
           }
         />
         <ListOption
-          name="Side Nav Color:"
+          name={<IntlMessage id={"theme.SideNavColor"}/>}
           selector={
             <Radio.Group
               disabled={isNavTop}
@@ -169,14 +172,14 @@ const ThemeConfigurator = ({
               onChange={(e) => onNavStyleChange(e.target.value)}
               value={sideNavTheme}
             >
-              <Radio.Button value={SIDE_NAV_LIGHT}>Light</Radio.Button>
-              <Radio.Button value={SIDE_NAV_DARK}>Dark</Radio.Button>
+              <Radio.Button value={SIDE_NAV_LIGHT}>{<IntlMessage id={"theme.Light"}/>}</Radio.Button>
+              <Radio.Button value={SIDE_NAV_DARK}>{<IntlMessage id={"theme.Dark"}/>}</Radio.Button>
             </Radio.Group>
           }
           disabled={isNavTop}
         />
         <ListOption
-          name="Side Nav Collapse:"
+          name={<IntlMessage id={"theme.SideNavCollapse"}/>}
           selector={
             <Switch
               disabled={isNavTop}
@@ -188,8 +191,8 @@ const ThemeConfigurator = ({
         />
       </div>
       <div className="mb-5">
-        <h4 className="mb-3 font-weight-bold">Locale</h4>
-        <ListOption name="Language:" selector={<NavLanguage configDisplay />} />
+        <h4 className="mb-3 font-weight-bold">{<IntlMessage id={"theme.Locale"}/>}</h4>
+        <ListOption name={<IntlMessage id={"theme.Language"}/>} selector={<NavLanguage configDisplay triggerType={"click"} />} />
       </div>
 			{/* Copy to clipboard Theme Config */}
       {/*<div>*/}

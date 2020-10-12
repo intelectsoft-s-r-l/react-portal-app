@@ -32,9 +32,9 @@ class NavPanel extends Component {
           </Menu.Item>
         </Menu>
         <Drawer
-          title="Theme Config"
+          title={<IntlMessage id={"theme.Title"}/>}
           placement="right"
-          width={350}
+          width={370}
           onClose={this.onClose}
           visible={this.state.visible}
         >

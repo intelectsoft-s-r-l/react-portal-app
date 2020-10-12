@@ -30,9 +30,9 @@ const dashBoardNavTree = [
     breadcrumb: true,
     submenu: [
       {
-        key: "companies",
-        path: "/app/catalog/companies",
-        title: "sidenav.catalog.companies",
+        key: "company",
+        path: "/app/catalog/company",
+        title: "sidenav.catalog.company",
         icon: ApartmentOutlined,
         breadcrumb: true,
         submenu: [],

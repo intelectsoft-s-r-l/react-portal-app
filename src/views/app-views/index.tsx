@@ -12,8 +12,8 @@ export const AppViews = ({ match, history }) => {
           component={lazy(() => import(`./dashboard`))}
         />
         <Route
-          path={`${match.url}/catalog/companies`}
-          component={lazy(() => import(`./catalog/companies/CompanyList`))}
+          path={`${match.url}/catalog/company`}
+          component={lazy(() => import(`./catalog/company`))}
         />
         <Route
           path={`${match.url}/catalog/users`}

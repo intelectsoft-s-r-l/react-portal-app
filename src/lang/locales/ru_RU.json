@@ -1,9 +1,49 @@
 {
+
+
+  "auth.SignIn": "Войти",
+  "auth.DontHaveAnAccountYet": "У вас нет аккаунта?",
+  "auth.SignUp": "Регистрация",
+  "auth.Email": "Электронная почта",
+  "auth.Password": "Пароль",
+  "auth.MessageInsertEmail": "Введите пожалуйста электронную почту!",
+  "auth.MessageInsertJuridicalName": "Введите пожалуйста юридическое название!",
+  "auth.MessageInsertIDNO": "Введите пожалуйста ваш идентификационный номер!",
+  "auth.MessageInsertVATCode": "Введите пожалусйта ваш код НДС!",
+  "auth.MessageInsertValidEmail": "Введите пожалуйста валидную почту!",
+  "auth.MessageInsertPassword": "Введите пожалуйста пароль!",
+  "auth.MessageInsertConfirmPassword": "Пожалуйста, подтвердите ваш пароль!",
+  "auth.MessagePasswordsMatch": "Ваши пароли не совпадают!",
+  "auth.MessageInsertValidPassword": "Ваш пароль должен содержать не менее 8 символов",
+  "auth.ForgotPassword": "Забыли пароль?",
+  "auth.ForgotPasswordMessage": "Введите почту чтобы сбросить пароль",
+  "auth.GoBack": "Назад",
+  "auth.Send": "Отправить",
+  "auth.Sending": "Отправляется",
+
+  "auth.AlreadyHaveAnAccount": "У вас уже есть аккаунт?",
+  "auth.JuridicalName": "Юридическое название",
+  "auth.VATCode": "Код НДС",
+
+  "auth.IDNO": "Идентификационный номер",
+  "auth.NotVATPayer": "Неплательщик НДС",
+  "auth.VATPayer": "Плательщик НДС",
+  "auth.ConfirmPassword": "Подтверждение пароля",
+  "auth.WelcomeMessage": "Добро пожаловать в IntelectSoft",
+  "auth.Terms&Conditions": "Условия и положения",
+  "auth.Privacy&Policy": "Конфиденциальность и политика",
+  "auth.Rights": "Все права защищены.",
+  "auth.ConfirmRegistration": "Подтвердите регистрацию",
+  "auth.ConfirmRegistrationTitle": "Введите код подтверждения который мы отправили на вашу почту",
+  "auth.MessageInsertCode": "Введите код подтверждения!",
+  "auth.MessageRedirect": "Вас перенаправят через несколько секунд...",
+
+
   "sidenav.home": "Главная",
   "sidenav.dashboard": "Панель",
 
   "sidenav.catalog": "Каталог",
-  "sidenav.catalog.companies": "Компании",
+  "sidenav.catalog.company": "Компания",
   "sidenav.catalog.group": "Группы",
   "sidenav.catalog.users": "Пользователи",
   "sidenav.settings": "Настройки",
@@ -84,7 +124,19 @@
   "account.Billing.Modal.CardNumber": "Номер карты",
   "account.Billing.Modal.ExpiryDate": "Истекает",
   "account.Billing.Modal.CVVCode": "Код CVV",
-  "account.Billing.Modal.SaveCard": "Сохранить карту"
+  "account.Billing.Modal.SaveCard": "Сохранить карту",
 
-
+  "theme.Title": "Тема",
+  "theme.Navigation": "Навигация",
+  "theme.HeaderNavColor": "Цвет заголовка навигации",
+  "theme.TopNavColor": "Цвет заголовка навигации",
+  "theme.NavigationType": "Тип навигации",
+  "theme.SideNavColor": "Цвет боковой навигации",
+  "theme.SideNavCollapse": "Коллапс боковой навигации",
+  "theme.Side": "Бок",
+  "theme.Top": "Вверх",
+  "theme.Light": "Светлая",
+  "theme.Dark": "Темная",
+  "theme.Locale": "Локализация",
+  "theme.Language": "Язык"
 }

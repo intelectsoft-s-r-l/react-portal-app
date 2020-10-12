@@ -30,7 +30,7 @@ export class UserView extends Component<UserViewProps> {
         visible={visible}
       >
         <div className="text-center mt-3">
-          <Avatar size={80} src={data?.img} />
+          <Avatar size={80} src={process.env.PUBLIC_URL + data?.img} />
           <h3 className="mt-2 mb-0">{data?.name}</h3>
           <span className="text-muted">{data?.personalInfo.title}</span>
         </div>
