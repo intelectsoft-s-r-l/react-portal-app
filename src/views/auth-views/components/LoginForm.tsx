@@ -76,7 +76,7 @@ const LoginForm = ({
         hideAuthMessage();
       }, 3000);
     }
-  });
+  }, [token, showMessage]);
 
   const renderOtherSignIn = (
     <div>
@@ -159,8 +159,8 @@ const LoginForm = ({
               required: true,
               message: <IntlMessage id={"auth.MessageInsertPassword"} />,
             },
-          ]}
-        >
+            ]}
+          > 
           <Input.Password prefix={<LockOutlined className="text-primary" />} />
         </Form.Item>
 

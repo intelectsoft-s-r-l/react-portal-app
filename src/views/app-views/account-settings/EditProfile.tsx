@@ -137,7 +137,7 @@ class EditProfile extends Component<EditProfileProps> {
             </IntlProvider>
           ),
           key,
-          duration: 1000,
+          duration: 2,
         });
         return;
       }
@@ -147,9 +147,7 @@ class EditProfile extends Component<EditProfileProps> {
             avatar: imageUrl,
           };
           updateSettings(newObj);
-          // let currentUser = JSON.parse(localStorage.getItem("user"));
-          // currentUser["avatar"] = imageUrl;
-          // localStorage.setItem("user", JSON.stringify(currentUser));
+
         });
         message.success({
           content: (
@@ -161,7 +159,7 @@ class EditProfile extends Component<EditProfileProps> {
             </IntlProvider>
           ),
           key,
-          duration: 1.5,
+          duration: 2,
         });
       } else {
         message.error({
