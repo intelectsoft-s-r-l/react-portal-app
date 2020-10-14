@@ -47,7 +47,6 @@ const LoginForm = ({
 }) => {
   const history = useHistory();
 
-
   const onLogin = ({ email, password }) => {
     const onLoginSettingsObject = {
       Email: email,
@@ -55,10 +54,13 @@ const LoginForm = ({
     };
     showLoading();
     setTimeout(() => {
-      authorizeUser(onLoginSettingsObject, history, <IntlMessage id={"auth.MessageRedirect"}/>);
+      authorizeUser(
+        onLoginSettingsObject,
+        history,
+        <IntlMessage id={"auth.MessageRedirect"} />
+      );
     }, 1000);
   };
-
   const onGoogleLogin = () => {
     showLoading();
   };
@@ -143,7 +145,9 @@ const LoginForm = ({
                   : ""
               }`}
             >
-              <span><IntlMessage id={"auth.Password"} /></span>
+              <span>
+                <IntlMessage id={"auth.Password"} />
+              </span>
               {showForgetPassword && (
                 <span
                   onClick={() => onForgetPasswordClick}
@@ -159,14 +163,15 @@ const LoginForm = ({
               required: true,
               message: <IntlMessage id={"auth.MessageInsertPassword"} />,
             },
-            ]}
-          > 
+          ]}
+        >
           <Input.Password prefix={<LockOutlined className="text-primary" />} />
         </Form.Item>
 
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={loading}>
-            {" "}<IntlMessage id={"auth.SignIn"} />
+            {" "}
+            <IntlMessage id={"auth.SignIn"} />
           </Button>
         </Form.Item>
         <NavLink to={"/auth/forgot-password"} className={"text-right"}>

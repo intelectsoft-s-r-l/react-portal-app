@@ -1,10 +1,9 @@
-import React, {lazy, Suspense, useEffect} from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Loading from "../../components/shared-components/Loading";
-import {signOut} from "../../redux/actions/Auth";
+import { signOut } from "../../redux/actions/Auth";
 
 export const AuthViews = ({ match }) => {
-
   return (
     <Suspense fallback={<Loading cover="page" />}>
       <Switch>
@@ -25,9 +24,10 @@ export const AuthViews = ({ match }) => {
           component={lazy(() => import(`./errors/error-page-1`))}
         />
         <Route
-          path={`${match.url}/validate`}
+          path={`${match.url}/validate/:token`}
           component={lazy(() => import(`./authentication/validate`))}
         />
+
         {/*<Route*/}
         {/*  path={`${match.url}/error-2`}*/}
         {/*  component={lazy(() => import(`./errors/error-page-2`))}*/}

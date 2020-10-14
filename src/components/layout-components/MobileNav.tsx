@@ -42,7 +42,7 @@ export const MobileNav = ({
             <ArrowLeftOutlined />
           </div>
         </Flex>
-        <div className="h-100">
+        <div className="mobile-nav-menu">
           <Scrollbars autoHide>
             <MenuContent type={NAV_TYPE_SIDE} {...props} />
           </Scrollbars>

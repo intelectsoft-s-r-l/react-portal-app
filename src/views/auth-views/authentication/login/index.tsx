@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row } from "antd";
+import { Col, Row, Modal } from "antd";
 import { NavLink } from "react-router-dom";
 import LoginForm from "../../components/LoginForm";
 import { IListOption } from "../../../../components/layout-components/ThemeConfigurator";

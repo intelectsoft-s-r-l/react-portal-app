@@ -17,7 +17,7 @@ import {
   VALIDATE_USER,
 } from "../constants/Auth";
 import axios from "axios";
-import { message,  } from "antd";
+import { message } from "antd";
 
 export const signIn = (user) => ({
   type: SIGNIN,
@@ -87,6 +87,7 @@ export const authorizeUser = (userData, history) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, userData)
       .then((response) => {
+        console.log(response.data);
         const { ErrorCode, ErrorMessage, Token, RefreshToken } = response.data;
         dispatch(hideLoading());
         if (ErrorCode === 0) {
@@ -94,40 +95,32 @@ export const authorizeUser = (userData, history) => {
         } else if (ErrorCode === 102) {
           dispatch(showAuthMessage(ErrorMessage));
         } else if (ErrorCode === 108) {
-          /* Inform user about redirecting him to confirmation modal */
-          message.loading(
-            "You'll be redirected in a few seconds...",
-            1.5
-          );
-          setTimeout(() => {
-            history.push("/auth/validate");
-          }, 1500);
+          /* Tell user that his account is not activated, and ask him to go to his email in order to confirm the registration. */
+          dispatch(showAuthMessage(ErrorMessage));
+          // message.loading("You'll be redirected in a few seconds...", 1.5);
+          // setTimeout(() => {
+          //   history.push("/auth/error");
+          // }, 1500);
         }
       })
       .catch((e) => dispatch(hideLoading()));
   };
 };
 
-export const registerCompany = (
-  companyData,
-  history,
-) => {
+export const registerCompany = (companyData, history) => {
   return (dispatch) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)
       .then((res) => {
-        const { ErrorCode, ErrorMessage, Token } = res.data;
+        const { ErrorCode, ErrorMessage } = res.data;
         dispatch(hideLoading());
         console.log(res.data);
         if (ErrorCode === 108) {
-          message.loading(
-            "You'll be redirected in a few seconds...",
-            1.5
+          /*  Inform user to go to his/her email  */
+          message.success(
+            "Please confirm the registration by clicking on the link we've sent to your email!",
+            10
           );
-          dispatch({ type: VALIDATE_USER, payload: Token });
-          setTimeout(() => {
-            history.push("/auth/validate");
-          }, 1500);
         } else {
           message.error(ErrorMessage, 5);
         }

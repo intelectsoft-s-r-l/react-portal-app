@@ -32,7 +32,10 @@
 	"auth.ConfirmRegistration": "Confirm registration",
 	"auth.ConfirmRegistrationTitle": "Enter the confirmation code that we've sent to your email",
 	"auth.MessageInsertCode": "Please insert the code from your email!",
-	"auth.MessageRedirect": "You'll be redirected in a few seconds...",
+  "auth.MessageRedirect": "You'll be redirected in a few seconds...",
+  "auth.validate.Success": "Congratulations! You've successfully registered!",
+  "auth.validate.Error": "You haven't confirmed your registration yet! Please check your email!",
+
 	"sidenav.home": "Home",
 	"sidenav.dashboard": "Dashboard",
 
