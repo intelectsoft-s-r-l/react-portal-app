@@ -5,6 +5,7 @@ import moment from "moment";
 import UserView from "./UserView";
 import AvatarStatus from "../../../../components/shared-components/AvatarStatus";
 import userData from "../../../../assets/data/user-list.data.json";
+import "../hand_gesture.scss";
 
 export class UserList extends Component {
   /* MAKE THIS FROM API CALL */
@@ -12,6 +13,7 @@ export class UserList extends Component {
     users: userData,
     userProfileVisible: false,
     selectedUser: null,
+    isHidden: "block",
   };
 
   deleteUser = (userId) => {
@@ -129,7 +131,14 @@ export class UserList extends Component {
       },
     ];
     return (
-      <Card bodyStyle={{ padding: "0px" }}>
+      <Card bodyStyle={{ padding: "0px", position: "relative" }}>
+        {/* <img
+          style={{ display: this.state.isHidden }}
+          onAnimationEnd={() => this.setState({ isHidden: "none" })}
+          alt="Hand gesture"
+          className="hand-gesture__svg"
+          src={process.env.PUBLIC_URL + "/img/icons/horizontal-scroll.svg"}
+        /> */}
         <Table columns={tableColumns} dataSource={users} rowKey="id" />
         <UserView
           data={selectedUser}

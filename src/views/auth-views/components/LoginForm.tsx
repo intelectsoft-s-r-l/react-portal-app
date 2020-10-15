@@ -56,8 +56,6 @@ const LoginForm = ({
     setTimeout(() => {
       authorizeUser(
         onLoginSettingsObject,
-        history,
-        <IntlMessage id={"auth.MessageRedirect"} />
       );
     }, 1000);
   };

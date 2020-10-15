@@ -1,6 +1,6 @@
 import React, {ReactNode, ReactText} from "react";
 import { connect } from "react-redux";
-import { Radio, Switch, Button, message } from "antd";
+import { Radio, Switch, Button, message, Grid } from 'antd';
 import {
   toggleCollapsedNav,
   onNavTypeChange,
@@ -19,6 +19,7 @@ import {
 } from "../../constants/ThemeConstant";
 import AppLocale from "../../lang";
 import IntlMessage from "../util-components/IntlMessage";
+import Utils from '../../utils/index';
 
 export interface IListOption {
   name?: string | ReactNode;
@@ -59,6 +60,9 @@ const ThemeConfigurator = ({
   onTopNavColorChange,
   onHeaderNavColorChange,
 }) => {
+  const { useBreakpoint } = Grid;
+  const screens = Utils.getBreakPoint(useBreakpoint());
+  const isMobile = !screens.includes("lg");
   const isNavTop = navType === NAV_TYPE_TOP;
   const AppCurrentLocale = AppLocale[locale];
   const isCollapse = navCollapsed;
@@ -150,7 +154,9 @@ const ThemeConfigurator = ({
           />
         )}
 
-        <ListOption
+        {isMobile || (
+          <>
+          <ListOption
           name={<IntlMessage id={"theme.NavigationType"}/>}
           selector={
             <Radio.Group
@@ -189,6 +195,9 @@ const ThemeConfigurator = ({
           }
           disabled={isNavTop}
         />
+        </>
+        )}
+        
       </div>
       <div className="mb-5">
         <h4 className="mb-3 font-weight-bold">{<IntlMessage id={"theme.Locale"}/>}</h4>

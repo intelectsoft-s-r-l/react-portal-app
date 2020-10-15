@@ -1,5 +1,4 @@
 export const API_IS_AUTH_SERVICE = "https://dev.edi.md/ISAuthService/json";
-
 // https://api.edi.md/ISAuthService/json PRODUCTION
 // https://dev.edi.md/ISAuthService DEVELOPMENT
 

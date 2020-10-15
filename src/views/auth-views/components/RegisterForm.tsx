@@ -148,7 +148,7 @@ export const RegisterForm = (props) => {
           VATCode: isVATPayer ? values.VATCode : "",
           UsrEmail: values.email,
           UsrPassword: Utils.encryptInput(values.password, API_PUBLIC_KEY),
-        };
+        } as { [key: string]: any };
         showLoading();
         setTimeout(() => {
           registerCompany(newCompanyData, history, <IntlMessage id={"auth.MessageRedirect"}/>);

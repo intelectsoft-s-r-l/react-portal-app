@@ -24,10 +24,9 @@ export const signIn = (user) => ({
   payload: user,
 });
 
-export const authenticated = (token, refreshToken) => ({
+export const authenticated = (token) => ({
   type: AUTHENTICATED,
-  token,
-  refreshToken,
+  token
 });
 
 export const signOut = () => ({
@@ -82,16 +81,16 @@ export const hideLoading = () => ({
   type: HIDE_LOADING,
 });
 
-export const authorizeUser = (userData, history) => {
+export const authorizeUser = (userData) => {
   return (dispatch) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, userData)
       .then((response) => {
         console.log(response.data);
-        const { ErrorCode, ErrorMessage, Token, RefreshToken } = response.data;
+        const { ErrorCode, ErrorMessage, Token } = response.data;
         dispatch(hideLoading());
         if (ErrorCode === 0) {
-          dispatch(authenticated(Token, RefreshToken));
+          dispatch(authenticated(Token));
         } else if (ErrorCode === 102) {
           dispatch(showAuthMessage(ErrorMessage));
         } else if (ErrorCode === 108) {
@@ -107,7 +106,7 @@ export const authorizeUser = (userData, history) => {
   };
 };
 
-export const registerCompany = (companyData, history) => {
+export const registerCompany = (companyData: {[key: string]: any}, history) => {
   return (dispatch) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)

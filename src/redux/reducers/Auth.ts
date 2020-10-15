@@ -19,7 +19,6 @@ const initState = {
   showMessage: false,
   redirect: "",
   token: "",
-  refreshToken: "",
   isAuth: false,
 };
 
@@ -32,7 +31,6 @@ const auth = (state = initState, action) => {
         redirect: "/",
         token: action.token,
         isAuth: true,
-        refreshToken: action.refreshToken,
       };
 
     case SHOW_AUTH_MESSAGE:
@@ -55,7 +53,6 @@ const auth = (state = initState, action) => {
         redirect: "/auth/login",
         loading: false,
         isAuth: false,
-        refreshToken: null,
       };
 
     case SIGNOUT_SUCCESS: {

@@ -2,7 +2,12 @@ import React from "react";
 import UserList from "../company/CompanyList";
 
 const Users = () => {
-  return <UserList />;
+  /* Get the hand gesture svg and animate it through css */
+  return (
+    <>
+      <UserList />
+    </>
+  );
 };
 
 export default Users;
