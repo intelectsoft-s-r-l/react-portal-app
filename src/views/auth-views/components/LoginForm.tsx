@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Button, Form, Input, Divider, Alert } from "antd";
+import { Button, Form, Input, Divider, Alert, Modal } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { GoogleSVG, FacebookSVG } from "../../../assets/svg/icon";
 import CustomIcon from "../../../components/util-components/CustomIcon";
@@ -12,7 +12,7 @@ import {
   authenticated,
   authorizeUser,
 } from "../../../redux/actions/Auth";
-import { updateSettings } from "../../../redux/actions/Account";
+import { updateSettings, getProfileInfo } from "../../../redux/actions/Account";
 import { motion } from "framer-motion";
 import { NavLink, useHistory } from "react-router-dom";
 import { hideLoading } from "../../../redux/actions/Auth";
@@ -44,9 +44,9 @@ const LoginForm = ({
   phoneNumber,
   updateSettings,
   authorizeUser,
+  getProfileInfo,
 }) => {
   const history = useHistory();
-
   const onLogin = ({ email, password }) => {
     const onLoginSettingsObject = {
       Email: email,
@@ -54,9 +54,10 @@ const LoginForm = ({
     };
     showLoading();
     setTimeout(() => {
-      authorizeUser(
-        onLoginSettingsObject,
-      );
+      /* The function below returns a promise.
+        I should probably reconsider the way I handle the "sendActivationCode" function,
+        maybe chain it after the "authorizerUser" function ???  */
+      authorizeUser(onLoginSettingsObject);
     }, 1000);
   };
   const onGoogleLogin = () => {
@@ -195,7 +196,15 @@ LoginForm.defaultProps = {
 };
 
 const mapStateToProps = ({ auth, account }) => {
-  const { loading, message, showMessage, token, redirect } = auth;
+  const {
+    loading,
+    message,
+    showMessage,
+    token,
+    redirect,
+    userActivated,
+    activationToken,
+  } = auth;
   // const { avatar, name, userName, email, dateOfBirth, phoneNumber } = account;
   return {
     loading,
@@ -203,6 +212,7 @@ const mapStateToProps = ({ auth, account }) => {
     showMessage,
     token,
     redirect,
+    userActivated,
     // avatar,
     // name,
     // userName,
@@ -220,6 +230,7 @@ const mapDispatchToProps = {
   updateSettings,
   authorizeUser,
   hideLoading,
+  getProfileInfo,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

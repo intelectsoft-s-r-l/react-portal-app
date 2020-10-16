@@ -14,30 +14,43 @@ import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import Flex from "../../../components/shared-components/Flex";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import { updateSettings, removeAvatar } from "../../../redux/actions/Account";
+import {
+  updateSettings,
+  removeAvatar,
+  setProfileInfo,
+} from "../../../redux/actions/Account";
 import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
+import axios from "axios";
+import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 
 interface EditProfileProps {
-  name: string,
-  email: string,
-  userName: string,
-  phoneNumber: string,
-  avatar: any,
-  updateSettings: any,
-  removeAvatar: any,
-  locale: string,
+  CompanyID: number;
+  Email: string;
+  FirstName: string;
+  ID: number;
+  LastName: string;
+  Password: string;
+  PhoneNumber: string;
+  Photo: any;
+  Token: string;
+  UiLanguage: number;
+  locale: string;
+  account: {};
+  token: string;
+  updateSettings: any;
+  setProfileInfo: any;
 }
 
 function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
+    message.error("You can only upload JPG/PNG file!");
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
+    message.error("Image must smaller than 2MB!");
   }
   return isJpgOrPng && isLt2M;
 }
@@ -66,28 +79,23 @@ class EditProfile extends Component<EditProfileProps> {
 
   render() {
     let {
-      name,
-      email,
-      userName,
-      phoneNumber,
-      avatar,
-      updateSettings,
-      removeAvatar,
+      account,
+      CompanyID,
+      Email,
+      FirstName,
+      ID,
+      LastName,
+      PhoneNumber,
+      Photo,
       locale,
+      updateSettings,
+      setProfileInfo,
+      token,
     } = this.props;
 
     const currentAppLocale = AppLocale[locale];
 
     const onFinish = (values) => {
-      // const obj = {
-      //   name: "Vlad",
-      //   email: "vlad@ad.com"
-      // }
-      //
-      // for (let prop in obj) {
-      //   localStorage.setItem("asd", JSON.stringify(prop));
-      // }
-
       const key = "updatable";
       message.loading({
         content: (
@@ -101,10 +109,8 @@ class EditProfile extends Component<EditProfileProps> {
         key,
       });
       setTimeout(() => {
-        updateSettings(values);
-        // Object.keys(values).forEach((key) => {
-        //   Utils.addToLocalStorageObject("user", key, values[key]);
-        // });
+        // console.log({ Token: token, User: { ...account, ...values } });
+        setProfileInfo({ Token: token, User: { ...account, ...values } });
         message.success({
           content: (
             <IntlProvider
@@ -143,11 +149,10 @@ class EditProfile extends Component<EditProfileProps> {
       }
       if (info.file.status === "done") {
         this.getBase64(info.file.originFileObj, (imageUrl) => {
-          const newObj = {
-            avatar: imageUrl,
-          };
-          updateSettings(newObj);
-
+          setProfileInfo({
+            Token: token,
+            User: { ...account, Photo: imageUrl },
+          });
         });
         message.success({
           content: (
@@ -178,8 +183,10 @@ class EditProfile extends Component<EditProfileProps> {
     };
 
     const onRemoveAvater = () => {
-      removeAvatar();
-      // Utils.addToLocalStorageObject("user", "avatar", "");
+      setProfileInfo({
+        Token: token,
+        User: { ...account, Photo: "" },
+      });
     };
 
     return (
@@ -189,7 +196,7 @@ class EditProfile extends Component<EditProfileProps> {
           mobileFlex={false}
           className="text-center text-md-left"
         >
-          <Avatar size={90} src={avatar} icon={<UserOutlined />} />
+          <Avatar size={90} src={Photo} icon={<UserOutlined />} />
           <div className="ml-md-3 mt-md-0 mt-3">
             <Upload
               onChange={onUploadAavater}
@@ -211,15 +218,13 @@ class EditProfile extends Component<EditProfileProps> {
             name="basicInformation"
             layout="vertical"
             initialValues={{
-              name: name,
-              email: email,
-              userName: userName,
-              dateOfBirth: "",
-              phoneNumber: phoneNumber,
-              // website: website,
-              // address: address,
-              // city: city,
-              // postcode: postcode,
+              CompanyID,
+              Email,
+              FirstName,
+              ID,
+              LastName,
+              PhoneNumber,
+              Photo,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -229,12 +234,14 @@ class EditProfile extends Component<EditProfileProps> {
                 <Row gutter={ROW_GUTTER}>
                   <Col xs={24} sm={24} md={12}>
                     <Form.Item
-                      label={<IntlMessage id={"account.EditProfile.Name"} />}
-                      name="name"
+                      label={
+                        <IntlMessage id={"account.EditProfile.FirstName"} />
+                      }
+                      name="FirstName"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your name!",
+                          message: "Please input your first name!",
                         },
                       ]}
                     >
@@ -244,13 +251,13 @@ class EditProfile extends Component<EditProfileProps> {
                   <Col xs={24} sm={24} md={12}>
                     <Form.Item
                       label={
-                        <IntlMessage id={"account.EditProfile.UserName"} />
+                        <IntlMessage id={"account.EditProfile.LastName"} />
                       }
-                      name="userName"
+                      name="LastName"
                       rules={[
                         {
                           required: true,
-                          message: "Please input your username!",
+                          message: "Please input your last name!",
                         },
                       ]}
                     >
@@ -260,7 +267,7 @@ class EditProfile extends Component<EditProfileProps> {
                   <Col xs={24} sm={24} md={12}>
                     <Form.Item
                       label={<IntlMessage id={"account.EditProfile.Email"} />}
-                      name="email"
+                      name="Email"
                       rules={[
                         {
                           required: true,
@@ -272,7 +279,7 @@ class EditProfile extends Component<EditProfileProps> {
                       <Input />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={24} md={12}>
+                  {/* <Col xs={24} sm={24} md={12}>
                     <Form.Item
                       label={
                         <IntlMessage id={"account.EditProfile.DateOfBirth"} />
@@ -281,47 +288,13 @@ class EditProfile extends Component<EditProfileProps> {
                     >
                       <DatePicker className="w-100" />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                   <Col xs={24} sm={24} md={12}>
                     <Form.Item
                       label={
                         <IntlMessage id={"account.EditProfile.PhoneNumber"} />
                       }
-                      name="phoneNumber"
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <Form.Item
-                      label={<IntlMessage id={"account.EditProfile.Website"} />}
-                      name="website"
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24}>
-                    <Form.Item
-                      label={<IntlMessage id={"account.EditProfile.Address"} />}
-                      name="address"
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <Form.Item
-                      label={<IntlMessage id={"account.EditProfile.City"} />}
-                      name="city"
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={12}>
-                    <Form.Item
-                      label={
-                        <IntlMessage id={"account.EditProfile.PostCode"} />
-                      }
-                      name="postcode"
+                      name="PhoneNumber"
                     >
                       <Input />
                     </Form.Item>
@@ -342,12 +315,33 @@ class EditProfile extends Component<EditProfileProps> {
 const mapDispatchToProps = {
   updateSettings,
   removeAvatar,
+  setProfileInfo,
 };
 
-const mapStateToProps = ({ account, theme }) => {
-  const { name, userName, avatar, dateOfBirth, email, phoneNumber } = account;
+const mapStateToProps = ({ account, theme, auth }) => {
+  const {
+    CompanyID,
+    Email,
+    FirstName,
+    ID,
+    LastName,
+    PhoneNumber,
+    Photo,
+  } = account;
   const { locale } = theme;
-  return { name, userName, avatar, dateOfBirth, email, phoneNumber, locale };
+  const { token } = auth;
+  return {
+    account,
+    CompanyID,
+    Email,
+    FirstName,
+    ID,
+    LastName,
+    PhoneNumber,
+    Photo,
+    locale,
+    token,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

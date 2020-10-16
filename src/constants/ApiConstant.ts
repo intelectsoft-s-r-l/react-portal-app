@@ -1,4 +1,6 @@
 export const API_IS_AUTH_SERVICE = "https://dev.edi.md/ISAuthService/json";
+export const API_IS_CLIENT_SERVICE =
+  "https://dev.edi.md/ISClientWebAppService/json";
 // https://api.edi.md/ISAuthService/json PRODUCTION
 // https://dev.edi.md/ISAuthService DEVELOPMENT
 
@@ -25,7 +27,7 @@ export const API_REGISTER_USER =
 export const API_RESET_PASSWORD =
   "https://api.edi.md/ISAuthService/json/ResetPasword"; // POST Email
 export const API_SENT_ACTIVATE_CODE =
-  "https://api.edi.md/ISAuthService/json/SentActivateCode?"; // Token={TOKEN}
+  "https://api.edi.md/ISAuthService/json/SentActivateCode?"; // Token={TOKEN} optional: UserID={USERID}
 export const API_UPDATE_COMPANY =
   "https://api.edi.md/ISAuthService/json/UpdateCompany"; // POST Company: {...}, Token: String
 export const API_UPDATE_USER =

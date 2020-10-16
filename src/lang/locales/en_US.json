@@ -87,8 +87,8 @@
 	"account.sidenav.Billing": "Billing",
 	"account.sidenav.Notification": "Notification",
 
-	"account.EditProfile.Name": "Name",
-	"account.EditProfile.UserName": "Username",
+	"account.EditProfile.FirstName": "First Name",
+	"account.EditProfile.LastName": "Last Name",
 	"account.EditProfile.Email": "Email",
 	"account.EditProfile.DateOfBirth": "Date of birth",
 	"account.EditProfile.PhoneNumber": "Phone Number",
@@ -100,6 +100,22 @@
 	"account.EditProfile.ChangeAvatar": "Change Avatar",
 	"account.EditProfile.Remove": "Remove",
 
+
+  "account.company.BIC": "BIC",
+  "account.company.Bank": "Bank",
+  "account.company.CommercialName": "Commercial Name",
+  "account.company.IBAN": "IBAN",
+  "account.company.IDNO": "IDNO",
+  "account.company.JuridicalAddress": "Juridical Address",
+  "account.company.JuridicalName": "Juridical Name",
+  "account.company.Logo": "Logo",
+  "account.company.OfficeAddress": "Office Address",
+  "account.company.VATCode": "VAT Code",
+  "account.company.Email": "Email",
+  "account.company.IsVATPayer": "VAT Payer",
+  "account.company.PhoneNumber": "Phone Number",
+  "account.company.PostalCode": "Postal Code",
+  "account.company.WebSite": "Website",
 
 	"account.ChangePassword.CurrentPassword": "Current Password",
 	"account.ChangePassword.Title": "Change Password",

@@ -11,6 +11,7 @@ import {
   SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
   HIDE_LOADING,
   VALIDATE_USER,
+  IS_USER_ACTIVATED,
 } from "../constants/Auth";
 
 const initState = {
@@ -20,6 +21,8 @@ const initState = {
   redirect: "",
   token: "",
   isAuth: false,
+  userActivated: false,
+  activationToken: "",
 };
 
 const auth = (state = initState, action) => {
@@ -95,6 +98,12 @@ const auth = (state = initState, action) => {
         token: action.token,
       };
     }
+    case IS_USER_ACTIVATED:
+      return {
+        ...state,
+        userActivated: action.userActivated,
+        activationToken: action.activationToken,
+      };
     default:
       return state;
   }

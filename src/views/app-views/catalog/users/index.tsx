@@ -1,5 +1,5 @@
 import React from "react";
-import UserList from "../company/CompanyList";
+import UserList from "../company/CompanyForm";
 
 const Users = () => {
   /* Get the hand gesture svg and animate it through css */

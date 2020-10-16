@@ -17,7 +17,10 @@ import {
   VALIDATE_USER,
 } from "../constants/Auth";
 import axios from "axios";
-import { message } from "antd";
+import { message, Modal } from "antd";
+import { IS_USER_ACTIVATED } from "../constants/Auth";
+import { getProfileInfo } from "./Account";
+const publicIp = require("react-public-ip");
 
 export const signIn = (user) => ({
   type: SIGNIN,
@@ -26,7 +29,7 @@ export const signIn = (user) => ({
 
 export const authenticated = (token) => ({
   type: AUTHENTICATED,
-  token
+  token,
 });
 
 export const signOut = () => ({
@@ -80,36 +83,96 @@ export const showLoading = () => ({
 export const hideLoading = () => ({
   type: HIDE_LOADING,
 });
+export const isUserActivated = (boolean, Token) => ({
+  type: IS_USER_ACTIVATED,
+  userActivated: boolean,
+  activationToken: Token,
+});
+
+export const sendActivationCode = (Token) => {
+  return async (dispatch) => {
+    Modal.confirm({
+      title: "Confirm registration",
+      content: `Your account is not activated. Press the OK button down below if you
+      want us to sent you a new confirmation message`,
+      onOk() {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(
+              axios
+                .get(`${API_IS_AUTH_SERVICE}/SendActivationCode`, {
+                  params: {
+                    Token,
+                  },
+                })
+                .then((res) => {
+                  console.log(res.data);
+                  if (res.data.ErrorCode === 0) {
+                    message.success("New email message was sent!");
+                  } else {
+                    dispatch(showAuthMessage(res.data.ErrorMessage));
+                  }
+                })
+            );
+          }, 2000);
+        });
+      },
+      onCancel() {},
+    });
+  };
+};
 
 export const authorizeUser = (userData) => {
-  return (dispatch) => {
+  return async (dispatch) => {
+    dispatch(hideLoading());
     axios
-      .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, userData)
+      .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, {
+        ...userData,
+        info: (await publicIp.v4()) || "",
+      })
       .then((response) => {
         console.log(response.data);
         const { ErrorCode, ErrorMessage, Token } = response.data;
-        dispatch(hideLoading());
         if (ErrorCode === 0) {
           dispatch(authenticated(Token));
+          dispatch(getProfileInfo(Token));
         } else if (ErrorCode === 102) {
           dispatch(showAuthMessage(ErrorMessage));
         } else if (ErrorCode === 108) {
-          /* Tell user that his account is not activated, and ask him to go to his email in order to confirm the registration. */
-          dispatch(showAuthMessage(ErrorMessage));
-          // message.loading("You'll be redirected in a few seconds...", 1.5);
-          // setTimeout(() => {
-          //   history.push("/auth/error");
-          // }, 1500);
+          dispatch(sendActivationCode(Token));
+          /* Tell user that his account is not activated, and ask him if he wants a new email code. If yes - send the code, if not, cancel. */
         }
       })
       .catch((e) => dispatch(hideLoading()));
   };
 };
 
-export const registerCompany = (companyData: {[key: string]: any}, history) => {
-  return (dispatch) => {
+export const resetPassword = async (email) => {
+  axios
+    .post(`${API_IS_AUTH_SERVICE}/ResetPassword`, {
+      Email: email,
+      info: (await publicIp.v4()) || "",
+    })
+    .then((response) => {
+      console.log(response.data);
+      if (response.data["ErrorCode"] === 0) {
+        /* Use response.data['ErrorMessage'] when the API will be able to handle error messages correctly  */
+        message.success("New password has been sent to your email!");
+      } else {
+        message.error(response.data["ErrorMessage"]);
+      }
+    });
+};
+
+export const registerCompany = (
+  companyData: { [key: string]: any },
+  history
+) => {
+  return async (dispatch) => {
     axios
-      .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, companyData)
+      .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, {
+        ...companyData,
+      })
       .then((res) => {
         const { ErrorCode, ErrorMessage } = res.data;
         dispatch(hideLoading());
@@ -124,7 +187,7 @@ export const registerCompany = (companyData: {[key: string]: any}, history) => {
           message.error(ErrorMessage, 5);
         }
       })
-      .catch((e) => dispatch(hideLoading()));
+      .catch(() => dispatch(hideLoading()));
   };
 };
 

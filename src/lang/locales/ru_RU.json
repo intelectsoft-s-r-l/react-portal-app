@@ -90,8 +90,8 @@
   "account.sidenav.Billing": "Оплата",
   "account.sidenav.Notification": "Уведомления",
 
-  "account.EditProfile.Name": "Имя",
-  "account.EditProfile.UserName": "Имя пользователя",
+  "account.EditProfile.FirstName": "Имя",
+	"account.EditProfile.LastName": "Фамилия",
   "account.EditProfile.Email": "Электронная почта",
   "account.EditProfile.DateOfBirth": "Дата рождения",
   "account.EditProfile.PhoneNumber": "Номер телефона",
