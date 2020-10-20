@@ -53,6 +53,8 @@
 
 
 
+  
+
 
 
   "sidenav.audit": "Audit",
@@ -96,6 +98,23 @@
   "account.EditProfile.SaveChange": "Salvează",
   "account.EditProfile.ChangeAvatar": "Schimbă avatar",
   "account.EditProfile.Remove": "Elimină",
+
+
+  "account.company.BIC": "BIC",
+  "account.company.Bank": "Banca",
+  "account.company.CommercialName": "Denumire comercială",
+  "account.company.IBAN": "IBAN",
+  "account.company.IDNO": "IDNO",
+  "account.company.JuridicalAddress": "Adresa juridică",
+  "account.company.JuridicalName": "Denumire juridică",
+  "account.company.Logo": "Logo",
+  "account.company.OfficeAddress": "Adresa fizică",
+  "account.company.VATCode": "Cod TVA",
+  "account.company.Email": "Email",
+  "account.company.IsVATPayer": "Plătitor TVA",
+  "account.company.PhoneNumber": "Telefon",
+  "account.company.PostalCode": "Cod poștal",
+  "account.company.WebSite": "Site Web",
 
 
   "account.ChangePassword.CurrentPassword": "Parola curentă",

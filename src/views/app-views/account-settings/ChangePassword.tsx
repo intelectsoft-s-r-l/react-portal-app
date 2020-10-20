@@ -82,8 +82,10 @@ export class ChangePassword extends Component {
                     message: "Please enter your new password!",
                   },
                   {
-                    min: 8,
-                    message: "Please enter at least 8 characters!",
+                    required: true,
+                    pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+,.\\\/;':"-]).{8,}$/,
+                    message:
+                      "Password should contain at least 8 characters, 1 capital letter and 1 special symbol!",
                   },
                 ]}
               >
@@ -116,7 +118,8 @@ export class ChangePassword extends Component {
                 htmlType="submit"
                 loading={this.state.loading}
               >
-                {" "}{this.state.loading ? (
+                {" "}
+                {this.state.loading ? (
                   <IntlMessage
                     id={"account.ChangePassword.ChangePasswordProcess"}
                   />

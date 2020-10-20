@@ -23,7 +23,7 @@ const initState = {
   isAuth: false,
   userActivated: false,
   activationToken: "",
-};
+} as { [key: string]: any };
 
 const auth = (state = initState, action) => {
   switch (action.type) {

@@ -20,6 +20,7 @@ import axios from "axios";
 import { message, Modal } from "antd";
 import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
+import { onLocaleChange } from "./Theme";
 const publicIp = require("react-public-ip");
 
 export const signIn = (user) => ({
@@ -123,14 +124,14 @@ export const sendActivationCode = (Token) => {
 };
 
 export const authorizeUser = (userData) => {
-  return async (dispatch) => {
-    dispatch(hideLoading());
+  return async (dispatch, getState) => {
     axios
       .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, {
         ...userData,
         info: (await publicIp.v4()) || "",
       })
       .then((response) => {
+        dispatch(hideLoading());
         console.log(response.data);
         const { ErrorCode, ErrorMessage, Token } = response.data;
         if (ErrorCode === 0) {

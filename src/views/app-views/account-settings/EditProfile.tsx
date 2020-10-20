@@ -24,6 +24,7 @@ import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
 import axios from "axios";
 import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
+const publicIp = require("react-public-ip");
 
 interface EditProfileProps {
   CompanyID: number;
@@ -108,9 +109,15 @@ class EditProfile extends Component<EditProfileProps> {
         ),
         key,
       });
-      setTimeout(() => {
+      setTimeout(async () => {
         // console.log({ Token: token, User: { ...account, ...values } });
-        setProfileInfo({ Token: token, User: { ...account, ...values } });
+        setProfileInfo({
+          Token: token,
+          User: {
+            ...account,
+            ...values,
+          },
+        });
         message.success({
           content: (
             <IntlProvider

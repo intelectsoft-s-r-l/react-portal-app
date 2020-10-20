@@ -128,6 +128,24 @@
   "account.Billing.Modal.CVVCode": "Код CVV",
   "account.Billing.Modal.SaveCard": "Сохранить карту",
 
+
+  "account.company.BIC": "BIC",
+  "account.company.Bank": "Банк",
+  "account.company.CommercialName": "Коммерческое название",
+  "account.company.IBAN": "IBAN",
+  "account.company.IDNO": "IDNO",
+  "account.company.JuridicalAddress": "Юридический адрес",
+  "account.company.JuridicalName": "Юридическое название",
+  "account.company.Logo": "Logo",
+  "account.company.OfficeAddress": "Физический адрес",
+  "account.company.VATCode": "Код НДС",
+  "account.company.Email": "Почта",
+  "account.company.IsVATPayer": "Плательщик НДС",
+  "account.company.PhoneNumber": "Телефон",
+  "account.company.PostalCode": "Почтовый индекс",
+  "account.company.WebSite": "Веб-сайт",
+
+
   "theme.Title": "Тема",
   "theme.Navigation": "Навигация",
   "theme.HeaderNavColor": "Цвет заголовка навигации",

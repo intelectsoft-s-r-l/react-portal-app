@@ -1,0 +1,10 @@
+.add_user {
+  font-size: 36px;
+  position: "fixed";
+  bottom: "10px";
+  left: "10px";
+
+  &:hover {
+    cursor: pointer;
+  }
+}

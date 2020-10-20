@@ -26,7 +26,7 @@ const Success = () => {
             <h1 className="font-weight-bold mb-4">
               <IntlMessage id={"auth.validate.Success"} />
             </h1>
-            <Link to="/app">
+            <Link to="/auth">
               <Button type="primary">
                 <IntlMessage id={"auth.GoBack"} />
               </Button>

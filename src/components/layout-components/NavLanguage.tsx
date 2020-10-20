@@ -1,16 +1,18 @@
 import React from "react";
 import { CheckOutlined, GlobalOutlined, DownOutlined } from "@ant-design/icons";
 import { Menu, Dropdown } from "antd";
-import {connect } from "react-redux";
+import { connect } from "react-redux";
 import { lang } from "../../assets/data/language.data.json";
 import { onLocaleChange } from "../../redux/actions/Theme";
-
-
+import { setProfileInfo } from "../../redux/actions/Account";
 interface NavLanguageProps {
   locale?: string;
   configDisplay?: any;
   onLocaleChange?: any;
   triggerType: "click" | "hover";
+  setProfileInfo?: any;
+  account?: any;
+  token?: string;
 }
 
 function getLanguageDetail(locale) {
@@ -36,7 +38,15 @@ const SelectedLanguage = ({ locale }) => {
   );
 };
 
-const NavLanguage = ({ locale, configDisplay, onLocaleChange, triggerType }: NavLanguageProps) => {
+const NavLanguage = ({
+  locale,
+  configDisplay,
+  onLocaleChange,
+  triggerType,
+  setProfileInfo,
+  account,
+  token,
+}: NavLanguageProps) => {
   const languageOption = (
     <Menu>
       {lang.map((elm) => {
@@ -48,7 +58,14 @@ const NavLanguage = ({ locale, configDisplay, onLocaleChange, triggerType }: Nav
             }
             onClick={() => {
               onLocaleChange(elm["langId"]);
-              // localStorage.setItem("locale", JSON.stringify(elm['langId']));
+              setProfileInfo({
+                Token: token,
+                User: {
+                  ...account,
+                  UiLanguage:
+                    elm["langId"] === "ro" ? 0 : elm["langId"] === "ru" ? 1 : 2,
+                },
+              });
             }}
           >
             <div className="d-flex justify-content-between align-items-center">
@@ -78,9 +95,9 @@ const NavLanguage = ({ locale, configDisplay, onLocaleChange, triggerType }: Nav
           <SelectedLanguage locale={locale} />
         </a>
       ) : (
-        <Menu style={{border: 'none', }} >
+        <Menu style={{ border: "none" }}>
           <Menu.Item>
-            <GlobalOutlined className="nav-icon mr-0"/>
+            <GlobalOutlined className="nav-icon mr-0" />
           </Menu.Item>
         </Menu>
       )}
@@ -88,9 +105,14 @@ const NavLanguage = ({ locale, configDisplay, onLocaleChange, triggerType }: Nav
   );
 };
 
-const mapStateToProps = ({ theme }) => {
+const mapStateToProps = ({ theme, account, auth }) => {
   const { locale } = theme;
-  return { locale };
+  const { token } = auth;
+  return { locale, account, token };
+};
+const mapDispatchToProps = {
+  setProfileInfo,
+  onLocaleChange,
 };
 
-export default connect(mapStateToProps, { onLocaleChange })(NavLanguage);
+export default connect(mapStateToProps, mapDispatchToProps)(NavLanguage);

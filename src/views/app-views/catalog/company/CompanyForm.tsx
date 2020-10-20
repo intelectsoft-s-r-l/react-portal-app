@@ -61,11 +61,11 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         } else if (res.data.ErrorCode === 118) {
           message.loading(
             "Time has expired. Redirecting you to login page...",
-            1.5
+            2
           );
           setTimeout(() => {
-            signOut();
-          }, 1500);
+            this.props.signOut();
+          }, 2000);
         } else {
           message.error(ErrorMessage);
         }

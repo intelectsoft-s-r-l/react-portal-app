@@ -39,13 +39,15 @@ const menuItem = [
   },
 ];
 
-const NavProfile = ({ signOut, token, history, name, avatar, locale, isAuth }) => {
-  /* Check if the token in the redux store is null, if true log out the user */
-  useEffect(() => {
-    if (token === null || isAuth === false) {
-      history.push("/auth/login");
-    }
-  }, [token, isAuth]);
+const NavProfile = ({
+  signOut,
+  token,
+  history,
+  FirstName,
+  Photo,
+  locale,
+  isAuth,
+}) => {
   const currentAppLocale = AppLocale[locale];
   const { confirm } = Modal;
   const confirmLogout = () => {
@@ -72,9 +74,9 @@ const NavProfile = ({ signOut, token, history, name, avatar, locale, isAuth }) =
     <div className="nav-profile nav-dropdown">
       <div className="nav-profile-header">
         <div className="d-flex">
-          <Avatar size={45} src={avatar} icon={<UserOutlined />} />
+          <Avatar size={45} src={Photo} icon={<UserOutlined />} />
           <div className="pl-3">
-            <h4 className="mb-0">{name}</h4>
+            <h4 className="mb-0">{FirstName}</h4>
             <span className="text-muted">Frontend Developer</span>
           </div>
         </div>
@@ -107,7 +109,7 @@ const NavProfile = ({ signOut, token, history, name, avatar, locale, isAuth }) =
     <Dropdown placement="bottomRight" overlay={profileMenu} trigger={["click"]}>
       <Menu className="d-flex align-item-center" mode="horizontal">
         <Menu.Item>
-          <Avatar src={avatar} icon={<UserOutlined />} />
+          <Avatar src={Photo} icon={<UserOutlined />} />
         </Menu.Item>
       </Menu>
     </Dropdown>
@@ -117,11 +119,8 @@ const NavProfile = ({ signOut, token, history, name, avatar, locale, isAuth }) =
 const mapStateToProps = ({ auth, account, theme }) => {
   const { token, isAuth } = auth;
   const { locale } = theme;
-  const {
-    name,
-    avatar /* get the rest of the state and make the component dynamic */,
-  } = account;
-  return { token, name, avatar, locale, isAuth };
+  const { FirstName, Photo } = account;
+  return { token, FirstName, Photo, locale, isAuth };
 };
 
 export default connect(mapStateToProps, { signOut })(NavProfile);

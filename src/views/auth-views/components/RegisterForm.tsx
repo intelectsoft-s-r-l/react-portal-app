@@ -65,8 +65,10 @@ const rules = {
       message: <IntlMessage id={"auth.MessageInsertPassword"} />,
     },
     {
-      min: 8,
-      message: <IntlMessage id={"auth.MessageInsertValidPassword"} />,
+      required: true,
+      pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+,.\\\/;':"-]).{8,}$/,
+      message:
+        "Password should contain at least 8 characters, 1 capital letter, 1 special symbol!",
     },
   ],
   confirm: [
@@ -151,7 +153,11 @@ export const RegisterForm = (props) => {
         } as { [key: string]: any };
         showLoading();
         setTimeout(() => {
-          registerCompany(newCompanyData, history, <IntlMessage id={"auth.MessageRedirect"}/>);
+          registerCompany(
+            newCompanyData,
+            history,
+            <IntlMessage id={"auth.MessageRedirect"} />
+          );
         }, 1500);
       })
       .catch((info) => {
@@ -189,7 +195,6 @@ export const RegisterForm = (props) => {
         name="register-form"
         onFinish={onSignUp}
       >
-
         <Form.Item
           name="JuridicalName"
           label={<IntlMessage id={"auth.JuridicalName"} />}
@@ -198,7 +203,12 @@ export const RegisterForm = (props) => {
         >
           <Input prefix={<MailOutlined className={"text-primary"} />} />
         </Form.Item>
-        <Form.Item name="IDNO" label={<IntlMessage id={"auth.IDNO"} />} rules={rules.IDNO} hasFeedback>
+        <Form.Item
+          name="IDNO"
+          label={<IntlMessage id={"auth.IDNO"} />}
+          rules={rules.IDNO}
+          hasFeedback
+        >
           <Input prefix={<MailOutlined className={"text-primary"} />} />
         </Form.Item>
 
@@ -207,8 +217,12 @@ export const RegisterForm = (props) => {
             defaultValue={false}
             onChange={() => setIsVATPayer(!isVATPayer)}
           >
-            <Radio.Button value={false}>{<IntlMessage id={"auth.NotVATPayer"} />}</Radio.Button>
-            <Radio.Button value={true}>{<IntlMessage id={"auth.VATPayer"} />}</Radio.Button>
+            <Radio.Button value={false}>
+              {<IntlMessage id={"auth.NotVATPayer"} />}
+            </Radio.Button>
+            <Radio.Button value={true}>
+              {<IntlMessage id={"auth.VATPayer"} />}
+            </Radio.Button>
           </Radio.Group>
         </Form.Item>
 
@@ -236,7 +250,12 @@ export const RegisterForm = (props) => {
             <Input prefix={<MailOutlined className={"text-primary"} />} />
           </Form.Item>
         </motion.div>
-        <Form.Item name="email" label={<IntlMessage id={"auth.Email"} />} rules={rules.email} hasFeedback>
+        <Form.Item
+          name="email"
+          label={<IntlMessage id={"auth.Email"} />}
+          rules={rules.email}
+          hasFeedback
+        >
           <Input prefix={<MailOutlined className={"text-primary"} />} />
         </Form.Item>
         <Form.Item
@@ -284,7 +303,8 @@ export const RegisterForm = (props) => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" block loading={loading}>
-            {" "}{<IntlMessage id={"auth.SignUp"} />}
+            {" "}
+            {<IntlMessage id={"auth.SignUp"} />}
           </Button>
         </Form.Item>
         <DocumentEvents onKeyDown={handleDocumentKeyDown} />
@@ -309,347 +329,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);
-
-{
-  /*
-<motion.div
-  initial={{ opacity: 0, marginBottom: 0 }}
-  animate={{
-    opacity: showMessage ? 1 : 0,
-    marginBottom: showMessage ? 20 : 0,
-  }}
->
-  <Alert type="error" showIcon message={message} />
-</motion.div>
-<Form
-form={form}
-layout="vertical"
-name="register-form"
-onFinish={onSignUp}
-  >
-  <Form.Item
-name="CommercialName"
-label="Commercial Name"
-rules={rules.CommercialName}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item
-name="JuridicalName"
-label="Juridical Name"
-rules={rules.JuridicalName}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item name="IDNO" label="IDNO" rules={rules.IDNO} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item
-name="JuridicalAddress"
-label="Juridical Address"
-rules={rules.JuridicalAddress}
-hasFeedback
->
-<Input prefix={<MailOutlined className="text-primary" />} />
-</Form.Item>
-<Form.Item
-name="OfficeAddress"
-label="Office Address"
-rules={rules.OfficeAddress}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item name="Bank" label="Bank" rules={rules.Bank} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item name="IBAN" label="IBAN" rules={rules.IBAN} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item name="BIC" label="BIC" rules={rules.BIC} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item>
-<Radio.Group
-defaultValue={false}
-onChange={() => setIsVATPayer(!isVATPayer)}
->
-<Radio.Button value={false}>Not a VAT Payer</Radio.Button>
-<Radio.Button value={true}>VAT Payer</Radio.Button>
-</Radio.Group>
-</Form.Item>
-
-<motion.div initial={{
-display: "none",
-opacity: 0,
-}} animate={{
-display: isVATPayer ? "block" : "none",
-opacity: isVATPayer ? 1 : 0
-}}>
-<Form.Item
-name="VATCode"
-label="VAT Code"
-rules={[{
-required: isVATPayer,
-message: "Please insert your VAT Code"
-}
-
-]}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</motion.div>
-
-<Form.Item name="email" label="Email" rules={rules.email} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-<Form.Item
-name="password"
-label="Password"
-rules={rules.password}
-hasFeedback
->
-<Input.Password
-{...{
-mode: "multiple",
-prefix: [
-<LockOutlined className={"text-primary"} />,
-isCapsLock && (
-<Tooltip title={"CapsLock is on"}>
-<WarningOutlined className={"text-danger ml-1"} />
-</Tooltip>
-),
-],
-type: "password",
-onKeyPress: handlePasswordKeyPress,
-}}
-/>
-</Form.Item>
-<Form.Item
-name="confirm"
-label="Confirm Password"
-rules={rules.confirm}
-hasFeedback
->
-<Input
-{...{
-prefix: [
-<LockOutlined className={"text-primary"} />,
-isCapsLock && (
-<Tooltip title={"CapsLock is on"}>
-<WarningOutlined className={"text-danger ml-1"} />
-</Tooltip>
-),
-],
-type: "password",
-onKeyPress: handlePasswordKeyPress,
-}}
-/>
-</Form.Item>
-<Form.Item>
-<Button type="primary" htmlType="submit" block loading={loading}>
-Sign Up
-</Button>
-</Form.Item>
-<DocumentEvents onKeyDown={handleDocumentKeyDown} />
-</Form>*/
-}
-
-/* 2 COLUMNS LAYOUT */
-
-{
-  /*
-<motion.div
-  initial={{ opacity: 0, marginBottom: 0 }}
-  animate={{
-    opacity: showMessage ? 1 : 0,
-    marginBottom: showMessage ? 20 : 0,
-  }}
->
-  <Alert type="error" showIcon message={message} />
-</motion.div>
-<Form
-form={form}
-layout="vertical"
-name="register-form"
-onFinish={onSignUp}
-  >
-  <Row gutter={40}>
-  <Col xs={24} sm={24} md={50} lg={50} xl={12}>
-  <Form.Item
-name="CommercialName"
-label="Commercial Name"
-rules={rules.CommercialName}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item
-name="JuridicalName"
-label="Juridical Name"
-rules={rules.JuridicalName}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-</Row>
-<Row gutter={40}>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item name="IDNO" label="IDNO" rules={rules.IDNO} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item
-name="JuridicalAddress"
-label="Juridical Address"
-rules={rules.JuridicalAddress}
-hasFeedback
->
-<Input prefix={<MailOutlined className="text-primary" />} />
-</Form.Item>
-</Col>
-</Row>
-<Row gutter={40}>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item
-name="OfficeAddress"
-label="Office Address"
-rules={rules.OfficeAddress}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item name="Bank" label="Bank" rules={rules.Bank} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-</Row>
-<Row gutter={40}>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item name="IBAN" label="IBAN" rules={rules.IBAN} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item name="BIC" label="BIC" rules={rules.BIC} hasFeedback>
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-</Row>
-<Row gutter={40}>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item
-name="email"
-label="Email"
-rules={rules.email}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</Col>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item>
-<Radio.Group
-defaultValue={false}
-onChange={() => setIsVATPayer(!isVATPayer)}
->
-<Radio.Button value={false}>Not a VAT Payer</Radio.Button>
-<Radio.Button value={true}>VAT Payer</Radio.Button>
-</Radio.Group>
-</Form.Item>
-</Col>
-</Row>
-<Row gutter={40}>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item
-name="password"
-label="Password"
-rules={rules.password}
-hasFeedback
->
-<Input.Password
-{...{
-mode: "multiple",
-prefix: [
-<LockOutlined className={"text-primary"} />,
-isCapsLock && (
-<Tooltip title={"CapsLock is on"}>
-<WarningOutlined className={"text-danger ml-1"} />
-</Tooltip>
-),
-],
-type: "password",
-onKeyPress: handlePasswordKeyPress,
-}}
-/>
-</Form.Item>
-</Col>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<motion.div
-initial={{
-display: "none",
-opacity: 0,
-}}
-animate={{
-display: isVATPayer ? "block" : "none",
-opacity: isVATPayer ? 1 : 0,
-}}
->
-<Form.Item
-name="VATCode"
-label="VAT Code"
-rules={[
-{
-required: isVATPayer,
-message: "Please insert your VAT Code",
-},
-]}
-hasFeedback
->
-<Input prefix={<MailOutlined className={"text-primary"} />} />
-</Form.Item>
-</motion.div>
-</Col>
-</Row>
-<Row gutter={40}>
-<Col xs={24} sm={24} md={50} lg={50} xl={12}>
-<Form.Item
-name="confirm"
-label="Confirm Password"
-rules={rules.confirm}
-hasFeedback
->
-<Input
-{...{
-prefix: [
-<LockOutlined className={"text-primary"} />,
-isCapsLock && (
-<Tooltip title={"CapsLock is on"}>
-<WarningOutlined className={"text-danger ml-1"} />
-</Tooltip>
-),
-],
-type: "password",
-onKeyPress: handlePasswordKeyPress,
-}}
-/>
-</Form.Item>
-</Col>
-</Row>
-<Form.Item>
-<Button type="primary" htmlType="submit" block loading={loading}>
-Sign Up
-</Button>
-</Form.Item>
-<DocumentEvents onKeyDown={handleDocumentKeyDown} />
-</Form>*/
-}

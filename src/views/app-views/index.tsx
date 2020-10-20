@@ -1,9 +1,17 @@
 import React, { lazy, Suspense, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Loading from "../../components/shared-components/Loading";
 
 export const AppViews = ({ match, history }) => {
-
+  /* Check if the token in the redux store is null, if true log out the user */
+  const token = useSelector((state) => state["auth"].token);
+  const isAuth = useSelector((state) => state["auth"].isAuth);
+  useEffect(() => {
+    if (token === null || isAuth === false) {
+      history.push("/auth/login");
+    }
+  }, [token, isAuth]);
   return (
     <Suspense fallback={<Loading cover="content" />}>
       <Switch>
