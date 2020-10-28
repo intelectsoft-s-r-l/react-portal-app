@@ -12,9 +12,10 @@ import {
   GlobalOutlined,
   ApartmentOutlined,
 } from "@ant-design/icons";
+import { UsersProps } from "./UserList";
 
 interface UserViewProps {
-  data: any;
+  data: UsersProps;
   visible: boolean;
   close: any;
 }
@@ -31,7 +32,11 @@ export class UserView extends Component<UserViewProps> {
         visible={visible}
       >
         <div className="text-center mt-3">
-          <Avatar size={80} src={process.env.PUBLIC_URL + data?.Photo} />
+          <Avatar
+            size={80}
+            src={data?.Photo}
+            icon={<UserOutlined />}
+          />
           <h3 className="mt-2 mb-0">
             {data?.FirstName && data?.LastName
               ? data?.FirstName + " " + data?.LastName

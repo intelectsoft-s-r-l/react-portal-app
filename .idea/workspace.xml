@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="bcd00017-c4bf-44d3-a15f-685b1ebb0d61" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/app-views/account-settings/EditProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/account-settings/EditProfile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/account-settings/Notification.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/account-settings/Notification.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserModalEdit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserModalEdit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/users/UserView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/catalog/users/add_user.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/catalog/users/add_user.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/app-views/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/app-views/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/auth-views/components/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/auth-views/components/LoginForm.tsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +33,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="add_unversioned_files" value="$PROJECT_DIR$/node_modules/rc-field-form/lib/interface.d.ts" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../react-redux-course-vladilen" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../admin_app_ts" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -37,7 +42,7 @@
     <property name="node.js.selected.package.standard" value="$USER_HOME$/AppData/Roaming/npm/node_modules/standard" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\natha\AppData\Roaming\npm\node_modules\prettier" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Font" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
     <property name="ts.external.directory.path" value="C:\Users\natha\projects\client_app_ts\node_modules\typescript\lib" />
   </component>
   <component name="RecentsManager">
@@ -99,6 +104,7 @@
       <workItem from="1602569025674" duration="55000" />
       <workItem from="1602575936028" duration="939000" />
       <workItem from="1602576941524" duration="109000" />
+      <workItem from="1603280363739" duration="637000" />
     </task>
     <servers />
   </component>

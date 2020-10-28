@@ -1,2 +1,3 @@
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+export const CLEAR_INFO = "CLEAR_INFO";
 export const REMOVE_AVATAR = "REMOVE_AVATAR";
