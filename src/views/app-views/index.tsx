@@ -2,63 +2,59 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Loading from "../../components/shared-components/Loading";
+import { APP_PREFIX_PATH } from "../../configs/AppConfig";
 
-export const AppViews = ({ match, history }) => {
-    /* Check if the token in the redux store is null, if true log out the user */
-    const token = useSelector((state) => state["auth"].token);
-    const isAuth = useSelector((state) => state["auth"].isAuth);
-    useEffect(() => {
-        if (token === null || isAuth === false) {
-            history.push("/auth/login");
-        }
-    }, [token, isAuth]);
+export const AppViews = () => {
     return (
         <Suspense fallback={<Loading cover="content" />}>
             <Switch>
                 <Route
-                    path={`${match.url}/dashboard`}
+                    path={`${APP_PREFIX_PATH}/dashboard`}
                     component={lazy(() => import(`./dashboard`))}
                 />
                 <Route
-                    path={`${match.url}/catalog/company`}
+                    path={`${APP_PREFIX_PATH}/catalog/company`}
                     component={lazy(() => import(`./catalog/company`))}
                 />
                 <Route
-                    path={`${match.url}/catalog/users`}
+                    path={`${APP_PREFIX_PATH}/catalog/users`}
                     component={lazy(() => import(`./catalog/users/UserList`))}
                 />
                 <Route
-                    path={`${match.url}/catalog/group`}
+                    path={`${APP_PREFIX_PATH}/catalog/group`}
                     component={lazy(() => import(`./catalog/group`))}
                 />
                 <Route
-                    path={`${match.url}/security/history`}
+                    path={`${APP_PREFIX_PATH}/security/history`}
                     component={lazy(() => import(`./security/history`))}
                 />
                 <Route
-                    path={`${match.url}/security/rules`}
+                    path={`${APP_PREFIX_PATH}/security/rules`}
                     component={lazy(() => import(`./security/rules`))}
                 />
                 <Route
-                    path={`${match.url}/audit`}
+                    path={`${APP_PREFIX_PATH}/audit`}
                     component={lazy(() => import(`./audit/all`))}
                 />
                 <Route
-                    path={`${match.url}/audit/login-history`}
+                    path={`${APP_PREFIX_PATH}/audit/login-history`}
                     component={lazy(() => import(`./audit/login-history`))}
                 />
                 <Route
-                    path={`${match.url}/reports`}
+                    path={`${APP_PREFIX_PATH}/reports`}
                     component={lazy(() => import(`./reports`))}
                 />
                 <Route
-                    path={`${match.url}/account-settings`}
+                    path={`${APP_PREFIX_PATH}/account-settings`}
                     component={lazy(() => import(`./account-settings`))}
                 />
-                <Redirect from={`${match.url}`} to={`${match.url}/dashboard`} />
+                <Redirect
+                    from={`${APP_PREFIX_PATH}`}
+                    to={`${APP_PREFIX_PATH}/dashboard`}
+                />
             </Switch>
         </Suspense>
     );
 };
 
-export default AppViews;
+export default React.memo(AppViews);
