@@ -40,7 +40,9 @@
 
 	"sidenav.home": "Home",
 	"sidenav.dashboard": "Dashboard",
-
+    "sidenav.applications": "Applications",
+    "sidenav.my-applications": "My Applications",
+    "sidenav.market": "Market",
 	"sidenav.catalog": "Catalog",
 	"sidenav.catalog.company": "Company",
 	"sidenav.catalog.group": "Groups",
@@ -61,7 +63,8 @@
 	"sidenav.audit.loginHistory": "Login History",
 	"sidenav.audit.actions": "Actions",
 
-	"sidenav.reports": "Reports",
+    "sidenav.reports": "Reports",
+    "sidenav.other": "Other",
 
 
 

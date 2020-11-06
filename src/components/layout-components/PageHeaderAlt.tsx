@@ -6,13 +6,21 @@ import { NAV_TYPE_TOP } from "../../constants/ThemeConstant";
 interface IStyle {
   [key: string]: string | number;
 }
+
+interface IPageHeaderAlt {
+    children?: any;
+    background?: any;
+    className?: any;
+    overlap?: any;
+    navType?: any;
+}
 export const PageHeaderAlt = ({
   children,
   background,
   className,
   overlap,
   navType,
-}) => {
+}: IPageHeaderAlt) => {
   const [widthOffset, setWidthOffset] = useState(0);
   const ref = useRef<any>(null);
   useEffect(() => {

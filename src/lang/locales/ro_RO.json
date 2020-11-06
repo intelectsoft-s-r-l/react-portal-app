@@ -43,6 +43,9 @@
   "sidenav.home": "Acasă",
   "sidenav.dashboard": "Dashboard",
 
+    "sidenav.applications": "Applications",
+    "sidenav.my-applications": "Market",
+    "sidenav.market": "Toate aplicatiile",
   "sidenav.catalog": "Catalog",
   "sidenav.catalog.company": "Compania",
   "sidenav.catalog.group": "Grupuri",
@@ -65,7 +68,7 @@
   "sidenav.audit.actions": "Acțiuni",
 
   "sidenav.reports": "Rapoarte",
-
+    "sidenav.other": "Altele",
   "sidenav.payment": "Plată",
   "sidenav.payment.invoices": "Facturi",
 

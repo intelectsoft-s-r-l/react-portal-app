@@ -46,6 +46,9 @@
   "sidenav.home": "Главная",
   "sidenav.dashboard": "Панель",
 
+    "sidenav.applications": "Applications",
+    "sidenav.my-applications": "Мои приложения",
+    "sidenav.market": "Маркет",
   "sidenav.catalog": "Каталог",
   "sidenav.catalog.company": "Компания",
   "sidenav.catalog.group": "Группы",
@@ -67,6 +70,7 @@
   "sidenav.audit.actions": "Действия",
 
   "sidenav.reports": "Отчеты",
+    "sidenav.other": "Другие",
 
   "header.logout.message": "Вы уверены что хотите выйти?",
   "header.logout.button": "Выйти",
