@@ -9,23 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import { signOut } from "../../../redux/actions/Auth";
 import Loading from "../../../components/shared-components/Loading";
-export interface IApps {
-    CustomerPrice: number;
-    DataBaseServer: string;
-    Description: string;
-    ID: number;
-    IsActive: boolean;
-    Name: string;
-    PartnerPercent: number;
-    Photo: string;
-    ReferalPercent: number;
-}
+
 const AppStoreNav = () => {
     // const [apps, setApps] = useState<IApps[]>([]);
     const dispatch = useDispatch();
     const Token = useSelector((state) => state["auth"].token);
     const loading = useSelector((state) => state["auth"].loading);
-    const [apps, setApps] = useState();
+    const [apps, setApps] = useState<any>([]);
     // const apps: IApps[] = useSelector((state) => state["apps"]);
     const renderApps = () => {
         Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
@@ -34,7 +24,7 @@ const AppStoreNav = () => {
             console.log(res.data);
             const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
             if (ErrorCode === 0) {
-                setApps(MarketAppList);
+                setApps([...MarketAppList]);
             } else if (ErrorCode === 118) {
                 message
                     .loading("Time has expired... Redirecting!", 1.5)
@@ -48,12 +38,7 @@ const AppStoreNav = () => {
         });
     };
     const menu = (
-        <Menu
-            style={{
-                minWidth: "330px",
-                minHeight: loading && "300px",
-            }}
-        >
+        <Menu style={{ minWidth: "330px", minHeight: loading && "300px" }}>
             {loading ? (
                 <Loading cover="content" align="center" />
             ) : (
@@ -65,9 +50,9 @@ const AppStoreNav = () => {
 
     return (
         <Dropdown overlay={menu} trigger={["click"]} placement={"bottomRight"}>
-            <Menu mode={"horizontal"} onClick={() => renderApps()}>
+            <Menu mode={"horizontal"} onClick={renderApps}>
                 <Menu.Item>
-                    <Tooltip title={<IntlMessage id={"header.applications"} />}>
+                    <Tooltip title={<IntlMessage id="header.applications" />}>
                         <AppstoreOutlined className={"nav-icon"} />
                     </Tooltip>
                 </Menu.Item>

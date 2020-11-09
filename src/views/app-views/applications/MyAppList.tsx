@@ -1,4 +1,4 @@
-import { Avatar, Card, Col, Empty, Menu, message, Row, Tag } from "antd";
+import { Modal, Avatar, Card, Col, Empty, Menu, message, Row, Tag } from "antd";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,25 +9,29 @@ import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import { signOut } from "../../../redux/actions/Auth";
 import {
     EyeOutlined,
+    CheckCircleOutlined,
+    ClockCircleOutlined,
     DeleteOutlined,
     ExperimentOutlined,
 } from "@ant-design/icons";
 import Flex from "../../../components/shared-components/Flex";
 
-const ItemAction = ({ data, id, removeId }) => (
+const ItemAction = ({ deactivateApp, data, id, removeId }) => (
     <EllipsisDropdown
         menu={
             <Menu>
                 <Menu.Item key="1">
-                    <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                    <Link
+                        to={`${APP_PREFIX_PATH}/applications/${data.ApplicationID}`}
+                    >
                         <EyeOutlined />
                         <span> View</span>
                     </Link>
                 </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key="3">
+                <Menu.Item key="3" onClick={() => deactivateApp(data.ID)}>
                     <DeleteOutlined />
-                    <span>Delete</span>
+                    <span>Deactivate</span>
                 </Menu.Item>
             </Menu>
         }
@@ -68,7 +72,7 @@ const ItemInfo = ({ Status, ID, packages }) => (
     </>
 );
 
-const GridItem = ({ data, removeId }) => (
+const GridItem = ({ deactivateApp, data, removeId }) => (
     <Card>
         <Flex alignItems="center" justifyContent="between">
             <ItemHeader
@@ -81,7 +85,12 @@ const GridItem = ({ data, removeId }) => (
                         : "Here could be your description. Here could be your description .Here could be your description."
                 }
             />
-            <ItemAction data={data} id={data.ID} removeId={removeId} />
+            <ItemAction
+                deactivateApp={deactivateApp}
+                data={data}
+                id={data.ID}
+                removeId={removeId}
+            />
         </Flex>
         <div className="mt-2">
             <ItemInfo
@@ -111,11 +120,11 @@ const ItemHeader = ({ name, avatar, shortDescription, Status }) => (
                         className="text-capitalize"
                         color={Status === 1 ? "cyan" : "red"}
                     >
-                        {/* {Status === 1 ? (
+                        {Status === 1 ? (
                             <CheckCircleOutlined />
                         ) : (
                             <ClockCircleOutlined />
-                        )} */}
+                        )}
                         <span className="ml-2 font-weight-semibold">
                             {Status === 1 ? "Active" : "Not Active"}
                         </span>
@@ -131,6 +140,7 @@ const ItemHeader = ({ name, avatar, shortDescription, Status }) => (
 
 const MyAppList = () => {
     const [apps, setApps] = useState<any>([]);
+    const { confirm } = Modal;
     const Token = useSelector((state) => state["auth"].token);
     const dispatch = useDispatch();
     useEffect(() => {
@@ -153,6 +163,32 @@ const MyAppList = () => {
         });
     }, []);
 
+    const deactivateApp = (AppID) => {
+        confirm({
+            title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
+            onOk: () => {
+                Axios.post(`${API_IS_CLIENT_SERVICE}/DeactivateApp`, {
+                    AppID,
+                    Token,
+                }).then((res) => {
+                    console.log(res.data);
+                    if (res.data.ErrorCode === 0) {
+                        message
+                            .success("Done!", 1.5)
+                            .then(() =>
+                                setApps(apps.filter((app) => app.ID != AppID))
+                            );
+                    } else if (res.data.ErrorCode === 118) {
+                        message
+                            .loading("Time has expired... Redirecting!", 1.5)
+                            .then(() => dispatch(signOut()));
+                    }
+                });
+            },
+            onCancel: () => {},
+        });
+    };
+
     const deleteItem = (ID) => {};
     return (
         <>
@@ -161,22 +197,29 @@ const MyAppList = () => {
                     container-fluid`}
             >
                 <Row gutter={16}>
-                    {apps.map((elm) => (
-                        <Col
-                            xs={24}
-                            sm={24}
-                            lg={12}
-                            xl={8}
-                            xxl={8}
-                            key={elm["ID"]}
-                        >
-                            <GridItem
-                                data={elm}
-                                removeId={(ID) => deleteItem(ID)}
+                    {apps.length > 0 ? (
+                        apps.map((elm) => (
+                            <Col
+                                xs={24}
+                                sm={24}
+                                lg={12}
+                                xl={8}
+                                xxl={8}
                                 key={elm["ID"]}
-                            />
-                        </Col>
-                    ))}
+                            >
+                                <GridItem
+                                    deactivateApp={deactivateApp}
+                                    data={elm}
+                                    removeId={(ID) => deleteItem(ID)}
+                                    key={elm["ID"]}
+                                />
+                            </Col>
+                        ))
+                    ) : (
+                        <Flex justifyContent="center" className="w-100">
+                            <Empty />
+                        </Flex>
+                    )}
                 </Row>
             </div>
         </>

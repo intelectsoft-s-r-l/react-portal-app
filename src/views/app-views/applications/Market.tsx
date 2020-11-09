@@ -11,6 +11,9 @@ import {
     Avatar,
     Menu,
     Card,
+    Modal,
+    message,
+    Empty,
 } from "antd";
 import {
     AppstoreOutlined,
@@ -28,15 +31,20 @@ import utils from "../../../utils";
 import { COLORS } from "../../../constants/ChartConstant";
 import Flex from "../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../components/shared-components/EllipsisDropdown";
-import { Link, NavLink, Route } from "react-router-dom";
+import { Link, NavLink, Route, useHistory } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
+import Axios from "axios";
+import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
+import { useSelector } from "react-redux";
 
 const ItemAction = ({ data, id, removeId }) => (
     <EllipsisDropdown
         menu={
             <Menu>
                 <Menu.Item key="1">
-                    <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                    <Link
+                        to={`${APP_PREFIX_PATH}/applications/${data.MarketID}`}
+                    >
                         <EyeOutlined />
                         <span> View</span>
                     </Link>
@@ -85,10 +93,12 @@ const ItemInfo = ({ Status, ID, packages }) => (
     </>
 );
 
-const GridItem = ({ data, removeId }) => (
+const GridItem = ({ data, removeId, activateApp }) => (
     <Card>
         <Flex alignItems="center" justifyContent="between">
             <ItemHeader
+                AppID={data.ID}
+                activateApp={activateApp}
                 Status={data.Status}
                 avatar={data.Photo}
                 name={data.Name}
@@ -110,7 +120,14 @@ const GridItem = ({ data, removeId }) => (
     </Card>
 );
 
-const ItemHeader = ({ name, avatar, shortDescription, Status }) => (
+const ItemHeader = ({
+    name,
+    avatar,
+    shortDescription,
+    Status,
+    AppID,
+    activateApp,
+}) => (
     <>
         <Flex>
             <div className="mr-3">
@@ -124,19 +141,18 @@ const ItemHeader = ({ name, avatar, shortDescription, Status }) => (
             <Flex flexDirection="column">
                 <Flex flexDirection="row">
                     <h2 className="mr-3">{name} </h2>
-                    <Tag
-                        className="text-capitalize"
-                        color={Status === 1 ? "cyan" : "red"}
-                    >
-                        {Status === 1 ? (
+                    {Status === 0 && (
+                        <Tag
+                            className="text-capitalize cursor-pointer"
+                            color="cyan"
+                            onClick={() => activateApp(AppID)}
+                        >
                             <CheckCircleOutlined />
-                        ) : (
-                            <ClockCircleOutlined />
-                        )}
-                        <span className="ml-2 font-weight-semibold">
-                            {Status === 1 ? "Active" : "Not Active"}
-                        </span>
-                    </Tag>
+                            <span className="ml-2 font-weight-semibold">
+                                Activate
+                            </span>
+                        </Tag>
+                    )}
                 </Flex>
                 <div>
                     <span className="text-muted ">{shortDescription}</span>
@@ -150,6 +166,37 @@ const Market = ({ apps, signOut }) => {
     const deleteItem = (id) => {
         const data = apps.filter((elm) => elm["ID"] !== id);
     };
+    const history = useHistory();
+
+    const Token = useSelector((state) => state["auth"].token);
+
+    const { confirm } = Modal;
+
+    const activateApp = (AppID) => {
+        confirm({
+            title: `Are you sure you want to activate app with ID: ${AppID}?`,
+            onOk: () => {
+                Axios.post(`${API_IS_CLIENT_SERVICE}/ActivateApp`, {
+                    AppID,
+                    Token,
+                }).then((res) => {
+                    if (res.data.ErrorCode === 0) {
+                        message
+                            .success("Done!", 1.5)
+                            .then(() =>
+                                history.push(
+                                    `${APP_PREFIX_PATH}/applications/my-applications`
+                                )
+                            );
+                    } else if (res.data.ErrorCode === 118) {
+                        message
+                            .loading("Time has expired... Redirecting!")
+                            .then(() => signOut());
+                    }
+                });
+            },
+        });
+    };
 
     return (
         <>
@@ -158,22 +205,29 @@ const Market = ({ apps, signOut }) => {
                     container-fluid`}
             >
                 <Row gutter={16}>
-                    {apps.map((elm) => (
-                        <Col
-                            xs={24}
-                            sm={24}
-                            lg={12}
-                            xl={8}
-                            xxl={8}
-                            key={elm["ID"]}
-                        >
-                            <GridItem
-                                data={elm}
-                                removeId={(ID) => deleteItem(ID)}
+                    {apps.length > 0 ? (
+                        apps.map((elm) => (
+                            <Col
+                                xs={24}
+                                sm={24}
+                                lg={12}
+                                xl={8}
+                                xxl={8}
                                 key={elm["ID"]}
-                            />
-                        </Col>
-                    ))}
+                            >
+                                <GridItem
+                                    activateApp={activateApp}
+                                    data={elm}
+                                    removeId={(ID) => deleteItem(ID)}
+                                    key={elm["ID"]}
+                                />
+                            </Col>
+                        ))
+                    ) : (
+                        <Flex justifyContent="center" className="w-100">
+                            <Empty />
+                        </Flex>
+                    )}
                 </Row>
             </div>
         </>

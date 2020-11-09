@@ -13,7 +13,36 @@ import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import Axios from "axios";
 import { message } from "antd";
 import Market from "./Market";
-
+export interface IPackages {
+    ID: number;
+    MaxValue: number;
+    MinValue: number;
+    Name: string;
+    Price: number;
+    Status: number;
+    ValidFrom: string;
+    ValidTo: string;
+}
+export interface IMarketAppList {
+    AppType: number;
+    ApyKey: string;
+    MarketID: number;
+    ApplicationID: number;
+    LicenseActivationCode: number;
+    LicenseActivationCodeValidHours: number;
+    LicenseActivationCodeValidTo: string;
+    LongDescription: string;
+    Name: string;
+    Packages: IPackages[];
+    Photo: string;
+    ShortDescription: string;
+    Status: number;
+}
+export interface IApplications {
+    ErrorCode: number;
+    ErrorMessage: string;
+    MarketAppList: IMarketAppList[];
+}
 const Applications = ({ signOut, Token, loading }) => {
     const [apps, setApps] = useState<any>([]);
     const dispatch = useDispatch();
@@ -22,7 +51,11 @@ const Applications = ({ signOut, Token, loading }) => {
             params: { Token },
         }).then((res) => {
             console.log(res.data);
-            const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
+            const {
+                ErrorCode,
+                ErrorMessage,
+                MarketAppList,
+            } = res.data as IApplications;
             if (ErrorCode === 0) {
                 setApps(MarketAppList);
             } else if (ErrorCode === 118) {
