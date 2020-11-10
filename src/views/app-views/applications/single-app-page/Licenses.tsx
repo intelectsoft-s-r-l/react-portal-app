@@ -1,4 +1,4 @@
-import { Button, Col, Empty, Row, Table, Tag } from "antd";
+import { Button, Card, Col, Empty, Row, Table, Tag } from "antd";
 import React, { useEffect } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import { PlusOutlined } from "@ant-design/icons";
@@ -28,7 +28,7 @@ const tableColumns = [
         title: "Status",
         dataIndex: "Status",
         render: (Status) => (
-            <div className="text-right">
+            <div>
                 <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
                     {Status === 1 ? "Active" : "Not Active"}
                 </Tag>
@@ -39,7 +39,7 @@ const tableColumns = [
 const Licenses = ({ licenses, setCreateLicenseVisible }: any) => {
     return (
         <>
-            <Flex justifyContent="between" alignItems="center" className="py-2">
+            <Flex justifyContent="between" alignItems="center" className="py-4">
                 <h2>Licenses</h2>
                 <div>
                     <Button
@@ -52,17 +52,7 @@ const Licenses = ({ licenses, setCreateLicenseVisible }: any) => {
                     </Button>
                 </div>
             </Flex>
-            <div className="my-4 container-fluid">
-                <Row>
-                    <Table
-                        className="no-border-last"
-                        columns={tableColumns}
-                        dataSource={licenses}
-                        rowKey="ID"
-                        pagination={false}
-                    />
-                </Row>
-            </div>
+            <Table columns={tableColumns} dataSource={licenses} rowKey="ID" />
         </>
     );
 };

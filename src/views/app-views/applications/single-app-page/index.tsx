@@ -53,6 +53,7 @@ const AppOption = ({ match, location }) => {
                 <span>Packages</span>
                 <Link to={"packages"} />
             </Menu.Item>
+            {/* Show Licenses Tab only for the following Apps: Sales Expert, Restaurant Expert, Mobile Agent */}
             <Menu.Item key={`${match.url}/licenses`}>
                 <span>Licenses</span>
                 <Link to={"licenses"} />
@@ -96,81 +97,6 @@ const AppRoute = ({
             />
             <Route path={`${match.url}/devices`} component={Devices} />
         </Switch>
-    );
-};
-
-const ItemAction = ({ packages }) => (
-    <EllipsisDropdown
-        menu={
-            <Menu>
-                <Menu.Divider />
-                <Menu.Item key={2}>
-                    <DeleteOutlined />
-                    <span>Delete</span>
-                </Menu.Item>
-            </Menu>
-        }
-    />
-);
-const ItemHeader = ({ packages }) => (
-    <>
-        <Flex>
-            <h4 className="mb-0">{packages.Name}</h4>
-            <Tag
-                className="text-capitalize ml-2"
-                color={packages.Status === 1 ? "cyan" : "red"}
-            >
-                {packages.Status === 1 ? (
-                    <CheckCircleOutlined />
-                ) : (
-                    <ClockCircleOutlined />
-                )}
-                <span className="ml-2 font-weight-semibold">
-                    {packages.Status === 1 ? "Active" : "Not Active"}
-                </span>
-            </Tag>
-        </Flex>
-    </>
-);
-
-const ItemFooter = ({ packages }) => (
-    <div>
-        <h5>Pricing</h5>
-        <Flex justifyContent="center">
-            <Card className="mt-3">
-                <div>
-                    From {packages.MinValue} to {packages.MaxValue} for{" "}
-                    {packages.Price} MDL
-                </div>
-            </Card>
-        </Flex>
-    </div>
-);
-
-const CardItem = ({ packages }) => {
-    return (
-        <Card>
-            <Flex alignItems="center" justifyContent="between">
-                <ItemHeader packages={packages} />
-                <ItemAction packages={packages} />
-            </Flex>
-            <div className="mt-2">
-                <ItemFooter packages={packages} />
-            </div>
-        </Card>
-    );
-};
-const LicenseCardItem = ({ licenses }) => {
-    return (
-        <Card>
-            <Flex alignItems="center" justifyContent="between">
-                <div>{licenses.ApplicationVersion}</div>
-                <div>{licenses.DeviceID}</div>
-                <div>{licenses.ID}</div>
-                <div>{licenses.LicenseCode}</div>
-            </Flex>
-            <div className="mt-2"></div>
-        </Card>
     );
 };
 

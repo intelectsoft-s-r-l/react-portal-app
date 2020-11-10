@@ -38,7 +38,7 @@ const AppStoreNav = () => {
         });
     };
     const menu = (
-        <Menu style={{ minWidth: "330px", minHeight: loading && "300px" }}>
+        <Menu style={{ width: "330px", minHeight: loading && "300px" }}>
             {loading ? (
                 <Loading cover="content" align="center" />
             ) : (

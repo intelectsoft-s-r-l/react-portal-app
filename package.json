@@ -38,6 +38,7 @@
     "jsencrypt": "^3.0.0-rc.1",
     "lodash": "^4.17.20",
     "node-sass": "^4.13.0",
+    "prettier": "^2.1.2",
     "rc-queue-anim": "^1.8.4",
     "rc-tween-one": "^2.6.8",
     "react": "^16.12.0",

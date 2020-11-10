@@ -39,6 +39,8 @@ import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import { useDispatch, useSelector } from "react-redux";
 import { IApplications } from ".";
 import { signOut } from "../../../redux/actions/Auth";
+import Loading from "../../../components/shared-components/Loading";
+
 const GridItem = ({ activateApp, deactivateApp, data }) => {
     return (
         <Card>
@@ -101,71 +103,97 @@ const Market = () => {
     const [apps, setApps] = useState<any>([]);
     const dispatch = useDispatch();
     const history = useHistory();
-
+    const [loading, setLoading] = useState(false);
     const Token = useSelector((state) => state["auth"].token);
     const { confirm } = Modal;
     useEffect(() => {
+        setLoading(true);
         Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
             params: { Token },
-        }).then((res) => {
-            console.log(res.data);
-            const {
-                ErrorCode,
-                ErrorMessage,
-                MarketAppList,
-            } = res.data as IApplications;
-            if (ErrorCode === 0) {
-                setApps(MarketAppList);
-            } else if (ErrorCode === 118) {
-                message
-                    .loading("Time has expired... Redirecting!", 1.5)
-                    .then(() => dispatch(signOut()));
-            } else if (ErrorCode === -1) {
-            }
-        });
+        })
+            .then((res) => {
+                setLoading(false);
+                console.log(res.data);
+                const {
+                    ErrorCode,
+                    ErrorMessage,
+                    MarketAppList,
+                } = res.data as IApplications;
+                if (ErrorCode === 0) {
+                    setApps(MarketAppList);
+                } else if (ErrorCode === 118) {
+                    message
+                        .loading("Time has expired... Redirecting!", 1.5)
+                        .then(() => dispatch(signOut()));
+                } else if (ErrorCode === -1) {
+                }
+            })
+            .catch((error) => {
+                message.error(error, 5);
+                setLoading(false);
+            });
     }, []);
 
     const deactivateApp = (AppID) => {
+        setLoading(true);
         confirm({
             title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
+
             onOk: () => {
-                Axios.post(`${API_IS_CLIENT_SERVICE}/DeactivateApp`, {
-                    AppID,
-                    Token,
-                }).then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        message.success("Done!", 1.5).then(() =>
-                            Axios.get(
-                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
-                                {
-                                    params: { Token },
-                                }
-                            ).then((res) => {
-                                console.log(res.data);
-                                const {
-                                    ErrorCode,
-                                    ErrorMessage,
-                                    MarketAppList,
-                                } = res.data as IApplications;
-                                if (ErrorCode === 0) {
-                                    setApps(MarketAppList);
-                                } else if (ErrorCode === 118) {
-                                    message
-                                        .loading(
-                                            "Time has expired... Redirecting!",
-                                            1.5
-                                        )
-                                        .then(() => dispatch(signOut()));
-                                } else if (ErrorCode === -1) {
-                                }
-                            })
-                        );
-                    } else if (res.data.ErrorCode === 118) {
-                        message
-                            .loading("Time has expired... Redirecting!", 1.5)
-                            .then(() => signOut());
-                    }
+                return new Promise((resolve) => {
+                    setTimeout(
+                        () =>
+                            resolve(
+                                Axios.post(
+                                    `${API_IS_CLIENT_SERVICE}/DeactivateApp`,
+                                    {
+                                        AppID,
+                                        Token,
+                                    }
+                                ).then((res) => {
+                                    setLoading(false);
+                                    console.log(res.data);
+                                    if (res.data.ErrorCode === 0) {
+                                        message.success("Done!", 1.5).then(() =>
+                                            Axios.get(
+                                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
+                                                {
+                                                    params: { Token },
+                                                }
+                                            ).then((res) => {
+                                                console.log(res.data);
+                                                const {
+                                                    ErrorCode,
+                                                    ErrorMessage,
+                                                    MarketAppList,
+                                                } = res.data as IApplications;
+                                                if (ErrorCode === 0) {
+                                                    setApps(MarketAppList);
+                                                } else if (ErrorCode === 118) {
+                                                    message
+                                                        .loading(
+                                                            "Time has expired... Redirecting!",
+                                                            1.5
+                                                        )
+                                                        .then(() =>
+                                                            dispatch(signOut())
+                                                        );
+                                                } else if (ErrorCode === -1) {
+                                                }
+                                            })
+                                        );
+                                    } else if (res.data.ErrorCode === 118) {
+                                        message
+                                            .loading(
+                                                "Time has expired... Redirecting!",
+                                                1.5
+                                            )
+                                            .then(() => signOut());
+                                    }
+                                })
+                            ),
+                        1000
+                    );
                 });
             },
             onCancel: () => {},
@@ -176,45 +204,60 @@ const Market = () => {
         confirm({
             title: `Are you sure you want to activate app with ID: ${AppID}?`,
             onOk: () => {
-                Axios.post(`${API_IS_CLIENT_SERVICE}/ActivateApp`, {
-                    AppID,
-                    Token,
-                }).then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        message.success("Done!", 1.5).then(() =>
-                            Axios.get(
-                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
-                                {
-                                    params: { Token },
-                                }
-                            ).then((res) => {
-                                console.log(res.data);
-                                const {
-                                    ErrorCode,
-                                    ErrorMessage,
-                                    MarketAppList,
-                                } = res.data as IApplications;
-                                if (ErrorCode === 0) {
-                                    setApps(MarketAppList);
-                                } else if (ErrorCode === 118) {
-                                    message
-                                        .loading(
-                                            "Time has expired... Redirecting!",
-                                            1.5
-                                        )
-                                        .then(() => dispatch(signOut()));
-                                } else if (ErrorCode === -1) {
-                                }
-                            })
-                        );
-                    } else if (res.data.ErrorCode === 118) {
-                        message
-                            .loading("Time has expired... Redirecting!")
-                            .then(() => dispatch(signOut()));
-                    } else {
-                        message.error(res.data.ErrorMessage);
-                    }
+                return new Promise((resolve) => {
+                    setTimeout(
+                        () =>
+                            resolve(
+                                Axios.post(
+                                    `${API_IS_CLIENT_SERVICE}/ActivateApp`,
+                                    {
+                                        AppID,
+                                        Token,
+                                    }
+                                ).then((res) => {
+                                    console.log(res.data);
+                                    if (res.data.ErrorCode === 0) {
+                                        message.success("Done!", 1.5).then(() =>
+                                            Axios.get(
+                                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
+                                                {
+                                                    params: { Token },
+                                                }
+                                            ).then((res) => {
+                                                console.log(res.data);
+                                                const {
+                                                    ErrorCode,
+                                                    ErrorMessage,
+                                                    MarketAppList,
+                                                } = res.data as IApplications;
+                                                if (ErrorCode === 0) {
+                                                    setApps(MarketAppList);
+                                                } else if (ErrorCode === 118) {
+                                                    message
+                                                        .loading(
+                                                            "Time has expired... Redirecting!",
+                                                            1.5
+                                                        )
+                                                        .then(() =>
+                                                            dispatch(signOut())
+                                                        );
+                                                } else if (ErrorCode === -1) {
+                                                }
+                                            })
+                                        );
+                                    } else if (res.data.ErrorCode === 118) {
+                                        message
+                                            .loading(
+                                                "Time has expired... Redirecting!"
+                                            )
+                                            .then(() => dispatch(signOut()));
+                                    } else {
+                                        message.error(res.data.ErrorMessage);
+                                    }
+                                })
+                            ),
+                        1000
+                    );
                 });
             },
         });
@@ -222,36 +265,40 @@ const Market = () => {
 
     return (
         <>
-            <div
-                className={`my-4 
+            {loading ? (
+                <Loading cover="content" />
+            ) : (
+                <div
+                    className={`my-4 
                     container-fluid`}
-            >
-                <Row gutter={16}>
-                    {apps.length > 0 ? (
-                        apps.map((elm) => (
-                            <Col
-                                xs={24}
-                                sm={24}
-                                lg={12}
-                                xl={6}
-                                xxl={6}
-                                key={elm["ID"]}
-                            >
-                                <GridItem
-                                    activateApp={activateApp}
-                                    deactivateApp={deactivateApp}
-                                    data={elm}
+                >
+                    <Row gutter={16}>
+                        {apps.length > 0 && !loading ? (
+                            apps.map((elm) => (
+                                <Col
+                                    xs={24}
+                                    sm={24}
+                                    lg={12}
+                                    xl={6}
+                                    xxl={6}
                                     key={elm["ID"]}
-                                />
-                            </Col>
-                        ))
-                    ) : (
-                        <Flex justifyContent="center" className="w-100">
-                            <Empty />
-                        </Flex>
-                    )}
-                </Row>
-            </div>
+                                >
+                                    <GridItem
+                                        activateApp={activateApp}
+                                        deactivateApp={deactivateApp}
+                                        data={elm}
+                                        key={elm["ID"]}
+                                    />
+                                </Col>
+                            ))
+                        ) : (
+                            <Flex justifyContent="center" className="w-100">
+                                <Empty />
+                            </Flex>
+                        )}
+                    </Row>
+                </div>
+            )}
         </>
     );
 };

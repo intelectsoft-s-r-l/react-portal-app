@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, Table, Tag, Tooltip, message, Button, Modal } from "antd";
 import {
     EyeOutlined,
+    CheckCircleOutlined,
     DeleteOutlined,
     EditOutlined,
     UserAddOutlined,
@@ -254,7 +255,7 @@ export class UserList extends Component<ReduxStoreProps> {
                         {elm.Status === 0 && (
                             <Tooltip title="Activate">
                                 <Button
-                                    icon={<UserAddOutlined />}
+                                    icon={<CheckCircleOutlined />}
                                     className="mr-2"
                                     size="small"
                                     onClick={() =>

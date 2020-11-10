@@ -27,6 +27,7 @@ import {
     ExperimentOutlined,
 } from "@ant-design/icons";
 import Flex from "../../../components/shared-components/Flex";
+import Loading from "../../../components/shared-components/Loading";
 
 const GridItem = ({ deactivateApp, data }) => {
     return (
@@ -42,12 +43,10 @@ const GridItem = ({ deactivateApp, data }) => {
                         />
                     </div>
                 </Link>
-                    <Tag className="text-capitalize" color="cyan">
-                        <CheckCircleOutlined />
-                        <span className="ml-2 font-weight-semibold">
-                            Installed
-                        </span>
-                    </Tag>
+                <Tag className="text-capitalize" color="cyan">
+                    <CheckCircleOutlined />
+                    <span className="ml-2 font-weight-semibold">Installed</span>
+                </Tag>
             </Flex>
             <div>
                 <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
@@ -76,25 +75,33 @@ const MyAppList = () => {
     const [apps, setApps] = useState<any>([]);
     const { confirm } = Modal;
     const Token = useSelector((state) => state["auth"].token);
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     useEffect(() => {
+        setLoading(true);
         Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
             params: { Token },
-        }).then((res) => {
-            console.log(res.data);
-            const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
-            if (ErrorCode === 0) {
-                const activeApps = MarketAppList.filter(
-                    (marketApp) => marketApp.Status != 0
-                );
-                setApps(activeApps);
-            } else if (ErrorCode === 118) {
-                message
-                    .loading("Time has expired... Redirecting!", 1.5)
-                    .then(() => dispatch(signOut()));
-            } else if (ErrorCode === -1) {
-            }
-        });
+        })
+            .then((res) => {
+                setLoading(false);
+                console.log(res.data);
+                const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
+                if (ErrorCode === 0) {
+                    const activeApps = MarketAppList.filter(
+                        (marketApp) => marketApp.Status != 0
+                    );
+                    setApps(activeApps);
+                } else if (ErrorCode === 118) {
+                    message
+                        .loading("Time has expired... Redirecting!", 1.5)
+                        .then(() => dispatch(signOut()));
+                } else if (ErrorCode === -1) {
+                }
+            })
+            .catch((error) => {
+                message.error(error, 5);
+                setLoading(false);
+            });
     }, []);
 
     const deactivateApp = (AppID) => {
@@ -126,35 +133,39 @@ const MyAppList = () => {
     const deleteItem = (ID) => {};
     return (
         <>
-            <div
-                className={`my-4 
+            {loading ? (
+                <Loading cover="content" />
+            ) : (
+                <div
+                    className={`my-4 
                     container-fluid`}
-            >
-                <Row gutter={16}>
-                    {apps.length > 0 ? (
-                        apps.map((elm) => (
-                            <Col
-                                xs={24}
-                                sm={24}
-                                lg={12}
-                                xl={6}
-                                xxl={6}
-                                key={elm["ID"]}
-                            >
-                                <GridItem
-                                    deactivateApp={deactivateApp}
-                                    data={elm}
+                >
+                    <Row gutter={16}>
+                        {apps.length > 0 ? (
+                            apps.map((elm) => (
+                                <Col
+                                    xs={24}
+                                    sm={24}
+                                    lg={12}
+                                    xl={6}
+                                    xxl={6}
                                     key={elm["ID"]}
-                                />
-                            </Col>
-                        ))
-                    ) : (
-                        <Flex justifyContent="center" className="w-100">
-                            <Empty />
-                        </Flex>
-                    )}
-                </Row>
-            </div>
+                                >
+                                    <GridItem
+                                        deactivateApp={deactivateApp}
+                                        data={elm}
+                                        key={elm["ID"]}
+                                    />
+                                </Col>
+                            ))
+                        ) : (
+                            <Flex justifyContent="center" className="w-100">
+                                <Empty />
+                            </Flex>
+                        )}
+                    </Row>
+                </div>
+            )}
         </>
     );
 };
