@@ -44,31 +44,7 @@ export interface IApplications {
     MarketAppList: IMarketAppList[];
 }
 const Applications = ({ signOut, Token, loading }) => {
-    const [apps, setApps] = useState<any>([]);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
-            params: { Token },
-        }).then((res) => {
-            console.log(res.data);
-            const {
-                ErrorCode,
-                ErrorMessage,
-                MarketAppList,
-            } = res.data as IApplications;
-            if (ErrorCode === 0) {
-                setApps(MarketAppList);
-            } else if (ErrorCode === 118) {
-                message
-                    .loading("Time has expired... Redirecting!", 1.5)
-                    .then(() => dispatch(signOut()));
-            } else if (ErrorCode === -1) {
-            }
-        });
-    }, []);
-    return (
-        <>{loading ? <Loading /> : <Market apps={apps} signOut={signOut} />}</>
-    );
+    return <>{loading ? <Loading /> : <Market />}</>;
 };
 const mapStateToProps = ({ auth }) => {
     const { token: Token, loading } = auth;

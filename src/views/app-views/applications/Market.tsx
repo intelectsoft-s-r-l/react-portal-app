@@ -1,4 +1,4 @@
-import React, { lazy, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 import PageHeaderAlt from "../../../components/layout-components/PageHeaderAlt";
 import {
     Radio,
@@ -18,6 +18,7 @@ import {
 import {
     AppstoreOutlined,
     UnorderedListOutlined,
+    VerticalAlignBottomOutlined,
     ExperimentOutlined,
     PlusOutlined,
     PaperClipOutlined,
@@ -31,146 +32,145 @@ import utils from "../../../utils";
 import { COLORS } from "../../../constants/ChartConstant";
 import Flex from "../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../components/shared-components/EllipsisDropdown";
-import { Link, NavLink, Route, useHistory } from "react-router-dom";
+import { Link, NavLink, Redirect, Route, useHistory } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import Axios from "axios";
 import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
-import { useSelector } from "react-redux";
-
-const ItemAction = ({ data, id, removeId }) => (
-    <EllipsisDropdown
-        menu={
-            <Menu>
-                <Menu.Item key="1">
-                    <Link
-                        to={`${APP_PREFIX_PATH}/applications/${data.MarketID}`}
+import { useDispatch, useSelector } from "react-redux";
+import { IApplications } from ".";
+import { signOut } from "../../../redux/actions/Auth";
+const GridItem = ({ activateApp, deactivateApp, data }) => {
+    return (
+        <Card>
+            <Flex className="mb-3 " justifyContent="between">
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                    <div className="cursor-pointer">
+                        <Avatar
+                            src={data.Photo}
+                            icon={<ExperimentOutlined />}
+                            shape="square"
+                            size={60}
+                        />
+                    </div>
+                </Link>
+                {data.Status === 0 ? (
+                    <Tag
+                        className="text-capitalize cursor-pointer"
+                        color="default"
+                        onClick={() => activateApp(data.ID)}
                     >
-                        <EyeOutlined />
-                        <span> View</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="3">
-                    <DeleteOutlined />
-                    <span>Delete</span>
-                </Menu.Item>
-            </Menu>
-        }
-    />
-);
-
-const ItemInfo = ({ Status, ID, packages }) => (
-    <>
-        {/* <h3>Packages</h3>
-        <Row gutter={16}>
-            {packages.map((pckg) => (
-                <Col key={pckg.ID} xl={12} xxl={12} md={12} lg={12}>
-                    <Card hoverable>
-                        <h4>{pckg.Name}</h4>
-                        <div>
-                            From {pckg.MinValue} to {pckg.MaxValue} for{" "}
-                            {pckg.Price}
-                        </div>
-                        <div className="text-center">
-                            <Tag
-                                className="text-capitalize mt-3"
-                                color={pckg.IsActive ? "cyan" : "red"}
-                            >
-                                {pckg.IsActive ? (
-                                    <CheckCircleOutlined />
-                                ) : (
-                                    <ClockCircleOutlined />
-                                )}
-                                <span className="ml-2 font-weight-semibold">
-                                    {pckg.IsActive ? "Active" : "Not Active"}
-                                </span>
-                            </Tag>
-                        </div>
-                    </Card>
-                </Col>
-            ))}
-        </Row> */}
-    </>
-);
-
-const GridItem = ({ data, removeId, activateApp }) => (
-    <Card>
-        <Flex alignItems="center" justifyContent="between">
-            <ItemHeader
-                AppID={data.ID}
-                activateApp={activateApp}
-                Status={data.Status}
-                avatar={data.Photo}
-                name={data.Name}
-                shortDescription={
-                    data.ShortDescription
-                        ? data.ShortDescription
-                        : "Here could be your description. Here could be your description .Here could be your description."
-                }
-            />
-            <ItemAction data={data} id={data.ID} removeId={removeId} />
-        </Flex>
-        <div className="mt-2">
-            <ItemInfo
-                ID={data.ID}
-                Status={data.Status}
-                packages={data.Packages}
-            />
-        </div>
-    </Card>
-);
-
-const ItemHeader = ({
-    name,
-    avatar,
-    shortDescription,
-    Status,
-    AppID,
-    activateApp,
-}) => (
-    <>
-        <Flex>
-            <div className="mr-3">
-                <Avatar
-                    src={avatar}
-                    icon={<ExperimentOutlined />}
-                    shape="square"
-                    size={80}
-                />
-            </div>
-            <Flex flexDirection="column">
-                <Flex flexDirection="row">
-                    <h2 className="mr-3">{name} </h2>
-                    {Status === 0 && (
-                        <Tag
-                            className="text-capitalize cursor-pointer"
-                            color="cyan"
-                            onClick={() => activateApp(AppID)}
-                        >
-                            <CheckCircleOutlined />
-                            <span className="ml-2 font-weight-semibold">
-                                Activate
-                            </span>
-                        </Tag>
-                    )}
-                </Flex>
-                <div>
-                    <span className="text-muted ">{shortDescription}</span>
-                </div>
+                        <VerticalAlignBottomOutlined />
+                        <span className="ml-2 font-weight-semibold">
+                            Install
+                        </span>
+                    </Tag>
+                ) : (
+                    <Tag className="text-capitalize" color="cyan">
+                        <CheckCircleOutlined />
+                        <span className="ml-2 font-weight-semibold">
+                            Installed
+                        </span>
+                    </Tag>
+                )}
             </Flex>
-        </Flex>
-    </>
-);
+            <div>
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                    <h3 className="mb-0 cursor-pointer ">{data.Name}</h3>
+                </Link>
+                <p className="text-muted">By IntelectSoft</p>
+                <div style={{ minHeight: "70px" }}>{data.ShortDescription}</div>
+            </div>
+            <Flex justifyContent="between" alignItems="center">
+                <div className="text-muted">Free</div>
+                <Button
+                    onClick={() => deactivateApp(data.ID)}
+                    danger
+                    type={"link"}
+                    style={{
+                        visibility: data.Status === 1 ? "visible" : "hidden",
+                    }}
+                >
+                    Delete
+                </Button>
+            </Flex>
+        </Card>
+    );
+};
 
-const Market = ({ apps, signOut }) => {
-    const deleteItem = (id) => {
-        const data = apps.filter((elm) => elm["ID"] !== id);
-    };
+const Market = () => {
+    const [apps, setApps] = useState<any>([]);
+    const dispatch = useDispatch();
     const history = useHistory();
 
     const Token = useSelector((state) => state["auth"].token);
-
     const { confirm } = Modal;
+    useEffect(() => {
+        Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
+            params: { Token },
+        }).then((res) => {
+            console.log(res.data);
+            const {
+                ErrorCode,
+                ErrorMessage,
+                MarketAppList,
+            } = res.data as IApplications;
+            if (ErrorCode === 0) {
+                setApps(MarketAppList);
+            } else if (ErrorCode === 118) {
+                message
+                    .loading("Time has expired... Redirecting!", 1.5)
+                    .then(() => dispatch(signOut()));
+            } else if (ErrorCode === -1) {
+            }
+        });
+    }, []);
+
+    const deactivateApp = (AppID) => {
+        confirm({
+            title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
+            onOk: () => {
+                Axios.post(`${API_IS_CLIENT_SERVICE}/DeactivateApp`, {
+                    AppID,
+                    Token,
+                }).then((res) => {
+                    console.log(res.data);
+                    if (res.data.ErrorCode === 0) {
+                        message.success("Done!", 1.5).then(() =>
+                            Axios.get(
+                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
+                                {
+                                    params: { Token },
+                                }
+                            ).then((res) => {
+                                console.log(res.data);
+                                const {
+                                    ErrorCode,
+                                    ErrorMessage,
+                                    MarketAppList,
+                                } = res.data as IApplications;
+                                if (ErrorCode === 0) {
+                                    setApps(MarketAppList);
+                                } else if (ErrorCode === 118) {
+                                    message
+                                        .loading(
+                                            "Time has expired... Redirecting!",
+                                            1.5
+                                        )
+                                        .then(() => dispatch(signOut()));
+                                } else if (ErrorCode === -1) {
+                                }
+                            })
+                        );
+                    } else if (res.data.ErrorCode === 118) {
+                        message
+                            .loading("Time has expired... Redirecting!", 1.5)
+                            .then(() => signOut());
+                    }
+                });
+            },
+            onCancel: () => {},
+        });
+    };
 
     const activateApp = (AppID) => {
         confirm({
@@ -180,18 +180,40 @@ const Market = ({ apps, signOut }) => {
                     AppID,
                     Token,
                 }).then((res) => {
+                    console.log(res.data);
                     if (res.data.ErrorCode === 0) {
-                        message
-                            .success("Done!", 1.5)
-                            .then(() =>
-                                history.push(
-                                    `${APP_PREFIX_PATH}/applications/my-applications`
-                                )
-                            );
+                        message.success("Done!", 1.5).then(() =>
+                            Axios.get(
+                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
+                                {
+                                    params: { Token },
+                                }
+                            ).then((res) => {
+                                console.log(res.data);
+                                const {
+                                    ErrorCode,
+                                    ErrorMessage,
+                                    MarketAppList,
+                                } = res.data as IApplications;
+                                if (ErrorCode === 0) {
+                                    setApps(MarketAppList);
+                                } else if (ErrorCode === 118) {
+                                    message
+                                        .loading(
+                                            "Time has expired... Redirecting!",
+                                            1.5
+                                        )
+                                        .then(() => dispatch(signOut()));
+                                } else if (ErrorCode === -1) {
+                                }
+                            })
+                        );
                     } else if (res.data.ErrorCode === 118) {
                         message
                             .loading("Time has expired... Redirecting!")
-                            .then(() => signOut());
+                            .then(() => dispatch(signOut()));
+                    } else {
+                        message.error(res.data.ErrorMessage);
                     }
                 });
             },
@@ -211,14 +233,14 @@ const Market = ({ apps, signOut }) => {
                                 xs={24}
                                 sm={24}
                                 lg={12}
-                                xl={8}
-                                xxl={8}
+                                xl={6}
+                                xxl={6}
                                 key={elm["ID"]}
                             >
                                 <GridItem
                                     activateApp={activateApp}
+                                    deactivateApp={deactivateApp}
                                     data={elm}
-                                    removeId={(ID) => deleteItem(ID)}
                                     key={elm["ID"]}
                                 />
                             </Col>

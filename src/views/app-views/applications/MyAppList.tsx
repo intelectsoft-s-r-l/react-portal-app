@@ -1,4 +1,15 @@
-import { Modal, Avatar, Card, Col, Empty, Menu, message, Row, Tag } from "antd";
+import {
+    Modal,
+    Avatar,
+    Card,
+    Col,
+    Empty,
+    Menu,
+    message,
+    Row,
+    Tag,
+    Button,
+} from "antd";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,134 +21,57 @@ import { signOut } from "../../../redux/actions/Auth";
 import {
     EyeOutlined,
     CheckCircleOutlined,
+    VerticalAlignBottomOutlined,
     ClockCircleOutlined,
     DeleteOutlined,
     ExperimentOutlined,
 } from "@ant-design/icons";
 import Flex from "../../../components/shared-components/Flex";
 
-const ItemAction = ({ deactivateApp, data, id, removeId }) => (
-    <EllipsisDropdown
-        menu={
-            <Menu>
-                <Menu.Item key="1">
-                    <Link
-                        to={`${APP_PREFIX_PATH}/applications/${data.ApplicationID}`}
-                    >
-                        <EyeOutlined />
-                        <span> View</span>
-                    </Link>
-                </Menu.Item>
-                <Menu.Divider />
-                <Menu.Item key="3" onClick={() => deactivateApp(data.ID)}>
-                    <DeleteOutlined />
-                    <span>Deactivate</span>
-                </Menu.Item>
-            </Menu>
-        }
-    />
-);
-
-const ItemInfo = ({ Status, ID, packages }) => (
-    <>
-        {/* <h3>Packages</h3>
-        <Row gutter={16}>
-            {packages.map((pckg) => (
-                <Col key={pckg.ID} xl={12} xxl={12} md={12} lg={12}>
-                    <Card hoverable>
-                        <h4>{pckg.Name}</h4>
-                        <div>
-                            From {pckg.MinValue} to {pckg.MaxValue} for{" "}
-                            {pckg.Price}
-                        </div>
-                        <div className="text-center">
-                            <Tag
-                                className="text-capitalize mt-3"
-                                color={pckg.IsActive ? "cyan" : "red"}
-                            >
-                                {pckg.IsActive ? (
-                                    <CheckCircleOutlined />
-                                ) : (
-                                    <ClockCircleOutlined />
-                                )}
-                                <span className="ml-2 font-weight-semibold">
-                                    {pckg.IsActive ? "Active" : "Not Active"}
-                                </span>
-                            </Tag>
-                        </div>
-                    </Card>
-                </Col>
-            ))}
-        </Row> */}
-    </>
-);
-
-const GridItem = ({ deactivateApp, data, removeId }) => (
-    <Card>
-        <Flex alignItems="center" justifyContent="between">
-            <ItemHeader
-                Status={data.Status}
-                avatar={data.Photo}
-                name={data.Name}
-                shortDescription={
-                    data.ShortDescription
-                        ? data.ShortDescription
-                        : "Here could be your description. Here could be your description .Here could be your description."
-                }
-            />
-            <ItemAction
-                deactivateApp={deactivateApp}
-                data={data}
-                id={data.ID}
-                removeId={removeId}
-            />
-        </Flex>
-        <div className="mt-2">
-            <ItemInfo
-                ID={data.ID}
-                Status={data.Status}
-                packages={data.Packages}
-            />
-        </div>
-    </Card>
-);
-
-const ItemHeader = ({ name, avatar, shortDescription, Status }) => (
-    <>
-        <Flex>
-            <div className="mr-3">
-                <Avatar
-                    src={avatar}
-                    icon={<ExperimentOutlined />}
-                    shape="square"
-                    size={80}
-                />
-            </div>
-            <Flex flexDirection="column">
-                <Flex flexDirection="row">
-                    <h2 className="mr-3">{name} </h2>
-                    <Tag
-                        className="text-capitalize"
-                        color={Status === 1 ? "cyan" : "red"}
-                    >
-                        {Status === 1 ? (
-                            <CheckCircleOutlined />
-                        ) : (
-                            <ClockCircleOutlined />
-                        )}
+const GridItem = ({ deactivateApp, data }) => {
+    return (
+        <Card>
+            <Flex className="mb-3 " justifyContent="between">
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                    <div className="cursor-pointer">
+                        <Avatar
+                            src={data.Photo}
+                            icon={<ExperimentOutlined />}
+                            shape="square"
+                            size={60}
+                        />
+                    </div>
+                </Link>
+                    <Tag className="text-capitalize" color="cyan">
+                        <CheckCircleOutlined />
                         <span className="ml-2 font-weight-semibold">
-                            {Status === 1 ? "Active" : "Not Active"}
+                            Installed
                         </span>
                     </Tag>
-                </Flex>
-                <div>
-                    <span className="text-muted ">{shortDescription}</span>
-                </div>
             </Flex>
-        </Flex>
-    </>
-);
-
+            <div>
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                    <h3 className="mb-0 cursor-pointer ">{data.Name}</h3>
+                </Link>
+                <p className="text-muted">By IntelectSoft</p>
+                <div style={{ minHeight: "70px" }}>{data.ShortDescription}</div>
+            </div>
+            <Flex justifyContent="between" alignItems="center">
+                <div className="text-muted">Free</div>
+                <Button
+                    onClick={() => deactivateApp(data.ID)}
+                    danger
+                    type={"link"}
+                    style={{
+                        visibility: data.Status === 1 ? "visible" : "hidden",
+                    }}
+                >
+                    Delete
+                </Button>
+            </Flex>
+        </Card>
+    );
+};
 const MyAppList = () => {
     const [apps, setApps] = useState<any>([]);
     const { confirm } = Modal;
@@ -203,14 +137,13 @@ const MyAppList = () => {
                                 xs={24}
                                 sm={24}
                                 lg={12}
-                                xl={8}
-                                xxl={8}
+                                xl={6}
+                                xxl={6}
                                 key={elm["ID"]}
                             >
                                 <GridItem
                                     deactivateApp={deactivateApp}
                                     data={elm}
-                                    removeId={(ID) => deleteItem(ID)}
                                     key={elm["ID"]}
                                 />
                             </Col>
