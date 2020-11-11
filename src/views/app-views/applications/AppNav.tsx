@@ -44,13 +44,13 @@ const AppStoreNav = () => {
             ) : (
                 <AppNavGrid apps={apps} />
             )}
-            {!apps && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+            {apps.length > 0 || <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </Menu>
     );
 
     return (
         <Dropdown overlay={menu} trigger={["click"]} placement={"bottomRight"}>
-            <Menu mode={"horizontal"} onClick={renderApps}>
+            <Menu mode={"horizontal"} onClick={() => renderApps()}>
                 <Menu.Item>
                     <Tooltip title={<IntlMessage id="header.applications" />}>
                         <AppstoreOutlined className={"nav-icon"} />

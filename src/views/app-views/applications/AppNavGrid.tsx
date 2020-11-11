@@ -5,7 +5,7 @@ import React, { CSSProperties, useEffect } from "react";
 import "./app_list.scss";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import { Link, NavLink } from "react-router-dom";
-const AppNavGrid = (/* { apps }: { apps: IApps[] }, */ props) => {
+const AppNavGrid = (props) => {
     return (
         <>
             {props.apps &&

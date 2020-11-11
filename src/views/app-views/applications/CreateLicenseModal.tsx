@@ -3,8 +3,16 @@ import React, { useEffect, useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import axios from "axios";
 import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
+import useHttpRequest from "../../../api";
 
-const CreateLicenseModal = ({ Token, AppType, visible, close, signOut }) => {
+const CreateLicenseModal = ({
+    Token,
+    AppType,
+    visible,
+    close,
+    signOut,
+    setLicenses,
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const onFinish = (values) => {
@@ -15,8 +23,18 @@ const CreateLicenseModal = ({ Token, AppType, visible, close, signOut }) => {
             .then((res) => {
                 console.log(res.data);
                 if (res.data.ErrorCode === 0) {
-                    message.success("Success!", 1.5);
-                    // .then(() => window.location.reload());
+                    message.success("Success!", 1.5).then(() => {
+                        axios
+                            .get(
+                                `${API_IS_CLIENT_SERVICE}/GetAppLicensesList`,
+                                {
+                                    params: { Token, AppType },
+                                }
+                            )
+                            .then((res) => {
+                                setLicenses(res.data.LicenseList);
+                            });
+                    });
                 } else if (res.data.ErrorCode === 118) {
                     message
                         .loading("Time has expired... Redirecting", 1.5)

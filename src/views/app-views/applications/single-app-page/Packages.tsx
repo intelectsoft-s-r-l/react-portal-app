@@ -49,9 +49,6 @@ const CardItem = ({ packages }) => {
     );
 };
 const Packages = ({ packages }: any) => {
-    useEffect(() => {
-        console.log(packages);
-    }, []);
     return (
         <>
             <h2 className="mb-4">Packages</h2>

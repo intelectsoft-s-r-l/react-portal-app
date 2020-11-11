@@ -37,6 +37,7 @@ import Licenses from "./Licenses";
 import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
+import IntegrationsHeader from "./IntegrationsHeader";
 
 const AppOption = ({ match, location }) => {
     return (
@@ -72,6 +73,8 @@ const AppRoute = ({
     packages,
     licenses,
     setCreateLicenseVisible,
+    AppType,
+    setLicenses,
 }) => {
     return (
         <Switch>
@@ -88,6 +91,8 @@ const AppRoute = ({
                         {...props}
                         licenses={licenses}
                         setCreateLicenseVisible={setCreateLicenseVisible}
+                        AppType={AppType}
+                        setLicenses={setLicenses}
                     />
                 )}
             />
@@ -147,8 +152,10 @@ const SingleAppPage = ({ match, location }) => {
     const [licenses, setLicenses] = useState<any>([]);
     const [apiKey, setApiKey] = useState<string>();
     const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
+    const [activationCode, setActivationCode] = useState<string>();
     const dispatch = useDispatch();
     const Token = useSelector((state) => state["auth"].token);
+
     useEffect(() => {
         let mounted = true;
         Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
@@ -158,13 +165,15 @@ const SingleAppPage = ({ match, location }) => {
                 console.log(res.data);
                 const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
                 if (ErrorCode === 0) {
-                    const selectedApp = MarketAppList.find(
+                    const currentApp = MarketAppList.find(
                         (data) => data.ID == appID
                     );
-                    setApp(selectedApp);
-                    selectedApp && setApiKey(selectedApp.ApyKey);
-
-                    return selectedApp;
+                    setApp(currentApp);
+                    if (currentApp) {
+                        setApiKey(currentApp.ApyKey);
+                        setActivationCode(currentApp.LicenseActivationCode);
+                    }
+                    return currentApp;
                 } else if (ErrorCode === 118) {
                     message
                         .loading("Time has expired... Redirecting!", 1.5)
@@ -177,10 +186,7 @@ const SingleAppPage = ({ match, location }) => {
                     Axios.get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
                         params: { Token, AppType: res["AppType"] },
                     }).then((res) => {
-                        console.log(res.data);
-                        if (res.data.ErrorCode === 0) {
-                            setLicenses([...res.data.LicenseList]);
-                        }
+                        setLicenses([...res.data.LicenseList]);
                     });
                 }
             });
@@ -193,55 +199,19 @@ const SingleAppPage = ({ match, location }) => {
         return <div>No app found</div>;
     }
 
-    const generateApiKey = () => {
-        confirm({
-            title: "Are you sure you want to generate a new API Key?",
-            onOk: () =>
-                Axios.post(`${API_IS_CLIENT_SERVICE}/GenerateApiKey`, {
-                    AppID: app.ID,
-                    Token,
-                }).then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        message.success("Done!", 1.5);
-                        setApiKey(res.data.ApiKey);
-                    } else if (res.data.ErrorCode === 118) {
-                        message
-                            .loading("Time has expired... Redirecting!")
-                            .then(() => dispatch(signOut()));
-                    }
-                }),
-            onCancel: () => {},
-        });
-    };
-
-    const deleteApiKey = () => {
-        confirm({
-            title: "Are you sure you want to delete current API Key?",
-            onOk: () =>
-                Axios.post(`${API_IS_CLIENT_SERVICE}/DeleteApiKey`, {
-                    AppID: app.ID,
-                    Token,
-                }).then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        message.success("Done!", 1.5);
-                        setApiKey("00000000-0000-0000-0000-000000000000");
-                    } else if (res.data.ErrorCode === 118) {
-                        message
-                            .loading("Time has expired... Redirecting!")
-                            .then(() => signOut());
-                    }
-                }),
-            onCancel: () => {},
-        });
-    };
-
     return (
         <>
             {app.Status === 1 ? (
                 <>
                     <AboutItem appData={app} />
+                    <IntegrationsHeader
+                        activationCode={activationCode}
+                        setActivationCode={setActivationCode}
+                        AppID={app.ID}
+                        apiKey={apiKey}
+                        setApiKey={setApiKey}
+                        Token={Token}
+                    />
                     <InnerAppLayout
                         sideContent={
                             <AppOption location={location} match={match} />
@@ -252,124 +222,27 @@ const SingleAppPage = ({ match, location }) => {
                                 match={match}
                                 packages={app.Packages}
                                 licenses={licenses}
+                                AppType={app.AppType}
                                 setCreateLicenseVisible={
                                     setCreateLicenseVisible
                                 }
+                                setLicenses={setLicenses}
                             />
                         }
                     />
                     <CreateLicenseModal
                         Token={Token}
+                        setLicenses={setLicenses}
                         AppType={app["AppType"]}
                         close={() => setCreateLicenseVisible(false)}
                         visible={createLicenseVisible}
                         signOut={signOut}
                     />
-                    {/* <PageHeaderAlt className="bg-white border-bottom">
-                        <div className="container-fluid">
-                            <Flex
-                                justifyContent="between"
-                                alignItems="center"
-                                className="py-4"
-                            >
-                                <h2>Licenses</h2>
-                                <div>
-                                    <Button
-                                        type="primary"
-                                        className="ml-2"
-                                        onClick={() =>
-                                            setCreateLicenseVisibile(true)
-                                        }
-                                    >
-                                        <PlusOutlined />
-                                        <span>New</span>
-                                    </Button>
-                                </div>
-                            </Flex>
-                        </div>
-                    </PageHeaderAlt>
-                    <div className="my-4 container-fluid">
-                        <Row gutter={16}>
-                            {licenses.length > 0 ? (
-                                licenses.map((elm) => (
-                                    <Col
-                                        xs={24}
-                                        sm={24}
-                                        lg={8}
-                                        xl={8}
-                                        xxl={6}
-                                        key={elm["ID"]}
-                                    >
-                                        <LicenseCardItem licenses={elm} />
-                                    </Col>
-                                ))
-                            ) : (
-                                <Flex className="w-100" justifyContent="center">
-                                    <Empty />
-                                </Flex>
-                            )}
-                        </Row>
-                    </div>
-                    <PageHeaderAlt className="bg-white border-bottom">
-                        <div className="container-fluid">
-                            <h2>Packages</h2>
-                        </div>
-                    </PageHeaderAlt>
-                    <div className="my-4 container-fluid">
-                        <Row gutter={16}>
-                            {app.Packages.length > 0 ? (
-                                app.Packages.map((elm) => (
-                                    <Col
-                                        xs={24}
-                                        sm={24}
-                                        lg={8}
-                                        xl={8}
-                                        xxl={6}
-                                        key={elm["ID"]}
-                                    >
-                                        <CardItem packages={elm} />
-                                    </Col>
-                                ))
-                            ) : (
-                                <Flex className="w-100" justifyContent="center">
-                                    <Empty />
-                                </Flex>
-                            )}
-                        </Row>
-                    </div>
-                    <PageHeaderAlt className="bg-white border-bottom">
-                        <div className="container-fluid">
-                            <h2>API Key</h2>
-                        </div>
-                    </PageHeaderAlt>
-                    <div className="my-4 container-fluid">
-                        <Row gutter={ROW_GUTTER}>
-                            <Col xs={12} xl={12} md={12}>
-                                <Input disabled value={apiKey} />
-                                <Button
-                                    type="primary"
-                                    className="mt-3"
-                                    onClick={() => generateApiKey()}
-                                >
-                                    Generate
-                                </Button>
-                                <Button
-                                    danger
-                                    className="mt-3 ml-3"
-                                    onClick={() => deleteApiKey()}
-                                >
-                                    Delete
-                                </Button>
-                            </Col>
-                        </Row>
-                    </div> */}
                 </>
             ) : (
-                <>
-                    <AboutItem appData={app} />
-                </>
+                <AboutItem appData={app} />
             )}
         </>
     );
 };
-export default connect(null, { signOut })(SingleAppPage);
+export default SingleAppPage;
