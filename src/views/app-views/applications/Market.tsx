@@ -38,7 +38,7 @@ import Axios from "axios";
 import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import { useDispatch, useSelector } from "react-redux";
 import { IApplications } from ".";
-import { signOut } from "../../../redux/actions/Auth";
+import { refreshToken, signOut } from "../../../redux/actions/Auth";
 import Loading from "../../../components/shared-components/Loading";
 
 const GridItem = ({ activateApp, deactivateApp, data }) => {
@@ -122,10 +122,7 @@ const Market = () => {
                 if (ErrorCode === 0) {
                     setApps(MarketAppList);
                 } else if (ErrorCode === 118) {
-                    message
-                        .loading("Time has expired... Redirecting!", 1.5)
-                        .then(() => dispatch(signOut()));
-                } else if (ErrorCode === -1) {
+                    dispatch(refreshToken(Token));
                 }
             })
             .catch((error) => {
@@ -183,12 +180,7 @@ const Market = () => {
                                             })
                                         );
                                     } else if (res.data.ErrorCode === 118) {
-                                        message
-                                            .loading(
-                                                "Time has expired... Redirecting!",
-                                                1.5
-                                            )
-                                            .then(() => signOut());
+                                        dispatch(refreshToken(Token));
                                     }
                                 })
                             ),
@@ -233,24 +225,14 @@ const Market = () => {
                                                 if (ErrorCode === 0) {
                                                     setApps(MarketAppList);
                                                 } else if (ErrorCode === 118) {
-                                                    message
-                                                        .loading(
-                                                            "Time has expired... Redirecting!",
-                                                            1.5
-                                                        )
-                                                        .then(() =>
-                                                            dispatch(signOut())
-                                                        );
-                                                } else if (ErrorCode === -1) {
+                                                    dispatch(
+                                                        refreshToken(Token)
+                                                    );
                                                 }
                                             })
                                         );
                                     } else if (res.data.ErrorCode === 118) {
-                                        message
-                                            .loading(
-                                                "Time has expired... Redirecting!"
-                                            )
-                                            .then(() => dispatch(signOut()));
+                                        dispatch(refreshToken(Token));
                                     } else {
                                         message.error(res.data.ErrorMessage);
                                     }

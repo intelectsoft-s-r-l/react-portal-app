@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import EllipsisDropdown from "../../../components/shared-components/EllipsisDropdown";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
-import { signOut } from "../../../redux/actions/Auth";
+import { refreshToken, signOut } from "../../../redux/actions/Auth";
 import {
     EyeOutlined,
     CheckCircleOutlined,
@@ -92,9 +92,7 @@ const MyAppList = () => {
                     );
                     setApps(activeApps);
                 } else if (ErrorCode === 118) {
-                    message
-                        .loading("Time has expired... Redirecting!", 1.5)
-                        .then(() => dispatch(signOut()));
+                    dispatch(refreshToken(Token));
                 } else if (ErrorCode === -1) {
                 }
             })
@@ -120,9 +118,7 @@ const MyAppList = () => {
                                 setApps(apps.filter((app) => app.ID != AppID))
                             );
                     } else if (res.data.ErrorCode === 118) {
-                        message
-                            .loading("Time has expired... Redirecting!", 1.5)
-                            .then(() => dispatch(signOut()));
+                        dispatch(refreshToken(Token));
                     }
                 });
             },

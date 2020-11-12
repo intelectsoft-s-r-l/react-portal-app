@@ -39,31 +39,56 @@ import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import IntegrationsHeader from "./IntegrationsHeader";
 
-const AppOption = ({ match, location }) => {
+enum app {
+    Retail = 10,
+    Agent = 20,
+    Expert = 30,
+}
+const AppOption = ({ match, location, AppType }) => {
     return (
-        <Menu
-            mode="inline"
-            defaultSelectedKeys={[`${match.url}/:appId/`]}
-            selectedKeys={[location.pathname]}
-        >
-            <Menu.Item key={`${match.url}/description`}>
-                <span>Description</span>
-                <Link to={"description"} />
-            </Menu.Item>
-            <Menu.Item key={`${match.url}/packages`}>
-                <span>Packages</span>
-                <Link to={"packages"} />
-            </Menu.Item>
-            {/* Show Licenses Tab only for the following Apps: Sales Expert, Restaurant Expert, Mobile Agent */}
-            <Menu.Item key={`${match.url}/licenses`}>
-                <span>Licenses</span>
-                <Link to={"licenses"} />
-            </Menu.Item>
-            <Menu.Item key={`${match.url}/devices`}>
-                <span>Devices</span>
-                <Link to={"devices"} />
-            </Menu.Item>
-        </Menu>
+        <>
+            {AppType == app.Retail ||
+            AppType == app.Agent ||
+            AppType == app.Expert ? (
+                <Menu
+                    mode="inline"
+                    defaultSelectedKeys={[`${match.url}/:appId/`]}
+                    selectedKeys={[location.pathname]}
+                >
+                    <Menu.Item key={`${match.url}/description`}>
+                        <span>Description</span>
+                        <Link to={"description"} />
+                    </Menu.Item>
+                    <Menu.Item key={`${match.url}/packages`}>
+                        <span>Packages</span>
+                        <Link to={"packages"} />
+                    </Menu.Item>
+                    <Menu.Item key={`${match.url}/licenses`}>
+                        <span>Licenses</span>
+                        <Link to={"licenses"} />
+                    </Menu.Item>
+                    <Menu.Item key={`${match.url}/devices`}>
+                        <span>Devices</span>
+                        <Link to={"devices"} />
+                    </Menu.Item>
+                </Menu>
+            ) : (
+                <Menu
+                    mode="inline"
+                    defaultSelectedKeys={[`${match.url}/:appId/`]}
+                    selectedKeys={[location.pathname]}
+                >
+                    <Menu.Item key={`${match.url}/description`}>
+                        <span>Description</span>
+                        <Link to={"description"} />
+                    </Menu.Item>
+                    <Menu.Item key={`${match.url}/packages`}>
+                        <span>Packages</span>
+                        <Link to={"packages"} />
+                    </Menu.Item>
+                </Menu>
+            )}
+        </>
     );
 };
 
@@ -137,7 +162,12 @@ const AboutItem = ({ appData }) => {
                     </Flex>
                     <div>
                         <span className="text-muted ">{ShortDescription}</span>
-                        <p className="mt-4">{LongDescription}</p>
+                        <p
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{
+                                __html: LongDescription,
+                            }}
+                        ></p>
                     </div>
                 </Flex>
             </Flex>
@@ -214,7 +244,11 @@ const SingleAppPage = ({ match, location }) => {
                     />
                     <InnerAppLayout
                         sideContent={
-                            <AppOption location={location} match={match} />
+                            <AppOption
+                                location={location}
+                                match={match}
+                                AppType={app.AppType}
+                            />
                         }
                         mainContent={
                             <AppRoute

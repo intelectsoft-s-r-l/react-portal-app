@@ -23,7 +23,7 @@ import {
 import moment from "moment";
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../../../../redux/actions/Auth";
+import { refreshToken, signOut } from "../../../../redux/actions/Auth";
 import { API_IS_CLIENT_SERVICE } from "../../../../constants/ApiConstant";
 
 const Licenses = ({
@@ -62,9 +62,7 @@ const Licenses = ({
                             })
                             .then(() => message.success("Done!", 1.5));
                     } else if (res.data.ErrorCode === 118) {
-                        message
-                            .loading("Time has expired! Redirecting...", 1.5)
-                            .then(() => dispatch(signOut()));
+                        dispatch(refreshToken(Token));
                     }
                 });
             },

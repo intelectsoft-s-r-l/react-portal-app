@@ -15,12 +15,14 @@ import {
     SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
     HIDE_LOADING,
     VALIDATE_USER,
+    SET_TOKEN,
 } from "../constants/Auth";
 import axios from "axios";
 import { message, Modal } from "antd";
 import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
 import { onLocaleChange } from "./Theme";
+import { EXPIRE_TIME } from "../../constants/Messages";
 const publicIp = require("react-public-ip");
 
 export const signIn = (user) => ({
@@ -89,6 +91,22 @@ export const isUserActivated = (boolean, Token) => ({
     userActivated: boolean,
     activationToken: Token,
 });
+
+export const refreshToken = (Token) => async (dispatch) => {
+    axios
+        .get(`${API_IS_AUTH_SERVICE}/RefreshToken`, {
+            params: { Token },
+        })
+        .then((res) => {
+            if (res.data.ErrorCode === 0) {
+                dispatch({ type: SET_TOKEN, token: res.data.Token });
+            } else if (res.data.ErrorCode === 105) {
+                message
+                    .loading(EXPIRE_TIME, 1.5)
+                    .then(() => dispatch(signOut()));
+            }
+        });
+};
 
 export const sendActivationCode = (Token) => {
     return async (dispatch) => {
