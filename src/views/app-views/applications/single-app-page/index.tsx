@@ -96,6 +96,7 @@ const AppRoute = ({
     match,
     location,
     packages,
+    LongDescription,
     licenses,
     setCreateLicenseVisible,
     AppType,
@@ -108,7 +109,12 @@ const AppRoute = ({
                 from={`${match.url}`}
                 to={`${match.url}/description`}
             />
-            <Route path={`${match.url}/description`} component={Description} />
+            <Route
+                path={`${match.url}/description`}
+                render={(props) => (
+                    <Description {...props} LongDescription={LongDescription} />
+                )}
+            />
             <Route
                 path={`${match.url}/licenses`}
                 render={(props) => (
@@ -252,6 +258,7 @@ const SingleAppPage = ({ match, location }) => {
                         }
                         mainContent={
                             <AppRoute
+                                LongDescription={app.LongDescription}
                                 location={location}
                                 match={match}
                                 packages={app.Packages}

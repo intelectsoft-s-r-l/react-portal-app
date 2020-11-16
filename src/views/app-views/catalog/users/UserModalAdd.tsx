@@ -4,15 +4,19 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { API_IS_AUTH_SERVICE } from "../../../../constants/ApiConstant";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { refreshToken } from "../../../../redux/actions/Auth";
 export const UserModalAdd = ({
     onCreate,
     onCancel,
     visible,
     token: Token,
     CompanyID,
+    getUsersInfo,
 }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
 
     const onFinish = (values) => {
         axios
@@ -27,10 +31,9 @@ export const UserModalAdd = ({
                 console.log(res.data);
                 form.resetFields();
                 if (res.data.ErrorCode === 0) {
-                    message.success(
-                        "You've successfully registered a new user. Check your email! :)",
-                        2
-                    );
+                    getUsersInfo();
+                } else if (res.data.ErrorCode === 118) {
+                    dispatch(refreshToken(Token));
                 } else {
                     message.error(res.data.ErrorMessage);
                 }
@@ -38,7 +41,7 @@ export const UserModalAdd = ({
     };
     return (
         <Modal
-            title={"Register user"}
+            title={"Invite user"}
             visible={visible}
             okText={<IntlMessage id={"account.EditProfile.SaveChange"} />}
             onCancel={onCancel}

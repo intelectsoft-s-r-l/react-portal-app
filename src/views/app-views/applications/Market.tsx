@@ -123,6 +123,8 @@ const Market = () => {
                     setApps(MarketAppList);
                 } else if (ErrorCode === 118) {
                     dispatch(refreshToken(Token));
+                } else if (ErrorCode === -1) {
+                    dispatch(signOut());
                 }
             })
             .catch((error) => {
@@ -167,14 +169,9 @@ const Market = () => {
                                                 if (ErrorCode === 0) {
                                                     setApps(MarketAppList);
                                                 } else if (ErrorCode === 118) {
-                                                    message
-                                                        .loading(
-                                                            "Time has expired... Redirecting!",
-                                                            1.5
-                                                        )
-                                                        .then(() =>
-                                                            dispatch(signOut())
-                                                        );
+                                                    dispatch(
+                                                        refreshToken(Token)
+                                                    );
                                                 } else if (ErrorCode === -1) {
                                                 }
                                             })

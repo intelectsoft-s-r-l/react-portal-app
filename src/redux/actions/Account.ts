@@ -6,6 +6,7 @@ import { REMOVE_AVATAR, UPDATE_SETTINGS } from "../constants/Account";
 import axios from "axios";
 import { message } from "antd";
 import { onLocaleChange } from "./Theme";
+import { signOut } from "./Auth";
 
 export const updateSettings = (payload) => ({
     type: UPDATE_SETTINGS,
@@ -35,6 +36,8 @@ export const getProfileInfo = (Token) => {
                     } else {
                         dispatch(onLocaleChange("en"));
                     }
+                } else if (ErrorCode === -1) {
+                    dispatch(signOut());
                 }
             });
     };

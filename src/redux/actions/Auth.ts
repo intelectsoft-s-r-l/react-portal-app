@@ -100,6 +100,7 @@ export const refreshToken = (Token) => async (dispatch) => {
         .then((res) => {
             if (res.data.ErrorCode === 0) {
                 dispatch({ type: SET_TOKEN, token: res.data.Token });
+                window.location.reload();
             } else if (res.data.ErrorCode === 105) {
                 message
                     .loading(EXPIRE_TIME, 1.5)

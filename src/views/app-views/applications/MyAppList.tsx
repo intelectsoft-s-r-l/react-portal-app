@@ -94,6 +94,7 @@ const MyAppList = () => {
                 } else if (ErrorCode === 118) {
                     dispatch(refreshToken(Token));
                 } else if (ErrorCode === -1) {
+                    dispatch(signOut());
                 }
             })
             .catch((error) => {

@@ -1,6 +1,16 @@
+import { Empty } from "antd";
 import React from "react";
 
-const Description = () => {
-    return <div>This is description component</div>;
+const Description = ({ LongDescription }) => {
+    return (
+        <div>
+            <h2 className="mb-4">Description</h2>
+            {LongDescription ? (
+                <p dangerouslySetInnerHTML={{ __html: LongDescription }}></p>
+            ) : (
+                <Empty />
+            )}
+        </div>
+    );
 };
 export default Description;
