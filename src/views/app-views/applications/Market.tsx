@@ -106,9 +106,9 @@ const Market = () => {
     const [loading, setLoading] = useState(false);
     const Token = useSelector((state) => state["auth"].token);
     const { confirm } = Modal;
-    useEffect(() => {
+    const getMarketApps = () => {
         setLoading(true);
-        Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
+        return Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
             params: { Token },
         })
             .then((res) => {
@@ -131,13 +131,14 @@ const Market = () => {
                 message.error(error, 5);
                 setLoading(false);
             });
+    };
+    useEffect(() => {
+        getMarketApps();
     }, []);
 
     const deactivateApp = (AppID) => {
-        setLoading(true);
         confirm({
             title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
-
             onOk: () => {
                 return new Promise((resolve) => {
                     setTimeout(
@@ -149,33 +150,10 @@ const Market = () => {
                                         AppID,
                                         Token,
                                     }
-                                ).then((res) => {
-                                    setLoading(false);
+                                ).then(async (res) => {
                                     console.log(res.data);
                                     if (res.data.ErrorCode === 0) {
-                                        message.success("Done!", 1.5).then(() =>
-                                            Axios.get(
-                                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
-                                                {
-                                                    params: { Token },
-                                                }
-                                            ).then((res) => {
-                                                console.log(res.data);
-                                                const {
-                                                    ErrorCode,
-                                                    ErrorMessage,
-                                                    MarketAppList,
-                                                } = res.data as IApplications;
-                                                if (ErrorCode === 0) {
-                                                    setApps(MarketAppList);
-                                                } else if (ErrorCode === 118) {
-                                                    dispatch(
-                                                        refreshToken(Token)
-                                                    );
-                                                } else if (ErrorCode === -1) {
-                                                }
-                                            })
-                                        );
+                                        await getMarketApps();
                                     } else if (res.data.ErrorCode === 118) {
                                         dispatch(refreshToken(Token));
                                     }
@@ -203,31 +181,10 @@ const Market = () => {
                                         AppID,
                                         Token,
                                     }
-                                ).then((res) => {
+                                ).then(async (res) => {
                                     console.log(res.data);
                                     if (res.data.ErrorCode === 0) {
-                                        message.success("Done!", 1.5).then(() =>
-                                            Axios.get(
-                                                `${API_IS_CLIENT_SERVICE}/GetMarketAppList`,
-                                                {
-                                                    params: { Token },
-                                                }
-                                            ).then((res) => {
-                                                console.log(res.data);
-                                                const {
-                                                    ErrorCode,
-                                                    ErrorMessage,
-                                                    MarketAppList,
-                                                } = res.data as IApplications;
-                                                if (ErrorCode === 0) {
-                                                    setApps(MarketAppList);
-                                                } else if (ErrorCode === 118) {
-                                                    dispatch(
-                                                        refreshToken(Token)
-                                                    );
-                                                }
-                                            })
-                                        );
+                                        await getMarketApps();
                                     } else if (res.data.ErrorCode === 118) {
                                         dispatch(refreshToken(Token));
                                     } else {
