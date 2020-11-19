@@ -42,10 +42,19 @@ import { refreshToken, signOut } from "../../../redux/actions/Auth";
 import Loading from "../../../components/shared-components/Loading";
 
 const GridItem = ({ activateApp, deactivateApp, data }) => {
+    const [shortDesc, setShortDesc] = useState<any>();
+    const locale = useSelector((state) => state["theme"].locale);
+    useEffect(() => {
+        try {
+            setShortDesc(JSON.parse(window.atob(data.ShortDescription)));
+        } catch {
+            setShortDesc({ en: "", ru: "", ro: "" });
+        }
+    }, []);
     return (
         <Card>
             <Flex className="mb-3 " justifyContent="between">
-                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
                     <div className="cursor-pointer">
                         <Avatar
                             src={data.Photo}
@@ -76,11 +85,13 @@ const GridItem = ({ activateApp, deactivateApp, data }) => {
                 )}
             </Flex>
             <div>
-                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
                     <h3 className="mb-0 cursor-pointer ">{data.Name}</h3>
                 </Link>
                 <p className="text-muted">By IntelectSoft</p>
-                <div style={{ minHeight: "70px" }}>{data.ShortDescription}</div>
+                <div style={{ minHeight: "70px" }}>
+                    {shortDesc ? shortDesc[locale] : null}
+                </div>
             </div>
             <Flex justifyContent="between" alignItems="center">
                 <div className="text-muted">Free</div>
@@ -124,12 +135,14 @@ const Market = () => {
                 } else if (ErrorCode === 118) {
                     dispatch(refreshToken(Token));
                 } else if (ErrorCode === -1) {
-                    dispatch(signOut());
+                    const key = "updatable";
+                    message.error({ content: "Error: Internal error.", key });
                 }
             })
             .catch((error) => {
-                message.error(error, 5);
                 setLoading(false);
+                const key = "updatable";
+                message.error({ content: error.toString(), key });
             });
     };
     useEffect(() => {
@@ -150,14 +163,22 @@ const Market = () => {
                                         AppID,
                                         Token,
                                     }
-                                ).then(async (res) => {
-                                    console.log(res.data);
-                                    if (res.data.ErrorCode === 0) {
-                                        await getMarketApps();
-                                    } else if (res.data.ErrorCode === 118) {
-                                        dispatch(refreshToken(Token));
-                                    }
-                                })
+                                )
+                                    .then(async (res) => {
+                                        console.log(res.data);
+                                        if (res.data.ErrorCode === 0) {
+                                            await getMarketApps();
+                                        } else if (res.data.ErrorCode === 118) {
+                                            dispatch(refreshToken(Token));
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        const key = "updatable";
+                                        message.error({
+                                            content: error.toString(),
+                                            key,
+                                        });
+                                    })
                             ),
                         1000
                     );
@@ -181,16 +202,26 @@ const Market = () => {
                                         AppID,
                                         Token,
                                     }
-                                ).then(async (res) => {
-                                    console.log(res.data);
-                                    if (res.data.ErrorCode === 0) {
-                                        await getMarketApps();
-                                    } else if (res.data.ErrorCode === 118) {
-                                        dispatch(refreshToken(Token));
-                                    } else {
-                                        message.error(res.data.ErrorMessage);
-                                    }
-                                })
+                                )
+                                    .then(async (res) => {
+                                        console.log(res.data);
+                                        if (res.data.ErrorCode === 0) {
+                                            await getMarketApps();
+                                        } else if (res.data.ErrorCode === 118) {
+                                            dispatch(refreshToken(Token));
+                                        } else {
+                                            message.error(
+                                                res.data.ErrorMessage
+                                            );
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        const key = "updatable";
+                                        message.error({
+                                            content: error.toString(),
+                                            key,
+                                        });
+                                    })
                             ),
                         1000
                     );
@@ -217,13 +248,13 @@ const Market = () => {
                                     lg={12}
                                     xl={6}
                                     xxl={6}
-                                    key={elm["ID"]}
+                                    key={elm["AppType"]}
                                 >
                                     <GridItem
                                         activateApp={activateApp}
                                         deactivateApp={deactivateApp}
                                         data={elm}
-                                        key={elm["ID"]}
+                                        key={elm["AppType"]}
                                     />
                                 </Col>
                             ))

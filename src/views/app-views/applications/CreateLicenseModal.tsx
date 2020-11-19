@@ -23,18 +23,13 @@ const CreateLicenseModal = ({
             .then((res) => {
                 console.log(res.data);
                 if (res.data.ErrorCode === 0) {
-                    message.success("Success!", 1.5).then(() => {
-                        axios
-                            .get(
-                                `${API_IS_CLIENT_SERVICE}/GetAppLicensesList`,
-                                {
-                                    params: { Token, AppType },
-                                }
-                            )
-                            .then((res) => {
-                                setLicenses(res.data.LicenseList);
-                            });
-                    });
+                    axios
+                        .get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
+                            params: { Token, AppType },
+                        })
+                        .then((res) => {
+                            setLicenses(res.data.LicenseList);
+                        });
                 } else if (res.data.ErrorCode === 118) {
                     message
                         .loading("Time has expired... Redirecting", 1.5)

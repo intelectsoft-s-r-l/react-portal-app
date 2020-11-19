@@ -69,6 +69,10 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                 } else {
                     message.error(ErrorMessage);
                 }
+            })
+            .catch((error) => {
+                const key = "updatable";
+                message.error({ content: error.toString(), key });
             });
     }
 

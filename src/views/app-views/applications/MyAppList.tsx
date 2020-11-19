@@ -30,10 +30,19 @@ import Flex from "../../../components/shared-components/Flex";
 import Loading from "../../../components/shared-components/Loading";
 
 const GridItem = ({ deactivateApp, data }) => {
+    const [shortDesc, setShortDesc] = useState<any>();
+    const locale = useSelector((state) => state["theme"].locale);
+    useEffect(() => {
+        try {
+            setShortDesc(JSON.parse(window.atob(data.ShortDescription)));
+        } catch {
+            setShortDesc({ en: "", ru: "", ro: "" });
+        }
+    }, []);
     return (
         <Card>
             <Flex className="mb-3 " justifyContent="between">
-                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
                     <div className="cursor-pointer">
                         <Avatar
                             src={data.Photo}
@@ -49,11 +58,13 @@ const GridItem = ({ deactivateApp, data }) => {
                 </Tag>
             </Flex>
             <div>
-                <Link to={`${APP_PREFIX_PATH}/applications/${data.ID}`}>
+                <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
                     <h3 className="mb-0 cursor-pointer ">{data.Name}</h3>
                 </Link>
                 <p className="text-muted">By IntelectSoft</p>
-                <div style={{ minHeight: "70px" }}>{data.ShortDescription}</div>
+                <div style={{ minHeight: "70px" }}>
+                    {shortDesc ? shortDesc[locale] : null}
+                </div>
             </div>
             <Flex justifyContent="between" alignItems="center">
                 <div className="text-muted">Free</div>
@@ -94,11 +105,16 @@ const MyAppList = () => {
                 } else if (ErrorCode === 118) {
                     dispatch(refreshToken(Token));
                 } else if (ErrorCode === -1) {
-                    dispatch(signOut());
+                    const key = "updatable";
+                    message.error({ content: "Error: Internal error.", key });
+                    /* TODO:  */
+                    /* Internal Error. Message Error was sent to our developers. */
+                    /* Send ErrorMessage to info@edi.md */
                 }
             })
             .catch((error) => {
-                message.error(error, 5);
+                const key = "updatable";
+                message.error({ content: error.toString(), key });
                 setLoading(false);
             });
     }, []);
@@ -110,24 +126,30 @@ const MyAppList = () => {
                 Axios.post(`${API_IS_CLIENT_SERVICE}/DeactivateApp`, {
                     AppID,
                     Token,
-                }).then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        message
-                            .success("Done!", 1.5)
-                            .then(() =>
-                                setApps(apps.filter((app) => app.ID != AppID))
-                            );
-                    } else if (res.data.ErrorCode === 118) {
-                        dispatch(refreshToken(Token));
-                    }
-                });
+                })
+                    .then((res) => {
+                        console.log(res.data);
+                        if (res.data.ErrorCode === 0) {
+                            message
+                                .success("Done!", 1.5)
+                                .then(() =>
+                                    setApps(
+                                        apps.filter((app) => app.ID != AppID)
+                                    )
+                                );
+                        } else if (res.data.ErrorCode === 118) {
+                            dispatch(refreshToken(Token));
+                        }
+                    })
+                    .catch((error) => {
+                        const key = "updatable";
+                        message.error({ content: error.toString(), key });
+                    });
             },
             onCancel: () => {},
         });
     };
 
-    const deleteItem = (ID) => {};
     return (
         <>
             {loading ? (
@@ -146,12 +168,12 @@ const MyAppList = () => {
                                     lg={12}
                                     xl={6}
                                     xxl={6}
-                                    key={elm["ID"]}
+                                    key={elm["AppType"]}
                                 >
                                     <GridItem
                                         deactivateApp={deactivateApp}
                                         data={elm}
-                                        key={elm["ID"]}
+                                        key={elm["AppType"]}
                                     />
                                 </Col>
                             ))

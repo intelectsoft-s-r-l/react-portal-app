@@ -11,6 +11,7 @@ import {
     Row,
     Col,
     Select,
+    message,
 } from "antd";
 import {
     showAuthMessage,
@@ -99,7 +100,6 @@ export const RegisterForm = (props) => {
         token,
         loading,
         redirect,
-        message,
         showMessage,
         hideAuthMessage,
         authenticated,
@@ -185,7 +185,7 @@ export const RegisterForm = (props) => {
                     marginBottom: showMessage ? 20 : 0,
                 }}
             >
-                <Alert type="error" showIcon message={message} />
+                <Alert type="error" showIcon message={props.message} />
             </motion.div>
             <Form
                 form={form}

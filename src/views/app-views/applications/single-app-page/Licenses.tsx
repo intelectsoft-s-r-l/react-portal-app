@@ -10,7 +10,7 @@ import {
     Tag,
     Tooltip,
 } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import {
     PlusOutlined,
@@ -25,48 +25,63 @@ import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToken, signOut } from "../../../../redux/actions/Auth";
 import { API_IS_CLIENT_SERVICE } from "../../../../constants/ApiConstant";
+import Utils from "../../../../utils";
 
 const Licenses = ({
     licenses,
     setCreateLicenseVisible,
     AppType,
     setLicenses,
+    getAppLicenses,
+    licensesToSearch,
+    setLicensesToSearch,
 }) => {
     const { confirm } = Modal;
     const Token = useSelector((state) => state["auth"].token);
+    const [selectedKeys, setSelectedKeys] = useState<any>([]);
+    const [selectedRows, setSeletedRows] = useState<any>([]);
     const dispatch = useDispatch();
-    const deleteAppLicense = (LicenseID, LicenseCode) => {
-        confirm({
-            title: `Are you sure you want to delete license with the code: ${LicenseCode}?`,
+    const deleteLicense = (LicenseID) => {
+        return Axios.get(`${API_IS_CLIENT_SERVICE}/DeleteAppLicense`, {
+            params: { Token, LicenseID },
+        })
+            .then(async (res) => {
+                console.log(res.data);
+                if (res.data.ErrorCode === 0) {
+                } else if (res.data.ErrorCode === 118) {
+                    dispatch(refreshToken(Token));
+                }
+            })
+            .catch((error) => {
+                const key = "updatable";
+                message.error({ content: error, key });
+            });
+    };
+    const deleteRow = (row) => {
+        const objKey = "ID";
+        let data = licenses;
+        Modal.confirm({
+            title: `Are you sure you want to delete ${selectedRows.length} ${
+                selectedRows.length > 1 ? "licenses" : "license"
+            }?`,
             onOk: () => {
-                Axios.get(`${API_IS_CLIENT_SERVICE}/DeleteAppLicense`, {
-                    params: { Token, LicenseID },
-                }).then((res) => {
-                    console.log(res.data);
-
-                    if (res.data.ErrorCode === 0) {
-                        message
-                            .loading("Loading...")
-                            .then(() => {
-                                Axios.get(
-                                    `${API_IS_CLIENT_SERVICE}/GetAppLicensesList`,
-                                    {
-                                        params: {
-                                            Token,
-                                            AppType,
-                                        },
-                                    }
-                                ).then((res) => {
-                                    setLicenses(res.data.LicenseList);
-                                });
-                            })
-                            .then(() => message.success("Done!", 1.5));
-                    } else if (res.data.ErrorCode === 118) {
-                        dispatch(refreshToken(Token));
+                if (selectedRows.length > 1) {
+                    selectedRows.forEach((elm) => {
+                        deleteLicense(elm.ID);
+                        data = Utils.deleteArrayRow(data, objKey, elm.ID);
+                        setLicenses(data);
+                        setSeletedRows([]);
+                    });
+                } else {
+                    for (const elm of row) {
+                        data = Utils.deleteArrayRow(data, objKey, elm.ID);
+                        setSeletedRows([]);
+                        setSelectedKeys([]);
+                        setLicenses(data);
+                        deleteLicense(elm.ID);
                     }
-                });
+                }
             },
-            onCancel: () => {},
         });
     };
     const tableColumns = [
@@ -123,9 +138,10 @@ const Licenses = ({
                             danger
                             icon={<DeleteOutlined />}
                             size="small"
-                            onClick={() =>
-                                deleteAppLicense(elm.ID, elm.LicenseCode)
-                            }
+                            onClick={async () => {
+                                await deleteLicense(elm.ID);
+                                await getAppLicenses(AppType);
+                            }}
                         />
                     </Tooltip>
                 </div>
@@ -137,17 +153,49 @@ const Licenses = ({
             <Flex justifyContent="between" alignItems="center" className="py-4">
                 <h2>Licenses</h2>
                 <div>
-                    <Button
-                        type="primary"
-                        className="ml-2"
-                        onClick={() => setCreateLicenseVisible(true)}
-                    >
-                        <PlusOutlined />
-                        <span>New</span>
-                    </Button>
+                    <Flex>
+                        {selectedRows.length > 0 && (
+                            <Tooltip
+                                title={`${
+                                    selectedRows.length > 1
+                                        ? `Delete (${selectedRows.length})`
+                                        : "Delete"
+                                }`}
+                            >
+                                <Button
+                                    className="mr-3"
+                                    danger
+                                    onClick={() => deleteRow(selectedRows)}
+                                >
+                                    <DeleteOutlined />
+                                </Button>
+                            </Tooltip>
+                        )}
+                        <Button
+                            type="primary"
+                            className="ml-2"
+                            onClick={() => setCreateLicenseVisible(true)}
+                        >
+                            <PlusOutlined />
+                            <span>New</span>
+                        </Button>
+                    </Flex>
                 </div>
             </Flex>
-            <Table columns={tableColumns} dataSource={licenses} rowKey="ID" />
+            <Table
+                columns={tableColumns}
+                dataSource={licenses}
+                rowKey="ID"
+                rowSelection={{
+                    onChange: (key, rows) => {
+                        setSelectedKeys(key);
+                        setSeletedRows(rows);
+                    },
+                    selectedRowKeys: selectedKeys,
+                    type: "checkbox",
+                    preserveSelectedRowKeys: false,
+                }}
+            />
         </>
     );
 };

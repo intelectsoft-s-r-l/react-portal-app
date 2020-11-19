@@ -98,9 +98,12 @@ const AppRoute = ({
     packages,
     LongDescription,
     licenses,
+    getAppLicenses,
     setCreateLicenseVisible,
     AppType,
     setLicenses,
+    licensesToSearch,
+    setLicensesToSearch,
 }) => {
     return (
         <Switch>
@@ -123,7 +126,10 @@ const AppRoute = ({
                         licenses={licenses}
                         setCreateLicenseVisible={setCreateLicenseVisible}
                         AppType={AppType}
+                        getAppLicenses={getAppLicenses}
                         setLicenses={setLicenses}
+                        setLicensesToSearch={setLicensesToSearch}
+                        licensesToSearch={licensesToSearch}
                     />
                 )}
             />
@@ -138,6 +144,23 @@ const AppRoute = ({
 
 const AboutItem = ({ appData }) => {
     const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
+    const [shortDesc, setShortDesc] = useState<any>();
+    const [longDesc, setLongDesc] = useState<any>();
+    const locale = useSelector((state) => state["theme"].locale);
+    useEffect(() => {
+        try {
+            setShortDesc(JSON.parse(window.atob(ShortDescription)));
+        } catch {
+            setShortDesc({ en: "", ru: "", ro: "" });
+        }
+    }, []);
+    useEffect(() => {
+        try {
+            setLongDesc(JSON.parse(window.atob(LongDescription)));
+        } catch {
+            setLongDesc({ en: "", ru: "", ro: "" });
+        }
+    }, []);
     return (
         <Card className="mb-5">
             <Flex>
@@ -167,11 +190,13 @@ const AboutItem = ({ appData }) => {
                         </Tag> */}
                     </Flex>
                     <div>
-                        <span className="text-muted ">{ShortDescription}</span>
+                        <span className="text-muted ">
+                            {shortDesc ? shortDesc[locale] : null}
+                        </span>
                         <p
                             className="mt-4"
                             dangerouslySetInnerHTML={{
-                                __html: LongDescription,
+                                __html: longDesc ? longDesc[locale] : null,
                             }}
                         ></p>
                     </div>
@@ -186,12 +211,22 @@ const SingleAppPage = ({ match, location }) => {
     const { confirm } = Modal;
     const [app, setApp] = useState<any>();
     const [licenses, setLicenses] = useState<any>([]);
+    const [licensestoSearch, setLicensesToSearch] = useState<any>([]);
     const [apiKey, setApiKey] = useState<string>();
     const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
     const [activationCode, setActivationCode] = useState<string>();
     const dispatch = useDispatch();
     const Token = useSelector((state) => state["auth"].token);
 
+    const getAppLinceses = (AppType) => {
+        Axios.get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
+            params: { Token, AppType },
+        }).then((res) => {
+            console.log(res.data);
+            setLicenses([...res.data.LicenseList]);
+            setLicensesToSearch([...res.data.LicenseList]);
+        });
+    };
     useEffect(() => {
         let mounted = true;
         Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
@@ -202,7 +237,7 @@ const SingleAppPage = ({ match, location }) => {
                 const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
                 if (ErrorCode === 0) {
                     const currentApp = MarketAppList.find(
-                        (data) => data.ID == appID
+                        (data) => data.AppType == appID
                     );
                     setApp(currentApp);
                     if (currentApp) {
@@ -217,14 +252,14 @@ const SingleAppPage = ({ match, location }) => {
                 } else if (ErrorCode === -1) {
                 }
             })
-            .then((res) => {
+            .then(async (res) => {
                 if (res) {
-                    Axios.get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
-                        params: { Token, AppType: res["AppType"] },
-                    }).then((res) => {
-                        setLicenses([...res.data.LicenseList]);
-                    });
+                    await getAppLinceses(res["AppType"]);
                 }
+            })
+            .catch((error) => {
+                const key = "updatable";
+                message.error({ content: error.toString(), key });
             });
         return () => {
             mounted = false;
@@ -264,6 +299,9 @@ const SingleAppPage = ({ match, location }) => {
                                 packages={app.Packages}
                                 licenses={licenses}
                                 AppType={app.AppType}
+                                getAppLicenses={getAppLinceses}
+                                licensesToSearch={licensestoSearch}
+                                setLicensesToSearch={setLicensesToSearch}
                                 setCreateLicenseVisible={
                                     setCreateLicenseVisible
                                 }

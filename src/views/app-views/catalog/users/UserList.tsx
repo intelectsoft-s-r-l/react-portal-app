@@ -123,6 +123,10 @@ export class UserList extends Component<ReduxStoreProps> {
                 } else if (res.data.ErrorCode === 118) {
                     this.props.refreshToken(this.props.token);
                 }
+            })
+            .catch((error) => {
+                const key = "updatable";
+                message.error({ content: error.toString(), key });
             });
     };
 
@@ -183,6 +187,10 @@ export class UserList extends Component<ReduxStoreProps> {
                     })
                     .then((res) => {
                         console.log(res.data);
+                    })
+                    .catch((error) => {
+                        const key = "updatable";
+                        message.error({ content: error.toString(), key });
                     });
             },
             onCancel() {},
@@ -190,18 +198,27 @@ export class UserList extends Component<ReduxStoreProps> {
     };
 
     toggleStatusRow = async (row, statusNumber) => {
-        for (const elm of row) {
-            await this.handleUserStatus(elm.ID, statusNumber);
-        }
-        this.setState({ selectedRows: [], selectedKeys: [] });
-        this.getUsersInfo();
+        Modal.confirm({
+            title: `Are you sure you want to ${
+                statusNumber === 0 ? "deactivate" : "activate"
+            } ${row.length} ${row.length > 1 ? "users" : "user"}?`,
+            onOk: async () => {
+                for (const elm of row) {
+                    await this.handleUserStatus(elm.ID, statusNumber);
+                }
+                this.setState({ selectedRows: [], selectedKeys: [] });
+                this.getUsersInfo();
+            },
+        });
     };
 
     deleteRow = (row) => {
         const objKey = "ID";
         let data = this.state.users;
         Modal.confirm({
-            title: `Are you sure you want to delete ${this.state.selectedRows.length} users?`,
+            title: `Are you sure you want to delete ${
+                this.state.selectedRows.length
+            } ${this.state.selectedRows.length > 1 ? "users" : "user"}?`,
             onOk: () => {
                 if (this.state.selectedRows.length > 1) {
                     this.state.selectedRows.forEach((elm) => {
@@ -238,35 +255,14 @@ export class UserList extends Component<ReduxStoreProps> {
                 } else if (res.data.ErrorCode === 118) {
                     this.props.refreshToken(this.props.token);
                 }
+            })
+            .catch((error) => {
+                const key = "updatable";
+                message.error({ content: error.toString(), key });
             });
     };
     dropdownMenu = (row) => (
         <Menu>
-            {row.Status === 0 ? (
-                <Menu.Item
-                    onClick={async () => {
-                        await this.handleUserStatus(row.ID, status.active);
-                        this.getUsersInfo();
-                    }}
-                >
-                    <Flex alignItems="center">
-                        <CheckCircleOutlined />
-                        <span className="ml-2">Activate</span>
-                    </Flex>
-                </Menu.Item>
-            ) : (
-                <Menu.Item
-                    onClick={async () => {
-                        await this.handleUserStatus(row.ID, status.inactive);
-                        this.getUsersInfo();
-                    }}
-                >
-                    <Flex alignItems="center">
-                        <CloseCircleOutlined />
-                        <span className="ml-2">Deactivate</span>
-                    </Flex>
-                </Menu.Item>
-            )}
             <Menu.Item onClick={() => this.showUserProfile(row)}>
                 <Flex alignItems="center">
                     <EyeOutlined />
@@ -279,10 +275,56 @@ export class UserList extends Component<ReduxStoreProps> {
                     <span className="ml-2">Edit</span>
                 </Flex>
             </Menu.Item>
+            {row.Status === 0 ? (
+                <Menu.Item
+                    onClick={async () => {
+                        Modal.confirm({
+                            title: `Are you sure you want to activate this user?`,
+                            onOk: async () => {
+                                await this.handleUserStatus(
+                                    row.ID,
+                                    status.active
+                                );
+                                await this.getUsersInfo();
+                            },
+                        });
+                    }}
+                >
+                    <Flex alignItems="center">
+                        <CheckCircleOutlined />
+                        <span className="ml-2">Activate</span>
+                    </Flex>
+                </Menu.Item>
+            ) : (
+                <Menu.Item
+                    onClick={async () => {
+                        Modal.confirm({
+                            title: `Are you sure you want to deactivate this user?`,
+                            onOk: async () => {
+                                await this.handleUserStatus(
+                                    row.ID,
+                                    status.inactive
+                                );
+                                await this.getUsersInfo();
+                            },
+                        });
+                    }}
+                >
+                    <Flex alignItems="center">
+                        <CloseCircleOutlined />
+                        <span className="ml-2">Deactivate</span>
+                    </Flex>
+                </Menu.Item>
+            )}
             <Menu.Item
                 onClick={async () => {
-                    await this.handleUserStatus(row.ID, status.deleted);
-                    this.getUsersInfo();
+                    Modal.confirm({
+                        title: `Are you sure you want to delete this user?`,
+                        onOk: async () => {
+                            await this.handleUserStatus(row.ID, status.deleted);
+                            await this.getUsersInfo();
+                        },
+                    });
                 }}
             >
                 <Flex alignItems="center">
@@ -292,6 +334,7 @@ export class UserList extends Component<ReduxStoreProps> {
             </Menu.Item>
         </Menu>
     );
+
     onSearch = (e) => {
         const value = e.currentTarget.value;
         const searchArray = value ? this.state.users : this.state.usersToSearch;
@@ -303,12 +346,12 @@ export class UserList extends Component<ReduxStoreProps> {
         const { users, userProfileVisible, selectedUser } = this.state;
 
         const tableColumns = [
-            {
-                title: "ID",
-                dataIndex: "ID",
-                sorter: { compare: (a, b) => a.ID - b.ID },
-                defaultSortOrder: "ascend" as SortOrder,
-            },
+            // {
+            //     title: "ID",
+            //     dataIndex: "ID",
+            //     sorter: { compare: (a, b) => a.ID - b.ID },
+            //     defaultSortOrder: "ascend" as SortOrder,
+            // },
             {
                 title: "User",
                 dataIndex: "name",

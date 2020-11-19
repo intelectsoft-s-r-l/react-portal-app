@@ -7,7 +7,11 @@ import AppLocale from "../lang";
 import { IntlProvider } from "react-intl";
 import { ConfigProvider } from "antd";
 import { signOut } from "../redux/actions/Auth";
-import { APP_PREFIX_PATH, AUTH_PREFIX_PATH } from "../configs/AppConfig";
+import {
+    APP_NAME,
+    APP_PREFIX_PATH,
+    AUTH_PREFIX_PATH,
+} from "../configs/AppConfig";
 
 function RouteInterceptor({ children, isAuthenticated, ...rest }) {
     return (
@@ -33,8 +37,8 @@ export const Views = (props) => {
     const { locale, signOut, location, token } = props;
     const currentAppLocale = AppLocale[locale];
     useEffect(() => {
-        localStorage.getItem("state") || signOut();
-    }, [localStorage.getItem("state")]);
+        localStorage.getItem(`${APP_NAME}`) || signOut();
+    }, [localStorage.getItem(`${APP_NAME}`)]);
     return (
         <IntlProvider
             locale={currentAppLocale.locale}
