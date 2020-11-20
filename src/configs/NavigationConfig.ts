@@ -131,7 +131,7 @@ const dashBoardNavTree = [
             },
             {
                 key: "payment",
-                path: "/app/account-settings/billing",
+                path: "/app/payments",
                 title: "sidenav.payment",
                 icon: CreditCardOutlined,
                 breadcrumb: true,

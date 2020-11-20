@@ -204,6 +204,8 @@ export class Billing extends Component {
       <>
         <h2 className="mb-4">
           <IntlMessage id={"account.Billing.Title"} />
+          {" "}
+          (in progress)
         </h2>
         <Table
           locale={locale}

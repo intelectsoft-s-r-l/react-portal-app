@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const AuditLoginHistory = () => {
-  return (<div>LoginHistory component works!</div>)
-}
+    return <div>In progress...</div>;
+};
 
 export default AuditLoginHistory;

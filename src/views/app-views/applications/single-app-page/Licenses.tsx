@@ -3,6 +3,7 @@ import {
     Card,
     Col,
     Empty,
+    Input,
     message,
     Modal,
     Row,
@@ -14,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import {
     PlusOutlined,
+    SearchOutlined,
     CloseCircleOutlined,
     CheckCircleOutlined,
     EyeOutlined,
@@ -84,6 +86,12 @@ const Licenses = ({
             },
         });
     };
+    const onSearch = (e) => {
+        const value = e.currentTarget.value;
+        const searchArray = value ? licenses : licensesToSearch;
+        const data = Utils.wildCardSearch(searchArray, value);
+        setLicenses(data);
+    };
     const tableColumns = [
         {
             title: "License Code",
@@ -138,9 +146,16 @@ const Licenses = ({
                             danger
                             icon={<DeleteOutlined />}
                             size="small"
-                            onClick={async () => {
-                                await deleteLicense(elm.ID);
-                                await getAppLicenses(AppType);
+                            onClick={() => {
+                                Modal.confirm({
+                                    title: `Are you sure you want to delete license ${elm.LicenseCode}?`,
+                                    onOk: async () => {
+                                        setSeletedRows([]);
+                                        setSelectedKeys([]);
+                                        await deleteLicense(elm.ID);
+                                        await getAppLicenses(AppType);
+                                    },
+                                });
                             }}
                         />
                     </Tooltip>
@@ -182,6 +197,13 @@ const Licenses = ({
                     </Flex>
                 </div>
             </Flex>
+            <div className="w-25 mb-3">
+                <Input
+                    placeholder="Search"
+                    prefix={<SearchOutlined />}
+                    onChange={(e) => onSearch(e)}
+                />
+            </div>
             <Table
                 columns={tableColumns}
                 dataSource={licenses}

@@ -76,7 +76,7 @@ export class Notification extends Component {
         const { config } = this.state;
         return (
             <>
-                <h2 className="mb-4">Notification</h2>
+                <h2 className="mb-4">Notification (in progress)</h2>
                 <List
                     itemLayout="horizontal"
                     dataSource={config}

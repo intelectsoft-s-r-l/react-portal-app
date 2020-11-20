@@ -1,8 +1,6 @@
-import React from 'react';
+import React from "react";
 
 const Group = () => {
-  return (
-    <div>Group component works just fine!</div>
-  )
-}
+    return <div>In progress...</div>;
+};
 export default Group;

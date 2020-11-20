@@ -1,7 +1,6 @@
 import React from "react";
 
-const Invoices = () => {
+const Payments = () => {
     return <div>In progress...</div>;
 };
-
-export default Invoices;
+export default Payments;

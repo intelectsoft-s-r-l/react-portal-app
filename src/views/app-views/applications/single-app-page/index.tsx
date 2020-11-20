@@ -219,7 +219,7 @@ const SingleAppPage = ({ match, location }) => {
     const Token = useSelector((state) => state["auth"].token);
 
     const getAppLinceses = (AppType) => {
-        Axios.get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
+        return Axios.get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
             params: { Token, AppType },
         }).then((res) => {
             console.log(res.data);
@@ -236,6 +236,7 @@ const SingleAppPage = ({ match, location }) => {
                 console.log(res.data);
                 const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
                 if (ErrorCode === 0) {
+                    getAppLinceses(appID);
                     const currentApp = MarketAppList.find(
                         (data) => data.AppType == appID
                     );
@@ -244,17 +245,11 @@ const SingleAppPage = ({ match, location }) => {
                         setApiKey(currentApp.ApyKey);
                         setActivationCode(currentApp.LicenseActivationCode);
                     }
-                    return currentApp;
                 } else if (ErrorCode === 118) {
                     message
                         .loading("Time has expired... Redirecting!", 1.5)
                         .then(() => dispatch(signOut()));
                 } else if (ErrorCode === -1) {
-                }
-            })
-            .then(async (res) => {
-                if (res) {
-                    await getAppLinceses(res["AppType"]);
                 }
             })
             .catch((error) => {

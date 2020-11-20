@@ -61,6 +61,10 @@ export const AppViews = () => {
                     component={lazy(() => import(`./reports`))}
                 />
                 <Route
+                    path={`${APP_PREFIX_PATH}/payments`}
+                    component={lazy(() => import(`./payments`))}
+                />
+                <Route
                     path={`${APP_PREFIX_PATH}/account-settings`}
                     component={lazy(() => import(`./account-settings`))}
                 />
