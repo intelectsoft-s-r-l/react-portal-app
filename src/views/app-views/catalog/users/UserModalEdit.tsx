@@ -12,10 +12,7 @@ import AppLocale from "../../../../lang";
 import { IntlProvider } from "react-intl";
 import { useDispatch } from "react-redux";
 import { setProfileInfo } from "../../../../redux/actions/Account";
-import {
-    API_IS_AUTH_SERVICE,
-    API_IS_CLIENT_SERVICE,
-} from "../../../../constants/ApiConstant";
+import { API_APP_URL } from "../../../../configs/AppConfig";
 
 export const UserModalEdit = ({
     signOut,
@@ -51,7 +48,7 @@ export const UserModalEdit = ({
         });
         setTimeout(async () => {
             axios
-                .post(`${API_IS_CLIENT_SERVICE}/UpdateUser`, {
+                .post(`${API_APP_URL}/UpdateUser`, {
                     User: {
                         ...data,
                         ...values,

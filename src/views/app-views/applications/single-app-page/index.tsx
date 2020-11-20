@@ -28,7 +28,6 @@ import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAl
 import { signOut } from "../../../../redux/actions/Auth";
 import Axios from "axios";
 import { Form } from "antd";
-import { API_IS_CLIENT_SERVICE } from "../../../../constants/ApiConstant";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import CreateLicenseModal from "../CreateLicenseModal";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
@@ -38,6 +37,7 @@ import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import IntegrationsHeader from "./IntegrationsHeader";
+import { API_APP_URL } from "../../../../configs/AppConfig";
 
 enum app {
     Retail = 10,
@@ -219,7 +219,7 @@ const SingleAppPage = ({ match, location }) => {
     const Token = useSelector((state) => state["auth"].token);
 
     const getAppLinceses = (AppType) => {
-        return Axios.get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
+        return Axios.get(`${API_APP_URL}/GetAppLicensesList`, {
             params: { Token, AppType },
         }).then((res) => {
             console.log(res.data);
@@ -229,7 +229,7 @@ const SingleAppPage = ({ match, location }) => {
     };
     useEffect(() => {
         let mounted = true;
-        Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
+        Axios.get(`${API_APP_URL}/GetMarketAppList`, {
             params: { Token },
         })
             .then((res) => {

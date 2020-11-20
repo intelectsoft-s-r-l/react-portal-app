@@ -23,8 +23,8 @@ import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../../lang";
 import axios from "axios";
-import { API_IS_CLIENT_SERVICE } from "../../../../constants/ApiConstant";
 import { signOut } from "../../../../redux/actions/Auth";
+import { API_APP_URL } from "../../../../configs/AppConfig";
 const publicIp = require("react-public-ip");
 
 function beforeUpload(file) {
@@ -47,7 +47,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
 
     componentDidMount() {
         axios
-            .get(`${API_IS_CLIENT_SERVICE}/GetCompanyInfo`, {
+            .get(`${API_APP_URL}/GetCompanyInfo`, {
                 params: {
                     Token: this.props.token,
                 },
@@ -111,7 +111,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     info: await publicIp.v4(),
                 });
                 axios
-                    .post(`${API_IS_CLIENT_SERVICE}/UpdateCompany`, {
+                    .post(`${API_APP_URL}/UpdateCompany`, {
                         Company: {
                             ...this.state,
                             ...values,
@@ -190,7 +190,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
             if (info.file.status === "done") {
                 this.getBase64(info.file.originFileObj, async (imageUrl) => {
                     axios
-                        .post(`${API_IS_CLIENT_SERVICE}/UpdateCompany`, {
+                        .post(`${API_APP_URL}/UpdateCompany`, {
                             Company: {
                                 ...this.state,
                                 Logo: imageUrl,
@@ -245,7 +245,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
 
         const onRemoveAvater = async () => {
             axios
-                .post(`${API_IS_CLIENT_SERVICE}/UpdateCompany`, {
+                .post(`${API_APP_URL}/UpdateCompany`, {
                     Company: {
                         ...this.state,
                         Logo: "",

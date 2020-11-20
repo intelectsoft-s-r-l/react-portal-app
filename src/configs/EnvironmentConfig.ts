@@ -1,26 +1,29 @@
 const dev = {
-  API_ENDPOINT_URL: "https://jsonplaceholder.typicode.com",
+    API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
+    API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
 };
 
 const prod = {
-  API_ENDPOINT_URL: "https://api.prod.com",
+    API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
+    API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
 };
 
 const test = {
-  API_ENDPOINT_URL: "https://api.test.com",
+    API_APP_URL: "https://dev.edi.md/ISClientWebAppSerivce/json",
+    API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
 };
 
 const getEnv = () => {
-  switch (process.env.NODE_ENV) {
-    case "development":
-      return dev;
-    case "production":
-      return prod;
-    case "test":
-      return test;
-    default:
-      break;
-  }
+    switch (process.env.NODE_ENV) {
+        case "development":
+            return dev;
+        case "production":
+            return prod;
+        case "test":
+            return test;
+        default:
+            break;
+    }
 };
 
 export const env = getEnv();

@@ -26,8 +26,8 @@ import moment from "moment";
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshToken, signOut } from "../../../../redux/actions/Auth";
-import { API_IS_CLIENT_SERVICE } from "../../../../constants/ApiConstant";
 import Utils from "../../../../utils";
+import { API_APP_URL } from "../../../../configs/AppConfig";
 
 const Licenses = ({
     licenses,
@@ -44,7 +44,7 @@ const Licenses = ({
     const [selectedRows, setSeletedRows] = useState<any>([]);
     const dispatch = useDispatch();
     const deleteLicense = (LicenseID) => {
-        return Axios.get(`${API_IS_CLIENT_SERVICE}/DeleteAppLicense`, {
+        return Axios.get(`${API_APP_URL}/DeleteAppLicense`, {
             params: { Token, LicenseID },
         })
             .then(async (res) => {

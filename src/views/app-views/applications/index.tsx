@@ -6,12 +6,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import Utils from "../../../utils";
 import { signOut } from "../../../redux/actions/Auth";
 // import { getMarketApps } from "../../../redux/actions/Applications";
-import { Route } from "react-router-dom";
-import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import Loading from "../../../components/shared-components/Loading";
-import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
-import Axios from "axios";
-import { message } from "antd";
 import Market from "./Market";
 export interface IPackages {
     ID: number;

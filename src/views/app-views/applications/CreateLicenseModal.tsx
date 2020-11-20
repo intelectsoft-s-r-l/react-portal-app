@@ -2,8 +2,8 @@ import { Row, Modal, Form, Col, Input, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import axios from "axios";
-import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import useHttpRequest from "../../../api";
+import { API_APP_URL } from "../../../configs/AppConfig";
 
 const CreateLicenseModal = ({
     Token,
@@ -17,14 +17,14 @@ const CreateLicenseModal = ({
     const [form] = Form.useForm();
     const onFinish = (values) => {
         axios
-            .get(`${API_IS_CLIENT_SERVICE}/RequestAppLicense`, {
+            .get(`${API_APP_URL}/RequestAppLicense`, {
                 params: { Token, AppType, Quantity: values["Quantity"] },
             })
             .then((res) => {
                 console.log(res.data);
                 if (res.data.ErrorCode === 0) {
                     axios
-                        .get(`${API_IS_CLIENT_SERVICE}/GetAppLicensesList`, {
+                        .get(`${API_APP_URL}/GetAppLicensesList`, {
                             params: { Token, AppType },
                         })
                         .then((res) => {

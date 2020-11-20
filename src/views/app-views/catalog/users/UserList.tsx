@@ -30,10 +30,6 @@ import UserView from "./UserView";
 import AvatarStatus from "../../../../components/shared-components/AvatarStatus";
 import userData from "../../../../assets/data/user-list.data.json";
 import "../hand_gesture.scss";
-import {
-    API_IS_AUTH_SERVICE,
-    API_IS_CLIENT_SERVICE,
-} from "../../../../constants/ApiConstant";
 import axios from "axios";
 import { connect } from "react-redux";
 import { signOut, refreshToken } from "../../../../redux/actions/Auth";
@@ -44,6 +40,7 @@ import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
 import { SortOrder } from "antd/es/table/interface";
+import { API_APP_URL, API_AUTH_URL } from "../../../../configs/AppConfig";
 
 enum status {
     active = 1,
@@ -106,7 +103,7 @@ export class UserList extends Component<ReduxStoreProps> {
     getUsersInfo = () => {
         this.setState({ loading: true });
         axios
-            .get(`${API_IS_CLIENT_SERVICE}/GetUsersInfo`, {
+            .get(`${API_APP_URL}/GetUsersInfo`, {
                 params: {
                     Token: this.props.token,
                 },
@@ -179,7 +176,7 @@ export class UserList extends Component<ReduxStoreProps> {
             content: "Press OK if you want us to send a new activation message",
             onOk() {
                 axios
-                    .get(`${API_IS_AUTH_SERVICE}/SendActivationCode`, {
+                    .get(`${API_AUTH_URL}/SendActivationCode`, {
                         params: {
                             Token,
                             UserID,
@@ -241,7 +238,7 @@ export class UserList extends Component<ReduxStoreProps> {
 
     handleUserStatus = (userId: number, status: number) => {
         axios
-            .get(`${API_IS_CLIENT_SERVICE}/ChangeUserStatus`, {
+            .get(`${API_APP_URL}/ChangeUserStatus`, {
                 params: {
                     Token: this.props.token,
                     ID: userId,

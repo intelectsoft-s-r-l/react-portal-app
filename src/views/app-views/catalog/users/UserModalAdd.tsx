@@ -1,11 +1,11 @@
 import { Row, Col, Input, Modal, Form, message } from "antd";
 import React, { useState } from "react";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { API_IS_AUTH_SERVICE } from "../../../../constants/ApiConstant";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { refreshToken } from "../../../../redux/actions/Auth";
+import { API_AUTH_URL } from "../../../../configs/AppConfig";
 export const UserModalAdd = ({
     onCreate,
     onCancel,
@@ -20,7 +20,7 @@ export const UserModalAdd = ({
 
     const onFinish = (values) => {
         axios
-            .post(`${API_IS_AUTH_SERVICE}/RegisterUser`, {
+            .post(`${API_AUTH_URL}/RegisterUser`, {
                 /* Get the companyID, token and uilanguage from redux store */
                 ...values,
                 CompanyID,

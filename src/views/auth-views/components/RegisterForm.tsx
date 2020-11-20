@@ -26,11 +26,9 @@ import JwtAuthService from "../../../services/JwtAuthService";
 import axios from "axios";
 import DocumentEvents from "react-document-events";
 import Utils from "../../../utils";
-import {
-    API_IS_AUTH_SERVICE,
-    API_PUBLIC_KEY,
-} from "../../../constants/ApiConstant";
+import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
+import { API_AUTH_URL } from "../../../configs/AppConfig";
 
 const rules = {
     JuridicalName: [
@@ -143,7 +141,7 @@ export const RegisterForm = (props) => {
                 setTimeout(() => {
                     hideLoading();
                     axios
-                        .post(`${API_IS_AUTH_SERVICE}/RegisterCompany`, {
+                        .post(`${API_AUTH_URL}/RegisterCompany`, {
                             ...newCompanyData,
                         })
                         .then((res) => {

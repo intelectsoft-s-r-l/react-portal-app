@@ -6,9 +6,9 @@ import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
 import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import { signOut } from "../../../redux/actions/Auth";
 import Loading from "../../../components/shared-components/Loading";
+import { API_APP_URL } from "../../../configs/AppConfig";
 
 const AppStoreNav = () => {
     // const [apps, setApps] = useState<IApps[]>([]);
@@ -18,7 +18,7 @@ const AppStoreNav = () => {
     const [apps, setApps] = useState<any>([]);
     // const apps: IApps[] = useSelector((state) => state["apps"]);
     const renderApps = () => {
-        Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
+        Axios.get(`${API_APP_URL}/GetMarketAppList`, {
             params: { Token },
         }).then((res) => {
             console.log(res.data);

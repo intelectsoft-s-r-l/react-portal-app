@@ -33,9 +33,8 @@ import { COLORS } from "../../../constants/ChartConstant";
 import Flex from "../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../components/shared-components/EllipsisDropdown";
 import { Link, NavLink, Redirect, Route, useHistory } from "react-router-dom";
-import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
+import { API_APP_URL, APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import Axios from "axios";
-import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import { useDispatch, useSelector } from "react-redux";
 import { IApplications } from ".";
 import { refreshToken, signOut } from "../../../redux/actions/Auth";
@@ -119,7 +118,7 @@ const Market = () => {
     const { confirm } = Modal;
     const getMarketApps = () => {
         setLoading(true);
-        return Axios.get(`${API_IS_CLIENT_SERVICE}/GetMarketAppList`, {
+        return Axios.get(`${API_APP_URL}/GetMarketAppList`, {
             params: { Token },
         })
             .then((res) => {
@@ -157,13 +156,10 @@ const Market = () => {
                     setTimeout(
                         () =>
                             resolve(
-                                Axios.post(
-                                    `${API_IS_CLIENT_SERVICE}/DeactivateApp`,
-                                    {
-                                        AppID,
-                                        Token,
-                                    }
-                                )
+                                Axios.post(`${API_APP_URL}/DeactivateApp`, {
+                                    AppID,
+                                    Token,
+                                })
                                     .then(async (res) => {
                                         console.log(res.data);
                                         if (res.data.ErrorCode === 0) {
@@ -196,13 +192,10 @@ const Market = () => {
                     setTimeout(
                         () =>
                             resolve(
-                                Axios.post(
-                                    `${API_IS_CLIENT_SERVICE}/ActivateApp`,
-                                    {
-                                        AppID,
-                                        Token,
-                                    }
-                                )
+                                Axios.post(`${API_APP_URL}/ActivateApp`, {
+                                    AppID,
+                                    Token,
+                                })
                                     .then(async (res) => {
                                         console.log(res.data);
                                         if (res.data.ErrorCode === 0) {

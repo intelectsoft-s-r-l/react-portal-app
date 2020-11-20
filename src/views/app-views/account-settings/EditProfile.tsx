@@ -22,8 +22,6 @@ import {
 import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
-import axios from "axios";
-import { API_IS_CLIENT_SERVICE } from "../../../constants/ApiConstant";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 const publicIp = require("react-public-ip");
 

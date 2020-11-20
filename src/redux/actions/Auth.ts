@@ -1,4 +1,3 @@
-import { API_IS_AUTH_SERVICE } from "../../constants/ApiConstant";
 import {
     SIGNIN,
     AUTHENTICATED,
@@ -23,6 +22,7 @@ import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
 import { onLocaleChange } from "./Theme";
 import { EXPIRE_TIME } from "../../constants/Messages";
+import { API_AUTH_URL } from "../../configs/AppConfig";
 const publicIp = require("react-public-ip");
 
 export const signIn = (user) => ({
@@ -94,7 +94,7 @@ export const isUserActivated = (boolean, Token) => ({
 
 export const refreshToken = (Token) => async (dispatch) => {
     axios
-        .get(`${API_IS_AUTH_SERVICE}/RefreshToken`, {
+        .get(`${API_AUTH_URL}/RefreshToken`, {
             params: { Token },
         })
         .then((res) => {
@@ -120,14 +120,11 @@ export const sendActivationCode = (Token) => {
                     setTimeout(() => {
                         resolve(
                             axios
-                                .get(
-                                    `${API_IS_AUTH_SERVICE}/SendActivationCode`,
-                                    {
-                                        params: {
-                                            Token,
-                                        },
-                                    }
-                                )
+                                .get(`${API_AUTH_URL}/SendActivationCode`, {
+                                    params: {
+                                        Token,
+                                    },
+                                })
                                 .then((res) => {
                                     console.log(res.data);
                                     if (res.data.ErrorCode === 0) {
@@ -154,7 +151,7 @@ export const sendActivationCode = (Token) => {
 export const authorizeUser = (userData) => {
     return async (dispatch, getState) => {
         axios
-            .post(`${API_IS_AUTH_SERVICE}/AuthorizeUser`, {
+            .post(`${API_AUTH_URL}/AuthorizeUser`, {
                 ...userData,
                 info: (await publicIp.v4()) || "",
             })

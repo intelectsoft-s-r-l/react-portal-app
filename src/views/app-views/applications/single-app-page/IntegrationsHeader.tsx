@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
 import Flex from "../../../../components/shared-components/Flex";
-import { API_IS_CLIENT_SERVICE } from "../../../../constants/ApiConstant";
+import { API_APP_URL } from "../../../../configs/AppConfig";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import { signOut } from "../../../../redux/actions/Auth";
 
@@ -22,7 +22,7 @@ const IntegrationsHeader = ({
         confirm({
             title: "Are you sure you want to generate a new API Key?",
             onOk: () =>
-                Axios.post(`${API_IS_CLIENT_SERVICE}/GenerateApiKey`, {
+                Axios.post(`${API_APP_URL}/GenerateApiKey`, {
                     AppID,
                     Token,
                 }).then((res) => {
@@ -48,7 +48,7 @@ const IntegrationsHeader = ({
         confirm({
             title: "Are you sure you want to delete current API Key?",
             onOk: () =>
-                Axios.post(`${API_IS_CLIENT_SERVICE}/DeleteApiKey`, {
+                Axios.post(`${API_APP_URL}/DeleteApiKey`, {
                     AppID,
                     Token,
                 }).then((res) => {
@@ -69,13 +69,10 @@ const IntegrationsHeader = ({
         confirm({
             title: "Are you sure you want generate a new activation code?",
             onOk: () =>
-                Axios.post(
-                    `${API_IS_CLIENT_SERVICE}/GenerateLicenseActivationCode`,
-                    {
-                        AppID,
-                        Token,
-                    }
-                ).then((res) => {
+                Axios.post(`${API_APP_URL}/GenerateLicenseActivationCode`, {
+                    AppID,
+                    Token,
+                }).then((res) => {
                     console.log(res.data);
                     if (res.data.ErrorCode === 0) {
                         message
