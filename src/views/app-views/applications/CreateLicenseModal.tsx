@@ -10,7 +10,7 @@ const CreateLicenseModal = ({
     visible,
     close,
     signOut,
-    setLicenses,
+    getAppLicenses,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
@@ -22,13 +22,7 @@ const CreateLicenseModal = ({
             .then((res) => {
                 console.log(res.data);
                 if (res.data.ErrorCode === 0) {
-                    axios
-                        .get(`${API_APP_URL}/GetAppLicensesList`, {
-                            params: { Token, AppType },
-                        })
-                        .then((res) => {
-                            setLicenses(res.data.LicenseList);
-                        });
+                    getAppLicenses(AppType);
                 } else if (res.data.ErrorCode === 118) {
                     message
                         .loading("Time has expired... Redirecting", 1.5)

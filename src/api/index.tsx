@@ -108,4 +108,12 @@ export class ClientApi extends HttpClient {
             AppID,
             Token: this._token,
         });
+
+    public GetAppLicenses = (AppType) =>
+        this.instance.get("/GetAppLincesesList", {
+            params: {
+                Token: this._token,
+                AppType,
+            },
+        });
 }

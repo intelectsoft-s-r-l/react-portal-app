@@ -38,6 +38,7 @@ import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import IntegrationsHeader from "./IntegrationsHeader";
 import { API_APP_URL } from "../../../../configs/AppConfig";
+import { ClientApi } from "../../../../api";
 
 enum app {
     Retail = 10,
@@ -175,19 +176,6 @@ const AboutItem = ({ appData }) => {
                 <Flex flexDirection="column">
                     <Flex flexDirection="row">
                         <h2 className="mr-3">{Name} </h2>
-                        {/* <Tag
-                            className="text-capitalize"
-                            color={Status === 1 ? "cyan" : "red"}
-                        >
-                            {Status === 1 ? (
-                                <CheckCircleOutlined />
-                            ) : (
-                                <ClockCircleOutlined />
-                            )}
-                            <span className="ml-2 font-weight-semibold">
-                                {Status === 1 ? "Active" : "Not Active"}
-                            </span>
-                        </Tag> */}
                     </Flex>
                     <div>
                         <span className="text-muted ">
@@ -208,57 +196,40 @@ const AboutItem = ({ appData }) => {
 
 const SingleAppPage = ({ match, location }) => {
     const { appID } = match.params;
-    const { confirm } = Modal;
     const [app, setApp] = useState<any>();
     const [licenses, setLicenses] = useState<any>([]);
     const [licensestoSearch, setLicensesToSearch] = useState<any>([]);
     const [apiKey, setApiKey] = useState<string>();
     const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
     const [activationCode, setActivationCode] = useState<string>();
-    const dispatch = useDispatch();
     const Token = useSelector((state) => state["auth"].token);
 
     const getAppLinceses = (AppType) => {
-        return Axios.get(`${API_APP_URL}/GetAppLicensesList`, {
-            params: { Token, AppType },
-        }).then((res) => {
-            console.log(res.data);
-            setLicenses([...res.data.LicenseList]);
-            setLicensesToSearch([...res.data.LicenseList]);
+        return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
+            if (data.ErrorCode === 0) {
+                setLicenses([...data.LicensesList]);
+                setLicensesToSearch([...data.LicensesList]);
+            }
+        });
+    };
+    const getMarketApp = () => {
+        return new ClientApi().GetMarketAppList().then((data: any) => {
+            const { ErrorCode, MarketAppList } = data;
+            if (ErrorCode === 0) {
+                getAppLinceses(appID);
+                const currentApp = MarketAppList.find(
+                    (app) => app.AppType == appID
+                );
+                setApp(currentApp);
+                if (currentApp) {
+                    setApiKey(currentApp.ApyKey);
+                    setActivationCode(currentApp.LicenseActivationCode);
+                }
+            }
         });
     };
     useEffect(() => {
-        let mounted = true;
-        Axios.get(`${API_APP_URL}/GetMarketAppList`, {
-            params: { Token },
-        })
-            .then((res) => {
-                console.log(res.data);
-                const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
-                if (ErrorCode === 0) {
-                    getAppLinceses(appID);
-                    const currentApp = MarketAppList.find(
-                        (data) => data.AppType == appID
-                    );
-                    setApp(currentApp);
-                    if (currentApp) {
-                        setApiKey(currentApp.ApyKey);
-                        setActivationCode(currentApp.LicenseActivationCode);
-                    }
-                } else if (ErrorCode === 118) {
-                    message
-                        .loading("Time has expired... Redirecting!", 1.5)
-                        .then(() => dispatch(signOut()));
-                } else if (ErrorCode === -1) {
-                }
-            })
-            .catch((error) => {
-                const key = "updatable";
-                message.error({ content: error.toString(), key });
-            });
-        return () => {
-            mounted = false;
-        };
+        getMarketApp();
     }, [appID]);
 
     if (!app) {
@@ -306,11 +277,11 @@ const SingleAppPage = ({ match, location }) => {
                     />
                     <CreateLicenseModal
                         Token={Token}
-                        setLicenses={setLicenses}
                         AppType={app["AppType"]}
                         close={() => setCreateLicenseVisible(false)}
                         visible={createLicenseVisible}
                         signOut={signOut}
+                        getAppLicenses={getAppLinceses}
                     />
                 </>
             ) : (
