@@ -1,8 +1,7 @@
 import { Row, Modal, Form, Col, Input, message } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import axios from "axios";
-import useHttpRequest from "../../../api";
 import { API_APP_URL } from "../../../configs/AppConfig";
 
 const CreateLicenseModal = ({

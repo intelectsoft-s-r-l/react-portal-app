@@ -1,32 +1,12 @@
-import {
-    Modal,
-    Avatar,
-    Card,
-    Col,
-    Empty,
-    Menu,
-    message,
-    Row,
-    Tag,
-    Button,
-} from "antd";
-import Axios from "axios";
+import { Modal, Avatar, Card, Col, Empty, Row, Tag, Button } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import EllipsisDropdown from "../../../components/shared-components/EllipsisDropdown";
-import { API_APP_URL, APP_PREFIX_PATH } from "../../../configs/AppConfig";
-import { refreshToken, signOut } from "../../../redux/actions/Auth";
-import {
-    EyeOutlined,
-    CheckCircleOutlined,
-    VerticalAlignBottomOutlined,
-    ClockCircleOutlined,
-    DeleteOutlined,
-    ExperimentOutlined,
-} from "@ant-design/icons";
-import Flex from "../../../components/shared-components/Flex";
-import Loading from "../../../components/shared-components/Loading";
+import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
+import { CheckCircleOutlined, ExperimentOutlined } from "@ant-design/icons";
+import Flex from "../../../../components/shared-components/Flex";
+import Loading from "../../../../components/shared-components/Loading";
+import { ClientApi } from "../../../../api";
 
 const GridItem = ({ deactivateApp, data }) => {
     const [shortDesc, setShortDesc] = useState<any>();
@@ -84,65 +64,32 @@ const GridItem = ({ deactivateApp, data }) => {
 const MyAppList = () => {
     const [apps, setApps] = useState<any>([]);
     const { confirm } = Modal;
-    const Token = useSelector((state) => state["auth"].token);
     const [loading, setLoading] = useState(false);
-    const dispatch = useDispatch();
-    useEffect(() => {
+    const getMarketAppList = () => {
         setLoading(true);
-        Axios.get(`${API_APP_URL}/GetMarketAppList`, {
-            params: { Token },
-        })
-            .then((res) => {
-                setLoading(false);
-                console.log(res.data);
-                const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
-                if (ErrorCode === 0) {
-                    const activeApps = MarketAppList.filter(
-                        (marketApp) => marketApp.Status != 0
-                    );
-                    setApps(activeApps);
-                } else if (ErrorCode === 118) {
-                    dispatch(refreshToken(Token));
-                } else if (ErrorCode === -1) {
-                    const key = "updatable";
-                    message.error({ content: "Error: Internal error.", key });
-                    /* TODO:  */
-                    /* Internal Error. Message Error was sent to our developers. */
-                    /* Send ErrorMessage to info@edi.md */
-                }
-            })
-            .catch((error) => {
-                const key = "updatable";
-                message.error({ content: error.toString(), key });
-                setLoading(false);
-            });
+        return new ClientApi().GetMarketAppList().then((data: any) => {
+            setLoading(false);
+            const { ErrorCode, ErrorMessage, MarketAppList } = data;
+            if (ErrorCode === 0) {
+                const activeApps = MarketAppList.filter(
+                    (marketApp) => marketApp.Status != 0
+                );
+                setApps(activeApps);
+            }
+        });
+    };
+    useEffect(() => {
+        getMarketAppList();
     }, []);
 
     const deactivateApp = (AppID) => {
         confirm({
             title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
             onOk: () => {
-                Axios.post(`${API_APP_URL}/DeactivateApp`, {
-                    AppID,
-                    Token,
-                })
-                    .then((res) => {
-                        console.log(res.data);
-                        if (res.data.ErrorCode === 0) {
-                            message
-                                .success("Done!", 1.5)
-                                .then(() =>
-                                    setApps(
-                                        apps.filter((app) => app.ID != AppID)
-                                    )
-                                );
-                        } else if (res.data.ErrorCode === 118) {
-                            dispatch(refreshToken(Token));
-                        }
-                    })
-                    .catch((error) => {
-                        const key = "updatable";
-                        message.error({ content: error.toString(), key });
+                return new ClientApi()
+                    .DeactivateApp(AppID)
+                    .then((data: any) => {
+                        if (data.ErrorCode === 0) getMarketAppList();
                     });
             },
             onCancel: () => {},

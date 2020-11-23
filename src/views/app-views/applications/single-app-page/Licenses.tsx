@@ -50,8 +50,6 @@ const Licenses = ({
             .then(async (res) => {
                 console.log(res.data);
                 if (res.data.ErrorCode === 0) {
-                } else if (res.data.ErrorCode === 118) {
-                    dispatch(refreshToken(Token));
                 }
             })
             .catch((error) => {

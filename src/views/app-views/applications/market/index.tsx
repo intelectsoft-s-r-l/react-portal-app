@@ -1,45 +1,47 @@
-import React, { lazy, useEffect, useState } from "react";
-import PageHeaderAlt from "../../../components/layout-components/PageHeaderAlt";
+import React, { useEffect, useState } from "react";
+import { Button, Row, Col, Tag, Avatar, Card, Modal, Empty } from "antd";
 import {
-    Radio,
-    Button,
-    Row,
-    Col,
-    Tooltip,
-    Tag,
-    Progress,
-    Avatar,
-    Menu,
-    Card,
-    Modal,
-    message,
-    Empty,
-} from "antd";
-import {
-    AppstoreOutlined,
-    UnorderedListOutlined,
     VerticalAlignBottomOutlined,
     ExperimentOutlined,
-    PlusOutlined,
-    PaperClipOutlined,
     CheckCircleOutlined,
-    ClockCircleOutlined,
-    EyeOutlined,
-    EditOutlined,
-    DeleteOutlined,
 } from "@ant-design/icons";
-import utils from "../../../utils";
-import { COLORS } from "../../../constants/ChartConstant";
-import Flex from "../../../components/shared-components/Flex";
-import EllipsisDropdown from "../../../components/shared-components/EllipsisDropdown";
-import { Link, NavLink, Redirect, Route, useHistory } from "react-router-dom";
-import { API_APP_URL, APP_PREFIX_PATH } from "../../../configs/AppConfig";
-import Axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { IApplications } from ".";
-import { refreshToken, signOut } from "../../../redux/actions/Auth";
-import Loading from "../../../components/shared-components/Loading";
+import Flex from "../../../../components/shared-components/Flex";
+import { Link } from "react-router-dom";
+import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
+import { useSelector } from "react-redux";
+import Loading from "../../../../components/shared-components/Loading";
+import { ClientApi } from "../../../../api";
 
+export interface IPackages {
+    ID: number;
+    MaxValue: number;
+    MinValue: number;
+    Name: string;
+    Price: number;
+    Status: number;
+    ValidFrom: string;
+    ValidTo: string;
+}
+export interface IMarketAppList {
+    AppType: number;
+    ApyKey: string;
+    MarketID: number;
+    ApplicationID: number;
+    LicenseActivationCode: number;
+    LicenseActivationCodeValidHours: number;
+    LicenseActivationCodeValidTo: string;
+    LongDescription: string;
+    Name: string;
+    Packages: IPackages[];
+    Photo: string;
+    ShortDescription: string;
+    Status: number;
+}
+export interface IApplications {
+    ErrorCode: number;
+    ErrorMessage: string;
+    MarketAppList: IMarketAppList[];
+}
 const GridItem = ({ activateApp, deactivateApp, data }) => {
     const [shortDesc, setShortDesc] = useState<any>();
     const locale = useSelector((state) => state["theme"].locale);
@@ -111,38 +113,16 @@ const GridItem = ({ activateApp, deactivateApp, data }) => {
 
 const Market = () => {
     const [apps, setApps] = useState<any>([]);
-    const dispatch = useDispatch();
-    const history = useHistory();
     const [loading, setLoading] = useState(false);
-    const Token = useSelector((state) => state["auth"].token);
     const { confirm } = Modal;
     const getMarketApps = () => {
         setLoading(true);
-        return Axios.get(`${API_APP_URL}/GetMarketAppList`, {
-            params: { Token },
-        })
-            .then((res) => {
-                setLoading(false);
-                console.log(res.data);
-                const {
-                    ErrorCode,
-                    ErrorMessage,
-                    MarketAppList,
-                } = res.data as IApplications;
-                if (ErrorCode === 0) {
-                    setApps(MarketAppList);
-                } else if (ErrorCode === 118) {
-                    dispatch(refreshToken(Token));
-                } else if (ErrorCode === -1) {
-                    const key = "updatable";
-                    message.error({ content: "Error: Internal error.", key });
-                }
-            })
-            .catch((error) => {
-                setLoading(false);
-                const key = "updatable";
-                message.error({ content: error.toString(), key });
-            });
+        return new ClientApi().GetMarketAppList().then((data: any) => {
+            setLoading(false);
+            if (data.ErrorCode === 0) {
+                setApps(data.MarketAppList);
+            }
+        });
     };
     useEffect(() => {
         getMarketApps();
@@ -156,24 +136,11 @@ const Market = () => {
                     setTimeout(
                         () =>
                             resolve(
-                                Axios.post(`${API_APP_URL}/DeactivateApp`, {
-                                    AppID,
-                                    Token,
-                                })
-                                    .then(async (res) => {
-                                        console.log(res.data);
-                                        if (res.data.ErrorCode === 0) {
+                                new ClientApi()
+                                    .DeactivateApp(AppID)
+                                    .then(async (data: any) => {
+                                        if (data.ErrorCode === 0)
                                             await getMarketApps();
-                                        } else if (res.data.ErrorCode === 118) {
-                                            dispatch(refreshToken(Token));
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        const key = "updatable";
-                                        message.error({
-                                            content: error.toString(),
-                                            key,
-                                        });
                                     })
                             ),
                         1000
@@ -192,28 +159,11 @@ const Market = () => {
                     setTimeout(
                         () =>
                             resolve(
-                                Axios.post(`${API_APP_URL}/ActivateApp`, {
-                                    AppID,
-                                    Token,
-                                })
-                                    .then(async (res) => {
-                                        console.log(res.data);
-                                        if (res.data.ErrorCode === 0) {
+                                new ClientApi()
+                                    .ActivateApp(AppID)
+                                    .then(async (data: any) => {
+                                        if (data.ErrorCode === 0)
                                             await getMarketApps();
-                                        } else if (res.data.ErrorCode === 118) {
-                                            dispatch(refreshToken(Token));
-                                        } else {
-                                            message.error(
-                                                res.data.ErrorMessage
-                                            );
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        const key = "updatable";
-                                        message.error({
-                                            content: error.toString(),
-                                            key,
-                                        });
                                     })
                             ),
                         1000

@@ -32,8 +32,6 @@ export const UserModalAdd = ({
                 form.resetFields();
                 if (res.data.ErrorCode === 0) {
                     getUsersInfo();
-                } else if (res.data.ErrorCode === 118) {
-                    dispatch(refreshToken(Token));
                 } else {
                     message.error(res.data.ErrorMessage);
                 }

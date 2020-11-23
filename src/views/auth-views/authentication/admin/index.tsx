@@ -13,8 +13,8 @@ const Admin = ({ match, history }) => {
     const redirect = useSelector((state) => state["auth"].redirect);
 
     useEffect(() => {
-        dispatch(getProfileInfo(match.params.Token));
         dispatch(authenticated(match.params.Token));
+        dispatch(getProfileInfo());
         if (Token) {
             history.push(APP_PREFIX_PATH);
         }
