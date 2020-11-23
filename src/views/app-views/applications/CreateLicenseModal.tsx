@@ -3,31 +3,22 @@ import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import axios from "axios";
 import { API_APP_URL } from "../../../configs/AppConfig";
+import { ClientApi } from "../../../api";
 
 const CreateLicenseModal = ({
     Token,
     AppType,
     visible,
     close,
-    signOut,
     getAppLicenses,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const onFinish = (values) => {
-        axios
-            .get(`${API_APP_URL}/RequestAppLicense`, {
-                params: { Token, AppType, Quantity: values["Quantity"] },
-            })
-            .then((res) => {
-                console.log(res.data);
-                if (res.data.ErrorCode === 0) {
-                    getAppLicenses(AppType);
-                } else if (res.data.ErrorCode === 118) {
-                    message
-                        .loading("Time has expired... Redirecting", 1.5)
-                        .then(() => signOut());
-                }
+        return new ClientApi()
+            .RequestLicense(AppType, values.Quantity)
+            .then((data: any) => {
+                if (data.ErrorCode === 0) getAppLicenses(AppType);
             });
     };
     const onOk = () => {

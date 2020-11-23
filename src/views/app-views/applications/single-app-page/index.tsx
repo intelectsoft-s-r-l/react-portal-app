@@ -10,25 +10,11 @@ import {
     Row,
     Tag,
 } from "antd";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-    PlusOutlined,
-    ExperimentOutlined,
-    EyeOutlined,
-    EditOutlined,
-    CheckCircleOutlined,
-    ClockCircleOutlined,
-    DeleteOutlined,
-} from "@ant-design/icons";
-import { connect, useDispatch, useSelector } from "react-redux";
-import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
+import React, { useEffect, useState } from "react";
+import { ExperimentOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
 import Avatar from "antd/lib/avatar/avatar";
-import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
-import { signOut } from "../../../../redux/actions/Auth";
-import Axios from "axios";
-import { Form } from "antd";
-import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import CreateLicenseModal from "../CreateLicenseModal";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import Description from "./Description";
@@ -95,7 +81,6 @@ const AppOption = ({ match, location, AppType }) => {
 
 const AppRoute = ({
     match,
-    location,
     packages,
     LongDescription,
     licenses,
@@ -207,8 +192,8 @@ const SingleAppPage = ({ match, location }) => {
     const getAppLinceses = (AppType) => {
         return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
             if (data.ErrorCode === 0) {
-                setLicenses([...data.LicensesList]);
-                setLicensesToSearch([...data.LicensesList]);
+                setLicenses([...data.LicenseList]);
+                setLicensesToSearch([...data.LicenseList]);
             }
         });
     };
@@ -260,7 +245,6 @@ const SingleAppPage = ({ match, location }) => {
                         mainContent={
                             <AppRoute
                                 LongDescription={app.LongDescription}
-                                location={location}
                                 match={match}
                                 packages={app.Packages}
                                 licenses={licenses}
@@ -280,7 +264,6 @@ const SingleAppPage = ({ match, location }) => {
                         AppType={app["AppType"]}
                         close={() => setCreateLicenseVisible(false)}
                         visible={createLicenseVisible}
-                        signOut={signOut}
                         getAppLicenses={getAppLinceses}
                     />
                 </>

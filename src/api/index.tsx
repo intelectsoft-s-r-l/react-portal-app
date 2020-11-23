@@ -100,20 +100,22 @@ export class ClientApi extends HttpClient {
     public DeactivateApp = (AppID) =>
         this.instance.post("/DeactivateApp", {
             AppID,
-            Token: this._token,
         });
 
     public ActivateApp = (AppID) =>
         this.instance.post("/ActivateApp", {
             AppID,
-            Token: this._token,
         });
 
     public GetAppLicenses = (AppType) =>
-        this.instance.get("/GetAppLincesesList", {
+        this.instance.get("/GetAppLicensesList", {
             params: {
-                Token: this._token,
                 AppType,
             },
+        });
+
+    public RequestLicense = (AppType, Quantity) =>
+        this.instance.get("/RequestAppLicense", {
+            params: { AppType, Quantity },
         });
 }
