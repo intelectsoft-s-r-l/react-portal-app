@@ -23,7 +23,6 @@ const initState = {
     token: "",
     isAuth: false,
     userActivated: false,
-    activationToken: "",
 } as { [key: string]: any };
 
 const auth = (state = initState, action) => {

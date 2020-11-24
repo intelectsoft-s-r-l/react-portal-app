@@ -118,4 +118,27 @@ export class ClientApi extends HttpClient {
         this.instance.get("/RequestAppLicense", {
             params: { AppType, Quantity },
         });
+
+    public DeleteLicense = (LicenseID) =>
+        this.instance.get("/DeleteAppLicense", {
+            params: { LicenseID },
+        });
+
+    public GenerateApiKey = (AppID) =>
+        this.instance.post("/GenerateApiKey", {
+            AppID,
+            Token: this._token,
+        });
+
+    public DeleteApiKey = (AppID) =>
+        this.instance.post("/DeleteApiKey", {
+            AppID,
+            Token: this._token,
+        });
+
+    public GenerateLicenseActivationCode = (AppID) =>
+        this.instance.post("/GenerateLicenseActivationCode", {
+            AppID,
+            Token: this._token,
+        });
 }

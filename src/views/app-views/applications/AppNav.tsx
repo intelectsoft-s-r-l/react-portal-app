@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../../../redux/actions/Auth";
 import Loading from "../../../components/shared-components/Loading";
 import { API_APP_URL } from "../../../configs/AppConfig";
+import { ClientApi } from "../../../api";
 
 const AppStoreNav = () => {
     // const [apps, setApps] = useState<IApps[]>([]);
@@ -18,23 +19,8 @@ const AppStoreNav = () => {
     const [apps, setApps] = useState<any>([]);
     // const apps: IApps[] = useSelector((state) => state["apps"]);
     const renderApps = () => {
-        Axios.get(`${API_APP_URL}/GetMarketAppList`, {
-            params: { Token },
-        }).then((res) => {
-            console.log(res.data);
-            const { ErrorCode, ErrorMessage, MarketAppList } = res.data;
-            if (ErrorCode === 0) {
-                setApps([...MarketAppList]);
-            } else if (ErrorCode === 118) {
-                message
-                    .loading("Time has expired... Redirecting!", 1.5)
-                    .then(() => dispatch(signOut()));
-            } else if (ErrorCode === -1) {
-                // message.loading(EXPIRE_TIME, 1.5);
-                // setTimeout(() => {
-                //     dispatch(signOut());
-                // }, 1500);
-            }
+        return new ClientApi().GetMarketAppList().then((data: any) => {
+            setApps([...data.MarketAppList]);
         });
     };
     const menu = (

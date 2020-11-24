@@ -1,6 +1,5 @@
 import { Card, Col, Empty, Row, Tag } from "antd";
-import React, { useEffect } from "react";
-import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
+import React from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 

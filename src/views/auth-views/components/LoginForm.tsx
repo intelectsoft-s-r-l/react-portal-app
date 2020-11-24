@@ -220,7 +220,6 @@ const mapStateToProps = ({ auth, account }) => {
         token,
         redirect,
         userActivated,
-        activationToken,
     } = auth;
     // const { avatar, name, userName, email, dateOfBirth, phoneNumber } = account;
     return {

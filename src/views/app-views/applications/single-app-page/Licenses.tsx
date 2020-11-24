@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { refreshToken, signOut } from "../../../../redux/actions/Auth";
 import Utils from "../../../../utils";
 import { API_APP_URL } from "../../../../configs/AppConfig";
+import { ClientApi } from "../../../../api";
 
 const Licenses = ({
     licenses,
@@ -44,18 +45,7 @@ const Licenses = ({
     const [selectedRows, setSeletedRows] = useState<any>([]);
     const dispatch = useDispatch();
     const deleteLicense = (LicenseID) => {
-        return Axios.get(`${API_APP_URL}/DeleteAppLicense`, {
-            params: { Token, LicenseID },
-        })
-            .then(async (res) => {
-                console.log(res.data);
-                if (res.data.ErrorCode === 0) {
-                }
-            })
-            .catch((error) => {
-                const key = "updatable";
-                message.error({ content: error, key });
-            });
+        return new ClientApi().DeleteLicense(LicenseID);
     };
     const deleteRow = (row) => {
         const objKey = "ID";

@@ -34,7 +34,7 @@ function RouteInterceptor({ children, isAuthenticated, ...rest }) {
 }
 
 export const Views = (props) => {
-    const { locale, signOut, location, token } = props;
+    const { locale, location, token, signOut } = props;
     const currentAppLocale = AppLocale[locale];
     useEffect(() => {
         localStorage.getItem(`${APP_NAME}`) || signOut();
