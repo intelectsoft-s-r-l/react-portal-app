@@ -121,6 +121,11 @@ export class ClientApi extends HttpClient {
             params: { AppType, Quantity },
         });
 
+    public ReleaseLicense = (LicenseID) =>
+        this.instance.get("/ReleaseAppLicense", {
+            params: { LicenseID },
+        });
+
     public DeleteLicense = (LicenseID) =>
         this.instance.get("/DeleteAppLicense", {
             params: { LicenseID },

@@ -1,33 +1,15 @@
-import {
-    Button,
-    Card,
-    Col,
-    Empty,
-    Input,
-    message,
-    Modal,
-    Row,
-    Table,
-    Tag,
-    Tooltip,
-} from "antd";
+import { Button, Input, Modal, Table, Tag, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import {
     PlusOutlined,
     SearchOutlined,
-    CloseCircleOutlined,
-    CheckCircleOutlined,
-    EyeOutlined,
+    ArrowUpOutlined,
     DeleteOutlined,
-    EditOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { refreshToken, signOut } from "../../../../redux/actions/Auth";
 import Utils from "../../../../utils";
-import { API_APP_URL } from "../../../../configs/AppConfig";
 import { ClientApi } from "../../../../api";
 
 const Licenses = ({
@@ -46,6 +28,9 @@ const Licenses = ({
     const dispatch = useDispatch();
     const deleteLicense = (LicenseID) => {
         return new ClientApi().DeleteLicense(LicenseID);
+    };
+    const releaseLicense = (LicenseID) => {
+        return new ClientApi().ReleaseLicense(LicenseID);
     };
     const deleteRow = (row) => {
         const objKey = "ID";
@@ -120,12 +105,23 @@ const Licenses = ({
             dataIndex: "actions",
             render: (_, elm) => (
                 <div className="text-right">
-                    {elm.Status === 1 && (
+                    {elm.Status === 0 && (
                         <Tooltip title="Release">
                             <Button
-                                icon={<CloseCircleOutlined />}
+                                icon={<ArrowUpOutlined />}
                                 className="mr-2"
                                 size="small"
+                                onClick={() => {
+                                    Modal.confirm({
+                                        title: `Are you sure you want to release license ${elm.LicenseCode}?`,
+                                        onOk: async () => {
+                                            setSeletedRows([]);
+                                            setSelectedKeys([]);
+                                            await releaseLicense(elm.ID);
+                                            await getAppLicenses(AppType);
+                                        },
+                                    });
+                                }}
                             />
                         </Tooltip>
                     )}
