@@ -162,6 +162,8 @@ const Market = () => {
                                 new ClientApi()
                                     .ActivateApp(AppID)
                                     .then(async (data: any) => {
+                                        console.log(data);
+
                                         if (data.ErrorCode === 0)
                                             await getMarketApps();
                                     })

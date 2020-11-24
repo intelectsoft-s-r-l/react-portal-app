@@ -1,16 +1,19 @@
 const dev = {
     API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
     API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
+    SUBDIR_PATH: "/clientportal",
 };
 
 const prod = {
     API_APP_URL: "https://api.edi.md/ISClientWebAppServiceTest/json",
     API_AUTH_URL: "https://api.edi.md/ISAuthServiceTest/json",
+    SUBDIR_PATH: "/testclientportal",
 };
 
 const test = {
     API_APP_URL: "https://dev.edi.md/ISClientWebAppSerivce/json",
     API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
+    SUBDIR_PATH: "/testclientportal",
 };
 
 const getEnv = () => {

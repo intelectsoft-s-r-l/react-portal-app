@@ -39,7 +39,7 @@ class HttpClient {
         });
     };
 
-    public _handleResponse = ({ data }: AxiosResponse) => {
+    public _handleResponse = ({ data, config }: AxiosResponse) => {
         if (data.ErrorCode === 118) {
             store.dispatch(refreshToken());
         }
@@ -99,12 +99,12 @@ export class ClientApi extends HttpClient {
 
     public DeactivateApp = (AppID) =>
         this.instance.post("/DeactivateApp", {
-            AppID,
+            params: { AppID },
         });
 
     public ActivateApp = (AppID) =>
         this.instance.post("/ActivateApp", {
-            AppID,
+            params: { AppID },
         });
 
     public GetAppLicenses = (AppType) =>

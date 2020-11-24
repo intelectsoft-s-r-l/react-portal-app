@@ -20,9 +20,7 @@ import axios from "axios";
 import { message, Modal } from "antd";
 import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
-import { onLocaleChange } from "./Theme";
 import { EMAIL_CONFIRM_MSG, EXPIRE_TIME } from "../../constants/Messages";
-import { API_AUTH_URL } from "../../configs/AppConfig";
 import { AuthApi } from "../../api";
 const publicIp = require("react-public-ip");
 
@@ -94,10 +92,10 @@ export const isUserActivated = (boolean, Token) => ({
 });
 
 export const refreshToken = () => async (dispatch) => {
-    return new AuthApi().RefreshToken().then((data: any) => {
+    return new AuthApi().RefreshToken().then(async (data: any) => {
         const { ErrorCode, Token } = data;
         if (ErrorCode === 0) {
-            dispatch(authenticated(Token));
+            await dispatch(authenticated(Token));
             window.location.reload();
         } else if (ErrorCode === 105) {
             const key = "updatable";

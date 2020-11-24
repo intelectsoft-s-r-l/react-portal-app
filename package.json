@@ -1,8 +1,8 @@
 {
   "name": "client-portal-app",
   "version": "1.1.0",
+  "homepage": "/testclientportal",
   "private": true,
-  "homepage": "/clientportal/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

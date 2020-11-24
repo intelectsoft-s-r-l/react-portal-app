@@ -4,12 +4,13 @@ import Views from "./views/index";
 import { Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { SUBDIR_PATH } from "./configs/AppConfig";
 
 const App: React.FC = () => {
     return (
         <div className="App">
             <Provider store={store}>
-                <Router basename={"/clientportal"}>
+                <Router basename={SUBDIR_PATH}>
                     <Switch>
                         <Route path="/" component={Views} />
                     </Switch>
