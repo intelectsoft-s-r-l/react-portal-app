@@ -4,8 +4,8 @@ const dev = {
 };
 
 const prod = {
-    API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
-    API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
+    API_APP_URL: "https://api.edi.md/ISClientWebAppServiceTest/json",
+    API_AUTH_URL: "https://api.edi.md/ISAuthServiceTest/json",
 };
 
 const test = {
