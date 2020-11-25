@@ -1,12 +1,12 @@
 {
   "name": "client-portal-app",
   "version": "1.1.0",
-  "homepage": "/testclientportal",
+  "homepage": "/clientportal",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts build",
     "eject": "react-scripts eject"
   },
   "dependencies": {

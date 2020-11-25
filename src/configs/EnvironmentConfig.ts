@@ -5,14 +5,14 @@ const dev = {
 };
 
 const prod = {
-    API_APP_URL: "https://api.edi.md/ISClientWebAppServiceTest/json",
-    API_AUTH_URL: "https://api.edi.md/ISAuthServiceTest/json",
-    SUBDIR_PATH: "/testclientportal",
+    API_APP_URL: "https://api.edi.md/ISClientWebAppService/json",
+    API_AUTH_URL: "https://api.edi.md/ISAuthService/json",
+    SUBDIR_PATH: "/clientportal",
 };
 
 const test = {
-    API_APP_URL: "https://dev.edi.md/ISClientWebAppSerivce/json",
-    API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
+    API_APP_URL: "https://api.edi.md/ISClientWebAppSerivceTest/json",
+    API_AUTH_URL: "https://api.edi.md/ISAuthServiceTest/json",
     SUBDIR_PATH: "/testclientportal",
 };
 

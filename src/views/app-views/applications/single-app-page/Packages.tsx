@@ -1,28 +1,33 @@
 import { Card, Col, Empty, Row, Tag } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 
-const ItemHeader = ({ packages }) => (
-    <>
-        <Flex>
-            <h4 className="mb-0">{packages.Name}</h4>
-            <Tag
-                className="text-capitalize ml-2"
-                color={packages.Status === 1 ? "cyan" : "red"}
-            >
-                {packages.Status === 1 ? (
-                    <CheckCircleOutlined />
-                ) : (
-                    <ClockCircleOutlined />
-                )}
-                <span className="ml-2 font-weight-semibold">
-                    {packages.Status === 1 ? "Active" : "Not Active"}
-                </span>
-            </Tag>
-        </Flex>
-    </>
-);
+const ItemHeader = ({ packages }) => {
+    useEffect(() => {
+        console.log(packages);
+    }, []);
+    return (
+        <>
+            <Flex>
+                <h4 className="mb-0">{packages.Name}</h4>
+                <Tag
+                    className="text-capitalize ml-2"
+                    color={packages.Status === 1 ? "cyan" : "red"}
+                >
+                    {packages.Status === 1 ? (
+                        <CheckCircleOutlined />
+                    ) : (
+                        <ClockCircleOutlined />
+                    )}
+                    <span className="ml-2 font-weight-semibold">
+                        {packages.Status === 1 ? "Active" : "Not Active"}
+                    </span>
+                </Tag>
+            </Flex>
+        </>
+    );
+};
 
 const ItemFooter = ({ packages }) => (
     <div>

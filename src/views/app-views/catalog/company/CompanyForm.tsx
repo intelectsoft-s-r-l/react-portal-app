@@ -328,19 +328,20 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                                                     message:
                                                         "Please input your BIC!",
                                                 },
-                                                {
-                                                    pattern: /[A-Z]{4}-[A-Z]{2}-[0-9]{5}/,
-                                                    message:
-                                                        "Invalid BIC format",
-                                                },
+                                                // {
+                                                //     pattern: /[A-Z]{4}-[A-Z]{2}-[0-9]{5}/,
+                                                //     message:
+                                                //         "Invalid BIC format",
+                                                // },
                                             ]}
                                         >
-                                            <MaskedInput
+                                            {/* <MaskedInput
                                                 mask="AAAA-AA-11111"
                                                 onChange={
                                                     this.props.onChangeMask
                                                 }
-                                            />
+                                            /> */}
+                                            <Input />
                                         </Form.Item>
                                     </Col>
                                     <Col xs={24} sm={24} md={12}>
@@ -542,7 +543,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                                             name="VATCode"
                                             rules={[
                                                 {
-                                                    required: true,
+                                                    required: false,
                                                     message:
                                                         "Please input your VAT code!",
                                                 },

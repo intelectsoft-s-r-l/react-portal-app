@@ -11,6 +11,8 @@ import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
 import { useSelector } from "react-redux";
 import Loading from "../../../../components/shared-components/Loading";
 import { ClientApi } from "../../../../api";
+import InstallWizard from "./wizard";
+import { MarketContext } from "./MarketContext";
 
 export interface IPackages {
     ID: number;
@@ -42,7 +44,15 @@ export interface IApplications {
     ErrorMessage: string;
     MarketAppList: IMarketAppList[];
 }
-const GridItem = ({ activateApp, deactivateApp, data }) => {
+const GridItem = ({
+    terms,
+    setTerms,
+    activateApp,
+    deactivateApp,
+    setVisibleModal,
+    setSelectedApp,
+    data,
+}) => {
     const [shortDesc, setShortDesc] = useState<any>();
     const locale = useSelector((state) => state["theme"].locale);
     useEffect(() => {
@@ -69,7 +79,10 @@ const GridItem = ({ activateApp, deactivateApp, data }) => {
                     <Tag
                         className="text-capitalize cursor-pointer"
                         color="default"
-                        onClick={() => activateApp(data.ID)}
+                        onClick={() => {
+                            setVisibleModal(true);
+                            setSelectedApp(data);
+                        }}
                     >
                         <VerticalAlignBottomOutlined />
                         <span className="ml-2 font-weight-semibold">
@@ -114,7 +127,15 @@ const GridItem = ({ activateApp, deactivateApp, data }) => {
 const Market = () => {
     const [apps, setApps] = useState<any>([]);
     const [loading, setLoading] = useState(false);
+    const [terms, setTerms] = useState<any>();
+    const locale = useSelector((state) => state["theme"].locale);
+    const [visibleModal, setVisibleModal] = useState<boolean>(false);
     const { confirm } = Modal;
+    const [current, setCurrent] = useState<any>(0);
+    const [isAccepted, setIsAccepted] = useState<boolean>(false);
+    const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
+    const [selectedApp, setSelectedApp] = useState<any>();
+    const [appInstalled, setAppInstalled] = useState<boolean>(false);
     const getMarketApps = () => {
         setLoading(true);
         return new ClientApi().GetMarketAppList().then((data: any) => {
@@ -163,7 +184,6 @@ const Market = () => {
                                     .ActivateApp(AppID)
                                     .then(async (data: any) => {
                                         console.log(data);
-
                                         if (data.ErrorCode === 0)
                                             await getMarketApps();
                                     })
@@ -174,44 +194,84 @@ const Market = () => {
             },
         });
     };
+    const handleOk = () => {
+        setVisibleModal(false);
+    };
+    const handleCancel = () => {
+        setVisibleModal(false);
+    };
+
+    useEffect(() => {
+        if (!visibleModal) {
+            setTimeout(() => {
+                setCurrent(0);
+                setIsAccepted(false);
+                setTermsAccepted(false);
+            }, 250);
+        }
+    }, [visibleModal]);
 
     return (
-        <>
+        <a>
             {loading ? (
                 <Loading cover="content" />
             ) : (
-                <div
-                    className={`my-4 
-                    container-fluid`}
+                <MarketContext.Provider
+                    value={{
+                        visibleModal,
+                        appInstalled,
+                        setAppInstalled,
+                        handleOk,
+                        handleCancel,
+                        terms,
+                        current,
+                        setCurrent,
+                        isAccepted,
+                        setIsAccepted,
+                        selectedApp,
+                        termsAccepted,
+                        setTermsAccepted,
+                        getMarketApps,
+                    }}
                 >
-                    <Row gutter={16}>
-                        {apps.length > 0 && !loading ? (
-                            apps.map((elm) => (
-                                <Col
-                                    xs={24}
-                                    sm={24}
-                                    lg={12}
-                                    xl={6}
-                                    xxl={6}
-                                    key={elm["AppType"]}
-                                >
-                                    <GridItem
-                                        activateApp={activateApp}
-                                        deactivateApp={deactivateApp}
-                                        data={elm}
+                    <InstallWizard apps={apps} />
+                    <div
+                        className={`my-4 
+                    container-fluid`}
+                    >
+                        <Row gutter={16}>
+                            {apps.length > 0 && !loading ? (
+                                apps.map((elm) => (
+                                    <Col
+                                        xs={24}
+                                        sm={24}
+                                        lg={12}
+                                        xl={6}
+                                        xxl={6}
                                         key={elm["AppType"]}
-                                    />
-                                </Col>
-                            ))
-                        ) : (
-                            <Flex justifyContent="center" className="w-100">
-                                <Empty />
-                            </Flex>
-                        )}
-                    </Row>
-                </div>
+                                    >
+                                        <GridItem
+                                            setVisibleModal={setVisibleModal}
+                                            activateApp={activateApp}
+                                            terms={terms}
+                                            setTerms={setTerms}
+                                            deactivateApp={deactivateApp}
+                                            data={elm}
+                                            key={elm["AppType"]}
+                                            setSelectedApp={setSelectedApp}
+                                        />
+                                    </Col>
+                                ))
+                            ) : (
+                                <Flex justifyContent="center" className="w-100">
+                                    <Empty />
+                                </Flex>
+                            )}
+                        </Row>
+                    </div>
+                </MarketContext.Provider>
             )}
-        </>
+        </a>
     );
 };
 
