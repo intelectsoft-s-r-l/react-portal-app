@@ -117,8 +117,6 @@ export class UserList extends Component<ReduxStoreProps> {
                     );
                     this.setState({ users: [...filteredUsers] });
                     this.setState({ usersToSearch: [...filteredUsers] });
-                } else if (res.data.ErrorCode === 118) {
-                    this.props.refreshToken(this.props.token);
                 }
             })
             .catch((error) => {
@@ -249,8 +247,6 @@ export class UserList extends Component<ReduxStoreProps> {
                 console.log(res.data);
                 if (res.data.ErrorCode === 0) {
                     // this.getUsersInfo();
-                } else if (res.data.ErrorCode === 118) {
-                    this.props.refreshToken(this.props.token);
                 }
             })
             .catch((error) => {
