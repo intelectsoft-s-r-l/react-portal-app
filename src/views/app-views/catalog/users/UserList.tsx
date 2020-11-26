@@ -190,7 +190,9 @@ export class UserList extends Component<ReduxStoreProps> {
     toggleStatusRow = async (row, statusNumber) => {
         Modal.confirm({
             title: `Are you sure you want to ${
-                statusNumber === 0 ? "deactivate" : "activate"
+                statusNumber === 0 || statusNumber === 2
+                    ? "disable"
+                    : "activate"
             } ${row.length} ${row.length > 1 ? "users" : "user"}?`,
             onOk: async () => {
                 await Promise.all(
@@ -458,8 +460,8 @@ export class UserList extends Component<ReduxStoreProps> {
                                         }
                                     >
                                         {this.state.selectedRows.length > 1
-                                            ? `Deactivate (${this.state.selectedRows.length})`
-                                            : "Deactivate"}
+                                            ? `Disable (${this.state.selectedRows.length})`
+                                            : "Disable"}
                                     </Button>
                                     {/* <Tooltip
                                         title={`${

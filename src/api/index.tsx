@@ -60,18 +60,24 @@ class HttpClient {
                 if (ErrorCode === 0) {
                     store.dispatch(authenticated(Token));
                     if (error.config.method === "get") {
-                        error.config.params = { ...error.config.params, Token };
+                        error.config.params = {
+                            ...error.config.params,
+                            Token,
+                        };
+                        return axios
+                            .request(error.config)
+                            .then((response) => response.data);
                     }
                     if (error.config.method === "post") {
                         error.config.data = {
-                            ...JSON.parse(error.config.params),
+                            ...JSON.parse(error.config.data),
                             Token,
                         };
+                        return axios
+                            .request(error.config)
+                            .then((response) => response.data);
                     }
-                    return axios
-                        .request(error.config)
-                        .then((response) => response.data);
-                } else if (ErrorCode === 105) {
+                } else {
                     const key = "updatable";
                     message
                         .loading({ content: EXPIRE_TIME, key })
