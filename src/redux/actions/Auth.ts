@@ -116,24 +116,29 @@ const sendActivationCode = () => async (dispatch) => {
 
 export const authorizeUser = (userData) => {
     return async (dispatch) => {
-        return new AuthApi().Login(userData).then((data: any) => {
-            const { ErrorCode, ErrorMessage, Token } = data;
-            if (ErrorCode === 0) {
-                dispatch(authenticated(Token));
-                dispatch(getProfileInfo());
-            } else if (ErrorCode === 102) {
-                dispatch(showAuthMessage(ErrorMessage));
-            } else if (ErrorCode === 108) {
-                dispatch(hideLoading());
-                Modal.confirm({
-                    title: "Confirm registration",
-                    content:
-                        "Press the OK button down below if you want us to send you a new activation code!",
-                    onOk: () => {
-                        dispatch(sendActivationCode());
-                    },
-                });
-            }
-        });
+        return new AuthApi()
+            .Login(userData)
+            .then((data: any) => {
+                console.log(data);
+                const { ErrorCode, ErrorMessage, Token } = data;
+                if (ErrorCode === 0) {
+                    dispatch(authenticated(Token));
+                    dispatch(getProfileInfo());
+                } else if (ErrorCode === 102) {
+                    dispatch(showAuthMessage(ErrorMessage));
+                } else if (ErrorCode === 108) {
+                    Modal.confirm({
+                        title: "Confirm registration",
+                        content:
+                            "Press the OK button down below if you want us to send you a new activation code!",
+                        onOk: () => {
+                            dispatch(sendActivationCode());
+                        },
+                    });
+                } else {
+                    dispatch(showAuthMessage(ErrorMessage));
+                }
+            })
+            .then(() => dispatch(hideLoading()));
     };
 };

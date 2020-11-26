@@ -59,7 +59,15 @@ class HttpClient {
                 const { ErrorCode, Token } = data;
                 if (ErrorCode === 0) {
                     store.dispatch(authenticated(Token));
-                    error.config.params = { Token };
+                    if (error.config.method === "get") {
+                        error.config.params = { ...error.config.params, Token };
+                    }
+                    if (error.config.method === "post") {
+                        error.config.data = {
+                            ...JSON.parse(error.config.params),
+                            Token,
+                        };
+                    }
                     return axios
                         .request(error.config)
                         .then((response) => response.data);
@@ -171,5 +179,16 @@ export class ClientApi extends HttpClient {
         this.instance.post("/GenerateLicenseActivationCode", {
             AppID,
             Token: this._token,
+        });
+
+    public GetUserList = () => this.instance.get("/GetUsersInfo");
+
+    public GetCompanyInfo = () => this.instance.get("/GetCompanyInfo");
+
+    public UpdateCompany = async (data) =>
+        this.instance.post("/UpdateCompany", {
+            ...data,
+            Token: this._token,
+            info: await publicIp.v4(),
         });
 }

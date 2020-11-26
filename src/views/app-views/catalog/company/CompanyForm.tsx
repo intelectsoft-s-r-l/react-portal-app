@@ -25,6 +25,8 @@ import AppLocale from "../../../../lang";
 import axios from "axios";
 import { signOut } from "../../../../redux/actions/Auth";
 import { API_APP_URL } from "../../../../configs/AppConfig";
+import { ClientApi } from "../../../../api";
+import { DONE } from "../../../../constants/Messages";
 const publicIp = require("react-public-ip");
 
 function beforeUpload(file) {
@@ -45,35 +47,33 @@ class CompanyForm extends Component<{ [key: string]: any }> {
     state = {} as { [key: string]: any };
     formRef = React.createRef() as any;
 
-    componentDidMount() {
-        axios
-            .get(`${API_APP_URL}/GetCompanyInfo`, {
-                params: {
-                    Token: this.props.token,
-                },
-            })
-            .then((res) => {
-                const { ErrorCode, ErrorMessage, Company } = res.data;
+    public getCompanyInfo = () => {
+        return new ClientApi().GetCompanyInfo().then((data: any) => {
+            const { ErrorCode, ErrorMessage, Company } = data;
+            if (ErrorCode === 0) {
+                this.setState(Company);
+                this.formRef["current"].setFieldsValue(Company);
+            } else {
+                message.error(data.ErrorMessage);
+            }
+        });
+    };
+
+    public updateCompany = (values) => {
+        const updatedInfo = { Company: { ...this.state, ...values } };
+        return new ClientApi()
+            .UpdateCompany(updatedInfo)
+            .then(async (data: any) => {
+                const { ErrorCode, ErrorMessage } = data;
                 if (ErrorCode === 0) {
-                    console.log(Company);
-                    this.setState(Company);
-                    this.formRef["current"].setFieldsValue(Company);
-                } else if (res.data.ErrorCode === 118) {
-                    message.loading(
-                        "Time has expired. Redirecting you to login page...",
-                        2
-                    );
-                    setTimeout(() => {
-                        this.props.signOut();
-                    }, 2000);
+                    await this.getCompanyInfo();
                 } else {
                     message.error(ErrorMessage);
                 }
-            })
-            .catch((error) => {
-                const key = "updatable";
-                message.error({ content: error.toString(), key });
             });
+    };
+    componentDidMount() {
+        this.getCompanyInfo();
     }
 
     getBase64(img, callback) {
@@ -81,9 +81,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         reader.addEventListener("load", () => callback(reader.result));
         reader.readAsDataURL(img);
     }
-    // componentDidMount {
-    //   getCompanyInfo(this.props.token)
-    // }
 
     render() {
         let { updateSettings, removeAvatar, locale, signOut } = this.props;
@@ -105,62 +102,12 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                 key,
             });
             setTimeout(async () => {
-                console.log({
-                    Company: { ...this.state, ...values },
-                    Token: this.props.token,
-                    info: await publicIp.v4(),
-                });
-                axios
-                    .post(`${API_APP_URL}/UpdateCompany`, {
-                        Company: {
-                            ...this.state,
-                            ...values,
-                        },
-                        Token: this.props.token,
-                        info: (await publicIp.v4()) || "",
-                    })
-                    .then((res) => {
-                        console.log(res.data);
-                        if (res.data.ErrorCode === 0) {
-                            message.success({
-                                content: (
-                                    <IntlProvider
-                                        locale={currentAppLocale.locale}
-                                        messages={currentAppLocale.messages}
-                                    >
-                                        <IntlMessage
-                                            id={"message.AccountSettings.Done"}
-                                        />
-                                    </IntlProvider>
-                                ),
-                                key,
-                                duration: 2,
-                            });
-                        } else if (res.data.ErrorCode === 118) {
-                            message.loading(
-                                "Time has expired. Redirecting you to login page...",
-                                1.5
-                            );
-                            setTimeout(() => {
-                                signOut();
-                            }, 1500);
-                        } else {
-                            message.error({
-                                content: (
-                                    <IntlProvider
-                                        locale={currentAppLocale.locale}
-                                        messages={currentAppLocale.messages}
-                                    >
-                                        <IntlMessage
-                                            id={"message.AccountSettings.Error"}
-                                        />
-                                    </IntlProvider>
-                                ),
-                                key,
-                                duration: 2,
-                            });
-                        }
-                    });
+                // console.log({
+                //     Company: { ...this.state, ...values },
+                //     Token: this.props.token,
+                //     info: await publicIp.v4(),
+                // });
+                this.updateCompany(values);
             }, 1000);
         };
 
@@ -189,29 +136,8 @@ class CompanyForm extends Component<{ [key: string]: any }> {
             }
             if (info.file.status === "done") {
                 this.getBase64(info.file.originFileObj, async (imageUrl) => {
-                    axios
-                        .post(`${API_APP_URL}/UpdateCompany`, {
-                            Company: {
-                                ...this.state,
-                                Logo: imageUrl,
-                            },
-                            Token: this.props.token,
-                            info: (await publicIp.v4()) || "",
-                        })
-                        .then((res) => {
-                            console.log(res.data);
-                            if (res.data.ErrorCode === 0) {
-                                this.setState({ Logo: imageUrl });
-                            } else if (res.data.ErrorCode === 118) {
-                                message.loading(
-                                    "Time has expired. Redirecting you to login page...",
-                                    1.5
-                                );
-                                setTimeout(() => {
-                                    signOut();
-                                }, 1500);
-                            }
-                        });
+                    const newImage = { Logo: imageUrl };
+                    this.updateCompany(newImage);
                 });
                 message.success({
                     content: (
@@ -244,29 +170,10 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         };
 
         const onRemoveAvater = async () => {
-            axios
-                .post(`${API_APP_URL}/UpdateCompany`, {
-                    Company: {
-                        ...this.state,
-                        Logo: "",
-                    },
-                    Token: this.props.token,
-                    info: (await publicIp.v4()) || "",
-                })
-                .then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        this.setState({ Logo: "" });
-                    } else if (res.data.ErrorCode === 118) {
-                        message.loading(
-                            "Time has expired. Redirecting you to login page...",
-                            1.5
-                        );
-                        setTimeout(() => {
-                            signOut();
-                        }, 1500);
-                    }
-                });
+            const deletedImage = { Logo: "" };
+            this.updateCompany(deletedImage).then(() =>
+                this.setState(deletedImage)
+            );
         };
 
         return (
