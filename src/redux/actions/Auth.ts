@@ -137,6 +137,7 @@ export const authorizeUser = (userData) => {
                             },
                         });
                     } else {
+                        dispatch(hideLoading());
                         dispatch(showAuthMessage(ErrorMessage));
                     }
                 }

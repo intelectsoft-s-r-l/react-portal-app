@@ -66,7 +66,7 @@ const NavProfile = ({
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         resolve(signOut());
-                        resolve(clearSettings());
+                        // resolve(clearSettings());
                     }, 1000);
                 }).catch(() => console.log("Oops errors!"));
             },

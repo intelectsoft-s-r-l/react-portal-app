@@ -85,7 +85,7 @@ class HttpClient {
                     const key = "updatable";
                     message.loading({ content: EXPIRE_TIME, key }).then(() => {
                         store.dispatch(signOut());
-                        store.dispatch(clearSettings());
+                        // store.dispatch(clearSettings());
                     });
                 }
             });
