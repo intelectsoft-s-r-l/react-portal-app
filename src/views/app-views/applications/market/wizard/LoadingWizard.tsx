@@ -6,7 +6,7 @@ import { hideLoading, showLoading } from "../../../../../redux/actions/Auth";
 import { MarketContext } from "../MarketContext";
 
 const LoadingWizard = () => {
-    const { selectedApp } = useContext(MarketContext);
+    const { selectedApp, getMarketApps } = useContext(MarketContext);
     const loading = useSelector((state) => state["auth"].loading);
     const dispatch = useDispatch();
     useEffect(() => {

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Card, Row, Col, Form, Input, Button, message } from "antd";
 import { MailOutlined } from "@ant-design/icons";
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { API_AUTH_URL } from "../../../../configs/AppConfig";
-const publicIp = require("react-public-ip");
+import { AuthApi } from "../../../../api";
+import { NEW_PASSWORD } from "../../../../constants/Messages";
 
 const backgroundStyle = {
     backgroundImage: `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`,
@@ -22,22 +21,14 @@ const ForgotPassword = () => {
         setLoading(true);
         setTimeout(async () => {
             setLoading(false);
-            axios
-                .post(`${API_AUTH_URL}/ResetPassword`, {
-                    Email: email,
-                    info: (await publicIp.v4()) || "",
-                })
-                .then((response) => {
-                    console.log(response.data);
-                    if (response.data.ErrorCode === 0) {
-                        /* Use response.data['ErrorMessage'] when the API will be able to handle error messages correctly  */
-                        message.success(
-                            "New password has been sent to your email!"
-                        );
-                    } else {
-                        message.error(response.data.ErrorMessage);
-                    }
-                });
+            return new AuthApi().ResetPassword(email).then((data: any) => {
+                if (data.ErrorCode === 0) {
+                    message.success({
+                        content: NEW_PASSWORD,
+                        key: "updatable",
+                    });
+                }
+            });
         }, 1500);
         form.resetFields();
     };

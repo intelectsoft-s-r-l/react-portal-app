@@ -1,8 +1,6 @@
 import { Row, Modal, Form, Col, Input, message } from "antd";
 import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
-import axios from "axios";
-import { API_APP_URL } from "../../../configs/AppConfig";
 import { ClientApi } from "../../../api";
 
 const CreateLicenseModal = ({
@@ -18,7 +16,9 @@ const CreateLicenseModal = ({
         return new ClientApi()
             .RequestLicense(AppType, values.Quantity)
             .then((data: any) => {
-                if (data.ErrorCode === 0) getAppLicenses(AppType);
+                if (data) {
+                    if (data.ErrorCode === 0) getAppLicenses(AppType);
+                }
             });
     };
     const onOk = () => {

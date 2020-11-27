@@ -16,7 +16,6 @@ import {
     VALIDATE_USER,
     SET_TOKEN,
 } from "../constants/Auth";
-import axios from "axios";
 import { message, Modal } from "antd";
 import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
@@ -91,26 +90,28 @@ export const isUserActivated = (boolean, Token) => ({
     activationToken: Token,
 });
 
-export const refreshToken = () => async (dispatch) => {
-    return new AuthApi().RefreshToken().then(async (data: any) => {
-        const { ErrorCode, Token } = data;
-        if (ErrorCode === 0) {
-            await dispatch(authenticated(Token));
-            window.location.reload();
-        } else if (ErrorCode === 105) {
-            const key = "updatable";
-            message
-                .loading({ content: EXPIRE_TIME, key })
-                .then(() => dispatch(signOut()));
-        }
-    });
-};
+// export const refreshToken = () => async (dispatch) => {
+//     return new AuthApi().RefreshToken().then(async (data: any) => {
+//         const { ErrorCode, Token } = data;
+//         if (ErrorCode === 0) {
+//             await dispatch(authenticated(Token));
+//             window.location.reload();
+//         } else if (ErrorCode === 105) {
+//             const key = "updatable";
+//             message
+//                 .loading({ content: EXPIRE_TIME, key })
+//                 .then(() => dispatch(signOut()));
+//         }
+//     });
+// };
 
-const sendActivationCode = () => async (dispatch) => {
+export const sendActivationCode = () => async (dispatch) => {
     return new AuthApi().SendActivationCode().then((data: any) => {
         const { ErrorMessage, ErrorCode } = data;
-        if (ErrorCode === 0) message.success(EMAIL_CONFIRM_MSG);
-        else dispatch(showAuthMessage(ErrorMessage));
+        if (data) {
+            if (ErrorCode === 0) message.success(EMAIL_CONFIRM_MSG);
+            else dispatch(showAuthMessage(ErrorMessage));
+        }
     });
 };
 
@@ -119,24 +120,25 @@ export const authorizeUser = (userData) => {
         return new AuthApi()
             .Login(userData)
             .then((data: any) => {
-                console.log(data);
-                const { ErrorCode, ErrorMessage, Token } = data;
-                if (ErrorCode === 0) {
-                    dispatch(authenticated(Token));
-                    dispatch(getProfileInfo());
-                } else if (ErrorCode === 102) {
-                    dispatch(showAuthMessage(ErrorMessage));
-                } else if (ErrorCode === 108) {
-                    Modal.confirm({
-                        title: "Confirm registration",
-                        content:
-                            "Press the OK button down below if you want us to send you a new activation code!",
-                        onOk: () => {
-                            dispatch(sendActivationCode());
-                        },
-                    });
-                } else {
-                    dispatch(showAuthMessage(ErrorMessage));
+                if (data) {
+                    const { ErrorCode, ErrorMessage, Token } = data;
+                    if (ErrorCode === 0) {
+                        dispatch(authenticated(Token));
+                        dispatch(getProfileInfo());
+                    } else if (ErrorCode === 102) {
+                        dispatch(showAuthMessage(ErrorMessage));
+                    } else if (ErrorCode === 108) {
+                        Modal.confirm({
+                            title: "Confirm registration",
+                            content:
+                                "Press the OK button down below if you want us to send you a new activation code!",
+                            onOk: () => {
+                                dispatch(sendActivationCode());
+                            },
+                        });
+                    } else {
+                        dispatch(showAuthMessage(ErrorMessage));
+                    }
                 }
             })
             .then(() => dispatch(hideLoading()));

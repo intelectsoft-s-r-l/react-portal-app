@@ -188,27 +188,34 @@ const SingleAppPage = ({ match, location }) => {
     const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
     const [activationCode, setActivationCode] = useState<string>();
     const Token = useSelector((state) => state["auth"].token);
-
+    // const sortData = (arr) => {
+    //     return arr.slice().sort((a, b) => a.ID - b.ID);
+    // };
     const getAppLinceses = (AppType) => {
         return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
-            if (data.ErrorCode === 0) {
-                setLicenses([...data.LicenseList]);
-                setLicensesToSearch([...data.LicenseList]);
+            if (data) {
+                if (data.ErrorCode === 0) {
+                    // const evaluatedArray = sortData(data.LicensesList);
+                    setLicenses(data.LicenseList);
+                    setLicensesToSearch(data.LicenseList);
+                }
             }
         });
     };
     const getMarketApp = () => {
         return new ClientApi().GetMarketAppList().then((data: any) => {
-            const { ErrorCode, MarketAppList } = data;
-            if (ErrorCode === 0) {
-                getAppLinceses(appID);
-                const currentApp = MarketAppList.find(
-                    (app) => app.AppType == appID
-                );
-                setApp(currentApp);
-                if (currentApp) {
-                    setApiKey(currentApp.ApyKey);
-                    setActivationCode(currentApp.LicenseActivationCode);
+            if (data) {
+                const { ErrorCode, MarketAppList } = data;
+                if (ErrorCode === 0) {
+                    getAppLinceses(appID);
+                    const currentApp = MarketAppList.find(
+                        (app) => app.AppType == appID
+                    );
+                    setApp(currentApp);
+                    if (currentApp) {
+                        setApiKey(currentApp.ApyKey);
+                        setActivationCode(currentApp.LicenseActivationCode);
+                    }
                 }
             }
         });
@@ -232,7 +239,6 @@ const SingleAppPage = ({ match, location }) => {
                         AppID={app.ID}
                         apiKey={apiKey}
                         setApiKey={setApiKey}
-                        Token={Token}
                     />
                     <InnerAppLayout
                         sideContent={

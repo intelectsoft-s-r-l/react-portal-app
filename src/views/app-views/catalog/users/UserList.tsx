@@ -1,47 +1,28 @@
 import React, { Component } from "react";
-import {
-    Card,
-    Table,
-    Tag,
-    Tooltip,
-    message,
-    Button,
-    Modal,
-    Menu,
-    Input,
-} from "antd";
+import { Card, Table, Tag, message, Button, Modal, Menu, Input } from "antd";
 import {
     EyeOutlined,
+    ArrowRightOutlined,
     PlusCircleOutlined,
+    EditOutlined,
     SearchOutlined,
     CloseCircleOutlined,
     CheckCircleOutlined,
-    DeleteOutlined,
-    EditOutlined,
-    UserAddOutlined,
-    CheckOutlined,
-    PlusOutlined,
     UserOutlined,
-    FrownOutlined,
-    LoadingOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 import UserView from "./UserView";
 import AvatarStatus from "../../../../components/shared-components/AvatarStatus";
-import userData from "../../../../assets/data/user-list.data.json";
 import "../hand_gesture.scss";
-import axios from "axios";
 import { connect } from "react-redux";
-import { signOut, refreshToken } from "../../../../redux/actions/Auth";
 import { UserModalEdit } from "./UserModalEdit";
 import { UserModalAdd } from "./UserModalAdd";
 import "./add_user.scss";
 import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
-import { SortOrder } from "antd/es/table/interface";
-import { API_APP_URL, API_AUTH_URL } from "../../../../configs/AppConfig";
 import { ClientApi } from "../../../../api";
+import { sendActivationCode } from "../../../../redux/actions/Auth";
 
 enum status {
     inactive = 0,
@@ -81,8 +62,7 @@ interface ReduxStoreProps {
     locale: string;
     ID: number;
     CompanyID: number;
-    signOut: () => any;
-    refreshToken: any;
+    sendActivationCode: any;
 }
 
 export class UserList extends Component<ReduxStoreProps> {
@@ -101,21 +81,28 @@ export class UserList extends Component<ReduxStoreProps> {
         loading: false,
     };
 
+    sortData = (arr) => {
+        return arr.slice().sort((a, b) => a.ID - b.ID);
+    };
+
     getUsersInfo = () => {
         return new ClientApi().GetUserList().then((data: any) => {
-            const { ErrorCode } = data;
-            if (ErrorCode === 0) {
-                const filteredUsers = data.Users.filter(
-                    (user) => user.ID !== this.props.ID
-                );
-                this.setState((prev) => ({
-                    ...prev,
-                    usersToSearch: [...filteredUsers],
-                }));
-                this.setState((prev) => ({
-                    ...prev,
-                    users: [...filteredUsers],
-                }));
+            if (data) {
+                const { ErrorCode } = data;
+                if (ErrorCode === 0) {
+                    const filteredUsers = data.Users.filter(
+                        (user) => user.ID !== this.props.ID
+                    );
+                    const evaluatedArray = this.sortData(filteredUsers);
+                    this.setState((prev) => ({
+                        ...prev,
+                        usersToSearch: [...evaluatedArray],
+                    }));
+                    this.setState((prev) => ({
+                        ...prev,
+                        users: [...evaluatedArray],
+                    }));
+                }
             }
         });
     };
@@ -159,31 +146,6 @@ export class UserList extends Component<ReduxStoreProps> {
     closeNewUserModal = () => {
         this.setState({
             newUserModalVisible: false,
-        });
-    };
-
-    showConfirmRegistrationModal = (UserID: number) => {
-        const Token = this.props.token;
-        Modal.confirm({
-            title: "User registration confirmation",
-            content: "Press OK if you want us to send a new activation message",
-            onOk() {
-                axios
-                    .get(`${API_AUTH_URL}/SendActivationCode`, {
-                        params: {
-                            Token,
-                            UserID,
-                        },
-                    })
-                    .then((res) => {
-                        console.log(res.data);
-                    })
-                    .catch((error) => {
-                        const key = "updatable";
-                        message.error({ content: error.toString(), key });
-                    });
-            },
-            onCancel() {},
         });
     };
 
@@ -234,27 +196,28 @@ export class UserList extends Component<ReduxStoreProps> {
     // };
 
     handleUserStatus = (userId: number, status: number) => {
-        axios
-            .get(`${API_APP_URL}/ChangeUserStatus`, {
-                params: {
-                    Token: this.props.token,
-                    ID: userId,
-                    Status: status,
-                },
-            })
-            .then((res) => {
-                console.log(res.data);
-                if (res.data.ErrorCode === 0) {
-                    // this.getUsersInfo();
-                }
-            })
-            .catch((error) => {
-                const key = "updatable";
-                message.error({ content: error.toString(), key });
-            });
+        return new ClientApi().ChangeUserStatus(userId, status);
     };
     dropdownMenu = (row) => (
         <Menu>
+            {row.Status === 0 && (
+                <Menu.Item
+                    onClick={() =>
+                        Modal.confirm({
+                            title: `Are you sure you want to send an email to ${row.FirstName} ?`,
+                            onOk: () => {
+                                this.props.sendActivationCode(row.ID);
+                            },
+                            onCancel: () => {},
+                        })
+                    }
+                >
+                    <Flex alignItems="center">
+                        <ArrowRightOutlined />
+                        <span className="ml-2">Send activation code</span>
+                    </Flex>
+                </Menu.Item>
+            )}
             <Menu.Item onClick={() => this.showUserProfile(row)}>
                 <Flex alignItems="center">
                     <EyeOutlined />
@@ -523,17 +486,15 @@ export class UserList extends Component<ReduxStoreProps> {
                     onCreate={this.showNewUserModal}
                     onCancel={this.closeNewUserModal}
                     visible={this.state.newUserModalVisible}
-                    token={this.props.token}
                 />
                 <UserModalEdit
-                    signOut={signOut}
+                    getUsersInfo={this.getUsersInfo}
                     locale={this.props.locale}
                     data={selectedUser}
                     visible={this.state.editModalVisible}
                     onCancel={() => {
                         this.closeEditModal();
                     }}
-                    token={this.props.token}
                 />
             </Card>
         );
@@ -547,4 +508,4 @@ const mapStateToProps = ({ auth, theme, account }) => {
     return { token, locale, CompanyID, ID };
 };
 
-export default connect(mapStateToProps, { signOut, refreshToken })(UserList);
+export default connect(mapStateToProps, { sendActivationCode })(UserList);

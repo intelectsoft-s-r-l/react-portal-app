@@ -1,30 +1,20 @@
 import React, { useEffect } from "react";
-import axios from "axios";
-import { Input, Row, Col, Tooltip, Form, Modal, Button, message } from "antd";
-import {
-    CreditCardOutlined,
-    CalendarOutlined,
-    QuestionCircleOutlined,
-} from "@ant-design/icons";
+import { Input, Row, Col, Form, Modal, message } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import AppLocale from "../../../../lang";
 import { IntlProvider } from "react-intl";
-import { useDispatch } from "react-redux";
-import { setProfileInfo } from "../../../../redux/actions/Account";
-import { API_APP_URL } from "../../../../configs/AppConfig";
+import { ClientApi } from "../../../../api";
+import { DONE, ERROR } from "../../../../constants/Messages";
 
 export const UserModalEdit = ({
-    signOut,
     data,
     visible,
     onCancel,
     locale,
-    token,
+    getUsersInfo,
 }) => {
     const [form] = Form.useForm();
-
-    const dispatch = useDispatch();
 
     /*  Destroy initialValues of form after Modal is closed */
     useEffect(() => {
@@ -32,6 +22,9 @@ export const UserModalEdit = ({
         form.resetFields();
     }, [visible, form]);
 
+    const updateUser = (data) => {
+        return new ClientApi().UpdateUser(data);
+    };
     const currentAppLocale = AppLocale[locale];
     const onFinish = (values) => {
         const key = "updatable";
@@ -47,57 +40,19 @@ export const UserModalEdit = ({
             key,
         });
         setTimeout(async () => {
-            axios
-                .post(`${API_APP_URL}/UpdateUser`, {
-                    User: {
-                        ...data,
-                        ...values,
-                    },
-                    Token: token,
-                })
-                .then((res) => {
-                    console.log(res.data);
-                    if (res.data.ErrorCode === 0) {
-                        message.success({
-                            content: (
-                                <IntlProvider
-                                    locale={currentAppLocale.locale}
-                                    messages={currentAppLocale.messages}
-                                >
-                                    <IntlMessage
-                                        id={"message.AccountSettings.Done"}
-                                    />
-                                </IntlProvider>
-                            ),
-                            key,
-                            duration: 2,
-                        });
-                        window.location.reload();
-                    } else if (res.data.ErrorCode === 118) {
-                        message.loading(
-                            "Time has expired. Redirecting you to login page...",
-                            1.5
-                        );
-                        setTimeout(() => {
-                            signOut();
-                        }, 1500);
+            updateUser({ User: { ...data, ...values } }).then((data: any) => {
+                if (data) {
+                    if (data.ErrorCode === 0) {
+                        message.success({ content: DONE, key: "updatable" });
+                        getUsersInfo();
                     } else {
                         message.error({
-                            content: (
-                                <IntlProvider
-                                    locale={currentAppLocale.locale}
-                                    messages={currentAppLocale.messages}
-                                >
-                                    <IntlMessage
-                                        id={"message.AccountSettings.Error"}
-                                    />
-                                </IntlProvider>
-                            ),
-                            key,
-                            duration: 2,
+                            content: data.ErrorMessage,
+                            key: "updatable",
                         });
                     }
-                });
+                }
+            });
         }, 1000);
     };
     const onFinishFailed = () => {};

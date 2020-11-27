@@ -22,12 +22,9 @@ import {
 import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../../lang";
-import axios from "axios";
 import { signOut } from "../../../../redux/actions/Auth";
-import { API_APP_URL } from "../../../../configs/AppConfig";
 import { ClientApi } from "../../../../api";
 import { DONE } from "../../../../constants/Messages";
-const publicIp = require("react-public-ip");
 
 function beforeUpload(file) {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -49,12 +46,14 @@ class CompanyForm extends Component<{ [key: string]: any }> {
 
     public getCompanyInfo = () => {
         return new ClientApi().GetCompanyInfo().then((data: any) => {
-            const { ErrorCode, ErrorMessage, Company } = data;
-            if (ErrorCode === 0) {
-                this.setState(Company);
-                this.formRef["current"].setFieldsValue(Company);
-            } else {
-                message.error(data.ErrorMessage);
+            if (data) {
+                const { ErrorCode, ErrorMessage, Company } = data;
+                if (ErrorCode === 0) {
+                    this.setState(Company);
+                    this.formRef["current"].setFieldsValue(Company);
+                } else {
+                    message.error(data.ErrorMessage);
+                }
             }
         });
     };
@@ -64,11 +63,17 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         return new ClientApi()
             .UpdateCompany(updatedInfo)
             .then(async (data: any) => {
-                const { ErrorCode, ErrorMessage } = data;
-                if (ErrorCode === 0) {
-                    await this.getCompanyInfo();
-                } else {
-                    message.error(ErrorMessage);
+                if (data) {
+                    const { ErrorCode, ErrorMessage } = data;
+                    if (ErrorCode === 0) {
+                        await this.getCompanyInfo();
+                        message.success({ content: DONE, key: "updatable" });
+                    } else {
+                        message.error({
+                            content: ErrorMessage,
+                            key: "updatable",
+                        });
+                    }
                 }
             });
     };
@@ -139,20 +144,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     const newImage = { Logo: imageUrl };
                     this.updateCompany(newImage);
                 });
-                message.success({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage
-                                id={"message.AccountSettings.Uploaded"}
-                            />
-                        </IntlProvider>
-                    ),
-                    key,
-                    duration: 2,
-                });
             } else {
                 message.error({
                     content: (
@@ -176,6 +167,12 @@ class CompanyForm extends Component<{ [key: string]: any }> {
             );
         };
 
+        const dummyRequest = ({ file, onSuccess }) => {
+            setTimeout(() => {
+                onSuccess("ok");
+            }, 0);
+        };
+
         return (
             <>
                 <Flex
@@ -190,10 +187,10 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     />
                     <div className="ml-md-3 mt-md-0 mt-3">
                         <Upload
+                            customRequest={dummyRequest}
                             onChange={onUploadAavater}
                             showUploadList={false}
-                            action={this.avatarEndpoint}
-                            // beforeUpload={beforeUpload}
+                            beforeUpload={(info) => beforeUpload(info)}
                         >
                             <p style={{ marginBottom: "15px" }}>
                                 * <i>JPEG, PNG. 150x150</i>

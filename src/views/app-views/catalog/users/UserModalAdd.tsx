@@ -2,40 +2,35 @@ import { Row, Col, Input, Modal, Form, message } from "antd";
 import React, { useState } from "react";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { refreshToken } from "../../../../redux/actions/Auth";
-import { API_AUTH_URL } from "../../../../configs/AppConfig";
+import { AuthApi } from "../../../../api";
 export const UserModalAdd = ({
     onCreate,
     onCancel,
     visible,
-    token: Token,
     CompanyID,
     getUsersInfo,
 }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const dispatch = useDispatch();
+
+    const registerUser = (values) => {
+        return new AuthApi().RegisterUser({
+            ...values,
+            CompanyID,
+            UiLanguage: 0,
+        });
+    };
 
     const onFinish = (values) => {
-        axios
-            .post(`${API_AUTH_URL}/RegisterUser`, {
-                /* Get the companyID, token and uilanguage from redux store */
-                ...values,
-                CompanyID,
-                Token,
-                UiLanguage: 0,
-            })
-            .then((res) => {
-                console.log(res.data);
-                form.resetFields();
-                if (res.data.ErrorCode === 0) {
+        registerUser(values).then((data: any) => {
+            if (data) {
+                if (data.ErrorCode === 0) {
                     getUsersInfo();
                 } else {
-                    message.error(res.data.ErrorMessage);
+                    message.error(data.ErrorMessage);
                 }
-            });
+            }
+        });
     };
     return (
         <Modal

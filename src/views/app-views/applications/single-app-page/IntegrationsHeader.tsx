@@ -1,19 +1,12 @@
 import { Button, Col, Input, message, Modal, Row } from "antd";
-import Axios from "axios";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import { ClientApi } from "../../../../api";
 import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
-import Flex from "../../../../components/shared-components/Flex";
-import { API_APP_URL } from "../../../../configs/AppConfig";
-import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
-import { signOut } from "../../../../redux/actions/Auth";
 
 const IntegrationsHeader = ({
     apiKey,
     setApiKey,
     AppID,
-    Token,
     activationCode,
     setActivationCode,
 }) => {
@@ -25,13 +18,15 @@ const IntegrationsHeader = ({
                 return new ClientApi()
                     .GenerateApiKey(AppID)
                     .then((data: any) => {
-                        if (data.ErrorCode === 0) {
-                            message
-                                .loading("Loading...", 1)
-                                .then(() => {
-                                    setApiKey(data.ApiKey);
-                                })
-                                .then(() => message.success("Done!", 1.5));
+                        if (data) {
+                            if (data.ErrorCode === 0) {
+                                message
+                                    .loading("Loading...", 1)
+                                    .then(() => {
+                                        setApiKey(data.ApiKey);
+                                    })
+                                    .then(() => message.success("Done!", 1.5));
+                            }
                         }
                     });
             },
@@ -43,9 +38,11 @@ const IntegrationsHeader = ({
             title: "Are you sure you want to delete current API Key?",
             onOk: () =>
                 new ClientApi().DeleteApiKey(AppID).then((data: any) => {
-                    if (data.ErrorCode === 0) {
-                        message.success("Done!", 1.5);
-                        setApiKey("00000000-0000-0000-0000-000000000000");
+                    if (data) {
+                        if (data.ErrorCode === 0) {
+                            message.success("Done!", 1.5);
+                            setApiKey("00000000-0000-0000-0000-000000000000");
+                        }
                     }
                 }),
             onCancel: () => {},
@@ -58,13 +55,15 @@ const IntegrationsHeader = ({
                 new ClientApi()
                     .GenerateLicenseActivationCode(AppID)
                     .then((data: any) => {
-                        if (data.ErrorCode === 0) {
-                            message
-                                .loading("Loading...", 1)
-                                .then(() => {
-                                    setActivationCode(data.ActivationCode);
-                                })
-                                .then(() => message.success("Done!", 1.5));
+                        if (data) {
+                            if (data.ErrorCode === 0) {
+                                message
+                                    .loading("Loading...", 1)
+                                    .then(() => {
+                                        setActivationCode(data.ActivationCode);
+                                    })
+                                    .then(() => message.success("Done!", 1.5));
+                            }
                         }
                     }),
             onCancel: () => {},

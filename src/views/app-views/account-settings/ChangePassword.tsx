@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { Form, Button, Input, Row, Col } from "antd";
+import { Form, Button, Input, Row, Col, message } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { connect } from "react-redux";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
-import axios from "axios";
 import AppLocale from "../../../lang";
-import ChangePasswordErrorHandler from "../../../error_handling/ChangePasswordErrorHandler";
-import { API_AUTH_URL } from "../../../configs/AppConfig";
+import { AuthApi } from "../../../api";
+import { DONE } from "../../../constants/Messages";
 
 export class ChangePassword extends Component {
     private changePasswordFormRef = React.createRef<any>();
@@ -25,8 +24,8 @@ export class ChangePassword extends Component {
         this.setState({ loading: true });
         setTimeout(() => {
             this.setState({ loading: false });
-            axios
-                .post(`${API_AUTH_URL}/ChangePassword`, {
+            return new AuthApi()
+                .ChangePassword({
                     NewPassword: Utils.encryptInput(
                         newPassword,
                         API_PUBLIC_KEY
@@ -35,13 +34,20 @@ export class ChangePassword extends Component {
                         currentPassword,
                         API_PUBLIC_KEY
                     ),
-                    Token: this.props["token"],
                 })
-                .then((res) => {
-                    ChangePasswordErrorHandler(
-                        res.data["ErrorCode"],
-                        currentAppLocale
-                    );
+                .then((data: any) => {
+                    if (data) {
+                        if (data.ErrorCode === 0)
+                            message.success({
+                                content: DONE,
+                                key: "updatable",
+                            });
+                        else
+                            message.error({
+                                content: data.ErrorMessage,
+                                key: "updatable",
+                            });
+                    }
                 });
         }, 1500);
         this.onReset();

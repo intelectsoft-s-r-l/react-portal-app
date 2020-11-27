@@ -2,12 +2,7 @@ import { message } from "antd";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { API_APP_URL, API_AUTH_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
-import {
-    authenticated,
-    hideLoading,
-    refreshToken,
-    signOut,
-} from "../redux/actions/Auth";
+import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
 const publicIp = require("react-public-ip");
 
@@ -35,10 +30,17 @@ class HttpClient {
     };
     public _initializeRequestInterceptor = () => {
         this.instance.interceptors.request.use((config) => {
+            console.log(config);
             if (config.method === "get") {
                 config.params = {
-                    Token: this._token,
                     ...config.params,
+                    Token: this._token,
+                };
+            }
+            if (config.method === "post") {
+                config.data = {
+                    ...config.data,
+                    Token: this._token,
                 };
             }
             return config;
@@ -48,6 +50,7 @@ class HttpClient {
         this.instance.get(`${API_AUTH_URL}/RefreshToken`);
 
     public _handleResponse = (response: AxiosResponse) => {
+        console.log(response);
         if (response.data.ErrorCode === 118) {
             return this._handleError(response);
         }
@@ -64,7 +67,7 @@ class HttpClient {
                             ...error.config.params,
                             Token,
                         };
-                        return axios
+                        return await axios
                             .request(error.config)
                             .then((response) => response.data);
                     }
@@ -73,7 +76,7 @@ class HttpClient {
                             ...JSON.parse(error.config.data),
                             Token,
                         };
-                        return axios
+                        return await axios
                             .request(error.config)
                             .then((response) => response.data);
                     }
@@ -86,7 +89,6 @@ class HttpClient {
             });
         }
         store.dispatch(hideLoading());
-        return Promise.reject(error);
     };
 }
 export class AuthApi extends HttpClient {
@@ -99,6 +101,9 @@ export class AuthApi extends HttpClient {
             ...data,
             info: (await publicIp.v4()) || ("" as string),
         });
+
+    public RegisterCompany = (data) =>
+        this.instance.post("/RegisterCompany", data);
 
     public RefreshToken = () => this.instance.get("/RefreshToken");
 
@@ -196,5 +201,13 @@ export class ClientApi extends HttpClient {
             ...data,
             Token: this._token,
             info: await publicIp.v4(),
+        });
+
+    public ChangeUserStatus = (ID, Status) =>
+        this.instance.get("/ChangeUserStatus", {
+            params: {
+                ID,
+                Status,
+            },
         });
 }

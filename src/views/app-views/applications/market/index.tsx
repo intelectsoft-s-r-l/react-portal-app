@@ -136,12 +136,18 @@ const Market = () => {
     const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
     const [selectedApp, setSelectedApp] = useState<any>();
     const [appInstalled, setAppInstalled] = useState<boolean>(false);
+    const sortData = (arr) => {
+        return arr.slice().sort((a, b) => a.AppType - b.AppType);
+    };
     const getMarketApps = () => {
         setLoading(true);
         return new ClientApi().GetMarketAppList().then((data: any) => {
             setLoading(false);
-            if (data.ErrorCode === 0) {
-                setApps(data.MarketAppList);
+            if (data) {
+                if (data.ErrorCode === 0) {
+                    const evaluatedArr = sortData(data.MarketAppList);
+                    setApps(evaluatedArr);
+                }
             }
         });
     };
@@ -160,8 +166,10 @@ const Market = () => {
                                 new ClientApi()
                                     .DeactivateApp(AppID)
                                     .then(async (data: any) => {
-                                        if (data.ErrorCode === 0)
-                                            await getMarketApps();
+                                        if (data) {
+                                            if (data.ErrorCode === 0)
+                                                await getMarketApps();
+                                        }
                                     })
                             ),
                         1000
@@ -183,9 +191,10 @@ const Market = () => {
                                 new ClientApi()
                                     .ActivateApp(AppID)
                                     .then(async (data: any) => {
-                                        console.log(data);
-                                        if (data.ErrorCode === 0)
-                                            await getMarketApps();
+                                        if (data) {
+                                            if (data.ErrorCode === 0)
+                                                await getMarketApps();
+                                        }
                                     })
                             ),
                         1000

@@ -1,20 +1,16 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Empty, Tooltip, message } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
-import Axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { signOut } from "../../../redux/actions/Auth";
 import Loading from "../../../components/shared-components/Loading";
-import { API_APP_URL } from "../../../configs/AppConfig";
 import { ClientApi } from "../../../api";
 
 const AppStoreNav = () => {
     // const [apps, setApps] = useState<IApps[]>([]);
     const dispatch = useDispatch();
-    const Token = useSelector((state) => state["auth"].token);
     const loading = useSelector((state) => state["auth"].loading);
     const [apps, setApps] = useState<any>([]);
     // const apps: IApps[] = useSelector((state) => state["apps"]);

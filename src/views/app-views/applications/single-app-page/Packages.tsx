@@ -4,9 +4,6 @@ import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 
 const ItemHeader = ({ packages }) => {
-    useEffect(() => {
-        console.log(packages);
-    }, []);
     return (
         <>
             <Flex>

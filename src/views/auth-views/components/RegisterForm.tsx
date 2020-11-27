@@ -8,8 +8,6 @@ import {
     Alert,
     Tooltip,
     Radio,
-    Row,
-    Col,
     Select,
     message,
 } from "antd";
@@ -20,15 +18,13 @@ import {
     authenticated,
     hideLoading,
 } from "../../../redux/actions/Auth";
-import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion";
-import JwtAuthService from "../../../services/JwtAuthService";
-import axios from "axios";
 import DocumentEvents from "react-document-events";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import { API_AUTH_URL } from "../../../configs/AppConfig";
+import { AuthApi } from "../../../api";
+import { EMAIL_CONFIRM_MSG } from "../../../constants/Messages";
 
 const rules = {
     JuridicalName: [
@@ -140,21 +136,22 @@ export const RegisterForm = (props) => {
                 showLoading();
                 setTimeout(() => {
                     hideLoading();
-                    axios
-                        .post(`${API_AUTH_URL}/RegisterCompany`, {
-                            ...newCompanyData,
-                        })
-                        .then((res) => {
-                            const { ErrorCode, ErrorMessage } = res.data;
-                            console.log(res.data);
-                            if (ErrorCode === 108) {
-                                /*  Inform user to go to his/her email  */
-                                message.success(
-                                    "Please confirm the registration by clicking on the link we've sent to your email!",
-                                    10
-                                );
+                    return new AuthApi()
+                        .RegisterCompany({ ...newCompanyData })
+                        .then((data: any) => {
+                            /* 108 is a positive errorcode in this case */
+                            if (data.ErrorCode === 108) {
+                                message.success({
+                                    content: EMAIL_CONFIRM_MSG,
+                                    key: "updatable",
+                                    duration: 10,
+                                });
                             } else {
-                                message.error(ErrorMessage, 5);
+                                message.error({
+                                    content: data.ErrorMessage,
+                                    key: "updatable",
+                                    duration: 5,
+                                });
                             }
                         });
                 }, 1500);

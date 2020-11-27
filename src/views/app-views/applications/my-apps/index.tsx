@@ -65,16 +65,21 @@ const MyAppList = () => {
     const [apps, setApps] = useState<any>([]);
     const { confirm } = Modal;
     const [loading, setLoading] = useState(false);
+    const sortData = (arr) => {
+        return arr.slice().sort((a, b) => a.ID - b.ID);
+    };
     const getMarketAppList = () => {
         setLoading(true);
         return new ClientApi().GetMarketAppList().then((data: any) => {
             setLoading(false);
-            const { ErrorCode, ErrorMessage, MarketAppList } = data;
-            if (ErrorCode === 0) {
-                const activeApps = MarketAppList.filter(
-                    (marketApp) => marketApp.Status != 0
-                );
-                setApps(activeApps);
+            if (data) {
+                const { ErrorCode, ErrorMessage, MarketAppList } = data;
+                if (ErrorCode === 0) {
+                    const activeApps = MarketAppList.filter(
+                        (marketApp) => marketApp.Status != 0
+                    );
+                    setApps(sortData(activeApps));
+                }
             }
         });
     };
@@ -89,7 +94,9 @@ const MyAppList = () => {
                 return new ClientApi()
                     .DeactivateApp(AppID)
                     .then((data: any) => {
-                        if (data.ErrorCode === 0) getMarketAppList();
+                        if (data) {
+                            if (data.ErrorCode === 0) getMarketAppList();
+                        }
                     });
             },
             onCancel: () => {},
