@@ -57,8 +57,6 @@ function beforeUpload(file) {
 }
 
 class EditProfile extends Component<EditProfileProps> {
-    avatarEndpoint = "https://www.mocky.io/v2/5cc8019d300000980a055e76";
-
     // state = {
     // 	avatarUrl: store.getState().account.avatar,
     // 	name: store.getState().account.name,
@@ -200,6 +198,12 @@ class EditProfile extends Component<EditProfileProps> {
             });
         };
 
+        const dummyRequest = ({ file, onSuccess }) => {
+            setTimeout(() => {
+                onSuccess("ok");
+            });
+        };
+
         return (
             <>
                 <Flex
@@ -212,8 +216,8 @@ class EditProfile extends Component<EditProfileProps> {
                         <Upload
                             onChange={onUploadAavater}
                             showUploadList={false}
-                            action={this.avatarEndpoint}
-                            // beforeUpload={beforeUpload}
+                            customRequest={dummyRequest}
+                            beforeUpload={(info) => beforeUpload(info)}
                         >
                             <Button type="primary">
                                 <IntlMessage

@@ -77,7 +77,6 @@ const NavProfile = ({
                     <Avatar size={45} src={Photo} icon={<UserOutlined />} />
                     <div className="pl-3">
                         <h4 className="mb-0">{FirstName}</h4>
-                        <span className="text-muted">Frontend Developer</span>
                     </div>
                 </div>
             </div>

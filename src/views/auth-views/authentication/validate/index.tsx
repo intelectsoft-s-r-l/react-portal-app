@@ -1,18 +1,24 @@
 import React, { useState, useLayoutEffect } from "react";
-
+import axios from "axios";
 import ErrorOne from "../../errors/error-page-1/index";
 import Success from "../success/index";
 import { AuthApi } from "../../../../api";
+import { API_AUTH_URL } from "../../../../configs/AppConfig";
 
 const Validate = ({ history, match }) => {
     const [isValidated, setIsValidated] = useState(false);
     useLayoutEffect(() => {
-        new AuthApi()
-            .ActivateUser({
-                Token: history.location.pathname.replace("/auth/validate/", ""),
+        axios
+            .get(`${API_AUTH_URL}/ActivateUser`, {
+                params: {
+                    Token: history.location.pathname.replace(
+                        "/auth/validate/",
+                        ""
+                    ),
+                },
             })
-            .then((data: any) => {
-                if (data.ErrorCode === 0) {
+            .then((response) => {
+                if (response.data["ErrorCode"] === 0) {
                     setIsValidated(true);
                 } else {
                     setIsValidated(false);

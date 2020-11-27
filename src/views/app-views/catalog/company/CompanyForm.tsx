@@ -39,7 +39,6 @@ function beforeUpload(file) {
 }
 
 class CompanyForm extends Component<{ [key: string]: any }> {
-    avatarEndpoint = "https://www.mocky.io/v2/5cc8019d300000980a055e76";
     inputMaskRef = React.createRef() as any;
     state = {} as { [key: string]: any };
     formRef = React.createRef() as any;
