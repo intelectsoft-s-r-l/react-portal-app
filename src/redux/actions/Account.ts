@@ -1,4 +1,8 @@
-import { REMOVE_AVATAR, UPDATE_SETTINGS } from "../constants/Account";
+import {
+    CLEAR_INFO,
+    REMOVE_AVATAR,
+    UPDATE_SETTINGS,
+} from "../constants/Account";
 import { onLocaleChange } from "./Theme";
 import { ClientApi } from "../../api";
 
@@ -6,8 +10,9 @@ export const updateSettings = (payload) => ({
     type: UPDATE_SETTINGS,
     payload,
 });
-export const removeAvatar = () => ({
-    type: REMOVE_AVATAR,
+
+export const clearSettings = () => ({
+    type: CLEAR_INFO,
 });
 
 export const getProfileInfo = () => {

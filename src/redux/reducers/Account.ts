@@ -13,7 +13,7 @@ const initialState = {
     PhoneNumber: null,
     Photo: null,
     UiLanguage: 0,
-};
+} as any;
 
 const account = (state = initialState, action) => {
     switch (action.type) {
@@ -23,14 +23,7 @@ const account = (state = initialState, action) => {
                 ...action.payload,
             };
         case CLEAR_INFO:
-            return {
-                state: {},
-            };
-        case REMOVE_AVATAR:
-            return {
-                ...state,
-                avatar: "",
-            };
+            state = null;
         default:
             return state;
     }

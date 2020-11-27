@@ -15,6 +15,7 @@ import { NavLink } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 import IntlMessage from "../util-components/IntlMessage";
 import AppLocale from "../../lang";
+import { clearSettings } from "../../redux/actions/Account";
 const menuItem = [
     // {
     // 	title: "Edit Profile",
@@ -47,6 +48,7 @@ const NavProfile = ({
     Photo,
     locale,
     isAuth,
+    clearSettings,
 }) => {
     const currentAppLocale = AppLocale[locale];
     const { confirm } = Modal;
@@ -62,14 +64,16 @@ const NavProfile = ({
             ),
             onOk: () => {
                 return new Promise((resolve) => {
-                    setTimeout(() => resolve(signOut()), 1000);
+                    setTimeout(() => {
+                        resolve(signOut());
+                        resolve(clearSettings());
+                    }, 1000);
                 }).catch(() => console.log("Oops errors!"));
             },
             onCancel: () => {},
         });
     };
 
-    // const profileImg = "/img/avatars/thumb-1.jpg";
     const profileMenu = (
         <div className="nav-profile nav-dropdown">
             <div className="nav-profile-header">
@@ -131,4 +135,4 @@ const mapStateToProps = ({ auth, account, theme }) => {
     return { token, FirstName, Photo, locale, isAuth };
 };
 
-export default connect(mapStateToProps, { signOut })(NavProfile);
+export default connect(mapStateToProps, { signOut, clearSettings })(NavProfile);

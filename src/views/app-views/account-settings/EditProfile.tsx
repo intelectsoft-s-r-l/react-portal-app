@@ -14,11 +14,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import Flex from "../../../components/shared-components/Flex";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import {
-    updateSettings,
-    removeAvatar,
-    setProfileInfo,
-} from "../../../redux/actions/Account";
+import { updateSettings, setProfileInfo } from "../../../redux/actions/Account";
 import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
@@ -359,7 +355,6 @@ class EditProfile extends Component<EditProfileProps> {
 
 const mapDispatchToProps = {
     updateSettings,
-    removeAvatar,
     setProfileInfo,
 };
 

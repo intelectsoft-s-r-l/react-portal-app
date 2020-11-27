@@ -15,10 +15,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import {
-    updateSettings,
-    removeAvatar,
-} from "../../../../redux/actions/Account";
+import { updateSettings } from "../../../../redux/actions/Account";
 import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../../lang";
@@ -87,7 +84,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
     }
 
     render() {
-        let { updateSettings, removeAvatar, locale, signOut } = this.props;
+        let { locale } = this.props;
 
         const currentAppLocale = AppLocale[locale];
 
@@ -477,7 +474,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
 
 const mapDispatchToProps = {
     updateSettings,
-    removeAvatar,
     signOut,
 };
 
