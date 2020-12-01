@@ -1,5 +1,5 @@
 import { Card, Col, Empty, Row, Tag } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 
@@ -56,18 +56,20 @@ const Packages = ({ packages }: any) => {
             <div className="my-4 container-fluid">
                 <Row gutter={16}>
                     {packages.length > 0 ? (
-                        packages.map((elm) => (
-                            <Col
-                                xs={24}
-                                sm={24}
-                                lg={8}
-                                xl={8}
-                                xxl={6}
-                                key={elm["ID"]}
-                            >
-                                <CardItem packages={elm} />
-                            </Col>
-                        ))
+                        packages
+                            .sort((a, b) => a.SortIndex - b.SortIndex)
+                            .map((elm) => (
+                                <Col
+                                    xs={24}
+                                    sm={24}
+                                    lg={8}
+                                    xl={8}
+                                    xxl={6}
+                                    key={elm["ID"]}
+                                >
+                                    <CardItem packages={elm} />
+                                </Col>
+                            ))
                     ) : (
                         <Flex className="w-100" justifyContent="center">
                             <Empty />
