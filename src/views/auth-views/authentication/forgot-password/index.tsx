@@ -23,6 +23,7 @@ const ForgotPassword = () => {
             setLoading(false);
             return new AuthApi().ResetPassword(email).then((data: any) => {
                 if (data.ErrorCode === 0) {
+                    form.resetFields();
                     message.success({
                         content: NEW_PASSWORD,
                         key: "updatable",
@@ -30,7 +31,6 @@ const ForgotPassword = () => {
                 }
             });
         }, 1500);
-        form.resetFields();
     };
 
     return (

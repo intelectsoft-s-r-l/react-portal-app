@@ -25,11 +25,13 @@ import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import IntegrationsHeader from "./IntegrationsHeader";
 import { API_APP_URL } from "../../../../configs/AppConfig";
 import { ClientApi } from "../../../../api";
+import News from "./News";
 
 enum app {
     Retail = 10,
     Agent = 20,
     Expert = 30,
+    MyDiscount = 60,
 }
 const AppOption = ({ match, location, AppType }) => {
     return (
@@ -57,6 +59,25 @@ const AppOption = ({ match, location, AppType }) => {
                     <Menu.Item key={`${match.url}/devices`}>
                         <span>Devices</span>
                         <Link to={"devices"} />
+                    </Menu.Item>
+                </Menu>
+            ) : AppType == app.MyDiscount ? (
+                <Menu
+                    mode="inline"
+                    defaultSelectedKeys={[`${match.url}/:appId/`]}
+                    selectedKeys={[location.pathname]}
+                >
+                    <Menu.Item key={`${match.url}/description`}>
+                        <span>Description</span>
+                        <Link to={"description"} />
+                    </Menu.Item>
+                    <Menu.Item key={`${match.url}/packages`}>
+                        <span>Packages</span>
+                        <Link to={"packages"} />
+                    </Menu.Item>
+                    <Menu.Item key={`${match.url}/news`}>
+                        <span>News</span>
+                        <Link to={"news"} />
                     </Menu.Item>
                 </Menu>
             ) : (
@@ -124,6 +145,7 @@ const AppRoute = ({
                 render={(props) => <Packages {...props} packages={packages} />}
             />
             <Route path={`${match.url}/devices`} component={Devices} />
+            <Route path={`${match.url}/news`} component={News} />
         </Switch>
     );
 };
@@ -166,12 +188,14 @@ const AboutItem = ({ appData }) => {
                         <span className="text-muted ">
                             {shortDesc ? shortDesc[locale] : null}
                         </span>
-                        <p
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{
-                                __html: longDesc ? longDesc[locale] : null,
-                            }}
-                        ></p>
+                        {Status === 0 && (
+                            <p
+                                className="mt-4"
+                                dangerouslySetInnerHTML={{
+                                    __html: longDesc ? longDesc[locale] : null,
+                                }}
+                            ></p>
+                        )}
                     </div>
                 </Flex>
             </Flex>
@@ -188,9 +212,6 @@ const SingleAppPage = ({ match, location }) => {
     const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
     const [activationCode, setActivationCode] = useState<string>();
     const Token = useSelector((state) => state["auth"].token);
-    // const sortData = (arr) => {
-    //     return arr.slice().sort((a, b) => a.ID - b.ID);
-    // };
     const getAppLinceses = (AppType) => {
         return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
             if (data) {

@@ -54,6 +54,14 @@ class HttpClient {
         console.log(response);
         if (response.data.ErrorCode === 118) {
             return this._handleError(response);
+        } else if (
+            response.data.ErrorCode !== 0 &&
+            response.data.ErrorCode !== 118
+        ) {
+            message.error({
+                content: response.data.ErrorMessage,
+                key: "updatable",
+            });
         }
         return response.data;
     };
