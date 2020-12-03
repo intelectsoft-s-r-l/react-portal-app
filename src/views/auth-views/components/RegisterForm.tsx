@@ -146,12 +146,6 @@ export const RegisterForm = (props) => {
                                     key: "updatable",
                                     duration: 10,
                                 });
-                            } else {
-                                message.error({
-                                    content: data.ErrorMessage,
-                                    key: "updatable",
-                                    duration: 5,
-                                });
                             }
                         });
                 }, 1500);

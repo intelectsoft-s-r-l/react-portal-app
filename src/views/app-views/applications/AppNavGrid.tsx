@@ -1,7 +1,7 @@
 import { Menu } from "antd";
 import { Avatar } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
-import React, { CSSProperties, useEffect } from "react";
+import React from "react";
 import "./app_list.scss";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import { Link, NavLink } from "react-router-dom";
@@ -16,7 +16,7 @@ const AppNavGrid = (props) => {
                         {...props}
                     >
                         <NavLink
-                            to={`${APP_PREFIX_PATH}/applications/${app.ID}`}
+                            to={`${APP_PREFIX_PATH}/applications/${app.AppType}`}
                         >
                             <div className="text-center">
                                 <Avatar

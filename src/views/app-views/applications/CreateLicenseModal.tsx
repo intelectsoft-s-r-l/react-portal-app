@@ -3,13 +3,7 @@ import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import { ClientApi } from "../../../api";
 
-const CreateLicenseModal = ({
-    Token,
-    AppType,
-    visible,
-    close,
-    getAppLicenses,
-}) => {
+const CreateLicenseModal = ({ AppType, visible, close, getAppLicenses }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
     const onFinish = (values) => {

@@ -22,19 +22,7 @@ import AppLocale from "../../../../lang";
 import { signOut } from "../../../../redux/actions/Auth";
 import { ClientApi } from "../../../../api";
 import { DONE } from "../../../../constants/Messages";
-
-function beforeUpload(file) {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-        message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
-}
-
+import Utils from "../../../../utils";
 class CompanyForm extends Component<{ [key: string]: any }> {
     inputMaskRef = React.createRef() as any;
     state = {} as { [key: string]: any };
@@ -47,8 +35,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                 if (ErrorCode === 0) {
                     this.setState(Company);
                     this.formRef["current"].setFieldsValue(Company);
-                } else {
-                    message.error(data.ErrorMessage);
                 }
             }
         });
@@ -64,11 +50,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     if (ErrorCode === 0) {
                         await this.getCompanyInfo();
                         message.success({ content: DONE, key: "updatable" });
-                    } else {
-                        message.error({
-                            content: ErrorMessage,
-                            key: "updatable",
-                        });
                     }
                 }
             });
@@ -140,19 +121,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     const newImage = { Logo: imageUrl };
                     this.updateCompany(newImage);
                 });
-            } else {
-                message.error({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage id={"message.AccountSettings.Error"} />
-                        </IntlProvider>
-                    ),
-                    key,
-                    duration: 2.5,
-                });
             }
         };
 
@@ -186,7 +154,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                             customRequest={dummyRequest}
                             onChange={onUploadAavater}
                             showUploadList={false}
-                            beforeUpload={(info) => beforeUpload(info)}
+                            beforeUpload={(info) => Utils.beforeUpload(info)}
                         >
                             <p style={{ marginBottom: "15px" }}>
                                 * <i>JPEG, PNG. 150x150</i>

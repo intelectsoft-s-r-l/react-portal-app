@@ -42,11 +42,6 @@ export class ChangePassword extends Component {
                                 content: DONE,
                                 key: "updatable",
                             });
-                        else
-                            message.error({
-                                content: data.ErrorMessage,
-                                key: "updatable",
-                            });
                     }
                 });
         }, 1500);

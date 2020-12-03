@@ -26,8 +26,6 @@ export const UserModalAdd = ({
             if (data) {
                 if (data.ErrorCode === 0) {
                     getUsersInfo();
-                } else {
-                    message.error(data.ErrorMessage);
                 }
             }
         });

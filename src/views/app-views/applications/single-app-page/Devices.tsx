@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import moment from "moment";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { ClientApi } from "../../../../api";
 import Flex from "../../../../components/shared-components/Flex";
 
 const tableColumns = [
@@ -36,13 +37,26 @@ const tableColumns = [
         dataIndex: "Workplace",
     },
 ];
-const Devices = ({ licenses }) => {
+const Devices = ({ AppType }) => {
+    const [devices, setDevices] = useState<any>();
+    const getDevices = (AppType) => {
+        return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
+            if (data) {
+                if (data.ErrorCode === 0) {
+                    setDevices(data.LicenseList);
+                }
+            }
+        });
+    };
+    useEffect(() => {
+        getDevices(AppType);
+    }, []);
     return (
         <>
             <Flex justifyContent="between" alignItems="center" className="py-4">
                 <h2>Devices</h2>
             </Flex>
-            <Table columns={tableColumns} dataSource={licenses} rowKey="ID" />
+            <Table columns={tableColumns} dataSource={devices} rowKey="ID" />
         </>
     );
 };

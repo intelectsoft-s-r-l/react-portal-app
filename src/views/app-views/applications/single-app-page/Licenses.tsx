@@ -11,21 +11,29 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import Utils from "../../../../utils";
 import { ClientApi } from "../../../../api";
+import CreateLicenseModal from "../CreateLicenseModal";
 
-const Licenses = ({
-    licenses,
-    setCreateLicenseVisible,
-    AppType,
-    setLicenses,
-    getAppLicenses,
-    licensesToSearch,
-    setLicensesToSearch,
-}) => {
+const Licenses = ({ AppType }) => {
     const { confirm } = Modal;
-    const Token = useSelector((state) => state["auth"].token);
+    const getAppLicenses = (AppType) => {
+        return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
+            if (data) {
+                if (data.ErrorCode === 0) {
+                    // const evaluatedArray = sortData(data.LicensesList);
+                    setLicenses(data.LicenseList);
+                    setLicensesToSearch(data.LicenseList);
+                }
+            }
+        });
+    };
+    useEffect(() => {
+        getAppLicenses(AppType);
+    }, []);
     const [selectedKeys, setSelectedKeys] = useState<any>([]);
     const [selectedRows, setSeletedRows] = useState<any>([]);
-    const dispatch = useDispatch();
+    const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
+    const [licenses, setLicenses] = useState<any>([]);
+    const [licensesToSearch, setLicensesToSearch] = useState<any>([]);
     const deleteLicense = (LicenseID) => {
         return new ClientApi().DeleteLicense(LicenseID);
     };
@@ -149,6 +157,12 @@ const Licenses = ({
     ];
     return (
         <>
+            <CreateLicenseModal
+                AppType={AppType}
+                close={() => setCreateLicenseVisible(false)}
+                visible={createLicenseVisible}
+                getAppLicenses={getAppLicenses}
+            />
             <Flex justifyContent="between" alignItems="center" className="py-4">
                 <h2>Licenses</h2>
                 <div>

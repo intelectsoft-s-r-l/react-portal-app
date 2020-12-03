@@ -15,7 +15,6 @@ import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
 import Avatar from "antd/lib/avatar/avatar";
-import CreateLicenseModal from "../CreateLicenseModal";
 import { Link, Redirect, Route, Switch } from "react-router-dom";
 import Description from "./Description";
 import Licenses from "./Licenses";
@@ -23,9 +22,9 @@ import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import IntegrationsHeader from "./IntegrationsHeader";
-import { API_APP_URL } from "../../../../configs/AppConfig";
 import { ClientApi } from "../../../../api";
-import News from "./News";
+import News from "./news";
+import Loading from "../../../../components/shared-components/Loading";
 
 enum app {
     Retail = 10,
@@ -100,18 +99,7 @@ const AppOption = ({ match, location, AppType }) => {
     );
 };
 
-const AppRoute = ({
-    match,
-    packages,
-    LongDescription,
-    licenses,
-    getAppLicenses,
-    setCreateLicenseVisible,
-    AppType,
-    setLicenses,
-    licensesToSearch,
-    setLicensesToSearch,
-}) => {
+const AppRoute = ({ match, packages, LongDescription, AppType }) => {
     return (
         <Switch>
             <Redirect
@@ -127,25 +115,20 @@ const AppRoute = ({
             />
             <Route
                 path={`${match.url}/licenses`}
-                render={(props) => (
-                    <Licenses
-                        {...props}
-                        licenses={licenses}
-                        setCreateLicenseVisible={setCreateLicenseVisible}
-                        AppType={AppType}
-                        getAppLicenses={getAppLicenses}
-                        setLicenses={setLicenses}
-                        setLicensesToSearch={setLicensesToSearch}
-                        licensesToSearch={licensesToSearch}
-                    />
-                )}
+                render={(props) => <Licenses {...props} AppType={AppType} />}
             />
             <Route
                 path={`${match.url}/packages`}
                 render={(props) => <Packages {...props} packages={packages} />}
             />
-            <Route path={`${match.url}/devices`} component={Devices} />
-            <Route path={`${match.url}/news`} component={News} />
+            <Route
+                path={`${match.url}/devices`}
+                render={(props) => <Devices {...props} AppType={AppType} />}
+            />
+            <Route
+                path={`${match.url}/news`}
+                render={(props) => <News {...props} AppType={AppType} />}
+            />
         </Switch>
     );
 };
@@ -206,29 +189,14 @@ const AboutItem = ({ appData }) => {
 const SingleAppPage = ({ match, location }) => {
     const { appID } = match.params;
     const [app, setApp] = useState<any>();
-    const [licenses, setLicenses] = useState<any>([]);
-    const [licensestoSearch, setLicensesToSearch] = useState<any>([]);
     const [apiKey, setApiKey] = useState<string>();
-    const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
     const [activationCode, setActivationCode] = useState<string>();
-    const Token = useSelector((state) => state["auth"].token);
-    const getAppLinceses = (AppType) => {
-        return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
-            if (data) {
-                if (data.ErrorCode === 0) {
-                    // const evaluatedArray = sortData(data.LicensesList);
-                    setLicenses(data.LicenseList);
-                    setLicensesToSearch(data.LicenseList);
-                }
-            }
-        });
-    };
+    const [loading, setLoading] = useState<boolean>();
     const getMarketApp = () => {
-        return new ClientApi().GetMarketAppList().then((data: any) => {
+        return new ClientApi().GetMarketAppList().then(async (data: any) => {
             if (data) {
                 const { ErrorCode, MarketAppList } = data;
                 if (ErrorCode === 0) {
-                    getAppLinceses(appID);
                     const currentApp = MarketAppList.find(
                         (app) => app.AppType == appID
                     );
@@ -246,14 +214,17 @@ const SingleAppPage = ({ match, location }) => {
     }, [appID]);
 
     if (!app) {
-        return <div>No app found</div>;
+        return <Loading cover="content" />;
     }
 
     return (
         <>
-            {app.Status === 1 ? (
+            {loading ? (
+                <Loading cover="content" />
+            ) : app.Status === 1 ? (
                 <>
                     <AboutItem appData={app} />
+
                     <IntegrationsHeader
                         activationCode={activationCode}
                         setActivationCode={setActivationCode}
@@ -274,24 +245,9 @@ const SingleAppPage = ({ match, location }) => {
                                 LongDescription={app.LongDescription}
                                 match={match}
                                 packages={app.Packages}
-                                licenses={licenses}
                                 AppType={app.AppType}
-                                getAppLicenses={getAppLinceses}
-                                licensesToSearch={licensestoSearch}
-                                setLicensesToSearch={setLicensesToSearch}
-                                setCreateLicenseVisible={
-                                    setCreateLicenseVisible
-                                }
-                                setLicenses={setLicenses}
                             />
                         }
-                    />
-                    <CreateLicenseModal
-                        Token={Token}
-                        AppType={app["AppType"]}
-                        close={() => setCreateLicenseVisible(false)}
-                        visible={createLicenseVisible}
-                        getAppLicenses={getAppLinceses}
                     />
                 </>
             ) : (

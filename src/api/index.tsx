@@ -153,13 +153,11 @@ export class ClientApi extends HttpClient {
     public DeactivateApp = (AppID) =>
         this.instance.post("/DeactivateApp", {
             AppID,
-            Token: this._token,
         });
 
     public ActivateApp = (AppID) =>
         this.instance.post("/ActivateApp", {
             AppID,
-            Token: this._token,
         });
 
     public GetAppLicenses = (AppType) =>
@@ -187,19 +185,16 @@ export class ClientApi extends HttpClient {
     public GenerateApiKey = (AppID) =>
         this.instance.post("/GenerateApiKey", {
             AppID,
-            Token: this._token,
         });
 
     public DeleteApiKey = (AppID) =>
         this.instance.post("/DeleteApiKey", {
             AppID,
-            Token: this._token,
         });
 
     public GenerateLicenseActivationCode = (AppID) =>
         this.instance.post("/GenerateLicenseActivationCode", {
             AppID,
-            Token: this._token,
         });
 
     public GetUserList = () => this.instance.get("/GetUsersInfo");
@@ -209,7 +204,6 @@ export class ClientApi extends HttpClient {
     public UpdateCompany = async (data) =>
         this.instance.post("/UpdateCompany", {
             ...data,
-            Token: this._token,
             info: await publicIp.v4(),
         });
 
@@ -219,5 +213,17 @@ export class ClientApi extends HttpClient {
                 ID,
                 Status,
             },
+        });
+
+    public GetNews = (AppType) =>
+        this.instance.get("/GetNews", {
+            params: {
+                AppType,
+            },
+        });
+
+    public UpdateNews = (NewsData) =>
+        this.instance.post("/UpdateNews", {
+            NewsData,
         });
 }

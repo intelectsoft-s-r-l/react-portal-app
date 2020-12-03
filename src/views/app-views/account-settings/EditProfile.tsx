@@ -19,6 +19,7 @@ import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
 import AppLocale from "../../../lang";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
+import Utils from "../../../utils";
 const publicIp = require("react-public-ip");
 
 interface EditProfileProps {
@@ -38,18 +39,6 @@ interface EditProfileProps {
     updateSettings: any;
     setProfileInfo: any;
     onChangeMask: any;
-}
-
-function beforeUpload(file) {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-        message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
 }
 
 class EditProfile extends Component<EditProfileProps> {
@@ -171,19 +160,6 @@ class EditProfile extends Component<EditProfileProps> {
                     key,
                     duration: 2,
                 });
-            } else {
-                message.error({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage id={"message.AccountSettings.Error"} />
-                        </IntlProvider>
-                    ),
-                    key,
-                    duration: 2.5,
-                });
             }
         };
 
@@ -213,7 +189,7 @@ class EditProfile extends Component<EditProfileProps> {
                             onChange={onUploadAavater}
                             showUploadList={false}
                             customRequest={dummyRequest}
-                            beforeUpload={(info) => beforeUpload(info)}
+                            beforeUpload={(info) => Utils.beforeUpload(info)}
                         >
                             <Button type="primary">
                                 <IntlMessage

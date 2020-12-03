@@ -45,11 +45,6 @@ export const UserModalEdit = ({
                     if (data.ErrorCode === 0) {
                         message.success({ content: DONE, key: "updatable" });
                         getUsersInfo();
-                    } else {
-                        message.error({
-                            content: data.ErrorMessage,
-                            key: "updatable",
-                        });
                     }
                 }
             });

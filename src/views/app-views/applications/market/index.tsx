@@ -44,15 +44,7 @@ export interface IApplications {
     ErrorMessage: string;
     MarketAppList: IMarketAppList[];
 }
-const GridItem = ({
-    terms,
-    setTerms,
-    activateApp,
-    deactivateApp,
-    setVisibleModal,
-    setSelectedApp,
-    data,
-}) => {
+const GridItem = ({ deactivateApp, setVisibleModal, setSelectedApp, data }) => {
     const [shortDesc, setShortDesc] = useState<any>();
     const locale = useSelector((state) => state["theme"].locale);
     useEffect(() => {
@@ -261,9 +253,6 @@ const Market = () => {
                                     >
                                         <GridItem
                                             setVisibleModal={setVisibleModal}
-                                            activateApp={activateApp}
-                                            terms={terms}
-                                            setTerms={setTerms}
                                             deactivateApp={deactivateApp}
                                             data={elm}
                                             key={elm["AppType"]}
