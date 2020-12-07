@@ -24,8 +24,8 @@ interface INews {
 const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }) => {
     return (
         <Card style={{ padding: 30 }}>
-            <Flex justifyContent="between" alignItems="center">
-                <div>
+            <Flex justifyContent="between" alignItems="center" className="mt-3">
+                <div style={{ maxWidth: 500 }}>
                     <Flex flexDirection="column">
                         <div
                             dangerouslySetInnerHTML={{
@@ -38,18 +38,36 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }) => {
                                 __html: newsData.Content,
                             }}
                         />
-                        <div className="mt-2">
+                    </Flex>
+                    <div style={{ position: "absolute", bottom: 15 }}>
+                        <Flex alignItems="center">
+                            <span>{newsData.CompanyName}</span>
+                            <span
+                                style={{
+                                    fontSize: 20,
+                                    color: "black",
+                                    margin: "0 5px 0",
+                                }}
+                            >
+                                &nbsp;&bull;&nbsp;
+                            </span>
                             <span style={{ color: "black" }}>
                                 {newsData.CreateDate &&
                                     moment
                                         .unix(newsData.CreateDate.slice(6, 16))
                                         .format("DD-MM-YYYY")}
                             </span>
-                        </div>
-                    </Flex>
+                        </Flex>
+                    </div>
                 </div>
-                <div className="ml-5">
-                    {newsData.Photo && <img src={newsData.Photo} alt="Photo" />}
+                <div className="ml-5" style={{ maxWidth: 300 }}>
+                    {newsData.Photo && (
+                        <img
+                            src={newsData.Photo}
+                            alt="Photo"
+                            style={{ maxWidth: "100%" }}
+                        />
+                    )}
                 </div>
             </Flex>
             <div style={{ position: "absolute", top: 20, right: 20 }}>
