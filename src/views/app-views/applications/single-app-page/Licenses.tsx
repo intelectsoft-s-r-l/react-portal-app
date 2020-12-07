@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Utils from "../../../../utils";
 import { ClientApi } from "../../../../api";
 import CreateLicenseModal from "../CreateLicenseModal";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
 
 const Licenses = ({ AppType }) => {
     const { confirm } = Modal;
@@ -164,7 +165,9 @@ const Licenses = ({ AppType }) => {
                 getAppLicenses={getAppLicenses}
             />
             <Flex justifyContent="between" alignItems="center" className="py-4">
-                <h2>Licenses</h2>
+                <h2>
+                    <IntlMessage id="app.Licenses" />
+                </h2>
                 <div>
                     <Flex>
                         {selectedRows.length > 0 && (

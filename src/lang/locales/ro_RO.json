@@ -21,6 +21,7 @@
   "auth.GoBack": "Înapoi",
   "auth.Send": "Trimite",
   "auth.Sending": "Se trimite...",
+  "auth.ActivateAccount": "Account-ul dvs nu este activat. Apăsați butonul de mai jos pentru a primi un mesaj nou de confirmare!",
 
   "auth.AlreadyHaveAnAccount": "Deja dețineți un cont?",
   "auth.JuridicalName": "Denumire juridică",
@@ -81,11 +82,14 @@
   "header.profile.SignOut": "Deconectați-vă",
 
   "message.language.success": "Ați schimbat limba cu succes!",
-  "message.AccountSettings.Uploading": "Se încarcă...",
-  "message.AccountSettings.Uploaded": "Încărcat!",
-  "message.AccountSettings.Updating": "Se actualizează...",
-  "message.AccountSettings.Done": "Succes!",
-  "message.AccountSettings.Error": "A apărut o problemă! Încercați din nou!",
+  "message.Uploading": "Se încarcă...",
+  "message.Uploaded": "Încărcat!",
+  "message.Updating": "Se actualizează...",
+  "message.Done": "Succes!",
+  "message.Error": "A apărut o problemă! Încercați din nou!",
+    "message.NewPassword": "O parolă nouă a fost trimisă pe email-ul dvs!",
+    "message.EmailConfirmMsg": "Un mesaj de confirmare a fost trimis pe email!",
+    "message.ExpireTime": "Timpul a expirat! Vă redirecționăm pe pagina de logare...",
 
   "account.sidenav.EditProfile": "Editează Profilul",
   "account.sidenav.ChangePassword": "Schimbă Parola",
@@ -157,6 +161,33 @@
   "theme.Light": "Light",
   "theme.Dark": "Dark",
   "theme.Locale": "Localizare",
-  "theme.Language": "Limbă"
+  "theme.Language": "Limbă",
+
+    "users.ViewDetails": "Detalii",
+    "users.Edit": "Editează",
+    "users.Disable": "Deactivează",
+    "users.Activate": "Activează",
+    "users.SendCode": "Trimite cod activare",
+    "users.Disable.Title": "Sunteți sigur că doriți să deactivați acest utilizator?",
+    "users.Invite": "Invită utilizator",
+    "users.table.User": "Utilizator",
+    "users.table.Role": "Rol",
+    "users.table.LastOnline": "Ultima intrare",
+    "users.table.Status": "Status",
+    "users.status.Active": "Activ",
+    "users.status.NotActivated": "Inactiv",
+    "users.status.Disabled": "Deactivat",
+
+    "app.Delete": "Șterge",
+    "app.status.Installed": "Instalat",
+    "app.status.NotInstalled": "Instalează",
+    "app.Generate": "Generează",
+    "app.Refresh": "Actualizează",
+    "app.Description": "Descriere",
+    "app.Packages": "Tarife",
+    "app.News": "Noutăți",
+    "app.Licenses": "Licenzii",
+    "app.Devices": "Dispozitive",
+    "app.News.Add": "Adaugă"
 
 }

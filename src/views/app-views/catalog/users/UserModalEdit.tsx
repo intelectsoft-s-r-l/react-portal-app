@@ -3,9 +3,9 @@ import { Input, Row, Col, Form, Modal, message } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import AppLocale from "../../../../lang";
-import { IntlProvider } from "react-intl";
 import { ClientApi } from "../../../../api";
-import { DONE, ERROR } from "../../../../constants/Messages";
+import { DONE, UPDATING } from "../../../../constants/Messages";
+import Localization from "../../../../utils/Localization";
 
 export const UserModalEdit = ({
     data,
@@ -29,21 +29,17 @@ export const UserModalEdit = ({
     const onFinish = (values) => {
         const key = "updatable";
         message.loading({
-            content: (
-                <IntlProvider
-                    locale={currentAppLocale.locale}
-                    messages={currentAppLocale.messages}
-                >
-                    <IntlMessage id={"message.AccountSettings.Updating"} />
-                </IntlProvider>
-            ),
+            content: <Localization msg={UPDATING} />,
             key,
         });
         setTimeout(async () => {
             updateUser({ User: { ...data, ...values } }).then((data: any) => {
                 if (data) {
                     if (data.ErrorCode === 0) {
-                        message.success({ content: DONE, key: "updatable" });
+                        message.success({
+                            content: <Localization msg={DONE} />,
+                            key: "updatable",
+                        });
                         getUsersInfo();
                     }
                 }
@@ -60,14 +56,10 @@ export const UserModalEdit = ({
             okText={<IntlMessage id={"account.EditProfile.SaveChange"} />}
             onCancel={onCancel}
             onOk={() => {
-                form.validateFields()
-                    .then((values) => {
-                        onCancel();
-                        onFinish(values);
-                    })
-                    .catch((info) => {
-                        console.log("Validate Failed:", info);
-                    });
+                form.validateFields().then((values) => {
+                    onCancel();
+                    onFinish(values);
+                });
             }}
         >
             <Form

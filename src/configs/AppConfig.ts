@@ -13,16 +13,6 @@ export const SUBDIR_PATH = env!.SUBDIR_PATH;
 export const APP_PREFIX_PATH = "/app";
 export const AUTH_PREFIX_PATH = "/auth";
 
-interface ThemeConfigProps {
-    navCollapsed?: boolean;
-    sideNavTheme?: string;
-    locale?: string;
-    navType?: string;
-    topNavColor?: string;
-    headerNavColor?: string;
-    mobileNav?: boolean;
-}
-
 export const THEME_CONFIG = {
     navCollapsed: false,
     sideNavTheme: SIDE_NAV_LIGHT,
@@ -31,4 +21,4 @@ export const THEME_CONFIG = {
     topNavColor: "#fff",
     headerNavColor: "#193550",
     mobileNav: false,
-} as ThemeConfigProps;
+};

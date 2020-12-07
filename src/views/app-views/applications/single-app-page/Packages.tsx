@@ -2,6 +2,7 @@ import { Card, Col, Empty, Row, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
 
 const ItemHeader = ({ packages }) => {
     return (
@@ -52,7 +53,9 @@ const CardItem = ({ packages }) => {
 const Packages = ({ packages }: any) => {
     return (
         <>
-            <h2 className="mb-4">Packages</h2>
+            <h2 className="mb-4">
+                <IntlMessage id="app.Packages" />
+            </h2>
             <div className="my-4 container-fluid">
                 <Row gutter={16}>
                     {packages.length > 0 ? (

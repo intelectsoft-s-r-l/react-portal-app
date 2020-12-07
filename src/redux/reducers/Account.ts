@@ -1,8 +1,17 @@
 import { CLEAR_INFO, UPDATE_SETTINGS } from "../constants/Account";
 import { REMOVE_AVATAR } from "../constants/Account";
 
-/* TODO: WRITE TYPES FOR REDUX REDUCERS STATE AND ACTIONS
-    29/09/2020 18:01 */
+export interface IAccount {
+    CompanyID?: number;
+    Email?: string;
+    FirstName?: string;
+    ID?: number;
+    LastName?: string;
+    Password?: string;
+    PhoneNumber?: string;
+    Photo?: string;
+    UiLanguage?: number;
+}
 const initialState = {
     CompanyID: null,
     Email: "",
@@ -13,17 +22,14 @@ const initialState = {
     PhoneNumber: null,
     Photo: null,
     UiLanguage: 0,
-} as any;
-
-const account = (state = initialState, action) => {
+};
+const account = (state = initialState, action: any) => {
     switch (action.type) {
         case UPDATE_SETTINGS:
             return {
                 ...state,
                 ...action.payload,
             };
-        case CLEAR_INFO:
-            state = null;
         default:
             return state;
     }

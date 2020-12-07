@@ -15,6 +15,15 @@ import {
     SET_TOKEN,
 } from "../constants/Auth";
 
+export interface IAuth {
+    loading?: boolean;
+    message?: string;
+    showMessage?: string;
+    redirect?: string;
+    token?: string;
+    isAuth?: boolean;
+    userActivated?: boolean;
+}
 const initState = {
     loading: false,
     message: "",
@@ -23,9 +32,8 @@ const initState = {
     token: "",
     isAuth: false,
     userActivated: false,
-} as { [key: string]: any };
-
-const auth = (state = initState, action) => {
+};
+const auth = (state = initState, action: any) => {
     switch (action.type) {
         case AUTHENTICATED:
             return {

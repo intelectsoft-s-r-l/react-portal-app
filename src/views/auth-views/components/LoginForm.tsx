@@ -19,6 +19,8 @@ import { hideLoading } from "../../../redux/actions/Auth";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
+import Localization from "../../../utils/Localization";
+import { ACTIVATE_ACCOUNT } from "../../../constants/Messages";
 
 const LoginForm = ({
     otherSignIn,
@@ -57,7 +59,10 @@ const LoginForm = ({
             /* The function below returns a promise.
         I should probably reconsider the way I handle the "sendActivationCode" function,
         maybe chain it after the "authorizerUser" function ???  */
-            authorizeUser(onLoginSettingsObject);
+            authorizeUser(
+                onLoginSettingsObject,
+                <Localization msg={ACTIVATE_ACCOUNT} />
+            );
         }, 1000);
     };
     const onGoogleLogin = () => {

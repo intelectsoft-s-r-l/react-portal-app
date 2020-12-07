@@ -41,14 +41,10 @@ export const UserModalAdd = ({
                 setLoading(true);
                 setTimeout(() => {
                     setLoading(false);
-                    form.validateFields()
-                        .then((values) => {
-                            onCancel();
-                            onFinish(values);
-                        })
-                        .catch((info) => {
-                            console.log("Validate Failed:", info);
-                        });
+                    form.validateFields().then((values) => {
+                        onCancel();
+                        onFinish(values);
+                    });
                 }, 1000);
             }}
         >

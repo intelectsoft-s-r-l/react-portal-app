@@ -16,23 +16,22 @@ import { IntlProvider } from "react-intl";
 import IntlMessage from "../util-components/IntlMessage";
 import AppLocale from "../../lang";
 import { clearSettings } from "../../redux/actions/Account";
+import Localization from "../../utils/Localization";
+import { ITheme } from "../../redux/reducers/Theme";
+import { IState } from "../../redux/reducers";
+import { IAccount } from "../../redux/reducers/Account";
+interface INavProfile {
+    signOut?: () => void;
+    FirstName?: string;
+    Photo?: string;
+    locale?: any;
+}
 const menuItem = [
-    // {
-    // 	title: "Edit Profile",
-    // 	icon: EditOutlined ,
-    // 	path: "/app/account-settings"
-    //   },
-
     {
         title: <IntlMessage id={"header.profile.AccountSettings"} />,
         icon: SettingOutlined,
         path: "/app/account-settings",
     },
-    //   {
-    // 	title: "Billing",
-    // 	icon: ShopOutlined ,
-    // 	path: "/app/account-settings/billing"
-    // },
     {
         title: <IntlMessage id={"header.profile.HelpCenter"} />,
         icon: QuestionCircleOutlined,
@@ -40,37 +39,19 @@ const menuItem = [
     },
 ];
 
-const NavProfile = ({
-    signOut,
-    token,
-    history,
-    FirstName,
-    Photo,
-    locale,
-    isAuth,
-    clearSettings,
-}) => {
+const NavProfile = ({ signOut, FirstName, Photo, locale }: INavProfile) => {
     const currentAppLocale = AppLocale[locale];
     const { confirm } = Modal;
     const confirmLogout = () => {
         confirm({
-            title: (
-                <IntlProvider
-                    locale={currentAppLocale.locale}
-                    messages={currentAppLocale.messages}
-                >
-                    <IntlMessage id={"header.logout.message"} />
-                </IntlProvider>
-            ),
+            title: <Localization msg={"header.logout.message"} />,
             onOk: () => {
                 return new Promise((resolve) => {
                     setTimeout(() => {
-                        resolve(signOut());
-                        // resolve(clearSettings());
+                        resolve(signOut!());
                     }, 1000);
-                }).catch(() => console.log("Oops errors!"));
+                });
             },
-            onCancel: () => {},
         });
     };
 
@@ -128,11 +109,10 @@ const NavProfile = ({
     );
 };
 
-const mapStateToProps = ({ auth, account, theme }) => {
-    const { token, isAuth } = auth;
-    const { locale } = theme;
-    const { FirstName, Photo } = account;
-    return { token, FirstName, Photo, locale, isAuth };
+const mapStateToProps = ({ account, theme }: IState) => {
+    const { FirstName, Photo } = account as IAccount;
+    const { locale } = theme as ITheme;
+    return { FirstName, Photo, locale };
 };
 
-export default connect(mapStateToProps, { signOut, clearSettings })(NavProfile);
+export default connect(mapStateToProps, { signOut })(NavProfile);

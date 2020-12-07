@@ -7,9 +7,12 @@ import { CheckCircleOutlined, ExperimentOutlined } from "@ant-design/icons";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
 import { ClientApi } from "../../../../api";
+import Utils from "../../../../utils";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
+import { IApplications, IMarketAppList, ITextEditor } from "../AppInterface";
 
 const GridItem = ({ deactivateApp, data }) => {
-    const [shortDesc, setShortDesc] = useState<any>();
+    const [shortDesc, setShortDesc] = useState<ITextEditor>();
     const locale = useSelector((state) => state["theme"].locale);
     useEffect(() => {
         try {
@@ -33,7 +36,9 @@ const GridItem = ({ deactivateApp, data }) => {
                 </Link>
                 <Tag className="text-capitalize" color="cyan">
                     <CheckCircleOutlined />
-                    <span className="ml-2 font-weight-semibold">Installed</span>
+                    <span className="ml-2 font-weight-semibold">
+                        <IntlMessage id={"app.status.Installed"} />
+                    </span>
                 </Tag>
             </Flex>
             <div>
@@ -55,30 +60,27 @@ const GridItem = ({ deactivateApp, data }) => {
                         visibility: data.Status === 1 ? "visible" : "hidden",
                     }}
                 >
-                    Delete
+                    <IntlMessage id={"app.Delete"} />
                 </Button>
             </Flex>
         </Card>
     );
 };
 const MyAppList = () => {
-    const [apps, setApps] = useState<any>([]);
+    const [apps, setApps] = useState<IMarketAppList[]>([]);
     const { confirm } = Modal;
-    const [loading, setLoading] = useState(false);
-    const sortData = (arr) => {
-        return arr.slice().sort((a, b) => a.ID - b.ID);
-    };
+    const [loading, setLoading] = useState<boolean>(false);
     const getMarketAppList = () => {
         setLoading(true);
         return new ClientApi().GetMarketAppList().then((data: any) => {
             setLoading(false);
             if (data) {
-                const { ErrorCode, ErrorMessage, MarketAppList } = data;
+                const { ErrorCode, MarketAppList } = data as IApplications;
                 if (ErrorCode === 0) {
                     const activeApps = MarketAppList.filter(
                         (marketApp) => marketApp.Status != 0
                     );
-                    setApps(sortData(activeApps));
+                    setApps(Utils.sortData(activeApps, "ID"));
                 }
             }
         });

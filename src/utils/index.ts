@@ -1,5 +1,5 @@
 import { message } from "antd";
-import JSencrypt from "jsencrypt/bin/jsencrypt";
+import { JSEncrypt } from "jsencrypt";
 class Utils {
     /**
      * Get first character from first & last sentences of a username
@@ -202,7 +202,7 @@ class Utils {
     }
 
     static encryptInput(input, publicKey) {
-        const jsEncrypt = new JSencrypt();
+        const jsEncrypt = new JSEncrypt({});
         jsEncrypt.setPublicKey(publicKey);
         return jsEncrypt.encrypt(input);
     }
@@ -236,6 +236,16 @@ class Utils {
         setTimeout(() => {
             onSuccess("ok");
         });
+    }
+
+    /**
+     * Add an item to a localStorage() object
+     * @param {Array} array - the array of objects that has to be sorted
+     * @param {String | Number} key - any value to search
+     * @return {Array} - a new sorted array
+     */
+    static sortData(array, key) {
+        return array.slice().sort((a, b) => a[key] - b[key]);
     }
 }
 

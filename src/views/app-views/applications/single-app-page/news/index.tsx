@@ -6,6 +6,7 @@ import Flex from "../../../../../components/shared-components/Flex";
 import CreateNews from "./CreateNews";
 import moment from "moment";
 import EditNews from "./EditNews";
+import IntlMessage from "../../../../../components/util-components/IntlMessage";
 
 interface INewsList {
     AppType: number;
@@ -114,13 +115,16 @@ const News = ({ AppType }) => {
                 getNews={getNews}
             />
             <Flex justifyContent="between" className="mb-4">
-                <h2>News</h2>
+                <h2>
+                    <IntlMessage id="app.News" />
+                </h2>
                 <Button
                     icon={<PlusCircleOutlined />}
                     type="primary"
                     onClick={() => setCreateVisible(true)}
                 >
-                    Add
+                    {" "}
+                    <IntlMessage id="app.News.Add" />
                 </Button>
             </Flex>
             <List style={{ maxWidth: 1000, margin: "0 auto" }}>

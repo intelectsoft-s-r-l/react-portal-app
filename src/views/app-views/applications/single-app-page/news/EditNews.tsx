@@ -7,6 +7,7 @@ import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
 import { ClientApi } from "../../../../../api";
+import Localization from "../../../../../utils/Localization";
 
 const EditNews = ({ visible, close, news, getNews }) => {
     const [form] = Form.useForm();
@@ -26,10 +27,17 @@ const EditNews = ({ visible, close, news, getNews }) => {
 
     const onUploadAvatar = (info) => {
         if (info.file.status === "uploading") {
-            message.loading({ content: UPLOADING, key: "updatable" });
+            message.loading({
+                content: <Localization msg={UPLOADING} />,
+                key: "updatable",
+            });
         }
         if (info.file.status === "done") {
-            message.success({ content: DONE, key: "updatable", duration: 1 });
+            message.success({
+                content: <Localization msg={DONE} />,
+                key: "updatable",
+                duration: 1,
+            });
             Utils.getBase64(info.file.originFileObj, (imageUrl) => {
                 setPhoto(imageUrl);
             });

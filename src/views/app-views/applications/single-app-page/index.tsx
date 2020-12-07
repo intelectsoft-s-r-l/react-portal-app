@@ -1,15 +1,4 @@
-import {
-    Button,
-    Card,
-    Col,
-    Empty,
-    Input,
-    Menu,
-    message,
-    Modal,
-    Row,
-    Tag,
-} from "antd";
+import { Card, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -25,6 +14,7 @@ import IntegrationsHeader from "./IntegrationsHeader";
 import { ClientApi } from "../../../../api";
 import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
 
 enum app {
     Retail = 10,
@@ -44,19 +34,27 @@ const AppOption = ({ match, location, AppType }) => {
                     selectedKeys={[location.pathname]}
                 >
                     <Menu.Item key={`${match.url}/description`}>
-                        <span>Description</span>
+                        <span>
+                            <IntlMessage id="app.Description" />
+                        </span>
                         <Link to={"description"} />
                     </Menu.Item>
                     <Menu.Item key={`${match.url}/packages`}>
-                        <span>Packages</span>
+                        <span>
+                            <IntlMessage id="app.Packages" />
+                        </span>
                         <Link to={"packages"} />
                     </Menu.Item>
                     <Menu.Item key={`${match.url}/licenses`}>
-                        <span>Licenses</span>
+                        <span>
+                            <IntlMessage id="app.Licenses" />
+                        </span>
                         <Link to={"licenses"} />
                     </Menu.Item>
                     <Menu.Item key={`${match.url}/devices`}>
-                        <span>Devices</span>
+                        <span>
+                            <IntlMessage id="app.Devices" />
+                        </span>
                         <Link to={"devices"} />
                     </Menu.Item>
                 </Menu>
@@ -67,15 +65,21 @@ const AppOption = ({ match, location, AppType }) => {
                     selectedKeys={[location.pathname]}
                 >
                     <Menu.Item key={`${match.url}/description`}>
-                        <span>Description</span>
+                        <span>
+                            <IntlMessage id="app.Description" />
+                        </span>
                         <Link to={"description"} />
                     </Menu.Item>
                     <Menu.Item key={`${match.url}/packages`}>
-                        <span>Packages</span>
+                        <span>
+                            <IntlMessage id="app.Packages" />
+                        </span>
                         <Link to={"packages"} />
                     </Menu.Item>
                     <Menu.Item key={`${match.url}/news`}>
-                        <span>News</span>
+                        <span>
+                            <IntlMessage id="app.News" />
+                        </span>
                         <Link to={"news"} />
                     </Menu.Item>
                 </Menu>
@@ -86,11 +90,15 @@ const AppOption = ({ match, location, AppType }) => {
                     selectedKeys={[location.pathname]}
                 >
                     <Menu.Item key={`${match.url}/description`}>
-                        <span>Description</span>
+                        <span>
+                            <IntlMessage id="app.Description" />
+                        </span>
                         <Link to={"description"} />
                     </Menu.Item>
                     <Menu.Item key={`${match.url}/packages`}>
-                        <span>Packages</span>
+                        <span>
+                            <IntlMessage id="app.Packages" />
+                        </span>
                         <Link to={"packages"} />
                     </Menu.Item>
                 </Menu>

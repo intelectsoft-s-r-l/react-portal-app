@@ -19,16 +19,14 @@ import {
 import { message, Modal } from "antd";
 import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
-import { EMAIL_CONFIRM_MSG, EXPIRE_TIME } from "../../constants/Messages";
+import { EMAIL_CONFIRM_MSG } from "../../constants/Messages";
 import { AuthApi } from "../../api";
-const publicIp = require("react-public-ip");
+import { ThunkAction } from "redux-thunk";
+import { IState } from "../reducers";
+import { IAuthorizerUser } from "../../api/auth_types";
+type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
-export const signIn = (user) => ({
-    type: SIGNIN,
-    payload: user,
-});
-
-export const authenticated = (token) => ({
+export const authenticated = (token: string) => ({
     type: AUTHENTICATED,
     token,
 });
@@ -37,39 +35,7 @@ export const signOut = () => ({
     type: SIGNOUT,
 });
 
-export const signOutSuccess = () => ({
-    type: SIGNOUT_SUCCESS,
-});
-
-export const signUp = (user) => ({
-    type: SIGNUP,
-    payload: user,
-});
-
-export const signUpSuccess = (token) => ({
-    type: SIGNUP_SUCCESS,
-    token,
-});
-
-export const signInWithGoogle = () => ({
-    type: SIGNIN_WITH_GOOGLE,
-});
-
-export const signInWithGoogleAuthenticated = (token) => ({
-    type: SIGNIN_WITH_GOOGLE_AUTHENTICATED,
-    token,
-});
-
-export const signInWithFacebook = () => ({
-    type: SIGNIN_WITH_FACEBOOK,
-});
-
-export const signInWithFacebookAuthenticated = (token) => ({
-    type: SIGNIN_WITH_FACEBOOK_AUTHENTICATED,
-    token,
-});
-
-export const showAuthMessage = (message) => ({
+export const showAuthMessage = (message: string | JSX.Element) => ({
     type: SHOW_AUTH_MESSAGE,
     message,
 });
@@ -84,28 +50,8 @@ export const showLoading = () => ({
 export const hideLoading = () => ({
     type: HIDE_LOADING,
 });
-export const isUserActivated = (boolean, Token) => ({
-    type: IS_USER_ACTIVATED,
-    userActivated: boolean,
-    activationToken: Token,
-});
 
-// export const refreshToken = () => async (dispatch) => {
-//     return new AuthApi().RefreshToken().then(async (data: any) => {
-//         const { ErrorCode, Token } = data;
-//         if (ErrorCode === 0) {
-//             await dispatch(authenticated(Token));
-//             window.location.reload();
-//         } else if (ErrorCode === 105) {
-//             const key = "updatable";
-//             message
-//                 .loading({ content: EXPIRE_TIME, key })
-//                 .then(() => dispatch(signOut()));
-//         }
-//     });
-// };
-
-export const sendActivationCode = () => async (dispatch) => {
+export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
     return new AuthApi().SendActivationCode().then((data: any) => {
         const { ErrorMessage, ErrorCode } = data;
         if (data) {
@@ -115,7 +61,10 @@ export const sendActivationCode = () => async (dispatch) => {
     });
 };
 
-export const authorizeUser = (userData) => {
+export const authorizeUser = (
+    userData: IAuthorizerUser,
+    message: any
+): ThunkResult<void> => {
     return async (dispatch) => {
         return new AuthApi()
             .Login(userData)
@@ -128,10 +77,9 @@ export const authorizeUser = (userData) => {
                     } else if (ErrorCode === 102) {
                         dispatch(showAuthMessage(ErrorMessage));
                     } else if (ErrorCode === 108) {
+                        /* We're passing the message as a parameter because localization is a react component, and this is a regular function. */
                         Modal.confirm({
-                            title: "Confirm registration",
-                            content:
-                                "Press the OK button down below if you want us to send you a new activation code!",
+                            content: message,
                             onOk: () => {
                                 dispatch(sendActivationCode());
                             },

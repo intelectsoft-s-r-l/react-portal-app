@@ -7,6 +7,7 @@ import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import AppLocale from "../../../lang";
 import { AuthApi } from "../../../api";
 import { DONE } from "../../../constants/Messages";
+import Localization from "../../../utils/Localization";
 
 export class ChangePassword extends Component {
     private changePasswordFormRef = React.createRef<any>();
@@ -39,7 +40,7 @@ export class ChangePassword extends Component {
                     if (data) {
                         if (data.ErrorCode === 0)
                             message.success({
-                                content: DONE,
+                                content: <Localization msg={DONE} />,
                                 key: "updatable",
                             });
                     }

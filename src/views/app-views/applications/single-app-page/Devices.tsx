@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ClientApi } from "../../../../api";
 import Flex from "../../../../components/shared-components/Flex";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
 
 const tableColumns = [
     {
@@ -54,7 +55,9 @@ const Devices = ({ AppType }) => {
     return (
         <>
             <Flex justifyContent="between" alignItems="center" className="py-4">
-                <h2>Devices</h2>
+                <h2>
+                    <IntlMessage id="app.Devices" />
+                </h2>
             </Flex>
             <Table columns={tableColumns} dataSource={devices} rowKey="ID" />
         </>

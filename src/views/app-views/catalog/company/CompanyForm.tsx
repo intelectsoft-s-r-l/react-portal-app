@@ -17,12 +17,10 @@ import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { updateSettings } from "../../../../redux/actions/Account";
 import { connect } from "react-redux";
-import { IntlProvider } from "react-intl";
-import AppLocale from "../../../../lang";
-import { signOut } from "../../../../redux/actions/Auth";
 import { ClientApi } from "../../../../api";
-import { DONE } from "../../../../constants/Messages";
+import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
+import Localization from "../../../../utils/Localization";
 class CompanyForm extends Component<{ [key: string]: any }> {
     inputMaskRef = React.createRef() as any;
     state = {} as { [key: string]: any };
@@ -49,7 +47,10 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     const { ErrorCode, ErrorMessage } = data;
                     if (ErrorCode === 0) {
                         await this.getCompanyInfo();
-                        message.success({ content: DONE, key: "updatable" });
+                        message.success({
+                            content: <Localization msg={DONE} />,
+                            key: "updatable",
+                        });
                     }
                 }
             });
@@ -58,37 +59,15 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         this.getCompanyInfo();
     }
 
-    getBase64(img, callback) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
-
     render() {
-        let { locale } = this.props;
-
-        const currentAppLocale = AppLocale[locale];
-
         const onFinish = async (values) => {
             console.log(values);
             const key = "updatable";
             message.loading({
-                content: (
-                    <IntlProvider
-                        locale={currentAppLocale.locale}
-                        messages={currentAppLocale.messages}
-                    >
-                        <IntlMessage id={"message.AccountSettings.Updating"} />
-                    </IntlProvider>
-                ),
+                content: <Localization msg={UPDATING} />,
                 key,
             });
             setTimeout(async () => {
-                // console.log({
-                //     Company: { ...this.state, ...values },
-                //     Token: this.props.token,
-                //     info: await publicIp.v4(),
-                // });
                 this.updateCompany(values);
             }, 1000);
         };
@@ -101,23 +80,14 @@ class CompanyForm extends Component<{ [key: string]: any }> {
             const key = "updatable";
             if (info.file.status === "uploading") {
                 message.loading({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage
-                                id={"message.AccountSettings.Uploading"}
-                            />
-                        </IntlProvider>
-                    ),
+                    content: <Localization msg={UPLOADING} />,
                     key,
                     duration: 2,
                 });
                 return;
             }
             if (info.file.status === "done") {
-                this.getBase64(info.file.originFileObj, async (imageUrl) => {
+                Utils.getBase64(info.file.originFileObj, async (imageUrl) => {
                     const newImage = { Logo: imageUrl };
                     this.updateCompany(newImage);
                 });
@@ -129,12 +99,6 @@ class CompanyForm extends Component<{ [key: string]: any }> {
             this.updateCompany(deletedImage).then(() =>
                 this.setState(deletedImage)
             );
-        };
-
-        const dummyRequest = ({ file, onSuccess }) => {
-            setTimeout(() => {
-                onSuccess("ok");
-            }, 0);
         };
 
         return (
@@ -151,7 +115,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                     />
                     <div className="ml-md-3 mt-md-0 mt-3">
                         <Upload
-                            customRequest={dummyRequest}
+                            customRequest={Utils.dummyRequest}
                             onChange={onUploadAavater}
                             showUploadList={false}
                             beforeUpload={(info) => Utils.beforeUpload(info)}
@@ -442,21 +406,11 @@ class CompanyForm extends Component<{ [key: string]: any }> {
 
 const mapDispatchToProps = {
     updateSettings,
-    signOut,
 };
 
-const mapStateToProps = ({ account, theme, auth }) => {
-    const { name, userName, avatar, dateOfBirth, email, phoneNumber } = account;
-    const { token } = auth;
+const mapStateToProps = ({ theme }) => {
     const { locale } = theme;
     return {
-        name,
-        userName,
-        token,
-        avatar,
-        dateOfBirth,
-        email,
-        phoneNumber,
         locale,
     };
 };

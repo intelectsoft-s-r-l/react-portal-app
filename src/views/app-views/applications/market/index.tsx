@@ -13,40 +13,23 @@ import Loading from "../../../../components/shared-components/Loading";
 import { ClientApi } from "../../../../api";
 import InstallWizard from "./wizard";
 import { MarketContext } from "./MarketContext";
-
-export interface IPackages {
-    ID: number;
-    MaxValue: number;
-    MinValue: number;
-    Name: string;
-    Price: number;
-    Status: number;
-    ValidFrom: string;
-    ValidTo: string;
+import IntlMessage from "../../../../components/util-components/IntlMessage";
+import { IApplications, IMarketAppList, ITextEditor } from "../AppInterface";
+import Utils from "../../../../utils";
+interface IGridItem {
+    deactivateApp: (AppID: number) => void;
+    setVisibleModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setSelectedApp: (data: IMarketAppList) => void;
+    data: IMarketAppList;
 }
-export interface IMarketAppList {
-    AppType: number;
-    ApyKey: string;
-    MarketID: number;
-    ApplicationID: number;
-    LicenseActivationCode: number;
-    LicenseActivationCodeValidHours: number;
-    LicenseActivationCodeValidTo: string;
-    LongDescription: string;
-    Name: string;
-    Packages: IPackages[];
-    Photo: string;
-    ShortDescription: string;
-    Status: number;
-}
-export interface IApplications {
-    ErrorCode: number;
-    ErrorMessage: string;
-    MarketAppList: IMarketAppList[];
-}
-const GridItem = ({ deactivateApp, setVisibleModal, setSelectedApp, data }) => {
-    const [shortDesc, setShortDesc] = useState<any>();
-    const locale = useSelector((state) => state["theme"].locale);
+const GridItem = ({
+    deactivateApp,
+    setVisibleModal,
+    setSelectedApp,
+    data,
+}: IGridItem) => {
+    const [shortDesc, setShortDesc] = useState<ITextEditor>();
+    const locale = useSelector((state: any) => state["theme"].locale);
     useEffect(() => {
         try {
             setShortDesc(JSON.parse(window.atob(data.ShortDescription)));
@@ -78,14 +61,14 @@ const GridItem = ({ deactivateApp, setVisibleModal, setSelectedApp, data }) => {
                     >
                         <VerticalAlignBottomOutlined />
                         <span className="ml-2 font-weight-semibold">
-                            Install
+                            <IntlMessage id={"app.status.NotInstalled"} />
                         </span>
                     </Tag>
                 ) : (
                     <Tag className="text-capitalize" color="cyan">
                         <CheckCircleOutlined />
                         <span className="ml-2 font-weight-semibold">
-                            Installed
+                            <IntlMessage id={"app.status.Installed"} />
                         </span>
                     </Tag>
                 )}
@@ -109,7 +92,7 @@ const GridItem = ({ deactivateApp, setVisibleModal, setSelectedApp, data }) => {
                         visibility: data.Status === 1 ? "visible" : "hidden",
                     }}
                 >
-                    Delete
+                    <IntlMessage id={"app.Delete"} />
                 </Button>
             </Flex>
         </Card>
@@ -117,27 +100,24 @@ const GridItem = ({ deactivateApp, setVisibleModal, setSelectedApp, data }) => {
 };
 
 const Market = () => {
-    const [apps, setApps] = useState<any>([]);
+    const [apps, setApps] = useState<IMarketAppList[]>([]);
     const [loading, setLoading] = useState(false);
     const [terms, setTerms] = useState<any>();
-    const locale = useSelector((state) => state["theme"].locale);
     const [visibleModal, setVisibleModal] = useState<boolean>(false);
     const { confirm } = Modal;
     const [current, setCurrent] = useState<any>(0);
     const [isAccepted, setIsAccepted] = useState<boolean>(false);
     const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
-    const [selectedApp, setSelectedApp] = useState<any>();
+    const [selectedApp, setSelectedApp] = useState<IMarketAppList>();
     const [appInstalled, setAppInstalled] = useState<boolean>(false);
-    const sortData = (arr) => {
-        return arr.slice().sort((a, b) => a.AppType - b.AppType);
-    };
     const getMarketApps = () => {
         setLoading(true);
         return new ClientApi().GetMarketAppList().then((data: any) => {
             setLoading(false);
             if (data) {
-                if (data.ErrorCode === 0) {
-                    const evaluatedArr = sortData(data.MarketAppList);
+                const { MarketAppList, ErrorCode } = data as IApplications;
+                if (ErrorCode === 0) {
+                    const evaluatedArr = Utils.sortData(MarketAppList, "ID");
                     setApps(evaluatedArr);
                 }
             }
@@ -147,7 +127,7 @@ const Market = () => {
         getMarketApps();
     }, []);
 
-    const deactivateApp = (AppID) => {
+    const deactivateApp = (AppID: number) => {
         confirm({
             title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
             onOk: () => {
@@ -172,29 +152,6 @@ const Market = () => {
         });
     };
 
-    const activateApp = (AppID) => {
-        confirm({
-            title: `Are you sure you want to activate app with ID: ${AppID}?`,
-            onOk: () => {
-                return new Promise((resolve) => {
-                    setTimeout(
-                        () =>
-                            resolve(
-                                new ClientApi()
-                                    .ActivateApp(AppID)
-                                    .then(async (data: any) => {
-                                        if (data) {
-                                            if (data.ErrorCode === 0)
-                                                await getMarketApps();
-                                        }
-                                    })
-                            ),
-                        1000
-                    );
-                });
-            },
-        });
-    };
     const handleOk = () => {
         setVisibleModal(false);
     };

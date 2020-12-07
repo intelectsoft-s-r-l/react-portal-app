@@ -1,22 +1,22 @@
 import * as React from "react";
 import { useState } from "react";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { Menu, Dropdown, Empty, Tooltip, message } from "antd";
+import { Menu, Dropdown, Empty, Tooltip } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../components/shared-components/Loading";
 import { ClientApi } from "../../../api";
+import { IMarketAppList } from "./AppInterface";
 
 const AppStoreNav = () => {
-    // const [apps, setApps] = useState<IApps[]>([]);
-    const dispatch = useDispatch();
     const loading = useSelector((state) => state["auth"].loading);
-    const [apps, setApps] = useState<any>([]);
-    // const apps: IApps[] = useSelector((state) => state["apps"]);
+    const [apps, setApps] = useState<IMarketAppList[]>([]);
     const renderApps = () => {
         return new ClientApi().GetMarketAppList().then((data: any) => {
-            setApps([...data.MarketAppList]);
+            if (data) {
+                setApps([...data.MarketAppList]);
+            }
         });
     };
     const menu = (

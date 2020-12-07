@@ -15,7 +15,7 @@
 	"auth.MessagePasswordsMatch": "Password do not match!",
     "auth.MessageInsertValidPassword": "Your password should have at least 8 characters!",
     "auth.PasswordValidation": "Password should contain at least 8 characters, 1 capital letter, 1 special symbol!",
-	"auth.ForgotPassword": "Forgot your password?",
+    "auth.ForgotPassword": "Forgot your password?",
 	"auth.ForgotPasswordMessage": "Enter your email to reset the password",
 	"auth.GoBack": "Go back",
 	"auth.Send": "Send",
@@ -37,6 +37,7 @@
   "auth.MessageRedirect": "You'll be redirected in a few seconds...",
   "auth.validate.Success": "Congratulations! You've successfully registered!",
   "auth.validate.Error": "You haven't confirmed your registration yet! Please check your email!",
+  "auth.ActivateAccount": "Your account is not activated. Press the OK button down below if you want us to send you a new confirmation message.",
 
 	"sidenav.home": "Home",
 	"sidenav.dashboard": "Dashboard",
@@ -80,11 +81,14 @@
 	"header.profile.SignOut": "Sign Out",
 
 	"message.language.success": "You've changed your language successfully!",
-	"message.AccountSettings.Uploading": "Uploading...",
-	"message.AccountSettings.Uploaded": "Uploaded!",
-	"message.AccountSettings.Updating": "Updating...",
-	"message.AccountSettings.Done": "Done!",
-	"message.AccountSettings.Error": "Something went wrong! Try again!",
+	"message.Uploading": "Uploading...",
+	"message.Uploaded": "Uploaded!",
+	"message.Updating": "Updating...",
+	"message.Done": "Done!",
+    "message.Error": "Something went wrong! Try again!",
+    "message.NewPassword": "New password has been sent to your email!",
+    "message.EmailConfirmMsg": "Confirmation message was send to the email!",
+    "message.ExpireTime": "Time has expired! Redirecting you to login page...",
 
 
 	"account.sidenav.EditProfile": "Edit Profile",
@@ -157,6 +161,33 @@
 	"theme.Light": "Light",
 	"theme.Dark": "Dark",
 	"theme.Locale": "Locale",
-	"theme.Language": "Language"
+	"theme.Language": "Language",
 
+    "users.ViewDetails": "View details",
+    "users.Edit": "Edit",
+    "users.Disable": "Disable",
+    "users.Activate": "Activate",
+    "users.SendCode": "Send activation code",
+    "users.Disable.Title": "Are you sure you want to disable this user?",
+    "users.Invite": "Invite user",
+    "users.table.User": "User",
+    "users.table.Role": "Role",
+    "users.table.LastOnline": "Last online",
+    "users.table.Status": "Status",
+    "users.status.Active": "Active",
+    "users.status.NotActivated": "Not Activated",
+    "users.status.Disabled": "Disabled",
+
+
+    "app.Delete": "Delete",
+    "app.status.Installed": "Installed",
+    "app.status.NotInstalled": "Install",
+    "app.Generate": "Generate",
+    "app.Refresh": "Refresh",
+    "app.Description": "Description",
+    "app.Packages": "Packages",
+    "app.News": "News",
+    "app.Licenses": "Licenses",
+    "app.Devices": "Devices",
+    "app.News.Add": "Add"
 }

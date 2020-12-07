@@ -1,26 +1,20 @@
 import React, { Component } from "react";
-import {
-    Form,
-    Avatar,
-    Button,
-    Input,
-    DatePicker,
-    Row,
-    Col,
-    message,
-    Upload,
-} from "antd";
+import { Form, Avatar, Button, Input, Row, Col, message, Upload } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import Flex from "../../../components/shared-components/Flex";
-import IntlMessage from "../../../components/util-components/IntlMessage";
-import { updateSettings, setProfileInfo } from "../../../redux/actions/Account";
+import { setProfileInfo } from "../../../redux/actions/Account";
 import { connect } from "react-redux";
-import { IntlProvider } from "react-intl";
-import AppLocale from "../../../lang";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 import Utils from "../../../utils";
-const publicIp = require("react-public-ip");
+import Localization from "../../../utils/Localization";
+import {
+    DONE,
+    UPDATING,
+    UPLOADED,
+    UPLOADING,
+} from "../../../constants/Messages";
+import IntlMessage from "../../../components/util-components/IntlMessage";
 
 interface EditProfileProps {
     CompanyID: number;
@@ -42,25 +36,6 @@ interface EditProfileProps {
 }
 
 class EditProfile extends Component<EditProfileProps> {
-    // state = {
-    // 	avatarUrl: store.getState().account.avatar,
-    // 	name: store.getState().account.name,
-    // 	email: store.getState().account.email,
-    // 	userName: store.getState().account.userName,
-    // 	dateOfBirth: null,
-    // 	phoneNumber: store.getState().account.phoneNumber,
-    // 	website: '',
-    // 	address: '',
-    // 	city: '',
-    // 	postcode: ''
-    // }
-
-    getBase64(img, callback) {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
-
     render() {
         let {
             account,
@@ -71,29 +46,17 @@ class EditProfile extends Component<EditProfileProps> {
             LastName,
             PhoneNumber,
             Photo,
-            locale,
-            updateSettings,
             setProfileInfo,
             token,
         } = this.props;
 
-        const currentAppLocale = AppLocale[locale];
-
         const onFinish = (values) => {
             const key = "updatable";
             message.loading({
-                content: (
-                    <IntlProvider
-                        locale={currentAppLocale.locale}
-                        messages={currentAppLocale.messages}
-                    >
-                        <IntlMessage id={"message.AccountSettings.Updating"} />
-                    </IntlProvider>
-                ),
+                content: <Localization msg={UPDATING} />,
                 key,
             });
             setTimeout(async () => {
-                // console.log({ Token: token, User: { ...account, ...values } });
                 setProfileInfo({
                     Token: token,
                     User: {
@@ -102,14 +65,7 @@ class EditProfile extends Component<EditProfileProps> {
                     },
                 });
                 message.success({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage id={"message.AccountSettings.Done"} />
-                        </IntlProvider>
-                    ),
+                    content: <Localization msg={DONE} />,
                     key,
                     duration: 2,
                 });
@@ -124,39 +80,21 @@ class EditProfile extends Component<EditProfileProps> {
             const key = "updatable";
             if (info.file.status === "uploading") {
                 message.loading({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage
-                                id={"message.AccountSettings.Uploading"}
-                            />
-                        </IntlProvider>
-                    ),
+                    content: <Localization msg={UPLOADING} />,
                     key,
                     duration: 2,
                 });
                 return;
             }
             if (info.file.status === "done") {
-                this.getBase64(info.file.originFileObj, (imageUrl) => {
+                Utils.getBase64(info.file.originFileObj, (imageUrl) => {
                     setProfileInfo({
                         Token: token,
                         User: { ...account, Photo: imageUrl },
                     });
                 });
                 message.success({
-                    content: (
-                        <IntlProvider
-                            locale={currentAppLocale.locale}
-                            messages={currentAppLocale.messages}
-                        >
-                            <IntlMessage
-                                id={"message.AccountSettings.Uploaded"}
-                            />
-                        </IntlProvider>
-                    ),
+                    content: <Localization msg={UPLOADED} />,
                     key,
                     duration: 2,
                 });
@@ -167,12 +105,6 @@ class EditProfile extends Component<EditProfileProps> {
             setProfileInfo({
                 Token: token,
                 User: { ...account, Photo: "" },
-            });
-        };
-
-        const dummyRequest = ({ file, onSuccess }) => {
-            setTimeout(() => {
-                onSuccess("ok");
             });
         };
 
@@ -188,7 +120,7 @@ class EditProfile extends Component<EditProfileProps> {
                         <Upload
                             onChange={onUploadAavater}
                             showUploadList={false}
-                            customRequest={dummyRequest}
+                            customRequest={Utils.dummyRequest}
                             beforeUpload={(info) => Utils.beforeUpload(info)}
                         >
                             <Button type="primary">
@@ -285,16 +217,6 @@ class EditProfile extends Component<EditProfileProps> {
                                             <Input />
                                         </Form.Item>
                                     </Col>
-                                    {/* <Col xs={24} sm={24} md={12}>
-                    <Form.Item
-                      label={
-                        <IntlMessage id={"account.EditProfile.DateOfBirth"} />
-                      }
-                      name="dateOfBirth"
-                    >
-                      <DatePicker className="w-100" />
-                    </Form.Item>
-                  </Col> */}
                                     <Col xs={24} sm={24} md={12}>
                                         <Form.Item
                                             label={
@@ -330,7 +252,6 @@ class EditProfile extends Component<EditProfileProps> {
 }
 
 const mapDispatchToProps = {
-    updateSettings,
     setProfileInfo,
 };
 

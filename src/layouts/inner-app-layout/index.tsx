@@ -15,7 +15,7 @@ interface InnerAppLayoutProps {
 
 const { useBreakpoint } = Grid;
 
-const SideContent = (props) => {
+const SideContent = (props: any) => {
     const { sideContent, sideContentWidth = 250, border } = props;
     return (
         <div
@@ -27,7 +27,7 @@ const SideContent = (props) => {
     );
 };
 
-const SideContentMobile = (props) => {
+const SideContentMobile = (props: any) => {
     const { sideContent, visible, onSideContentClose } = props;
     return (
         <Drawer
@@ -43,12 +43,12 @@ const SideContentMobile = (props) => {
     );
 };
 
-export const InnerAppLayout: React.FC<InnerAppLayoutProps> = (props) => {
+export const InnerAppLayout = (props: any) => {
     const { mainContent, pageHeader, sideContentGutter = true } = props;
     const isMobile = !utils.getBreakPoint(useBreakpoint()).includes("lg");
     const [visible, setVisible] = useState(false);
 
-    const close = (e) => {
+    const close = () => {
         setVisible(false);
     };
 

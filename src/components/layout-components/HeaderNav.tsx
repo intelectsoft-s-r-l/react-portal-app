@@ -18,10 +18,12 @@ import utils from "../../utils";
 import NavProfile from "./NavProfile";
 import AppNavGrid from "../../views/app-views/applications/AppNavGrid";
 import AppStoreNav from "../../views/app-views/applications/AppNav";
+import { ITheme } from "../../redux/reducers/Theme";
+import { IState } from "../../redux/reducers";
 
 const { Header } = Layout;
 
-const HeaderNav = (props) => {
+const HeaderNav = (props: any) => {
     const {
         navCollapsed,
         mobileNav,
@@ -93,12 +95,9 @@ const HeaderNav = (props) => {
                     </div>
                     <div className="nav-left"></div>
                     <div className="nav-right">
-                        {/* Uncomment this if you want to have language selector on header*/}
-                        {/*<NavLanguage configDisplay />*/}
                         <AppStoreNav />
                         <NavPanel />
-                        {/*<LogoutButton history={history} />*/}
-                        <NavProfile history={history} />
+                        <NavProfile />
                     </div>
                     <NavSearch active={searchActive} close={onSearchClose} />
                 </div>
@@ -107,8 +106,13 @@ const HeaderNav = (props) => {
     );
 };
 
-const mapStateToProps = ({ theme }) => {
-    const { navCollapsed, navType, headerNavColor, mobileNav } = theme;
+const mapStateToProps = ({ theme }: IState) => {
+    const {
+        navCollapsed,
+        navType,
+        headerNavColor,
+        mobileNav,
+    } = theme as ITheme;
     return { navCollapsed, navType, headerNavColor, mobileNav };
 };
 

@@ -5,6 +5,19 @@ import { EXPIRE_TIME } from "../constants/Messages";
 import { clearSettings } from "../redux/actions/Account";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
+import {
+    ICompany,
+    INews,
+    INewsData,
+    IUpdateCompany,
+    IUpdateUser,
+} from "./app_types";
+import {
+    IAuthorizerUser,
+    IChangePassword,
+    IRegisterCompany,
+    IRegisterUser,
+} from "./auth_types";
 const publicIp = require("react-public-ip");
 
 declare module "axios" {
@@ -106,36 +119,35 @@ export class AuthApi extends HttpClient {
         super(`${API_AUTH_URL}`);
     }
 
-    public Login = async (data) =>
+    public Login = async (data: IAuthorizerUser) =>
         this.instance.post("/AuthorizeUser", {
             ...data,
             info: (await publicIp.v4()) || ("" as string),
         });
 
-    public RegisterCompany = (data) =>
+    public RegisterCompany = (data: IRegisterCompany) =>
         this.instance.post("/RegisterCompany", data);
-
-    public RefreshToken = () => this.instance.get("/RefreshToken");
 
     public SendActivationCode = () => this.instance.get("/SendActivationCode");
 
-    public ResetPassword = async (Email) =>
+    public ResetPassword = async (Email: string) =>
         this.instance.post("/ResetPassword", {
             Email,
-            info: (await publicIp.v4()) || "",
+            info: (await publicIp.v4()) || ("" as string),
         });
 
-    public RegisterUser = (data) => this.instance.post("/RegisterUser", data);
+    public RegisterUser = (data: IRegisterUser) =>
+        this.instance.post("/RegisterUser", data);
 
-    public GetManagedToken = (CompanyID) =>
+    public GetManagedToken = (CompanyID: number) =>
         this.instance.get("/GetManagedToken", {
             params: { CompanyID },
         });
 
-    public ChangePassword = (data) =>
+    public ChangePassword = (data: IChangePassword) =>
         this.instance.post("/ChangePassword", data);
 
-    public ActivateUser = (params) =>
+    public ActivateUser = (params: string) =>
         this.instance.get("/ActivateUser", {
             params,
         });
@@ -146,53 +158,54 @@ export class ClientApi extends HttpClient {
         super(`${API_APP_URL}`);
     }
     public GetProfileInfo = () => this.instance.get("/GetProfileInfo");
-    public UpdateUser = async (data) => this.instance.post("/UpdateUser", data);
+    public UpdateUser = async (data: IUpdateUser) =>
+        this.instance.post("/UpdateUser", data);
 
     public GetMarketAppList = () => this.instance.get("/GetMarketAppList");
 
-    public DeactivateApp = (AppID) =>
+    public DeactivateApp = (AppID: number) =>
         this.instance.post("/DeactivateApp", {
             AppID,
         });
 
-    public ActivateApp = (AppID) =>
+    public ActivateApp = (AppID: number) =>
         this.instance.post("/ActivateApp", {
             AppID,
         });
 
-    public GetAppLicenses = (AppType) =>
+    public GetAppLicenses = (AppType: number) =>
         this.instance.get("/GetAppLicensesList", {
             params: {
                 AppType,
             },
         });
 
-    public RequestLicense = (AppType, Quantity) =>
+    public RequestLicense = (AppType: number, Quantity: number) =>
         this.instance.get("/RequestAppLicense", {
             params: { AppType, Quantity },
         });
 
-    public ReleaseLicense = (LicenseID) =>
+    public ReleaseLicense = (LicenseID: number) =>
         this.instance.get("/ReleaseAppLicense", {
             params: { LicenseID },
         });
 
-    public DeleteLicense = (LicenseID) =>
+    public DeleteLicense = (LicenseID: number) =>
         this.instance.get("/DeleteAppLicense", {
             params: { LicenseID },
         });
 
-    public GenerateApiKey = (AppID) =>
+    public GenerateApiKey = (AppID: number) =>
         this.instance.post("/GenerateApiKey", {
             AppID,
         });
 
-    public DeleteApiKey = (AppID) =>
+    public DeleteApiKey = (AppID: number) =>
         this.instance.post("/DeleteApiKey", {
             AppID,
         });
 
-    public GenerateLicenseActivationCode = (AppID) =>
+    public GenerateLicenseActivationCode = (AppID: number) =>
         this.instance.post("/GenerateLicenseActivationCode", {
             AppID,
         });
@@ -201,13 +214,13 @@ export class ClientApi extends HttpClient {
 
     public GetCompanyInfo = () => this.instance.get("/GetCompanyInfo");
 
-    public UpdateCompany = async (data) =>
+    public UpdateCompany = async (data: ICompany) =>
         this.instance.post("/UpdateCompany", {
             ...data,
             info: await publicIp.v4(),
         });
 
-    public ChangeUserStatus = (ID, Status) =>
+    public ChangeUserStatus = (ID: number, Status: number) =>
         this.instance.get("/ChangeUserStatus", {
             params: {
                 ID,
@@ -215,14 +228,14 @@ export class ClientApi extends HttpClient {
             },
         });
 
-    public GetNews = (AppType) =>
+    public GetNews = (AppType: number) =>
         this.instance.get("/GetNews", {
             params: {
                 AppType,
             },
         });
 
-    public UpdateNews = (NewsData) =>
+    public UpdateNews = (NewsData: INewsData) =>
         this.instance.post("/UpdateNews", {
             NewsData,
         });

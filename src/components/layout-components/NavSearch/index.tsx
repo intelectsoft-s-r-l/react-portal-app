@@ -1,30 +1,41 @@
-import React from 'react';
+import React from "react";
 import { connect } from "react-redux";
-import {
-	CloseOutlined,
-} from '@ant-design/icons';
-import Utils from '../../../utils'
-import SearchInput from './SearchInput';
+import { CloseOutlined } from "@ant-design/icons";
+import Utils from "../../../utils";
+import SearchInput from "./SearchInput";
+import { IState } from "../../../redux/reducers";
+import { ITheme } from "../../../redux/reducers/Theme";
 
-export const NavSearch = (props) => {
-	const { active, close, headerNavColor } = props
-	const mode = Utils.getColorContrast(headerNavColor)
-
-	return (
-		<div className={`nav-search ${active ? 'nav-search-active' : ''} ${mode}`} style={{backgroundColor: headerNavColor}}>
-			<div className="d-flex align-items-center w-100">
-				<SearchInput close={close} active={active}/>
-			</div>
-			<div className="nav-close" onClick={close}>
-				<CloseOutlined />
-			</div>
-		</div>
-	)
+interface INavSearch {
+    active?: any;
+    close?: any;
+    headerNavColor?: string;
 }
 
-const mapStateToProps = ({ theme }) => {
-  const { headerNavColor } =  theme;
-  return { headerNavColor }
+export const NavSearch = (props: INavSearch) => {
+    const { active, close, headerNavColor } = props;
+    const mode = Utils.getColorContrast(headerNavColor);
+
+    return (
+        <div
+            className={`nav-search ${
+                active ? "nav-search-active" : ""
+            } ${mode}`}
+            style={{ backgroundColor: headerNavColor }}
+        >
+            <div className="d-flex align-items-center w-100">
+                <SearchInput close={close} active={active} />
+            </div>
+            <div className="nav-close" onClick={close}>
+                <CloseOutlined />
+            </div>
+        </div>
+    );
 };
 
-export default connect(mapStateToProps, {})(NavSearch)
+const mapStateToProps = ({ theme }: IState) => {
+    const { headerNavColor } = theme as ITheme;
+    return { headerNavColor };
+};
+
+export default connect(mapStateToProps, {})(NavSearch);

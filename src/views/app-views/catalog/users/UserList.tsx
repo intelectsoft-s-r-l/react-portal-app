@@ -23,8 +23,10 @@ import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
 import { ClientApi } from "../../../../api";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
+import Localization from "../../../../utils/Localization";
 
-enum status {
+export enum status {
     inactive = 0,
     active = 1,
     disabled = 2,
@@ -66,7 +68,6 @@ interface ReduxStoreProps {
 }
 
 export class UserList extends Component<ReduxStoreProps> {
-    /* MAKE THIS FROM API CALL */
     state: UserListStateProps = {
         users: [],
         usersToSearch: [],
@@ -81,10 +82,6 @@ export class UserList extends Component<ReduxStoreProps> {
         loading: false,
     };
 
-    sortData = (arr) => {
-        return arr.slice().sort((a, b) => a.ID - b.ID);
-    };
-
     getUsersInfo = () => {
         return new ClientApi().GetUserList().then((data: any) => {
             if (data) {
@@ -93,7 +90,7 @@ export class UserList extends Component<ReduxStoreProps> {
                     const filteredUsers = data.Users.filter(
                         (user) => user.ID !== this.props.ID
                     );
-                    const evaluatedArray = this.sortData(filteredUsers);
+                    const evaluatedArray = Utils.sortData(filteredUsers, "ID");
                     this.setState((prev) => ({
                         ...prev,
                         usersToSearch: [...evaluatedArray],
@@ -168,33 +165,6 @@ export class UserList extends Component<ReduxStoreProps> {
         });
     };
 
-    // deleteRow = (row) => {
-    //     const objKey = "ID";
-    //     let data = this.state.users;
-    //     Modal.confirm({
-    //         title: `Are you sure you want to delete ${
-    //             this.state.selectedRows.length
-    //         } ${this.state.selectedRows.length > 1 ? "users" : "user"}?`,
-    //         onOk: () => {
-    //             if (this.state.selectedRows.length > 1) {
-    //                 this.state.selectedRows.forEach((elm) => {
-    //                     this.handleUserStatus(elm.ID, status.deleted);
-    //                     data = Utils.deleteArrayRow(data, objKey, elm.ID);
-    //                     this.setState({ users: data });
-    //                     this.setState({ selectedRows: [] });
-    //                 });
-    //             } else {
-    //                 for (const elm of row) {
-    //                     data = Utils.deleteArrayRow(data, objKey, elm.ID);
-    //                     this.setState({ selectedRows: [], selectedKeys: [] });
-    //                     this.setState({ users: data });
-    //                     this.handleUserStatus(elm.ID, status.deleted);
-    //                 }
-    //             }
-    //         },
-    //     });
-    // };
-
     handleUserStatus = (userId: number, status: number) => {
         return new ClientApi().ChangeUserStatus(userId, status);
     };
@@ -214,20 +184,26 @@ export class UserList extends Component<ReduxStoreProps> {
                 >
                     <Flex alignItems="center">
                         <ArrowRightOutlined />
-                        <span className="ml-2">Send activation code</span>
+                        <span className="ml-2">
+                            <IntlMessage id={"users.SendCode"} />
+                        </span>
                     </Flex>
                 </Menu.Item>
             )}
             <Menu.Item onClick={() => this.showUserProfile(row)}>
                 <Flex alignItems="center">
                     <EyeOutlined />
-                    <span className="ml-2">View Details</span>
+                    <span className="ml-2">
+                        <IntlMessage id={"users.ViewDetails"} />
+                    </span>
                 </Flex>
             </Menu.Item>
             <Menu.Item onClick={() => this.showEditModal(row)}>
                 <Flex alignItems="center">
                     <EditOutlined />
-                    <span className="ml-2">Edit</span>
+                    <span className="ml-2">
+                        <IntlMessage id={"users.Edit"} />
+                    </span>
                 </Flex>
             </Menu.Item>
             {row.Status === status.inactive ||
@@ -248,14 +224,16 @@ export class UserList extends Component<ReduxStoreProps> {
                 >
                     <Flex alignItems="center">
                         <CheckCircleOutlined />
-                        <span className="ml-2">Activate</span>
+                        <span className="ml-2">
+                            <IntlMessage id={"users.Activate"} />
+                        </span>
                     </Flex>
                 </Menu.Item>
             ) : (
                 <Menu.Item
                     onClick={async () => {
                         Modal.confirm({
-                            title: `Are you sure you want to disable this user?`,
+                            title: <Localization msg={"users.Disable.Title"} />,
                             onOk: async () => {
                                 await this.handleUserStatus(
                                     row.ID,
@@ -268,26 +246,12 @@ export class UserList extends Component<ReduxStoreProps> {
                 >
                     <Flex alignItems="center">
                         <CloseCircleOutlined />
-                        <span className="ml-2">Disable</span>
+                        <span className="ml-2">
+                            <IntlMessage id={"users.Disable"} />
+                        </span>
                     </Flex>
                 </Menu.Item>
             )}
-            {/* <Menu.Item
-                onClick={async () => {
-                    Modal.confirm({
-                        title: `Are you sure you want to delete this user?`,
-                        onOk: async () => {
-                            await this.handleUserStatus(row.ID, status.deleted);
-                            await this.getUsersInfo();
-                        },
-                    });
-                }}
-            >
-                <Flex alignItems="center">
-                    <DeleteOutlined />
-                    <span className="ml-2">Delete</span>
-                </Flex>
-            </Menu.Item> */}
         </Menu>
     );
 
@@ -302,14 +266,8 @@ export class UserList extends Component<ReduxStoreProps> {
         const { users, userProfileVisible, selectedUser } = this.state;
 
         const tableColumns = [
-            // {
-            //     title: "ID",
-            //     dataIndex: "ID",
-            //     sorter: { compare: (a, b) => a.ID - b.ID },
-            //     defaultSortOrder: "ascend" as SortOrder,
-            // },
             {
-                title: "User",
+                title: <IntlMessage id={"users.table.User"} />,
                 dataIndex: "name",
                 render: (_, record: UsersProps) => (
                     <div className="d-flex">
@@ -330,11 +288,11 @@ export class UserList extends Component<ReduxStoreProps> {
                 },
             },
             {
-                title: "Role",
+                title: <IntlMessage id={"users.table.Role"} />,
                 render: () => "User",
             },
             {
-                title: "Last online",
+                title: <IntlMessage id={"users.table.LastOnline"} />,
                 dataIndex: "LastAuthorize",
                 render: (LastAuthorize) => (
                     <span>
@@ -347,24 +305,26 @@ export class UserList extends Component<ReduxStoreProps> {
                 ),
             },
             {
-                title: "Status",
+                title: <IntlMessage id={"users.table.Status"} />,
                 dataIndex: "Status",
                 render: (Status) => (
                     <Tag
                         className="text-capitalize"
                         color={
-                            Status === 1
+                            Status === status.active
                                 ? "cyan"
-                                : Status === 2
+                                : Status === status.disabled
                                 ? "red"
                                 : "orange"
                         }
                     >
-                        {Status === 1
-                            ? "Active"
-                            : Status === 2
-                            ? "Disabled"
-                            : "Not Activated"}
+                        {Status === 1 ? (
+                            <IntlMessage id={"users.status.Active"} />
+                        ) : Status === 2 ? (
+                            <IntlMessage id={"users.status.Disabled"} />
+                        ) : (
+                            <IntlMessage id={"users.status.NotActivated"} />
+                        )}
                     </Tag>
                 ),
                 sorter: {
@@ -408,9 +368,18 @@ export class UserList extends Component<ReduxStoreProps> {
                                             )
                                         }
                                     >
-                                        {this.state.selectedRows.length > 1
-                                            ? `Activate (${this.state.selectedRows.length})`
-                                            : "Activate"}
+                                        {this.state.selectedRows.length > 1 ? (
+                                            <>
+                                                <IntlMessage
+                                                    id={"users.Activate"}
+                                                />{" "}
+                                                (
+                                                {this.state.selectedRows.length}
+                                                )
+                                            </>
+                                        ) : (
+                                            <IntlMessage id="users.Activate" />
+                                        )}
                                     </Button>
                                     <Button
                                         type="ghost"
@@ -422,29 +391,19 @@ export class UserList extends Component<ReduxStoreProps> {
                                             )
                                         }
                                     >
-                                        {this.state.selectedRows.length > 1
-                                            ? `Disable (${this.state.selectedRows.length})`
-                                            : "Disable"}
-                                    </Button>
-                                    {/* <Tooltip
-                                        title={`${
-                                            this.state.selectedRows.length > 1
-                                                ? `Delete (${this.state.selectedRows.length})`
-                                                : "Delete"
-                                        }`}
-                                    >
-                                        <Button
-                                            className="mr-3"
-                                            danger
-                                            onClick={() =>
-                                                this.deleteRow(
-                                                    this.state.selectedRows
+                                        {this.state.selectedRows.length > 1 ? (
+                                            <>
+                                                <IntlMessage
+                                                    id={"users.Disable"}
+                                                />{" "}
+                                                (
+                                                {this.state.selectedRows.length}
                                                 )
-                                            }
-                                        >
-                                            <DeleteOutlined />
-                                        </Button>
-                                    </Tooltip> */}
+                                            </>
+                                        ) : (
+                                            <IntlMessage id={"users.Disable"} />
+                                        )}
+                                    </Button>
                                 </>
                             )}
                             <Button
@@ -453,7 +412,8 @@ export class UserList extends Component<ReduxStoreProps> {
                                 icon={<PlusCircleOutlined />}
                                 block
                             >
-                                Invite user
+                                {" "}
+                                <IntlMessage id={"users.Invite"} />
                             </Button>
                         </Flex>
                     </div>

@@ -9,6 +9,7 @@ import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
 import { ClientApi } from "../../../../../api";
 import { useSelector } from "react-redux";
+import Localization from "../../../../../utils/Localization";
 
 const CreateNews = ({ getNews, AppType, visible, close }) => {
     const [form] = Form.useForm();
@@ -28,7 +29,11 @@ const CreateNews = ({ getNews, AppType, visible, close }) => {
             message.loading({ content: UPLOADING, key: "updatable" });
         }
         if (info.file.status === "done") {
-            message.success({ content: DONE, key: "updatable", duration: 1 });
+            message.success({
+                content: <Localization msg={DONE} />,
+                key: "updatable",
+                duration: 1,
+            });
             Utils.getBase64(info.file.originFileObj, (imageUrl) => {
                 setPhoto(imageUrl);
             });

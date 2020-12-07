@@ -41,6 +41,7 @@
   "auth.MessageRedirect": "Вас перенаправят через несколько секунд...",
   "auth.validate.Success": "Поздравляем! Вы успешно зарегестрировались!",
   "auth.validate.Error": "Вы не подтвердили регистрацию! Проверьте электронную почту!",
+  "auth.ActivateAccount": "Ваш аккаунт не активирован. Нажминте кнопку внизу если хотите получить новое сообщение о подтерждении!",
 
 
   "sidenav.home": "Главная",
@@ -83,11 +84,14 @@
 
 
   "message.language.success": "Вы успешно сменили язык!",
-  "message.AccountSettings.Uploading": "Загружается...",
-  "message.AccountSettings.Uploaded": "Загрузилось!",
-  "message.AccountSettings.Updating": "Обновляется...",
-  "message.AccountSettings.Done": "Готово!",
-  "message.AccountSettings.Error": "Что-то пошло не так! Попробуйте еще раз!",
+  "message.Uploading": "Загружается...",
+  "message.Uploaded": "Загрузилось!",
+  "message.Updating": "Обновляется...",
+  "message.Done": "Готово!",
+  "message.Error": "Что-то пошло не так! Попробуйте еще раз!",
+    "message.NewPassword": "Новый пароль был отправлен на на вашу почту!",
+    "message.EmailConfirmMsg": "Сообщение о подтверждении реигстрации было отправлено на почту!",
+    "message.ExpireTime": "Время истекло! Перенаправляем вас на страницу аутентификации...",
 
 
 
@@ -164,5 +168,32 @@
   "theme.Light": "Светлая",
   "theme.Dark": "Темная",
   "theme.Locale": "Локализация",
-  "theme.Language": "Язык"
+  "theme.Language": "Язык",
+
+    "users.ViewDetails": "Просмотр",
+    "users.Edit": "Редактирование",
+    "users.Disable": "Деактивировать",
+    "users.Activate": "Активировать",
+    "users.SendCode": "Отправить код активации",
+    "users.Disable.Title": "Вы уверены что хотите деактивировать этого пользователя?",
+    "users.Invite": "Пригласить",
+    "users.table.User": "Пользователь",
+    "users.table.Role": "Роль",
+    "users.table.LastOnline": "Посл. визит",
+    "users.table.Status": "Статус",
+    "users.status.Active": "Активный",
+    "users.status.NotActivated": "Неактивный",
+    "users.status.Disabled": "Деактивированный",
+
+    "app.Delete": "Удалить",
+    "app.status.Installed": "Установлено",
+    "app.status.NotInstalled": "Установить",
+    "app.Generate": "Генерировать",
+    "app.Refresh": "Обновить",
+    "app.Description": "Описание",
+    "app.Packages": "Тарифы",
+    "app.News": "Новости",
+    "app.Licenses": "Лицензии",
+    "app.Devices": "Устройства",
+    "app.News.Add": "Добавить"
 }

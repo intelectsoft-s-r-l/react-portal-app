@@ -2,6 +2,9 @@ import { Button, Col, Input, message, Modal, Row } from "antd";
 import React from "react";
 import { ClientApi } from "../../../../api";
 import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
+import IntlMessage from "../../../../components/util-components/IntlMessage";
+import { DONE } from "../../../../constants/Messages";
+import Localization from "../../../../utils/Localization";
 
 const IntegrationsHeader = ({
     apiKey,
@@ -25,7 +28,15 @@ const IntegrationsHeader = ({
                                     .then(() => {
                                         setApiKey(data.ApiKey);
                                     })
-                                    .then(() => message.success("Done!", 1.5));
+                                    .then(() =>
+                                        message.success({
+                                            content: (
+                                                <Localization msg={DONE} />
+                                            ),
+                                            key: "updatable",
+                                            duration: 1,
+                                        })
+                                    );
                             }
                         }
                     });
@@ -82,7 +93,7 @@ const IntegrationsHeader = ({
                         className="mt-3"
                         onClick={() => generateApiKey()}
                     >
-                        Generate
+                        <IntlMessage id="app.Generate" />
                     </Button>
                     <Button
                         danger
@@ -102,7 +113,7 @@ const IntegrationsHeader = ({
                         className="mt-3"
                         onClick={() => generateActivationCode()}
                     >
-                        Refresh
+                        <IntlMessage id="app.Refresh" />
                     </Button>
                 </Col>
             </Row>
