@@ -22,7 +22,7 @@ interface INews {
     NewsList: INewsList[];
 }
 
-const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }) => {
+const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
     return (
         <Card style={{ padding: 30 }}>
             <Flex justifyContent="between" alignItems="center" className="mt-3">
@@ -85,8 +85,8 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }) => {
         </Card>
     );
 };
-const News = ({ AppType }) => {
-    const getNews = (AppType) => {
+const News = ({ AppType }: any) => {
+    const getNews = (AppType: number) => {
         return new ClientApi().GetNews(AppType).then((data: any) => {
             if (data) {
                 if (data.ErrorCode === 0) setNews(data.NewsList);
@@ -130,9 +130,9 @@ const News = ({ AppType }) => {
             <List style={{ maxWidth: 1000, margin: "0 auto" }}>
                 {news && news.length > 0 ? (
                     news
-                        .sort((a, b) => a.ID - b.ID)
+                        .sort((a: any, b: any) => a.ID - b.ID)
                         .reverse()
-                        .map((elm) => (
+                        .map((elm: any) => (
                             <ArticleItem
                                 newsData={elm}
                                 key={elm.ID}

@@ -5,11 +5,11 @@ import React from "react";
 import "./app_list.scss";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import { Link, NavLink } from "react-router-dom";
-const AppNavGrid = (props) => {
+const AppNavGrid = (props: any) => {
     return (
         <>
             {props.apps &&
-                props.apps.map((app) => (
+                props.apps.map((app: any) => (
                     <Menu.Item
                         key={app.Name}
                         className="app-list__item"

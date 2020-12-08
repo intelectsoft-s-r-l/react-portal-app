@@ -21,6 +21,8 @@ import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Localization from "../../../utils/Localization";
 import { ACTIVATE_ACCOUNT } from "../../../constants/Messages";
+import { IState } from "../../../redux/reducers";
+import { IAuth } from "../../../redux/reducers/Auth";
 
 const LoginForm = ({
     otherSignIn,
@@ -47,9 +49,9 @@ const LoginForm = ({
     updateSettings,
     authorizeUser,
     getProfileInfo,
-}) => {
+}: any) => {
     const history = useHistory();
-    const onLogin = ({ email, password }) => {
+    const onLogin = ({ email, password }: { [key: string]: string }) => {
         const onLoginSettingsObject = {
             Email: email,
             Password: Utils.encryptInput(password, API_PUBLIC_KEY),
@@ -217,7 +219,7 @@ LoginForm.defaultProps = {
     showForgetPassword: false,
 };
 
-const mapStateToProps = ({ auth, account }) => {
+const mapStateToProps = ({ auth, account }: IState) => {
     const {
         loading,
         message,
@@ -225,7 +227,7 @@ const mapStateToProps = ({ auth, account }) => {
         token,
         redirect,
         userActivated,
-    } = auth;
+    } = auth as IAuth;
     // const { avatar, name, userName, email, dateOfBirth, phoneNumber } = account;
     return {
         loading,

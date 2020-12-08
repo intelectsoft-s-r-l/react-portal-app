@@ -3,7 +3,7 @@ import { Dropdown, Menu } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 export interface IEllipsisDropdown {
     menu: any;
-    placement: any;
+    placement?: any;
 }
 const EllipsisDropdown = ({
     menu = <Menu />,

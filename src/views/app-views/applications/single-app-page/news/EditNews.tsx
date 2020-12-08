@@ -8,8 +8,7 @@ import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
 import { ClientApi } from "../../../../../api";
 import Localization from "../../../../../utils/Localization";
-
-const EditNews = ({ visible, close, news, getNews }) => {
+const EditNews = ({ visible, close, news, getNews }: any) => {
     const [form] = Form.useForm();
     const [Photo, setPhoto] = useState<any>();
     const [Header, setHeader] = useState<any>();
@@ -25,7 +24,7 @@ const EditNews = ({ visible, close, news, getNews }) => {
         }
     }, [news]);
 
-    const onUploadAvatar = (info) => {
+    const onUploadAvatar = (info: any) => {
         if (info.file.status === "uploading") {
             message.loading({
                 content: <Localization msg={UPLOADING} />,
@@ -38,13 +37,13 @@ const EditNews = ({ visible, close, news, getNews }) => {
                 key: "updatable",
                 duration: 1,
             });
-            Utils.getBase64(info.file.originFileObj, (imageUrl) => {
+            Utils.getBase64(info.file.originFileObj, (imageUrl: any) => {
                 setPhoto(imageUrl);
             });
         }
     };
 
-    const onFinish = (values) => {
+    const onFinish = (values: any) => {
         setLoading(true);
         setTimeout(() => {
             return new ClientApi()
@@ -116,7 +115,9 @@ const EditNews = ({ visible, close, news, getNews }) => {
                         <Form.Item label={"Header"}>
                             <TextEditor
                                 apps={Header}
-                                handleEditorChange={(field) => setHeader(field)}
+                                handleEditorChange={(field: any) =>
+                                    setHeader(field)
+                                }
                             />
                         </Form.Item>
                     </Col>
@@ -124,7 +125,7 @@ const EditNews = ({ visible, close, news, getNews }) => {
                         <Form.Item label={"Content"}>
                             <TextEditor
                                 apps={Content}
-                                handleEditorChange={(field) =>
+                                handleEditorChange={(field: any) =>
                                     setContent(field)
                                 }
                             />

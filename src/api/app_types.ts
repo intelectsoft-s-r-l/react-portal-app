@@ -33,26 +33,28 @@ export interface IUpdateUser {
 }
 
 export interface ICompany {
-    BIC?: string;
-    Bank?: string;
-    CommercialName?: string;
-    CountryID?: number;
-    CreateDate?: string;
-    Email?: string;
-    IBAN?: string;
-    ID?: number;
-    IDNO?: string;
-    IsVATPayer?: boolean;
-    JuridicalAddress?: string;
-    JuridicalName?: string;
-    Logo?: string;
-    OfficeAddress?: string;
-    PhoneNumber?: string;
-    PostalCode?: string;
-    ShortName?: string;
-    Status?: number;
-    VATCode?: string;
-    WebSite?: string;
+    Company: {
+        BIC?: string;
+        Bank?: string;
+        CommercialName?: string;
+        CountryID?: number;
+        CreateDate?: string;
+        Email?: string;
+        IBAN?: string;
+        ID?: number;
+        IDNO?: string;
+        IsVATPayer?: boolean;
+        JuridicalAddress?: string;
+        JuridicalName?: string;
+        Logo?: string;
+        OfficeAddress?: string;
+        PhoneNumber?: string;
+        PostalCode?: string;
+        ShortName?: string;
+        Status?: number;
+        VATCode?: string;
+        WebSite?: string;
+    };
 }
 
 export interface IUpdateCompany {

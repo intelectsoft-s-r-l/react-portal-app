@@ -3,6 +3,8 @@ import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
+import { IState } from "../../../../../redux/reducers";
+import { IMarketAppList } from "../../AppInterface";
 import { MarketContext } from "../MarketContext";
 import LoadingWizard from "./LoadingWizard";
 import TermsModal from "./TermsWizard";
@@ -16,9 +18,9 @@ const steps = [
         content: <LoadingWizard />,
     },
 ];
-const InstallWizard = ({ apps }) => {
-    const loading = useSelector((state) => state["auth"].loading);
-    const locale = useSelector((state) => state["theme"].locale);
+const InstallWizard = ({ apps }: any) => {
+    const loading = useSelector((state: IState) => state["auth"]!.loading);
+    const locale = useSelector((state: IState) => state["theme"]!.locale);
     const {
         current,
         visibleModal,

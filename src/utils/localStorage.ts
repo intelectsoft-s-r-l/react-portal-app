@@ -1,7 +1,8 @@
 import { APP_NAME } from "../configs/AppConfig";
+import { IState } from "../redux/reducers";
 
 // Pass in Redux store's state to save it to the user's browser local storage
-export const saveState = (state) => {
+export const saveState = (state: IState) => {
     try {
         localStorage.getItem("client") && localStorage.removeItem("client");
         localStorage.getItem("state") && localStorage.removeItem("state");

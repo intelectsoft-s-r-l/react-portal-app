@@ -15,27 +15,12 @@ import {
     UPLOADING,
 } from "../../../constants/Messages";
 import IntlMessage from "../../../components/util-components/IntlMessage";
+import { IState } from "../../../redux/reducers";
+import { IAccount } from "../../../redux/reducers/Account";
+import { ITheme } from "../../../redux/reducers/Theme";
+import { IAuth } from "../../../redux/reducers/Auth";
 
-interface EditProfileProps {
-    CompanyID: number;
-    Email: string;
-    FirstName: string;
-    ID: number;
-    LastName: string;
-    Password: string;
-    PhoneNumber: string;
-    Photo: any;
-    Token: string;
-    UiLanguage: number;
-    locale: string;
-    account: {};
-    token: string;
-    updateSettings: any;
-    setProfileInfo: any;
-    onChangeMask: any;
-}
-
-class EditProfile extends Component<EditProfileProps> {
+class EditProfile extends Component {
     render() {
         let {
             account,
@@ -48,9 +33,10 @@ class EditProfile extends Component<EditProfileProps> {
             Photo,
             setProfileInfo,
             token,
-        } = this.props;
+            onChangeMask,
+        } = this.props as any;
 
-        const onFinish = (values) => {
+        const onFinish = (values: any) => {
             const key = "updatable";
             message.loading({
                 content: <Localization msg={UPDATING} />,
@@ -72,11 +58,11 @@ class EditProfile extends Component<EditProfileProps> {
             }, 1000);
         };
 
-        const onFinishFailed = (errorInfo) => {
+        const onFinishFailed = (errorInfo: any) => {
             console.log("Failed:", errorInfo);
         };
 
-        const onUploadAavater = (info) => {
+        const onUploadAavater = (info: any) => {
             const key = "updatable";
             if (info.file.status === "uploading") {
                 message.loading({
@@ -87,7 +73,7 @@ class EditProfile extends Component<EditProfileProps> {
                 return;
             }
             if (info.file.status === "done") {
-                Utils.getBase64(info.file.originFileObj, (imageUrl) => {
+                Utils.getBase64(info.file.originFileObj, (imageUrl: any) => {
                     setProfileInfo({
                         Token: token,
                         User: { ...account, Photo: imageUrl },
@@ -230,9 +216,7 @@ class EditProfile extends Component<EditProfileProps> {
                                         >
                                             <MaskedInput
                                                 mask="+(111) 111 111 11"
-                                                onChange={
-                                                    this.props.onChangeMask
-                                                }
+                                                onChange={onChangeMask}
                                             />
                                         </Form.Item>
                                     </Col>
@@ -255,7 +239,7 @@ const mapDispatchToProps = {
     setProfileInfo,
 };
 
-const mapStateToProps = ({ account, theme, auth }) => {
+const mapStateToProps = ({ account, theme, auth }: IState) => {
     const {
         CompanyID,
         Email,
@@ -264,9 +248,9 @@ const mapStateToProps = ({ account, theme, auth }) => {
         LastName,
         PhoneNumber,
         Photo,
-    } = account;
-    const { locale } = theme;
-    const { token } = auth;
+    } = account as IAccount;
+    const { locale } = theme as ITheme;
+    const { token } = auth as IAuth;
     return {
         account,
         CompanyID,

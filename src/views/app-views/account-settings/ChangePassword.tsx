@@ -8,6 +8,9 @@ import AppLocale from "../../../lang";
 import { AuthApi } from "../../../api";
 import { DONE } from "../../../constants/Messages";
 import Localization from "../../../utils/Localization";
+import { IState } from "../../../redux/reducers";
+import { IAuth } from "../../../redux/reducers/Auth";
+import { ITheme } from "../../../redux/reducers/Theme";
 
 export class ChangePassword extends Component {
     private changePasswordFormRef = React.createRef<any>();
@@ -15,13 +18,12 @@ export class ChangePassword extends Component {
         loading: false,
     };
 
-    onFinish = ({ currentPassword, newPassword }) => {
-        console.log({
-            NewPassword: Utils.encryptInput(newPassword, API_PUBLIC_KEY),
-            OldPassword: Utils.encryptInput(currentPassword, API_PUBLIC_KEY),
-            Token: this.props["token"],
-        });
-        const currentAppLocale = AppLocale[this.props["locale"]];
+    onFinish = ({
+        currentPassword,
+        newPassword,
+    }: {
+        [key: string]: string;
+    }) => {
         this.setState({ loading: true });
         setTimeout(() => {
             this.setState({ loading: false });
@@ -171,9 +173,9 @@ export class ChangePassword extends Component {
     }
 }
 
-const mapStateToProps = ({ auth, theme }) => {
-    const { token } = auth;
-    const { locale } = theme;
+const mapStateToProps = ({ auth, theme }: IState) => {
+    const { token } = auth as IAuth;
+    const { locale } = theme as ITheme;
     return { token, locale };
 };
 export default connect(mapStateToProps, null)(ChangePassword);

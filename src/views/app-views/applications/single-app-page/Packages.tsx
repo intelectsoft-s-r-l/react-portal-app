@@ -4,7 +4,7 @@ import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 
-const ItemHeader = ({ packages }) => {
+const ItemHeader = ({ packages }: any) => {
     return (
         <>
             <Flex>
@@ -27,7 +27,7 @@ const ItemHeader = ({ packages }) => {
     );
 };
 
-const ItemFooter = ({ packages }) => (
+const ItemFooter = ({ packages }: any) => (
     <div>
         <h5>Pricing</h5>
         <Flex justifyContent="center">
@@ -40,7 +40,7 @@ const ItemFooter = ({ packages }) => (
         </Flex>
     </div>
 );
-const CardItem = ({ packages }) => {
+const CardItem = ({ packages }: any) => {
     return (
         <Card>
             <ItemHeader packages={packages} />
@@ -60,8 +60,8 @@ const Packages = ({ packages }: any) => {
                 <Row gutter={16}>
                     {packages.length > 0 ? (
                         packages
-                            .sort((a, b) => a.SortIndex - b.SortIndex)
-                            .map((elm) => (
+                            .sort((a: any, b: any) => a.SortIndex - b.SortIndex)
+                            .map((elm: any) => (
                                 <Col
                                     xs={24}
                                     sm={24}

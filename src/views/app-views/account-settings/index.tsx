@@ -61,7 +61,7 @@ const SettingOption = ({ match, location }: ISettingOption) => {
 
 const SettingContent = ({ match }: ISettingOption) => {
     const [mask, setMask] = useState<any>();
-    const onChangeMask = (e) => {
+    const onChangeMask = (e: any) => {
         setMask({ [e.taget.name]: e.target.value });
     };
     return (

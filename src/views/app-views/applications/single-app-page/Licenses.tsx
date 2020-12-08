@@ -14,9 +14,9 @@ import { ClientApi } from "../../../../api";
 import CreateLicenseModal from "../CreateLicenseModal";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 
-const Licenses = ({ AppType }) => {
+const Licenses = ({ AppType }: { [key: string]: any }) => {
     const { confirm } = Modal;
-    const getAppLicenses = (AppType) => {
+    const getAppLicenses = (AppType: number) => {
         return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
             if (data) {
                 if (data.ErrorCode === 0) {
@@ -35,13 +35,13 @@ const Licenses = ({ AppType }) => {
     const [createLicenseVisible, setCreateLicenseVisible] = useState(false);
     const [licenses, setLicenses] = useState<any>([]);
     const [licensesToSearch, setLicensesToSearch] = useState<any>([]);
-    const deleteLicense = (LicenseID) => {
+    const deleteLicense = (LicenseID: number) => {
         return new ClientApi().DeleteLicense(LicenseID);
     };
-    const releaseLicense = (LicenseID) => {
+    const releaseLicense = (LicenseID: number) => {
         return new ClientApi().ReleaseLicense(LicenseID);
     };
-    const deleteRow = (row) => {
+    const deleteRow = (row: any) => {
         const objKey = "ID";
         let data = licenses;
         Modal.confirm({
@@ -50,7 +50,7 @@ const Licenses = ({ AppType }) => {
             }?`,
             onOk: () => {
                 if (selectedRows.length > 1) {
-                    selectedRows.forEach((elm) => {
+                    selectedRows.forEach((elm: any) => {
                         deleteLicense(elm.ID);
                         data = Utils.deleteArrayRow(data, objKey, elm.ID);
                         setLicenses(data);
@@ -68,7 +68,7 @@ const Licenses = ({ AppType }) => {
             },
         });
     };
-    const onSearch = (e) => {
+    const onSearch = (e: any) => {
         const value = e.currentTarget.value;
         const searchArray = value ? licenses : licensesToSearch;
         const data = Utils.wildCardSearch(searchArray, value);
@@ -82,7 +82,7 @@ const Licenses = ({ AppType }) => {
         {
             title: "Create Date",
             dataIndex: "CreateDate",
-            render: (CreateDate) => (
+            render: (CreateDate: any) => (
                 <span>
                     {CreateDate
                         ? moment
@@ -99,7 +99,7 @@ const Licenses = ({ AppType }) => {
         {
             title: "Status",
             dataIndex: "Status",
-            render: (Status) => (
+            render: (Status: number) => (
                 <div>
                     <Tag
                         className="mr-0"
@@ -112,7 +112,7 @@ const Licenses = ({ AppType }) => {
         },
         {
             dataIndex: "actions",
-            render: (_, elm) => (
+            render: (_: any, elm: any) => (
                 <div className="text-right">
                     {elm.Status === 0 && (
                         <Tooltip title="Release">

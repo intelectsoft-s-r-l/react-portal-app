@@ -10,8 +10,9 @@ import TextEditor from "../TextEditor";
 import { ClientApi } from "../../../../../api";
 import { useSelector } from "react-redux";
 import Localization from "../../../../../utils/Localization";
+import { IState } from "../../../../../redux/reducers";
 
-const CreateNews = ({ getNews, AppType, visible, close }) => {
+const CreateNews = ({ getNews, AppType, visible, close }: any) => {
     const [form] = Form.useForm();
     useEffect(() => {
         if (!visible) return;
@@ -23,8 +24,10 @@ const CreateNews = ({ getNews, AppType, visible, close }) => {
     const [header, setHeader] = useState<string>();
     const [content, setContent] = useState<string>();
     const [loading, setLoading] = useState<boolean>(false);
-    const CompanyID = useSelector((state) => state["account"].CompanyID);
-    const onUploadAvatar = (info) => {
+    const CompanyID = useSelector(
+        (state: IState) => state["account"]!.CompanyID
+    );
+    const onUploadAvatar = (info: any) => {
         if (info.file.status === "uploading") {
             message.loading({ content: UPLOADING, key: "updatable" });
         }
@@ -34,12 +37,12 @@ const CreateNews = ({ getNews, AppType, visible, close }) => {
                 key: "updatable",
                 duration: 1,
             });
-            Utils.getBase64(info.file.originFileObj, (imageUrl) => {
+            Utils.getBase64(info.file.originFileObj, (imageUrl: string) => {
                 setPhoto(imageUrl);
             });
         }
     };
-    const onFinish = (values) => {
+    const onFinish = (values: any) => {
         setLoading(true);
         setTimeout(() => {
             return new ClientApi()
@@ -112,7 +115,9 @@ const CreateNews = ({ getNews, AppType, visible, close }) => {
                         <Form.Item label={"Header"}>
                             <TextEditor
                                 apps={header}
-                                handleEditorChange={(field) => setHeader(field)}
+                                handleEditorChange={(field: any) =>
+                                    setHeader(field)
+                                }
                             />
                         </Form.Item>
                     </Col>
@@ -120,7 +125,7 @@ const CreateNews = ({ getNews, AppType, visible, close }) => {
                         <Form.Item label={"Content"}>
                             <TextEditor
                                 apps={content}
-                                handleEditorChange={(field) =>
+                                handleEditorChange={(field: any) =>
                                     setContent(field)
                                 }
                             />

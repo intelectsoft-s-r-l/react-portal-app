@@ -18,7 +18,7 @@ const ForgotPassword = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
 
-    const onSend = async ({ email }) => {
+    const onSend = async ({ email }: any) => {
         setLoading(true);
         setTimeout(async () => {
             setLoading(false);

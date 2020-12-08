@@ -3,10 +3,15 @@ import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import { ClientApi } from "../../../api";
 
-const CreateLicenseModal = ({ AppType, visible, close, getAppLicenses }) => {
+const CreateLicenseModal = ({
+    AppType,
+    visible,
+    close,
+    getAppLicenses,
+}: any) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form] = Form.useForm();
-    const onFinish = (values) => {
+    const onFinish = (values: any) => {
         return new ClientApi()
             .RequestLicense(AppType, values.Quantity)
             .then((data: any) => {

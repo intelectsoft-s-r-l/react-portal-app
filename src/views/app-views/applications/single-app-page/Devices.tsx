@@ -21,7 +21,7 @@ const tableColumns = [
     {
         title: "Last Access Date",
         dataIndex: "LastAccessDate",
-        render: (date) => (
+        render: (date: any) => (
             <span>
                 {date
                     ? moment.unix(date.slice(6, 16)).format("DD/MM/YYYY")
@@ -38,9 +38,9 @@ const tableColumns = [
         dataIndex: "Workplace",
     },
 ];
-const Devices = ({ AppType }) => {
+const Devices = ({ AppType }: any) => {
     const [devices, setDevices] = useState<any>();
-    const getDevices = (AppType) => {
+    const getDevices = (AppType: any) => {
         return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
             if (data) {
                 if (data.ErrorCode === 0) {

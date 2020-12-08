@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import {
+    Route,
+    Switch,
+    Redirect,
+    withRouter,
+    RouteComponentProps,
+} from "react-router-dom";
 import { connect } from "react-redux";
 import AppLayout from "../layouts/app-layout";
 import AuthLayout from "../layouts/auth-layout";
@@ -12,8 +18,11 @@ import {
     APP_PREFIX_PATH,
     AUTH_PREFIX_PATH,
 } from "../configs/AppConfig";
+import { IState } from "../redux/reducers";
+import { ITheme } from "../redux/reducers/Theme";
+import { IAuth } from "../redux/reducers/Auth";
 
-function RouteInterceptor({ children, isAuthenticated, ...rest }) {
+function RouteInterceptor({ children, isAuthenticated, ...rest }: any) {
     return (
         <Route
             {...rest}
@@ -32,10 +41,10 @@ function RouteInterceptor({ children, isAuthenticated, ...rest }) {
         />
     );
 }
-
-export const Views = (props) => {
-    const { locale, location, token, signOut } = props;
-    const currentAppLocale = AppLocale[locale];
+interface IViews extends ITheme, IAuth, RouteComponentProps {}
+export const Views = (props: IViews) => {
+    const { locale, location, token } = props;
+    const currentAppLocale = locale ? AppLocale[locale] : "en";
     useEffect(() => {
         localStorage.getItem(`${APP_NAME}`) || signOut();
     }, [localStorage.getItem(`${APP_NAME}`)]);
@@ -64,9 +73,9 @@ export const Views = (props) => {
     );
 };
 
-const mapStateToProps = ({ theme, auth }) => {
-    const { locale } = theme;
-    const { token } = auth;
+const mapStateToProps = ({ theme, auth }: IState): ITheme & IAuth => {
+    const { locale } = theme as ITheme;
+    const { token } = auth as IAuth;
     return { locale, token };
 };
 

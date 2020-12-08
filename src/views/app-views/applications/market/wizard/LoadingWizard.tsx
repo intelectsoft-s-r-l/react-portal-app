@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ClientApi } from "../../../../../api";
 import Loading from "../../../../../components/shared-components/Loading";
 import { hideLoading, showLoading } from "../../../../../redux/actions/Auth";
+import { IState } from "../../../../../redux/reducers";
 import { MarketContext } from "../MarketContext";
 
 const LoadingWizard = () => {
     const { selectedApp, getMarketApps } = useContext(MarketContext);
-    const loading = useSelector((state) => state["auth"].loading);
+    const loading = useSelector((state: IState) => state["auth"]!.loading);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(showLoading());

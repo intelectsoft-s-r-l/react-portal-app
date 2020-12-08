@@ -1,6 +1,7 @@
 import { Checkbox, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { IState } from "../../../../../redux/reducers";
 import { MarketContext } from "../MarketContext";
 
 const TermsWizard = () => {
@@ -15,12 +16,13 @@ const TermsWizard = () => {
             setTerms({ en: "", ru: "", ro: "" });
         }
     }, []);
-    const locale = useSelector((state) => state["theme"].locale);
+    const locale =
+        useSelector((state: IState) => state["theme"]!.locale) ?? "en";
     return (
         <>
             <div
                 style={{ maxHeight: 500, overflowY: "scroll" }}
-                dangerouslySetInnerHTML={{ __html: terms && terms[locale] }}
+                dangerouslySetInnerHTML={{ __html: terms[locale] }}
             />
             <Checkbox
                 checked={isAccepted}

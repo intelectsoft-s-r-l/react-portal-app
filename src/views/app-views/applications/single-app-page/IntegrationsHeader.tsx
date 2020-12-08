@@ -12,7 +12,7 @@ const IntegrationsHeader = ({
     AppID,
     activationCode,
     setActivationCode,
-}) => {
+}: any) => {
     const { confirm } = Modal;
     const generateApiKey = () => {
         confirm({

@@ -4,8 +4,9 @@ import ErrorOne from "../../errors/error-page-1/index";
 import Success from "../success/index";
 import { AuthApi } from "../../../../api";
 import { API_AUTH_URL } from "../../../../configs/AppConfig";
+import { RouteComponentProps } from "react-router-dom";
 
-const Validate = ({ history, match }) => {
+const Validate = ({ history, match }: RouteComponentProps) => {
     const [isValidated, setIsValidated] = useState(false);
     useLayoutEffect(() => {
         axios

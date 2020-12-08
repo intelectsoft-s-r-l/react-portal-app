@@ -21,6 +21,9 @@ import { ClientApi } from "../../../../api";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
 import Localization from "../../../../utils/Localization";
+import { ICompany } from "../../../../api/app_types";
+import { IState } from "../../../../redux/reducers";
+import { ITheme } from "../../../../redux/reducers/Theme";
 class CompanyForm extends Component<{ [key: string]: any }> {
     inputMaskRef = React.createRef() as any;
     state = {} as { [key: string]: any };
@@ -38,7 +41,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         });
     };
 
-    public updateCompany = (values) => {
+    public updateCompany = (values: any) => {
         const updatedInfo = { Company: { ...this.state, ...values } };
         return new ClientApi()
             .UpdateCompany(updatedInfo)
@@ -60,7 +63,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
     }
 
     render() {
-        const onFinish = async (values) => {
+        const onFinish = async (values: any) => {
             console.log(values);
             const key = "updatable";
             message.loading({
@@ -72,11 +75,11 @@ class CompanyForm extends Component<{ [key: string]: any }> {
             }, 1000);
         };
 
-        const onFinishFailed = (errorInfo) => {
+        const onFinishFailed = (errorInfo: any) => {
             console.log("Failed:", errorInfo);
         };
 
-        const onUploadAavater = (info) => {
+        const onUploadAavater = (info: any) => {
             const key = "updatable";
             if (info.file.status === "uploading") {
                 message.loading({
@@ -87,10 +90,13 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                 return;
             }
             if (info.file.status === "done") {
-                Utils.getBase64(info.file.originFileObj, async (imageUrl) => {
-                    const newImage = { Logo: imageUrl };
-                    this.updateCompany(newImage);
-                });
+                Utils.getBase64(
+                    info.file.originFileObj,
+                    async (imageUrl: string) => {
+                        const newImage = { Logo: imageUrl };
+                        this.updateCompany(newImage);
+                    }
+                );
             }
         };
 
@@ -408,8 +414,8 @@ const mapDispatchToProps = {
     updateSettings,
 };
 
-const mapStateToProps = ({ theme }) => {
-    const { locale } = theme;
+const mapStateToProps = ({ theme }: IState) => {
+    const { locale } = theme as ITheme;
     return {
         locale,
     };

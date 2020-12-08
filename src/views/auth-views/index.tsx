@@ -1,8 +1,8 @@
 import React, { lazy, Suspense } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, RouteComponentProps } from "react-router-dom";
 import Loading from "../../components/shared-components/Loading";
 
-export const AuthViews = ({ match }) => {
+export const AuthViews = ({ match }: RouteComponentProps) => {
     return (
         <Suspense fallback={<Loading cover="page" />}>
             <Switch>

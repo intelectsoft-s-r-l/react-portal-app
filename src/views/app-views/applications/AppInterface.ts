@@ -10,18 +10,19 @@ export interface IPackages {
 }
 export interface IMarketAppList {
     AppType: number;
-    ApyKey: string;
-    MarketID: number;
+    ApyKey?: string;
+    ID: number;
     ApplicationID: number;
-    LicenseActivationCode: number;
-    LicenseActivationCodeValidHours: number;
-    LicenseActivationCodeValidTo: string;
-    LongDescription: string;
+    LicenseActivationCode?: number;
+    LicenseActivationCodeValidHours?: number;
+    LicenseActivationCodeValidTo?: string;
+    LongDescription?: string;
     Name: string;
-    Packages: IPackages[];
-    Photo: string;
-    ShortDescription: string;
+    Packages?: IPackages[];
+    Photo?: string;
+    ShortDescription?: string;
     Status: number;
+    BackOfficeURI?: string;
 }
 export interface IApplications {
     ErrorCode: number;

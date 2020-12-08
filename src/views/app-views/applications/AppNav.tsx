@@ -4,13 +4,14 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Empty, Tooltip } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loading from "../../../components/shared-components/Loading";
 import { ClientApi } from "../../../api";
 import { IMarketAppList } from "./AppInterface";
+import { IState } from "../../../redux/reducers";
 
 const AppStoreNav = () => {
-    const loading = useSelector((state) => state["auth"].loading);
+    const loading = useSelector((state: IState) => state["auth"]!.loading);
     const [apps, setApps] = useState<IMarketAppList[]>([]);
     const renderApps = () => {
         return new ClientApi().GetMarketAppList().then((data: any) => {

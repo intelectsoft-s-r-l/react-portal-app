@@ -31,10 +31,12 @@ const GridItem = ({
     const [shortDesc, setShortDesc] = useState<ITextEditor>();
     const locale = useSelector((state: any) => state["theme"].locale);
     useEffect(() => {
-        try {
-            setShortDesc(JSON.parse(window.atob(data.ShortDescription)));
-        } catch {
-            setShortDesc({ en: "", ru: "", ro: "" });
+        if (data.ShortDescription) {
+            try {
+                setShortDesc(JSON.parse(window.atob(data.ShortDescription)));
+            } catch {
+                setShortDesc({ en: "", ru: "", ro: "" });
+            }
         }
     }, []);
     return (

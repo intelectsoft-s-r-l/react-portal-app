@@ -25,6 +25,9 @@ import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { AuthApi } from "../../../api";
 import { EMAIL_CONFIRM_MSG } from "../../../constants/Messages";
+import { IState } from "../../../redux/reducers";
+import { IAuth } from "../../../redux/reducers/Auth";
+import { ITheme } from "../../../redux/reducers/Theme";
 
 const rules = {
     JuridicalName: [
@@ -75,8 +78,8 @@ const rules = {
             required: true,
             message: <IntlMessage id={"auth.MessageInsertConfirmPassword"} />,
         },
-        ({ getFieldValue }) => ({
-            validator(rule, value) {
+        ({ getFieldValue }: any) => ({
+            validator(rule: any, value: any) {
                 if (!value || getFieldValue("password") === value) {
                     return Promise.resolve();
                 }
@@ -88,7 +91,7 @@ const rules = {
     ],
 } as { [key: string]: any };
 
-export const RegisterForm = (props) => {
+export const RegisterForm = (props: any) => {
     const {
         showLoading,
         token,
@@ -108,13 +111,17 @@ export const RegisterForm = (props) => {
     const [isCapsLock, setIsCapsLock] = useState<boolean>();
     const [isVATPayer, setIsVATPayer] = useState<boolean>(false);
 
-    const handlePasswordKeyPress = (event) => {
+    const handlePasswordKeyPress = (
+        event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
         if (event.getModifierState("CapsLock") && !isCapsLock) {
             setIsCapsLock(true);
         }
     };
 
-    const handleDocumentKeyDown = (event) => {
+    const handleDocumentKeyDown = (
+        event: React.KeyboardEvent<HTMLInputElement>
+    ) => {
         if (event.key === "CapsLock" && !event.ctrlKey && isCapsLock) {
             setIsCapsLock(false);
         }
@@ -132,7 +139,7 @@ export const RegisterForm = (props) => {
                         values.password,
                         API_PUBLIC_KEY
                     ),
-                } as { [key: string]: any };
+                };
                 showLoading();
                 setTimeout(() => {
                     hideLoading();
@@ -321,9 +328,9 @@ export const RegisterForm = (props) => {
     );
 };
 
-const mapStateToProps = ({ auth, theme }) => {
-    const { loading, message, showMessage, token, redirect } = auth;
-    const { locale } = theme;
+const mapStateToProps = ({ auth, theme }: IState) => {
+    const { loading, message, showMessage, token, redirect } = auth as IAuth;
+    const { locale } = theme as ITheme;
     return { loading, message, showMessage, token, redirect, locale };
 };
 

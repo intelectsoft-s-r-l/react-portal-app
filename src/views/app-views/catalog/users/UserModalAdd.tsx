@@ -9,11 +9,11 @@ export const UserModalAdd = ({
     visible,
     CompanyID,
     getUsersInfo,
-}) => {
+}: any) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
 
-    const registerUser = (values) => {
+    const registerUser = (values: any) => {
         return new AuthApi().RegisterUser({
             ...values,
             CompanyID,
@@ -21,7 +21,7 @@ export const UserModalAdd = ({
         });
     };
 
-    const onFinish = (values) => {
+    const onFinish = (values: any) => {
         registerUser(values).then((data: any) => {
             if (data) {
                 if (data.ErrorCode === 0) {

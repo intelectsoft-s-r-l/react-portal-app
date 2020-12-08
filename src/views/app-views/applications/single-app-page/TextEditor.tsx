@@ -1,8 +1,7 @@
 import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import Loading from "../../../../components/shared-components/Loading";
 
-const TextEditor = ({ apps, handleEditorChange }) => {
+const TextEditor = ({ apps, handleEditorChange }: any) => {
     return (
         <Editor
             apiKey="n212ulx8ltmzy5gkpquyp9dx6gf2ui0xvzzuod2h2r6iwygg"

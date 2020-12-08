@@ -6,7 +6,7 @@ class Utils {
      * @param {String} name - Username
      * @return {String} 2 characters string
      */
-    static getNameInitial(name) {
+    static getNameInitial(name: string) {
         let initials = name.match(/\b\w/g) || [];
         return (
             (initials.shift() || "") + (initials.pop() || "")
@@ -19,7 +19,7 @@ class Utils {
      * @param {String} path - Location path you looking for e.g '/app/dashboards/analytic'
      * @return {Object} object that contained the path string
      */
-    static getRouteInfo(navTree, path) {
+    static getRouteInfo(navTree: any, path: any): any {
         if (navTree.path === path) {
             return navTree;
         }
@@ -40,21 +40,21 @@ class Utils {
      * @param {String} hex - Hex color code e.g '#3e82f7'
      * @return {String} 'dark' or 'light'
      */
-    static getColorContrast(hex) {
+    static getColorContrast(hex: any) {
         const threshold = 130;
         const hRed = hexToR(hex);
         const hGreen = hexToG(hex);
         const hBlue = hexToB(hex);
-        function hexToR(h) {
+        function hexToR(h: any) {
             return parseInt(cutHex(h).substring(0, 2), 16);
         }
-        function hexToG(h) {
+        function hexToG(h: any) {
             return parseInt(cutHex(h).substring(2, 4), 16);
         }
-        function hexToB(h) {
+        function hexToB(h: any) {
             return parseInt(cutHex(h).substring(4, 6), 16);
         }
-        function cutHex(h) {
+        function cutHex(h: any) {
             return h.charAt(0) === "#" ? h.substring(1, 7) : h;
         }
         const cBrightness = (hRed * 299 + hGreen * 587 + hBlue * 114) / 1000;
@@ -71,7 +71,7 @@ class Utils {
      * @param {Number} percent - Percentage -100 to 100, positive for lighten, negative for darken
      * @return {String} Darken or lighten color
      */
-    static shadeColor(color, percent) {
+    static shadeColor(color: any, percent: any) {
         let R = parseInt(color.substring(1, 3), 16);
         let G = parseInt(color.substring(3, 5), 16);
         let B = parseInt(color.substring(5, 7), 16);
@@ -97,7 +97,7 @@ class Utils {
      * @param {any} negative - value that return when negative
      * @return {any} positive or negative value based on param
      */
-    static getSignNum(number, positive, negative) {
+    static getSignNum(number: number, positive: any, negative: any) {
         if (number > 0) {
             return positive;
         }
@@ -114,7 +114,7 @@ class Utils {
      * @param {String} key - object key for compare
      * @return {any} a value minus b value
      */
-    static antdTableSorter(a, b, key) {
+    static antdTableSorter(a: any, b: any, key: any) {
         if (typeof a[key] === "number" && typeof b[key] === "number") {
             return a[key] - b[key];
         }
@@ -134,10 +134,10 @@ class Utils {
      * @param {any} value  - value that excluded from filter
      * @return {Array} a value minus b value
      */
-    static filterArray(list, key, value) {
+    static filterArray(list: any, key: any, value: any) {
         let data = list;
         if (list) {
-            data = list.filter((item) => item[key] === value);
+            data = list.filter((item: any) => item[key] === value);
         }
         return data;
     }
@@ -149,10 +149,10 @@ class Utils {
      * @param {any} value  - target value
      * @return {Array} Array that removed target object
      */
-    static deleteArrayRow(list, key, value) {
+    static deleteArrayRow(list: any, key: any, value: any) {
         let data = list;
         if (list) {
-            data = list.filter((item) => item[key] !== value);
+            data = list.filter((item: any) => item[key] !== value);
         }
         return data;
     }
@@ -163,8 +163,8 @@ class Utils {
      * @param {Array} list - array for search
      * @return {Array} array of object contained keyword
      */
-    static wildCardSearch(list, input) {
-        const searchText = (item) => {
+    static wildCardSearch(list: any, input: any) {
+        const searchText = (item: any) => {
             for (let key in item) {
                 if (item[key] == null) {
                     continue;
@@ -179,7 +179,7 @@ class Utils {
                 }
             }
         };
-        list = list.filter((value) => searchText(value));
+        list = list.filter((value: any) => searchText(value));
         return list;
     }
 
@@ -188,7 +188,7 @@ class Utils {
      * @param {Object} screens - Grid.useBreakpoint() from antd
      * @return {Array} array of breakpoint size
      */
-    static getBreakPoint(screens) {
+    static getBreakPoint(screens: any) {
         let breakpoints: any[] = [];
         for (const key in screens) {
             if (screens.hasOwnProperty(key)) {
@@ -201,7 +201,7 @@ class Utils {
         return breakpoints;
     }
 
-    static encryptInput(input, publicKey) {
+    static encryptInput(input: string, publicKey: string) {
         const jsEncrypt = new JSEncrypt({});
         jsEncrypt.setPublicKey(publicKey);
         return jsEncrypt.encrypt(input);
@@ -212,13 +212,13 @@ class Utils {
      * @param {String} img  The img that was uploaded
      * @param {Function} callback Callback function to render img
      */
-    static getBase64(img, callback) {
+    static getBase64(img: any, callback: any) {
         const reader = new FileReader();
         reader.addEventListener("load", () => callback(reader.result));
         reader.readAsDataURL(img);
     }
 
-    static beforeUpload(file) {
+    static beforeUpload(file: any) {
         const isJpgOrPng =
             file.type === "image/jpeg" || file.type === "image/png";
         if (!isJpgOrPng) {
@@ -232,7 +232,7 @@ class Utils {
         return isJpgOrPng && isLt2M;
     }
 
-    static dummyRequest({ file, onSuccess }) {
+    static dummyRequest({ file, onSuccess }: any) {
         setTimeout(() => {
             onSuccess("ok");
         });
@@ -244,8 +244,8 @@ class Utils {
      * @param {String | Number} key - any value to search
      * @return {Array} - a new sorted array
      */
-    static sortData(array, key) {
-        return array.slice().sort((a, b) => a[key] - b[key]);
+    static sortData(array: any, key: any) {
+        return array.slice().sort((a: any, b: any) => a[key] - b[key]);
     }
 }
 

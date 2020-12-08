@@ -25,6 +25,10 @@ import { ClientApi } from "../../../../api";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import Localization from "../../../../utils/Localization";
+import { IState } from "../../../../redux/reducers";
+import { IAuth } from "../../../../redux/reducers/Auth";
+import { IAccount } from "../../../../redux/reducers/Account";
+import { ITheme } from "../../../../redux/reducers/Theme";
 
 export enum status {
     inactive = 0,
@@ -45,6 +49,13 @@ export interface UsersProps {
     Status: number;
     UiLanguage: number;
 }
+interface IUserListStoreProps {
+    token?: string;
+    locale?: string;
+    CompanyID?: number;
+    ID?: number;
+    sendActivationCode: (ID: number) => void;
+}
 
 interface UserListStateProps {
     users: UsersProps[];
@@ -59,15 +70,8 @@ interface UserListStateProps {
     registerUserModalVisible: boolean;
     loading: boolean;
 }
-interface ReduxStoreProps {
-    token: string;
-    locale: string;
-    ID: number;
-    CompanyID: number;
-    sendActivationCode: any;
-}
 
-export class UserList extends Component<ReduxStoreProps> {
+export class UserList extends Component<IUserListStoreProps> {
     state: UserListStateProps = {
         users: [],
         usersToSearch: [],
@@ -88,7 +92,7 @@ export class UserList extends Component<ReduxStoreProps> {
                 const { ErrorCode } = data;
                 if (ErrorCode === 0) {
                     const filteredUsers = data.Users.filter(
-                        (user) => user.ID !== this.props.ID
+                        (user: any) => user.ID !== this.props.ID
                     );
                     const evaluatedArray = Utils.sortData(filteredUsers, "ID");
                     this.setState((prev) => ({
@@ -146,7 +150,7 @@ export class UserList extends Component<ReduxStoreProps> {
         });
     };
 
-    toggleStatusRow = async (row, statusNumber) => {
+    toggleStatusRow = async (row: any, statusNumber: number) => {
         Modal.confirm({
             title: `Are you sure you want to ${
                 statusNumber === 0 || statusNumber === 2
@@ -155,7 +159,7 @@ export class UserList extends Component<ReduxStoreProps> {
             } ${row.length} ${row.length > 1 ? "users" : "user"}?`,
             onOk: async () => {
                 await Promise.all(
-                    row.map(async (elm) => {
+                    row.map(async (elm: any) => {
                         await this.handleUserStatus(elm.ID, statusNumber);
                     })
                 );
@@ -168,7 +172,7 @@ export class UserList extends Component<ReduxStoreProps> {
     handleUserStatus = (userId: number, status: number) => {
         return new ClientApi().ChangeUserStatus(userId, status);
     };
-    dropdownMenu = (row) => (
+    dropdownMenu = (row: any) => (
         <Menu>
             {row.Status === 0 && (
                 <Menu.Item
@@ -255,7 +259,7 @@ export class UserList extends Component<ReduxStoreProps> {
         </Menu>
     );
 
-    onSearch = (e) => {
+    onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         const searchArray = value ? this.state.users : this.state.usersToSearch;
         const data = Utils.wildCardSearch(searchArray, value);
@@ -269,7 +273,7 @@ export class UserList extends Component<ReduxStoreProps> {
             {
                 title: <IntlMessage id={"users.table.User"} />,
                 dataIndex: "name",
-                render: (_, record: UsersProps) => (
+                render: (_: any, record: UsersProps) => (
                     <div className="d-flex">
                         <AvatarStatus
                             src={record.Photo}
@@ -280,7 +284,7 @@ export class UserList extends Component<ReduxStoreProps> {
                     </div>
                 ),
                 sorter: {
-                    compare: (a, b) => {
+                    compare: (a: any, b: any) => {
                         a = a.FirstName.toLowerCase();
                         b = b.FirstName.toLowerCase();
                         return a > b ? -1 : b > a ? 1 : 0;
@@ -294,7 +298,7 @@ export class UserList extends Component<ReduxStoreProps> {
             {
                 title: <IntlMessage id={"users.table.LastOnline"} />,
                 dataIndex: "LastAuthorize",
-                render: (LastAuthorize) => (
+                render: (LastAuthorize: any) => (
                     <span>
                         {LastAuthorize
                             ? moment
@@ -307,7 +311,7 @@ export class UserList extends Component<ReduxStoreProps> {
             {
                 title: <IntlMessage id={"users.table.Status"} />,
                 dataIndex: "Status",
-                render: (Status) => (
+                render: (Status: number) => (
                     <Tag
                         className="text-capitalize"
                         color={
@@ -328,12 +332,12 @@ export class UserList extends Component<ReduxStoreProps> {
                     </Tag>
                 ),
                 sorter: {
-                    compare: (a, b) => a.Status - b.Status,
+                    compare: (a: any, b: any) => a.Status - b.Status,
                 },
             },
             {
                 dataIndex: "actions",
-                render: (_, elm: UsersProps) => (
+                render: (_: any, elm: UsersProps) => (
                     <div className="text-right">
                         <EllipsisDropdown menu={this.dropdownMenu(elm)} />
                     </div>
@@ -461,10 +465,10 @@ export class UserList extends Component<ReduxStoreProps> {
     }
 }
 
-const mapStateToProps = ({ auth, theme, account }) => {
-    const { token } = auth;
-    const { CompanyID, ID } = account;
-    const { locale } = theme;
+const mapStateToProps = ({ auth, theme, account }: IState) => {
+    const { token } = auth as IAuth;
+    const { CompanyID, ID } = account as IAccount;
+    const { locale } = theme as ITheme;
     return { token, locale, CompanyID, ID };
 };
 

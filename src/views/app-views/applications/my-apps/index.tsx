@@ -10,10 +10,12 @@ import { ClientApi } from "../../../../api";
 import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IApplications, IMarketAppList, ITextEditor } from "../AppInterface";
+import { IState } from "../../../../redux/reducers";
 
-const GridItem = ({ deactivateApp, data }) => {
+const GridItem = ({ deactivateApp, data }: any) => {
     const [shortDesc, setShortDesc] = useState<ITextEditor>();
-    const locale = useSelector((state) => state["theme"].locale);
+    const locale =
+        useSelector((state: IState) => state["theme"]!.locale) ?? "en";
     useEffect(() => {
         try {
             setShortDesc(JSON.parse(window.atob(data.ShortDescription)));
@@ -89,7 +91,7 @@ const MyAppList = () => {
         getMarketAppList();
     }, []);
 
-    const deactivateApp = (AppID) => {
+    const deactivateApp = (AppID: number) => {
         confirm({
             title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
             onOk: () => {

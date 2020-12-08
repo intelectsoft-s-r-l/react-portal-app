@@ -15,6 +15,7 @@ import { ClientApi } from "../../../../api";
 import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
+import { IState } from "../../../../redux/reducers";
 
 enum app {
     Retail = 10,
@@ -22,7 +23,7 @@ enum app {
     Expert = 30,
     MyDiscount = 60,
 }
-const AppOption = ({ match, location, AppType }) => {
+const AppOption = ({ match, location, AppType }: any) => {
     return (
         <>
             {AppType == app.Retail ||
@@ -107,7 +108,14 @@ const AppOption = ({ match, location, AppType }) => {
     );
 };
 
-const AppRoute = ({ match, packages, LongDescription, AppType }) => {
+const AppRoute = ({
+    match,
+    packages,
+    LongDescription,
+    AppType,
+}: {
+    [key: string]: any;
+}) => {
     return (
         <Switch>
             <Redirect
@@ -141,11 +149,12 @@ const AppRoute = ({ match, packages, LongDescription, AppType }) => {
     );
 };
 
-const AboutItem = ({ appData }) => {
+const AboutItem = ({ appData }: any) => {
     const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
     const [shortDesc, setShortDesc] = useState<any>();
     const [longDesc, setLongDesc] = useState<any>();
-    const locale = useSelector((state) => state["theme"].locale);
+    const locale =
+        useSelector((state: IState) => state["theme"]!.locale) ?? "en";
     useEffect(() => {
         try {
             setShortDesc(JSON.parse(window.atob(ShortDescription)));
@@ -194,7 +203,7 @@ const AboutItem = ({ appData }) => {
     );
 };
 
-const SingleAppPage = ({ match, location }) => {
+const SingleAppPage = ({ match, location }: any) => {
     const { appID } = match.params;
     const [app, setApp] = useState<any>();
     const [apiKey, setApiKey] = useState<string>();
@@ -206,7 +215,7 @@ const SingleAppPage = ({ match, location }) => {
                 const { ErrorCode, MarketAppList } = data;
                 if (ErrorCode === 0) {
                     const currentApp = MarketAppList.find(
-                        (app) => app.AppType == appID
+                        (app: any) => app.AppType == appID
                     );
                     setApp(currentApp);
                     if (currentApp) {

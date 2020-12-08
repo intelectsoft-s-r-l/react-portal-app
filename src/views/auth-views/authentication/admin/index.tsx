@@ -1,24 +1,27 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
 import {
     APP_PREFIX_PATH,
     AUTH_PREFIX_PATH,
 } from "../../../../configs/AppConfig";
 import { getProfileInfo } from "../../../../redux/actions/Account";
 import { authenticated } from "../../../../redux/actions/Auth";
+import { IState } from "../../../../redux/reducers";
 
-const Admin = ({ match, history }) => {
+const Admin = ({ match, history }: RouteComponentProps) => {
     const dispatch = useDispatch();
-    const Token = useSelector((state) => state["auth"].token);
-    const redirect = useSelector((state) => state["auth"].redirect);
+    const Token = useSelector((state: IState) => state["auth"]!.token);
 
     useEffect(() => {
-        dispatch(authenticated(match.params.Token));
-        dispatch(getProfileInfo());
-        if (Token) {
-            history.push(APP_PREFIX_PATH);
+        if ("Token" in match.params) {
+            dispatch(authenticated(match.params["Token"]));
+            dispatch(getProfileInfo());
+            if (Token) {
+                history.push(APP_PREFIX_PATH);
+            }
+            history.push(AUTH_PREFIX_PATH);
         }
-        history.push(AUTH_PREFIX_PATH);
     }, []);
     return <div>Loading...</div>;
 };

@@ -13,7 +13,7 @@ export const UserModalEdit = ({
     onCancel,
     locale,
     getUsersInfo,
-}) => {
+}: any) => {
     const [form] = Form.useForm();
 
     /*  Destroy initialValues of form after Modal is closed */
@@ -22,11 +22,11 @@ export const UserModalEdit = ({
         form.resetFields();
     }, [visible, form]);
 
-    const updateUser = (data) => {
+    const updateUser = (data: any) => {
         return new ClientApi().UpdateUser(data);
     };
     const currentAppLocale = AppLocale[locale];
-    const onFinish = (values) => {
+    const onFinish = (values: any) => {
         const key = "updatable";
         message.loading({
             content: <Localization msg={UPDATING} />,
