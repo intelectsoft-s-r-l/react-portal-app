@@ -18,7 +18,7 @@ import {
 export interface IAuth {
     loading?: boolean;
     message?: string;
-    showMessage?: string;
+    showMessage?: boolean;
     redirect?: string;
     token?: string;
     isAuth?: boolean;

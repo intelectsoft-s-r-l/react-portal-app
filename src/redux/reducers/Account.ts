@@ -2,7 +2,7 @@ import { CLEAR_INFO, UPDATE_SETTINGS } from "../constants/Account";
 import { REMOVE_AVATAR } from "../constants/Account";
 
 export interface IAccount {
-    CompanyID?: number;
+    CompanyID: number;
     Email?: string;
     FirstName?: string;
     ID?: number;

@@ -41,9 +41,12 @@ function RouteInterceptor({ children, isAuthenticated, ...rest }: any) {
         />
     );
 }
-interface IViews extends ITheme, IAuth, RouteComponentProps {}
+interface IDispatch {
+    signOut: any;
+}
+interface IViews extends ITheme, IAuth, RouteComponentProps, IDispatch {}
 export const Views = (props: IViews) => {
-    const { locale, location, token } = props;
+    const { locale, location, token, signOut } = props;
     const currentAppLocale = locale ? AppLocale[locale] : "en";
     useEffect(() => {
         localStorage.getItem(`${APP_NAME}`) || signOut();

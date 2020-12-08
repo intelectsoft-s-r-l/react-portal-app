@@ -17,7 +17,7 @@ import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 
-enum app {
+enum appTypeEnum {
     Retail = 10,
     Agent = 20,
     Expert = 30,
@@ -26,9 +26,9 @@ enum app {
 const AppOption = ({ match, location, AppType }: any) => {
     return (
         <>
-            {AppType == app.Retail ||
-            AppType == app.Agent ||
-            AppType == app.Expert ? (
+            {AppType == appTypeEnum.Retail ||
+            AppType == appTypeEnum.Agent ||
+            AppType == appTypeEnum.Expert ? (
                 <Menu
                     mode="inline"
                     defaultSelectedKeys={[`${match.url}/:appId/`]}
@@ -59,7 +59,7 @@ const AppOption = ({ match, location, AppType }: any) => {
                         <Link to={"devices"} />
                     </Menu.Item>
                 </Menu>
-            ) : AppType == app.MyDiscount ? (
+            ) : AppType == appTypeEnum.MyDiscount ? (
                 <Menu
                     mode="inline"
                     defaultSelectedKeys={[`${match.url}/:appId/`]}
@@ -242,13 +242,17 @@ const SingleAppPage = ({ match, location }: any) => {
                 <>
                     <AboutItem appData={app} />
 
-                    <IntegrationsHeader
-                        activationCode={activationCode}
-                        setActivationCode={setActivationCode}
-                        AppID={app.ID}
-                        apiKey={apiKey}
-                        setApiKey={setApiKey}
-                    />
+                    {appID == appTypeEnum.Agent ||
+                    appID == appTypeEnum.Expert ||
+                    appID == appTypeEnum.Retail ? (
+                        <IntegrationsHeader
+                            activationCode={activationCode}
+                            setActivationCode={setActivationCode}
+                            AppID={app.ID}
+                            apiKey={apiKey}
+                            setApiKey={setApiKey}
+                        />
+                    ) : null}
                     <InnerAppLayout
                         sideContent={
                             <AppOption

@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import Auth from "./Auth";
+import Auth, { IAuth } from "./Auth";
 import Theme, { ITheme } from "./Theme";
-import Account from "./Account";
+import Account, { IAccount } from "./Account";
 export interface IState {
     theme?: ITheme;
-    account?: { [key: string]: any };
-    auth?: { [key: string]: any };
+    account?: IAccount;
+    auth?: IAuth;
 }
 
 const reducers = combineReducers({

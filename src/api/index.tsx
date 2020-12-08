@@ -2,7 +2,6 @@ import { message } from "antd";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { API_APP_URL, API_AUTH_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
-import { clearSettings } from "../redux/actions/Account";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
 import {
@@ -104,10 +103,15 @@ class HttpClient {
                     }
                 } else {
                     const key = "updatable";
-                    message.loading({ content: EXPIRE_TIME, key }).then(() => {
-                        store.dispatch(signOut());
-                        // store.dispatch(clearSettings());
-                    });
+                    message
+                        .loading({
+                            content:
+                                "Time has expired... Redirecting you to login page!",
+                            key,
+                        })
+                        .then(() => {
+                            store.dispatch(signOut());
+                        });
                 }
             });
         }

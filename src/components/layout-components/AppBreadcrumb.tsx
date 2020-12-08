@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Breadcrumb } from "antd";
 import navigationConfig from "../../configs/NavigationConfig";
 import IntlMessage from "../util-components/IntlMessage";
-import { HomeOutlined } from "@ant-design/icons";
 let breadcrumbData = {
     "/app": <IntlMessage id="home" />,
 } as { [key: string]: any };

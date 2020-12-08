@@ -4,8 +4,6 @@ import { IState } from "../redux/reducers";
 // Pass in Redux store's state to save it to the user's browser local storage
 export const saveState = (state: IState) => {
     try {
-        localStorage.getItem("client") && localStorage.removeItem("client");
-        localStorage.getItem("state") && localStorage.removeItem("state");
         const serializedState = JSON.stringify(state);
         localStorage.setItem(`${APP_NAME}`, serializedState);
     } catch {
@@ -16,8 +14,6 @@ export const saveState = (state: IState) => {
  *  preloadedState parameter of store.js's call to configureStore */
 export const loadState = () => {
     try {
-        localStorage.getItem("client") && localStorage.removeItem("client");
-        localStorage.getItem("state") && localStorage.removeItem("state");
         const serializedState = localStorage.getItem(`${APP_NAME}`);
         if (serializedState === null) {
             return undefined;

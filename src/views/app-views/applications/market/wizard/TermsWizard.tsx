@@ -22,7 +22,7 @@ const TermsWizard = () => {
         <>
             <div
                 style={{ maxHeight: 500, overflowY: "scroll" }}
-                dangerouslySetInnerHTML={{ __html: terms[locale] }}
+                dangerouslySetInnerHTML={{ __html: terms && terms[locale] }}
             />
             <Checkbox
                 checked={isAccepted}
