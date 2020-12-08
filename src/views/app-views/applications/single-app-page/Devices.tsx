@@ -8,7 +8,7 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 const tableColumns = [
     {
         title: "Device Name",
-        dataIndex: "Device Name",
+        dataIndex: "DeviceName",
     },
     {
         title: "OS Type",
@@ -25,7 +25,7 @@ const tableColumns = [
             <span>
                 {date
                     ? moment.unix(date.slice(6, 16)).format("DD/MM/YYYY")
-                    : " "}{" "}
+                    : " "}
             </span>
         ),
     },
