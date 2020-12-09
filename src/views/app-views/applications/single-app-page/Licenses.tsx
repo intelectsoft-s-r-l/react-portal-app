@@ -95,6 +95,13 @@ const Licenses = ({ AppType }: { [key: string]: any }) => {
         {
             title: "Activation Date",
             dataIndex: "LicenseActivationDate",
+            render: (date: any) => (
+                <span>
+                    {date
+                        ? moment.unix(date.slice(6, 16)).format("DD/MM/YYYY")
+                        : " "}
+                </span>
+            ),
         },
         {
             title: "Status",

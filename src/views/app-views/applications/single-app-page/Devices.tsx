@@ -44,7 +44,9 @@ const Devices = ({ AppType }: any) => {
         return new ClientApi().GetAppLicenses(AppType).then((data: any) => {
             if (data) {
                 if (data.ErrorCode === 0) {
-                    setDevices(data.LicenseList);
+                    setDevices(
+                        data.LicenseList.filter((elm: any) => elm.Status !== 0)
+                    );
                 }
             }
         });

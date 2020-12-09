@@ -247,10 +247,12 @@ const SingleAppPage = ({ match, location }: any) => {
                     appID == appTypeEnum.Retail ? (
                         <IntegrationsHeader
                             activationCode={activationCode}
+                            BackOfficeURI={app.BackOfficeURI}
                             setActivationCode={setActivationCode}
                             AppID={app.ID}
                             apiKey={apiKey}
                             setApiKey={setApiKey}
+                            getMarketApp={getMarketApp}
                         />
                     ) : null}
                     <InnerAppLayout

@@ -243,4 +243,9 @@ export class ClientApi extends HttpClient {
         this.instance.post("/UpdateNews", {
             NewsData,
         });
+
+    public UpdateApp = (AppData: any) =>
+        this.instance.post("/UpdateApp", {
+            ...AppData,
+        });
 }

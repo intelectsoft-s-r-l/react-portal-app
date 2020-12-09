@@ -41,35 +41,24 @@ export class CardToolbar extends Component<CardToolbarProps> {
         const { code, expand, isExpand } = this.props;
         const { copied, copyTooltipVisible } = this.state;
         return (
-            <div className="code-box-actions">
-                <span
-                    className={`code-box-icon mr-3 ${
-                        copied && copyTooltipVisible ? "text-success" : ""
-                    }`}
+            <span
+                className={`code-box-icon mr-3 ${
+                    copied && copyTooltipVisible ? "text-success" : ""
+                }`}
+            >
+                <Tooltip
+                    title={copied ? "Copied" : "Copy code"}
+                    visible={copyTooltipVisible}
+                    onVisibleChange={this.onCopyTooltipVisibleChange}
                 >
-                    <Tooltip
-                        title={copied ? "Copied" : "Copy code"}
-                        visible={copyTooltipVisible}
-                        onVisibleChange={this.onCopyTooltipVisibleChange}
+                    <CopyToClipboard
+                        text={code}
+                        onCopy={() => this.handleCodeCopied()}
                     >
-                        <CopyToClipboard
-                            text={code}
-                            onCopy={() => this.handleCodeCopied()}
-                        >
-                            {copied ? <CheckOutlined /> : <SnippetsOutlined />}
-                        </CopyToClipboard>
-                    </Tooltip>
-                </span>
-                <span className="code-box-icon" onClick={expand}>
-                    <Tooltip title={isExpand ? "Hide code" : "Show code"}>
-                        {isExpand ? (
-                            <UpSquareOutlined />
-                        ) : (
-                            <DownSquareOutlined />
-                        )}
-                    </Tooltip>
-                </span>
-            </div>
+                        {copied ? <CheckOutlined /> : <SnippetsOutlined />}
+                    </CopyToClipboard>
+                </Tooltip>
+            </span>
         );
     }
 }
