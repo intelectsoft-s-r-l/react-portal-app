@@ -121,7 +121,7 @@ const Licenses = ({ AppType }: { [key: string]: any }) => {
             dataIndex: "actions",
             render: (_: any, elm: any) => (
                 <div className="text-right">
-                    {elm.Status === 0 && (
+                    {elm.Status === 1 && (
                         <Tooltip title="Release">
                             <Button
                                 icon={<ArrowUpOutlined />}
