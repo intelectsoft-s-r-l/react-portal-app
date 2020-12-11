@@ -25,6 +25,8 @@ import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { IAuthorizerUser } from "../../api/auth_types";
 import WithStringTranslate from "../../utils/translate";
+import axios from "axios";
+import { API_AUTH_URL } from "../../configs/AppConfig";
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
 export const authenticated = (token: string) => ({
@@ -83,7 +85,34 @@ export const authorizeUser = (userData: IAuthorizerUser): ThunkResult<void> => {
                         Modal.confirm({
                             content: WithStringTranslate(ACTIVATE_ACCOUNT),
                             onOk: () => {
-                                dispatch(sendActivationCode());
+                                axios
+                                    .get(`${API_AUTH_URL}/SendActivationCode`, {
+                                        params: {
+                                            Token,
+                                        },
+                                    })
+                                    .then((data: any) => {
+                                        const {
+                                            ErrorMessage,
+                                            ErrorCode,
+                                        } = data;
+                                        if (data) {
+                                            if (ErrorCode === 0)
+                                                message.success({
+                                                    content: WithStringTranslate(
+                                                        EMAIL_CONFIRM_MSG
+                                                    ),
+                                                    key: "updatable",
+                                                    duration: 2,
+                                                });
+                                            else
+                                                dispatch(
+                                                    showAuthMessage(
+                                                        "Error: Internal Error"
+                                                    )
+                                                );
+                                        }
+                                    });
                             },
                         });
                     } else {
