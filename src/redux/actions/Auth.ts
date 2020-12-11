@@ -17,7 +17,6 @@ import {
     SET_TOKEN,
 } from "../constants/Auth";
 import { message, Modal } from "antd";
-import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
 import { ACTIVATE_ACCOUNT, EMAIL_CONFIRM_MSG } from "../../constants/Messages";
 import { AuthApi } from "../../api";
@@ -84,33 +83,28 @@ export const authorizeUser = (userData: IAuthorizerUser): ThunkResult<void> => {
                     } else if (ErrorCode === 108) {
                         Modal.confirm({
                             content: WithStringTranslate(ACTIVATE_ACCOUNT),
-                            onOk: () => {
-                                axios
+                            onOk: async () => {
+                                return await axios
                                     .get(`${API_AUTH_URL}/SendActivationCode`, {
                                         params: {
                                             Token,
                                         },
                                     })
-                                    .then((data: any) => {
-                                        const {
-                                            ErrorMessage,
-                                            ErrorCode,
-                                        } = data;
-                                        if (data) {
-                                            if (ErrorCode === 0)
-                                                message.success({
-                                                    content: WithStringTranslate(
-                                                        EMAIL_CONFIRM_MSG
-                                                    ),
-                                                    key: "updatable",
-                                                    duration: 2,
-                                                });
-                                            else
-                                                dispatch(
-                                                    showAuthMessage(
-                                                        "Error: Internal Error"
-                                                    )
-                                                );
+                                    .then((response: any) => {
+                                        if (response.data.ErrorCode === 0) {
+                                            message.success({
+                                                content: WithStringTranslate(
+                                                    EMAIL_CONFIRM_MSG
+                                                ),
+                                                key: "updatable",
+                                                duration: 2,
+                                            });
+                                        } else {
+                                            dispatch(
+                                                showAuthMessage(
+                                                    "Error: Internal Error"
+                                                )
+                                            );
                                         }
                                     });
                             },
