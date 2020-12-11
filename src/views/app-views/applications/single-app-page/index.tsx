@@ -16,6 +16,7 @@ import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
+import { APP_NAME } from "../../../../configs/AppConfig";
 
 enum appTypeEnum {
     Retail = 10,
@@ -217,6 +218,7 @@ const SingleAppPage = ({ match, location }: any) => {
                     const currentApp = MarketAppList.find(
                         (app: any) => app.AppType == appID
                     );
+                    document.title = `${APP_NAME} - ${currentApp.Name}`;
                     setApp(currentApp);
                     if (currentApp) {
                         setApiKey(currentApp.ApyKey);

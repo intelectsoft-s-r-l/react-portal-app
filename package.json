@@ -41,6 +41,7 @@
     "google-map-react": "^1.1.7",
     "history": "^5.0.0",
     "immutability-helper": "^3.0.1",
+    "jquery": "^3.5.1",
     "jsencrypt": "^3.0.0-rc.1",
     "lodash": "^4.17.20",
     "node-sass": "^4.13.0",

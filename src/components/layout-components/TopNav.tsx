@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { APP_NAME } from "../../configs/AppConfig";
 import { NAV_TYPE_TOP } from "../../constants/ThemeConstant";
 import { IState } from "../../redux/reducers";
 import { ITheme } from "../../redux/reducers/Theme";
 import utils from "../../utils";
+import WithStringTranslate from "../../utils/translate";
 import MenuContent from "./MenuContent";
 
 interface TopNavProps {
@@ -18,6 +20,14 @@ export const TopNav = ({
     routeInfo,
 }: TopNavProps) => {
     const props = { topNavColor, localization };
+    useEffect(() => {
+        if (routeInfo) {
+            const title = routeInfo.title;
+            document.title = `${APP_NAME} - ${WithStringTranslate(title)}`;
+        } else {
+            document.title = APP_NAME;
+        }
+    }, [routeInfo]);
     return (
         <div
             className={`top-nav ${utils.getColorContrast(topNavColor)}`}

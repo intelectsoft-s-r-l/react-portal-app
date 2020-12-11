@@ -4,6 +4,7 @@ import { API_APP_URL, API_AUTH_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
+import WithStringTranslate from "../utils/translate";
 import {
     ICompany,
     INews,
@@ -105,9 +106,9 @@ class HttpClient {
                     const key = "updatable";
                     message
                         .loading({
-                            content:
-                                "Time has expired... Redirecting you to login page!",
+                            content: WithStringTranslate(EXPIRE_TIME),
                             key,
+                            duration: 1.5,
                         })
                         .then(() => {
                             store.dispatch(signOut());

@@ -1,6 +1,7 @@
 import React from "react";
+import InDevelopmentMessage from "../../../utils/inDevelopmentMessage";
 
 const Payments = () => {
-    return <div>In progress...</div>;
+    return <InDevelopmentMessage />;
 };
 export default Payments;

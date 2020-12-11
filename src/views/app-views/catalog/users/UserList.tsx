@@ -29,6 +29,7 @@ import { IState } from "../../../../redux/reducers";
 import { IAuth } from "../../../../redux/reducers/Auth";
 import { IAccount } from "../../../../redux/reducers/Account";
 import { ITheme } from "../../../../redux/reducers/Theme";
+import WithStringTranslate from "../../../../utils/translate";
 
 export enum status {
     inactive = 0,
@@ -353,7 +354,7 @@ export class UserList extends Component<IUserListStoreProps> {
                 >
                     <div className="mr-md-3 mb-3">
                         <Input
-                            placeholder="Search"
+                            placeholder={WithStringTranslate("app.Search")}
                             prefix={<SearchOutlined />}
                             onChange={(e) => this.onSearch(e)}
                         />

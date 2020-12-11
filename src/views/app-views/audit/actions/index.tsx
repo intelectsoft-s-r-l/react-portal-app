@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
+import InDevelopmentMessage from "../../../../utils/inDevelopmentMessage";
 
 const AuditActions = () => {
-  return (<div>Actions component works!</div>)
-}
+    return <InDevelopmentMessage />;
+};
 
 export default AuditActions;

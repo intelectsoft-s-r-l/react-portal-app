@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import Icon from "../../../components/util-components/Icon";
 import Flex from "../../../components/shared-components/Flex";
+import InDevelopmentMessage from "../../../utils/inDevelopmentMessage";
 
 export class Notification extends Component {
     state = {
@@ -76,7 +77,8 @@ export class Notification extends Component {
         const { config } = this.state;
         return (
             <>
-                <h2 className="mb-4">Notification (in progress)</h2>
+                <InDevelopmentMessage />
+                <h2 className="mb-4">Notification</h2>
                 <List
                     itemLayout="horizontal"
                     dataSource={config}

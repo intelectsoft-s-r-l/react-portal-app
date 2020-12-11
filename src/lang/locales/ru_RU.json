@@ -1,6 +1,7 @@
 {
 
 
+    "InDevelopment": "В разработке",
   "auth.SignIn": "Войти",
   "auth.DontHaveAnAccountYet": "У вас нет аккаунта?",
   "auth.SignUp": "Регистрация",
@@ -95,8 +96,8 @@
 
 
 
-  "account.sidenav.EditProfile": "Редактирование Профиля",
-  "account.sidenav.ChangePassword": "Сменить Пароль",
+  "account.sidenav.EditProfile": "Редактирование профиля",
+  "account.sidenav.ChangePassword": "Сменить пароль",
   "account.sidenav.Billing": "Оплата",
   "account.sidenav.Notification": "Уведомления",
 
@@ -195,5 +196,6 @@
     "app.News": "Новости",
     "app.Licenses": "Лицензии",
     "app.Devices": "Устройства",
-    "app.News.Add": "Добавить"
+    "app.News.Add": "Добавить",
+    "app.Search": "Поиск"
 }

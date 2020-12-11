@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
+import InDevelopmentMessage from "../../../utils/inDevelopmentMessage";
 
 const { Column } = Table;
 
@@ -220,9 +221,10 @@ export class Billing extends Component {
         };
 
         return (
-            <>
+            <div style={{ position: "relative" }}>
+                <InDevelopmentMessage />
                 <h2 className="mb-4">
-                    <IntlMessage id={"account.Billing.Title"} /> (in progress)
+                    <IntlMessage id={"account.Billing.Title"} />
                 </h2>
                 <Table
                     locale={locale}
@@ -290,7 +292,7 @@ export class Billing extends Component {
                     onCreate={this.addCard}
                     onCancel={this.closeModal}
                 />
-            </>
+            </div>
         );
     }
 }

@@ -1,4 +1,6 @@
 {
+
+"InDevelopment": "In development",
 	"auth.SignIn": "Sign In",
 	"auth.DontHaveAnAccountYet": "Don't have an account yet?",
 	"auth.SignUp": "Register",
@@ -189,5 +191,7 @@
     "app.News": "News",
     "app.Licenses": "Licenses",
     "app.Devices": "Devices",
-    "app.News.Add": "Add"
+    "app.News.Add": "Add",
+    "app.Search": "Search"
+
 }

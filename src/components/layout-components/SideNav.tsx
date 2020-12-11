@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout } from "antd";
 import { connect } from "react-redux";
 import {
@@ -10,6 +10,8 @@ import { Scrollbars } from "react-custom-scrollbars";
 import MenuContent from "./MenuContent";
 import { IState } from "../../redux/reducers";
 import { ITheme } from "../../redux/reducers/Theme";
+import WithStringTranslate from "../../utils/translate";
+import { APP_NAME } from "../../configs/AppConfig";
 
 const { Sider } = Layout;
 
@@ -25,6 +27,14 @@ export const SideNav = ({
     localization = true,
 }: SideNavProps) => {
     const props = { sideNavTheme, routeInfo, hideGroupTitle, localization };
+    useEffect(() => {
+        if (routeInfo) {
+            const title = routeInfo.title;
+            document.title = `${APP_NAME} - ${WithStringTranslate(title)}`;
+        } else {
+            document.title = APP_NAME;
+        }
+    }, [routeInfo]);
     return (
         <Sider
             className={`side-nav ${

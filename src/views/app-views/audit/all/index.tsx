@@ -1,7 +1,8 @@
 import React from "react";
+import InDevelopmentMessage from "../../../../utils/inDevelopmentMessage";
 
 const AuditAll = () => {
-    return <div>In progress...</div>;
+    return <InDevelopmentMessage />;
 };
 
 export default AuditAll;

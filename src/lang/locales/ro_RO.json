@@ -1,5 +1,5 @@
 {
-
+"InDevelopment": "În dezvoltare",
   "auth.SignIn": "Intră în cont",
   "auth.DontHaveAnAccountYet": "Nu dețineți un cont?",
   "auth.SignUp": "Înregistrare",
@@ -45,7 +45,7 @@
   "sidenav.dashboard": "Dashboard",
 
     "sidenav.applications": "Applications",
-    "sidenav.my-applications": "Aplicatiile mele",
+    "sidenav.my-applications": "Aplicațiile mele",
     "sidenav.market": "Market",
   "sidenav.catalog": "Catalog",
   "sidenav.catalog.company": "Compania",
@@ -188,6 +188,7 @@
     "app.News": "Noutăți",
     "app.Licenses": "Licenzii",
     "app.Devices": "Dispozitive",
-    "app.News.Add": "Adaugă"
+    "app.News.Add": "Adaugă",
+    "app.Search": "Caută"
 
 }

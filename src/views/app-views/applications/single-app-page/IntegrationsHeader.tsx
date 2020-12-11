@@ -167,7 +167,7 @@ const IntegrationsHeader = ({
                         className="mt-3 ml-3"
                         onClick={() => deleteApiKey()}
                     >
-                        Delete
+                        <IntlMessage id="app.Delete" />
                     </Button>
                 </Col>
                 <Col xl={8}>

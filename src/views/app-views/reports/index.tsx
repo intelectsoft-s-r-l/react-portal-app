@@ -1,7 +1,8 @@
 import React from "react";
+import InDevelopmentMessage from "../../../utils/inDevelopmentMessage";
 
 const Reports = () => {
-    return <div>In progress...</div>;
+    return <InDevelopmentMessage />;
 };
 
 export default Reports;
