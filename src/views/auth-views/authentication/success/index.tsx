@@ -30,7 +30,9 @@ const Success = () => {
                             <IntlMessage id={"auth.validate.Success"} />
                         </h1>
                         <Link to="/auth/login">
-                            <Button type="primary">Go to login</Button>
+                            <Button type="primary">
+                                <IntlMessage id="auth.GoToLogin" />
+                            </Button>
                         </Link>
                     </div>
                 </div>

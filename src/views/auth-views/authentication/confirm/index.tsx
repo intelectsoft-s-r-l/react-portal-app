@@ -22,7 +22,10 @@ const Confirm = () => {
                 <div className="container">
                     <Row align="middle">
                         <Col xs={24} sm={24} md={8}>
-                            <h1 className="font-weight-bold mb-4 display-4">
+                            <h1
+                                className="font-weight-bold mb-4 display-4"
+                                style={{ zIndex: 1000 }}
+                            >
                                 <IntlMessage id="auth.ConfirmRegistration" />
                             </h1>
                             <p className="font-size-md mb-4">
