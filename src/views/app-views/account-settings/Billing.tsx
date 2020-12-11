@@ -221,7 +221,7 @@ export class Billing extends Component {
         };
 
         return (
-            <div style={{ position: "relative" }}>
+            <div style={{ position: "relative", opacity: 0.5 }}>
                 <InDevelopmentMessage />
                 <h2 className="mb-4">
                     <IntlMessage id={"account.Billing.Title"} />
@@ -283,7 +283,7 @@ export class Billing extends Component {
                     />
                 </Table>
                 <div className="mt-3 text-right">
-                    <Button type="primary" onClick={this.showModal}>
+                    <Button type="primary" onClick={this.showModal} disabled>
                         <IntlMessage id={"account.Billing.AddNewCard"} />
                     </Button>
                 </div>

@@ -76,7 +76,7 @@ export class Notification extends Component {
     render() {
         const { config } = this.state;
         return (
-            <>
+            <div style={{ position: "relative", opacity: 0.5 }}>
                 <InDevelopmentMessage />
                 <h2 className="mb-4">Notification</h2>
                 <List
@@ -121,7 +121,7 @@ export class Notification extends Component {
                         </List.Item>
                     )}
                 />
-            </>
+            </div>
         );
     }
 }
