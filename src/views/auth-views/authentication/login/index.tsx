@@ -107,6 +107,7 @@ const LoginTwo = (props: any) => {
                                             selector={
                                                 <NavLanguage
                                                     triggerType={"click"}
+                                                    match={props.match}
                                                 />
                                             }
                                         />

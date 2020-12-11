@@ -9,13 +9,7 @@ import { IState } from "../../redux/reducers";
 import { ITheme } from "../../redux/reducers/Theme";
 import { IAuth } from "../../redux/reducers/Auth";
 interface NavLanguageProps {
-    locale?: string;
-    configDisplay?: any;
-    onLocaleChange?: any;
-    triggerType: "click" | "hover";
-    setProfileInfo?: any;
-    account?: any;
-    token?: string;
+    [key: string]: any;
 }
 
 function getLanguageDetail(locale: string) {
@@ -63,18 +57,20 @@ const NavLanguage = ({
                         }
                         onClick={() => {
                             onLocaleChange(elm["langId"]);
-                            setProfileInfo({
-                                Token: token,
-                                User: {
-                                    ...account,
-                                    UiLanguage:
-                                        elm["langId"] === "ro"
-                                            ? 0
-                                            : elm["langId"] === "ru"
-                                            ? 1
-                                            : 2,
-                                },
-                            });
+                            const app = "app";
+                            if (window.location.pathname.indexOf(app) >= 0)
+                                setProfileInfo({
+                                    Token: token,
+                                    User: {
+                                        ...account,
+                                        UiLanguage:
+                                            elm["langId"] === "ro"
+                                                ? 0
+                                                : elm["langId"] === "ru"
+                                                ? 1
+                                                : 2,
+                                    },
+                                });
                         }}
                     >
                         <div className="d-flex justify-content-between align-items-center">

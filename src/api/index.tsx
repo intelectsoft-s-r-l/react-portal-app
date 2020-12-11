@@ -67,10 +67,7 @@ class HttpClient {
         console.log(response);
         if (response.data.ErrorCode === 118) {
             return this._handleError(response);
-        } else if (
-            response.data.ErrorCode !== 0 &&
-            response.data.ErrorCode !== 118
-        ) {
+        } else if (response.data.ErrorCode !== 0) {
             message.error({
                 content: response.data.ErrorMessage,
                 key: "updatable",
@@ -79,6 +76,9 @@ class HttpClient {
         return response.data;
     };
     public _handleError = async (error: any) => {
+        /* 
+            In case the token has expired, we call Refresh Token API function then re-call last API function.
+        */
         if (error.config && error.data && error.data.ErrorCode === 118) {
             return this._RefreshToken().then(async (data: any) => {
                 const { ErrorCode, Token } = data;
@@ -114,6 +114,13 @@ class HttpClient {
                             store.dispatch(signOut());
                         });
                 }
+            });
+        }
+        if (error.request.status !== 200) {
+            message.error({
+                content: error.toString(),
+                key: "updatable",
+                duration: 10,
             });
         }
         store.dispatch(hideLoading());
@@ -249,4 +256,11 @@ export class ClientApi extends HttpClient {
         this.instance.post("/UpdateApp", {
             ...AppData,
         });
+}
+
+export class fakeAPI extends HttpClient {
+    constructor() {
+        super("http://api/mock.io/v1");
+    }
+    public FakePostCall = () => this.instance.post("/979095de");
 }

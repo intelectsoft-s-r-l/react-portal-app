@@ -8,10 +8,10 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 const Success = () => {
     return (
         <div className="h-100 bg-white">
-            <div className="container-fluid d-flex flex-column justify-content-between h-100 px-md-4 pb-md-4 pt-md-1">
+            <div className="container-fluid d-flex flex-column justify-content-between h-100 ">
                 <div>
                     <img
-                        className="img-fluid"
+                        className="img-fluid px-3"
                         src={process.env.PUBLIC_URL + "/img/is-logo-pic.png"}
                         alt=""
                     />
@@ -29,7 +29,7 @@ const Success = () => {
                         <h1 className="font-weight-bold mb-4">
                             <IntlMessage id={"auth.validate.Success"} />
                         </h1>
-                        <Link to="/auth">
+                        <Link to="/auth/login">
                             <Button type="primary">Go to login</Button>
                         </Link>
                     </div>

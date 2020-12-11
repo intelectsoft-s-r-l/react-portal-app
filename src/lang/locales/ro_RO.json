@@ -40,6 +40,9 @@
   "auth.MessageRedirect": "Veți fi redirecționat în câteva secunde...",
   "auth.validate.Success": "Felicitări! V-ați înregistrat cu succes!",
   "auth.validate.Error": "Nu ați confirmat înregistrarea! Accesați email-ul!",
+  "auth.ConfirmRegistration.Msg1": "Sunteți la un pas de a vă activa contul pe",
+  "auth.ConfirmRegistration.Msg2": "Verificați email-ul și confirmați înregistrarea apăsând pe link-ul trimis de noi!",
+  "auth.GoToLogin": "La logare",
 
   "sidenav.home": "Acasă",
   "sidenav.dashboard": "Dashboard",

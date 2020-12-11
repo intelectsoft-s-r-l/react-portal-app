@@ -28,6 +28,7 @@ import { EMAIL_CONFIRM_MSG } from "../../../constants/Messages";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
 import { ITheme } from "../../../redux/reducers/Theme";
+import Confirm from "../authentication/confirm";
 
 const rules = {
     JuridicalName: [
@@ -148,12 +149,9 @@ export const RegisterForm = (props: any) => {
                         .then((data: any) => {
                             /* 108 is a positive errorcode in this case */
                             if (data.ErrorCode === 108) {
-                                message.success({
-                                    content: EMAIL_CONFIRM_MSG,
-                                    key: "updatable",
-                                    duration: 10,
-                                });
+                                history.push("/auth/confirm");
                             }
+                            // Else ErrorCode >= 135 send message to admin / show internal error
                         });
                 }, 1500);
             })

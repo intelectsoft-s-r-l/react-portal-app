@@ -84,11 +84,12 @@ export class UserList extends Component<IUserListStoreProps> {
         editModalVisible: false,
         newUserModalVisible: false,
         registerUserModalVisible: false,
-        loading: false,
+        loading: true,
     };
 
     getUsersInfo = () => {
         return new ClientApi().GetUserList().then((data: any) => {
+            this.setState({ loading: false });
             if (data) {
                 const { ErrorCode } = data;
                 if (ErrorCode === 0) {
