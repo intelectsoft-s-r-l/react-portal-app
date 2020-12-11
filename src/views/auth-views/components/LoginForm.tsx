@@ -61,10 +61,7 @@ const LoginForm = ({
             /* The function below returns a promise.
         I should probably reconsider the way I handle the "sendActivationCode" function,
         maybe chain it after the "authorizerUser" function ???  */
-            authorizeUser(
-                onLoginSettingsObject,
-                <Localization msg={ACTIVATE_ACCOUNT} />
-            );
+            authorizeUser(onLoginSettingsObject);
         }, 1000);
     };
     const onGoogleLogin = () => {

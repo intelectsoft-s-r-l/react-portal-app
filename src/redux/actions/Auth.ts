@@ -19,11 +19,12 @@ import {
 import { message, Modal } from "antd";
 import { IS_USER_ACTIVATED } from "../constants/Auth";
 import { getProfileInfo } from "./Account";
-import { EMAIL_CONFIRM_MSG } from "../../constants/Messages";
+import { ACTIVATE_ACCOUNT, EMAIL_CONFIRM_MSG } from "../../constants/Messages";
 import { AuthApi } from "../../api";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { IAuthorizerUser } from "../../api/auth_types";
+import WithStringTranslate from "../../utils/translate";
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
 export const authenticated = (token: string) => ({
@@ -55,16 +56,18 @@ export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
     return new AuthApi().SendActivationCode().then((data: any) => {
         const { ErrorMessage, ErrorCode } = data;
         if (data) {
-            if (ErrorCode === 0) message.success(EMAIL_CONFIRM_MSG);
+            if (ErrorCode === 0)
+                message.success({
+                    content: WithStringTranslate(EMAIL_CONFIRM_MSG),
+                    key: "updatable",
+                    duration: 2,
+                });
             else dispatch(showAuthMessage(ErrorMessage));
         }
     });
 };
 
-export const authorizeUser = (
-    userData: IAuthorizerUser,
-    message: any
-): ThunkResult<void> => {
+export const authorizeUser = (userData: IAuthorizerUser): ThunkResult<void> => {
     return async (dispatch) => {
         return new AuthApi()
             .Login(userData)
@@ -77,9 +80,8 @@ export const authorizeUser = (
                     } else if (ErrorCode === 102) {
                         dispatch(showAuthMessage(ErrorMessage));
                     } else if (ErrorCode === 108) {
-                        /* We're passing the message as a parameter because localization is a react component, and this is a regular function. */
                         Modal.confirm({
-                            content: message,
+                            content: WithStringTranslate(ACTIVATE_ACCOUNT),
                             onOk: () => {
                                 dispatch(sendActivationCode());
                             },

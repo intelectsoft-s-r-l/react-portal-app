@@ -92,7 +92,7 @@
 	"message.Done": "Done!",
     "message.Error": "Something went wrong! Try again!",
     "message.NewPassword": "New password has been sent to your email!",
-    "message.EmailConfirmMsg": "Confirmation message was send to the email!",
+    "message.EmailConfirmMsg": "Confirmation message was sent to the email!",
     "message.ExpireTime": "Time has expired! Redirecting you to login page...",
 
 
