@@ -58,9 +58,6 @@ const LoginForm = ({
         };
         showLoading();
         setTimeout(() => {
-            /* The function below returns a promise.
-        I should probably reconsider the way I handle the "sendActivationCode" function,
-        maybe chain it after the "authorizerUser" function ???  */
             authorizeUser(onLoginSettingsObject);
         }, 1000);
     };
@@ -73,6 +70,7 @@ const LoginForm = ({
     };
 
     useEffect(() => {
+        hideLoading();
         if (token !== null) {
             history.push(redirect);
         }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import WithStringTranslate from "./translate";
 import "./in_development.scss";
 import IntlMessage from "../components/util-components/IntlMessage";
@@ -9,13 +9,13 @@ import { message } from "antd";
 
 const InDevelopmentMessage = () => {
     const locale = useSelector((state) => state["auth"].locale);
-    useEffect(() => {
+    useLayoutEffect(() => {
         $("div.header").append("<div class='glitch-window'></div>");
         //fill div with clone of real header
         $("h1.glitched").clone().appendTo(".glitch-window");
         return () => {
             $("div.header").empty();
-            $("h1.glitched").empty();
+            $("div.glitch-window").empty();
         };
     }, [locale]);
     return (
