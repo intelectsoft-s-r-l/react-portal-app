@@ -151,19 +151,9 @@ export class ChangePassword extends Component {
                                 loading={this.state.loading}
                             >
                                 {" "}
-                                {this.state.loading ? (
-                                    <IntlMessage
-                                        id={
-                                            "account.ChangePassword.ChangePasswordProcess"
-                                        }
-                                    />
-                                ) : (
-                                    <IntlMessage
-                                        id={
-                                            "account.ChangePassword.ChangePassword"
-                                        }
-                                    />
-                                )}
+                                <IntlMessage
+                                    id={"account.ChangePassword.ChangePassword"}
+                                />
                             </Button>
                         </Form>
                     </Col>

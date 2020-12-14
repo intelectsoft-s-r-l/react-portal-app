@@ -7,7 +7,7 @@ import { API_AUTH_URL } from "../../../../configs/AppConfig";
 import { RouteComponentProps } from "react-router-dom";
 
 const Validate = ({ history, match }: RouteComponentProps) => {
-    const [isValidated, setIsValidated] = useState(false);
+    const [isValidated, setIsValidated] = useState(true);
     useLayoutEffect(() => {
         axios
             .get(`${API_AUTH_URL}/ActivateUser`, {
@@ -19,6 +19,7 @@ const Validate = ({ history, match }: RouteComponentProps) => {
                 },
             })
             .then((response) => {
+                console.log(response.data);
                 if (response.data["ErrorCode"] === 0) {
                     setIsValidated(true);
                 } else {

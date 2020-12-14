@@ -26,6 +26,10 @@ import { IAuthorizerUser } from "../../api/auth_types";
 import WithStringTranslate from "../../utils/translate";
 import axios from "axios";
 import { API_AUTH_URL } from "../../configs/AppConfig";
+enum SendType {
+    list = 0,
+    auth = 1,
+}
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
 export const authenticated = (token: string) => ({
