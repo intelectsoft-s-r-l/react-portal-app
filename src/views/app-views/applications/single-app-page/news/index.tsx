@@ -87,7 +87,7 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
 };
 const News = ({ AppType }: any) => {
     const getNews = (AppType: number) => {
-        return new ClientApi().GetNews(AppType).then((data: any) => {
+        return new ClientApi().GetAppNews(AppType).then((data: any) => {
             if (data) {
                 if (data.ErrorCode === 0) setNews(data.NewsList);
             }

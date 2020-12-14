@@ -243,8 +243,8 @@ export class ClientApi extends HttpClient {
             },
         });
 
-    public GetNews = (AppType: number) =>
-        this.instance.get("/GetNews", {
+    public GetAppNews = (AppType: number) =>
+        this.instance.get("/GetAppNews", {
             params: {
                 AppType,
             },
