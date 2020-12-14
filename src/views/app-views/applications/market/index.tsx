@@ -16,8 +16,9 @@ import { MarketContext } from "./MarketContext";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IApplications, IMarketAppList, ITextEditor } from "../AppInterface";
 import Utils from "../../../../utils";
+import WithStringTranslate from "../../../../utils/translate";
 interface IGridItem {
-    deactivateApp: (AppID: number) => void;
+    deactivateApp: (AppID: number, AppName: string) => void;
     setVisibleModal: React.Dispatch<React.SetStateAction<boolean>>;
     setSelectedApp: (data: IMarketAppList) => void;
     data: IMarketAppList;
@@ -87,7 +88,7 @@ const GridItem = ({
             <Flex justifyContent="between" alignItems="center">
                 <div className="text-muted">Free</div>
                 <Button
-                    onClick={() => deactivateApp(data.ID)}
+                    onClick={() => deactivateApp(data.ID, data.Name)}
                     danger
                     type={"link"}
                     style={{
@@ -129,9 +130,9 @@ const Market = () => {
         getMarketApps();
     }, []);
 
-    const deactivateApp = (AppID: number) => {
+    const deactivateApp = (AppID: number, AppName: string) => {
         confirm({
-            title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
+            title: `${WithStringTranslate("app.uninstall.title")} ${AppName}?`,
             onOk: () => {
                 return new Promise((resolve) => {
                     setTimeout(

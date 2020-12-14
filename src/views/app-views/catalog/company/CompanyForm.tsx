@@ -395,6 +395,87 @@ class CompanyForm extends Component<{ [key: string]: any }> {
                                             <Input />
                                         </Form.Item>
                                     </Col>
+                                    <Col xs={24} sm={24} md={12}>
+                                        <Form.Item
+                                            label={
+                                                <IntlMessage
+                                                    id={
+                                                        "account.company.ShortName"
+                                                    }
+                                                />
+                                            }
+                                            name="ShortName"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                    message:
+                                                        "Please enter a short name!",
+                                                },
+                                            ]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={12}>
+                                        <Form.Item
+                                            label={
+                                                <IntlMessage
+                                                    id={
+                                                        "account.company.PostalCode"
+                                                    }
+                                                />
+                                            }
+                                            name="PostalCode"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                    message:
+                                                        "Please enter a postal code!",
+                                                },
+                                            ]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={12}>
+                                        <Form.Item
+                                            label={
+                                                <IntlMessage
+                                                    id={
+                                                        "account.EditProfile.Email"
+                                                    }
+                                                />
+                                            }
+                                            name="Email"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                    type: "email",
+                                                    message:
+                                                        "Please enter a valid email!",
+                                                },
+                                            ]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col xs={24} sm={24} md={12}>
+                                        <Form.Item
+                                            label={
+                                                <IntlMessage id="account.company.WebSite" />
+                                            }
+                                            name="WebSite"
+                                            rules={[
+                                                {
+                                                    required: false,
+                                                    message:
+                                                        "Please input website!",
+                                                },
+                                            ]}
+                                        >
+                                            <Input />
+                                        </Form.Item>
+                                    </Col>
                                 </Row>
                                 <Button type="primary" htmlType="submit">
                                     <IntlMessage

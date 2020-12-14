@@ -1,6 +1,7 @@
 import { Checkbox, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../../redux/reducers";
 import { MarketContext } from "../MarketContext";
 
@@ -29,7 +30,7 @@ const TermsWizard = () => {
                 className="mt-4"
                 onChange={() => setIsAccepted(!isAccepted)}
             >
-                I accept terms and conditions
+                <IntlMessage id="wizard.terms" />
             </Checkbox>
         </>
     );

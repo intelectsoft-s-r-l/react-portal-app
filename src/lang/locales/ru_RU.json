@@ -51,6 +51,7 @@
   "sidenav.home": "Главная",
   "sidenav.dashboard": "Панель",
 
+    "sidenav.news": "Новости",
     "sidenav.applications": "Applications",
     "sidenav.my-applications": "Мои приложения",
     "sidenav.market": "Маркет",
@@ -158,6 +159,7 @@
   "account.company.PhoneNumber": "Телефон",
   "account.company.PostalCode": "Почтовый индекс",
   "account.company.WebSite": "Веб-сайт",
+  "account.company.ShortName": "Короткое название",
 
 
   "theme.Title": "Тема",
@@ -200,5 +202,20 @@
     "app.Licenses": "Лицензии",
     "app.Devices": "Устройства",
     "app.News.Add": "Добавить",
-    "app.Search": "Поиск"
+    "app.Search": "Поиск",
+    "app.uninstall.title": "Вы уверены что хотите удалить",
+
+
+    "news.title": "Новости",
+
+
+    "wizard.title": "Установка приложения",
+    "wizard.terms": "Я прочитал и согласен с условиями пользовательского соглашения",
+    "wizard.next": "Далее",
+    "wizard.cancel": "Отмена",
+    "wizard.go": "Перейти к приложению",
+    "wizard.ok": "ОК",
+    "wizard.install.success.title": "Успешная установка",
+    "wizard.install.success.content": "Приложение было успешно установлено.",
+    "wizard.install.error.title": "Установка не удалась"
 }

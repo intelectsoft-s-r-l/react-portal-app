@@ -33,6 +33,14 @@ const dashBoardNavTree = [
         submenu: [],
     },
     {
+        key: "news",
+        path: "/app/news",
+        title: "sidenav.news",
+        icon: InfoCircleOutlined,
+        breadcrumb: false,
+        submenu: [],
+    },
+    {
         key: "applications",
         path: "/app/applications",
         title: "sidenav.applications",

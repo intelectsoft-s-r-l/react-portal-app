@@ -45,7 +45,8 @@
   "auth.GoToLogin": "Go to login",
 
 	"sidenav.home": "Home",
-	"sidenav.dashboard": "Dashboard",
+    "sidenav.dashboard": "Dashboard",
+    "sidenav.news": "News",
     "sidenav.applications": "Applications",
     "sidenav.my-applications": "My Applications",
     "sidenav.market": "Market",
@@ -130,6 +131,7 @@
   "account.company.PhoneNumber": "Phone Number",
   "account.company.PostalCode": "Postal Code",
   "account.company.WebSite": "Website",
+  "account.company.ShortName": "Short name",
 
 	"account.ChangePassword.CurrentPassword": "Current Password",
 	"account.ChangePassword.Title": "Change Password",
@@ -191,10 +193,23 @@
     "app.Refresh": "Refresh",
     "app.Description": "Description",
     "app.Packages": "Packages",
-    "app.News": "News",
-    "app.Licenses": "Licenses",
+    "app.News": "News", 
+    "app.Licenses": "Licenses", 
     "app.Devices": "Devices",
     "app.News.Add": "Add",
-    "app.Search": "Search"
+    "app.Search": "Search",
+    "app.uninstall.title": "Are you sure you want to uninstall",
+
+    "news.title": "News",
+
+    "wizard.title": "Install application",
+    "wizard.terms": "I have read and agree to the Terms and Conditions",
+    "wizard.next": "Next",
+    "wizard.cancel": "Cancel",
+    "wizard.go": "Go to app",
+    "wizard.ok": "OK",
+    "wizard.install.success.title": "Installation Succeeded",
+    "wizard.install.success.content": "The software was succesfully installed.",
+    "wizard.install.error.title": "Installation Failed"
 
 }

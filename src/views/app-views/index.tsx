@@ -13,6 +13,10 @@ export const AppViews = () => {
                     component={lazy(() => import(`./dashboard`))}
                 />
                 <Route
+                    path={`${APP_PREFIX_PATH}/news`}
+                    component={lazy(() => import(`./news`))}
+                />
+                <Route
                     path={`${APP_PREFIX_PATH}/my-applications`}
                     exact
                     component={lazy(() => import(`./applications/my-apps`))}

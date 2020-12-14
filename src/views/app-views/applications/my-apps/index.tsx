@@ -11,6 +11,7 @@ import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IApplications, IMarketAppList, ITextEditor } from "../AppInterface";
 import { IState } from "../../../../redux/reducers";
+import WithStringTranslate from "../../../../utils/translate";
 
 const GridItem = ({ deactivateApp, data }: any) => {
     const [shortDesc, setShortDesc] = useState<ITextEditor>();
@@ -55,7 +56,7 @@ const GridItem = ({ deactivateApp, data }: any) => {
             <Flex justifyContent="between" alignItems="center">
                 <div className="text-muted">Free</div>
                 <Button
-                    onClick={() => deactivateApp(data.ID)}
+                    onClick={() => deactivateApp(data.ID, data.Name)}
                     danger
                     type={"link"}
                     style={{
@@ -91,17 +92,26 @@ const MyAppList = () => {
         getMarketAppList();
     }, []);
 
-    const deactivateApp = (AppID: number) => {
+    const deactivateApp = (AppID: number, AppName: string) => {
         confirm({
-            title: `Are you sure you want to deactivate app with ID: ${AppID}?`,
+            title: `${WithStringTranslate("app.uninstall.title")} ${AppName}?`,
             onOk: () => {
-                return new ClientApi()
-                    .DeactivateApp(AppID)
-                    .then((data: any) => {
-                        if (data) {
-                            if (data.ErrorCode === 0) getMarketAppList();
-                        }
-                    });
+                return new Promise((resolve) => {
+                    setTimeout(
+                        () =>
+                            resolve(
+                                new ClientApi()
+                                    .DeactivateApp(AppID)
+                                    .then(async (data: any) => {
+                                        if (data) {
+                                            if (data.ErrorCode === 0)
+                                                await getMarketAppList();
+                                        }
+                                    })
+                            ),
+                        1000
+                    );
+                });
             },
             onCancel: () => {},
         });

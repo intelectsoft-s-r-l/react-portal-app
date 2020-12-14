@@ -2,11 +2,12 @@ import { Button, Checkbox, Modal, Steps } from "antd";
 import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
 import { IState } from "../../../../../redux/reducers";
-import { IMarketAppList } from "../../AppInterface";
+import WithStringTranslate from "../../../../../utils/translate";
 import { MarketContext } from "../MarketContext";
-import LoadingWizard from "./LoadingWizard";
+import FinalStep from "./final-step";
 import TermsModal from "./TermsWizard";
 const steps = [
     {
@@ -15,7 +16,7 @@ const steps = [
     },
     {
         title: "Loading",
-        content: <LoadingWizard />,
+        content: <FinalStep />,
     },
 ];
 const InstallWizard = ({ apps }: any) => {
@@ -37,7 +38,7 @@ const InstallWizard = ({ apps }: any) => {
     } = useContext(MarketContext);
     return (
         <Modal
-            title={"Installation wizard"}
+            title={WithStringTranslate("wizard.title")}
             visible={visibleModal}
             onOk={() => setCurrent(current + 1)}
             destroyOnClose
@@ -50,7 +51,9 @@ const InstallWizard = ({ apps }: any) => {
                     }}
                     disabled={loading}
                 >
-                    {termsAccepted ? "OK" : "Cancel"}
+                    {termsAccepted
+                        ? WithStringTranslate("wizard.ok")
+                        : WithStringTranslate("wizard.cancel")}
                 </Button>,
                 <Button
                     key="next"
@@ -65,10 +68,10 @@ const InstallWizard = ({ apps }: any) => {
                         <Link
                             to={`${APP_PREFIX_PATH}/applications/${selectedApp.AppType}`}
                         >
-                            Go to app
+                            <IntlMessage id="wizard.go" />
                         </Link>
                     ) : (
-                        "Next"
+                        <IntlMessage id="wizard.next" />
                     )}
                 </Button>,
             ]}

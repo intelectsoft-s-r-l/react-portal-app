@@ -251,7 +251,7 @@ export class ClientApi extends HttpClient {
         });
 
     public UpdateNews = (NewsData: INewsData) =>
-        this.instance.post("/UpdateNews", {
+        this.instance.post("/UpdateAppNews", {
             NewsData,
         });
 
@@ -259,6 +259,8 @@ export class ClientApi extends HttpClient {
         this.instance.post("/UpdateApp", {
             ...AppData,
         });
+
+    public GetPortalNews = () => this.instance.get("/GetPortalNews");
 }
 
 export class fakeAPI extends HttpClient {

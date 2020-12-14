@@ -212,7 +212,7 @@ export class UserList extends Component<IUserListStoreProps> {
                     </span>
                 </Flex>
             </Menu.Item>
-            {row.Status === status.inactive ||
+            {
             row.Status === status.disabled ? (
                 <Menu.Item
                     onClick={async () => {
@@ -235,7 +235,7 @@ export class UserList extends Component<IUserListStoreProps> {
                         </span>
                     </Flex>
                 </Menu.Item>
-            ) : (
+            ) : row.Status === status.active ? (
                 <Menu.Item
                     onClick={async () => {
                         Modal.confirm({
@@ -257,7 +257,7 @@ export class UserList extends Component<IUserListStoreProps> {
                         </span>
                     </Flex>
                 </Menu.Item>
-            )}
+            ): null}
         </Menu>
     );
 

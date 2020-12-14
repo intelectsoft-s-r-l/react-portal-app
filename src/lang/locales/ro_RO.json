@@ -46,6 +46,7 @@
 
   "sidenav.home": "Acasă",
   "sidenav.dashboard": "Dashboard",
+    "sidenav.news": "Noutăți",
 
     "sidenav.applications": "Applications",
     "sidenav.my-applications": "Aplicațiile mele",
@@ -127,6 +128,7 @@
   "account.company.PhoneNumber": "Telefon",
   "account.company.PostalCode": "Cod poștal",
   "account.company.WebSite": "Site Web",
+  "account.company.ShortName": "Denumire prescurtată",
 
 
   "account.ChangePassword.CurrentPassword": "Parola curentă",
@@ -192,6 +194,19 @@
     "app.Licenses": "Licenzii",
     "app.Devices": "Dispozitive",
     "app.News.Add": "Adaugă",
-    "app.Search": "Caută"
+    "app.Search": "Caută",
+    "app.uninstall.title": "Sunteți sigur(ă) că doriți să dezinstalați",
 
+    "news.title": "Noutăți",
+
+
+    "wizard.title": "Instalează aplicația",
+    "wizard.terms": "Sunt de acord cu termenii și condițiile",
+    "wizard.next": "Următorul",
+    "wizard.cancel": "Anulează",
+    "wizard.go": "Mergi la aplicație",
+    "wizard.ok": "OK",
+    "wizard.install.success.title": "Instalare cu succes",
+    "wizard.install.success.content": "Aplicația a fost instalată cu succes.",
+    "wizard.install.error.title": "Instalarea a eșuat"
 }
