@@ -72,12 +72,10 @@ const News = () => {
     const [isCreateVisible, setCreateVisible] = useState<boolean>();
     const [edit, setEdit] = useState<boolean>();
     const [apps, setApps] = useState<any>();
-    const [appNews, setAppNews] = useState<any>();
-    const token = useSelector((state: IState) => state["auth"]!.token);
     const [selected, setSelected] = useState<any>();
-    const getPortalNews = () => {
-        return new ClientApi()
-            .GetPortalNews()
+    const getPortalNews = async (AppType = 0) => {
+        return await new ClientApi()
+            .GetPortalNews(AppType)
             .then((data: any) => {
                 setLoading(false);
                 if (data) {
@@ -88,16 +86,8 @@ const News = () => {
                 getApps();
             });
     };
-    const getAppNews = (AppType: number) => {
-        return new ClientApi().GetAppNews(AppType).then((data: any) => {
-            setLoading(false);
-            if (data) {
-                if (data.ErrorCode === 0) setNews(data.NewsList);
-            }
-        });
-    };
-    const getApps = () => {
-        return new ClientApi().GetMarketAppList().then((data: any) => {
+    const getApps = async () => {
+        return await new ClientApi().GetMarketAppList().then((data: any) => {
             setLoading(false);
             if (data) {
                 if (data.ErrorCode === 0) setApps(data.MarketAppList);
@@ -106,7 +96,7 @@ const News = () => {
     };
     const onSelect = (AppType: number) => {
         if (AppType !== 0) {
-            getAppNews(AppType);
+            getPortalNews(AppType);
         } else {
             getPortalNews();
         }
@@ -129,7 +119,9 @@ const News = () => {
                             style={{ width: "150px" }}
                             onChange={onSelect}
                         >
-                            <Select.Option value={0}>All</Select.Option>
+                            <Select.Option value={0}>
+                                <b>General</b>
+                            </Select.Option>
                             {apps &&
                                 apps.map((app: any) => (
                                     <Select.Option

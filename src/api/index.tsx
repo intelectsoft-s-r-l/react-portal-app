@@ -260,7 +260,12 @@ export class ClientApi extends HttpClient {
             ...AppData,
         });
 
-    public GetPortalNews = () => this.instance.get("/GetPortalNews");
+    public GetPortalNews = (ProductType: number) =>
+        this.instance.get("/GetPortalNews", {
+            params: {
+                ProductType,
+            },
+        });
 }
 
 export class fakeAPI extends HttpClient {
