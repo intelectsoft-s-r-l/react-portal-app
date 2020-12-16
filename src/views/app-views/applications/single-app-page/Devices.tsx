@@ -4,7 +4,26 @@ import React, { useEffect, useState } from "react";
 import { ClientApi } from "../../../../api";
 import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-
+enum Health {
+    _good = 2,
+    _cold = 7,
+    _dead = 4,
+    _overheat = 3,
+    _overvoltage = 5,
+    _unspecified_failurej = 6,
+    _unknown = 1,
+}
+enum Plugged {
+    _ac = 1,
+    _usb = 2,
+    _wireless = 4,
+}
+enum Status {
+    _discharging = 3,
+    _not_charging = 4,
+    _full = 5,
+    _charging = 2,
+}
 const tableColumns = [
     {
         title: "Device Name",
