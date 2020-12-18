@@ -30,7 +30,7 @@ const tableColumns = [
         dataIndex: "DeviceName",
     },
     {
-        title: "OS Type",
+        title: "OS Version",
         dataIndex: "OSVersion",
     },
     {
