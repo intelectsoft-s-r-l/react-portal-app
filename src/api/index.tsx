@@ -5,19 +5,8 @@ import { EXPIRE_TIME } from "../constants/Messages";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
 import WithStringTranslate from "../utils/translate";
-import {
-    ICompany,
-    INews,
-    INewsData,
-    IUpdateCompany,
-    IUpdateUser,
-} from "./app_types";
-import {
-    IAuthorizerUser,
-    IChangePassword,
-    IRegisterCompany,
-    IRegisterUser,
-} from "./auth_types";
+import { IActivateUserRequest, IAuthorizeUserRequest, IChangePasswordRequest, IRegisterCompanyRequest, IRegisterUserRequest, IUpdateAppRequest, IUpdateNewsRequest } from "./types.request";
+import { IActivateUserResponse, IAuthorizeUserResponse, IChangePasswordResponse, IChangeUserStatusResponse, ICompanyData,  IDeactivateAppResponse, IDeleteAppLicenseResponse, IGenerateApiKeyResponse, IGenerateLicenseActivationCodeResponse, IGetAppLicensesList, IGetManagedTokenResponse, IGetProfileInfoResponse, IMarketAppList, INewsList, IRegisterUserResponse, IReleaseLicenseResponse, IRequestLicenseResponse, IResetPasswordResponse, ISendActivationCodeResponse, IUpdateCompanyResponse, IUpdateUserResponse, IUsers } from "./types.response";
 const publicIp = require("react-public-ip");
 
 declare module "axios" {
@@ -58,7 +47,7 @@ class HttpClient {
                 };
             }
             return config;
-        });
+        }, (error) => Promise.reject(error));
     };
     private _RefreshToken = () =>
         this.instance.get(`${API_AUTH_URL}/RefreshToken`);
@@ -66,43 +55,26 @@ class HttpClient {
     public _handleResponse = (response: AxiosResponse) => {
         console.log(response);
         if (response.data.ErrorCode === 118) {
-            return this._handleError(response);
-        } else if (
-            response.data.ErrorCode !== 0 &&
-            response.data.ErrorCode !== 108
-        ) {
-            message.error({
-                content: response.data.ErrorMessage,
-                key: "updatable",
-            });
-        }
-        return response.data;
-    };
-    public _handleError = async (error: any) => {
-        /* 
-            In case the token has expired, we call Refresh Token API function then re-call last API function.
-        */
-        if (error.config && error.data && error.data.ErrorCode === 118) {
             return this._RefreshToken().then(async (data: any) => {
                 const { ErrorCode, Token } = data;
                 if (ErrorCode === 0) {
                     store.dispatch(authenticated(Token));
-                    if (error.config.method === "get") {
-                        error.config.params = {
-                            ...error.config.params,
+                    if (response.config.method === "get") {
+                        response.config.params = {
+                            ...response.config.params,
                             Token,
                         };
                         return await axios
-                            .request(error.config)
+                            .request(response.config)
                             .then((response) => response.data);
                     }
-                    if (error.config.method === "post") {
-                        error.config.data = {
-                            ...JSON.parse(error.config.data),
+                    if (response.config.method === "post") {
+                        response.config.data = {
+                            ...JSON.parse(response.config.data),
                             Token,
                         };
                         return await axios
-                            .request(error.config)
+                            .request(response.config)
                             .then((response) => response.data);
                     }
                 } else {
@@ -118,7 +90,18 @@ class HttpClient {
                         });
                 }
             });
+        } else if (
+            response.data.ErrorCode !== 0 &&
+            response.data.ErrorCode !== 108
+        ) {
+            message.error({
+                content: response.data.ErrorMessage,
+                key: "updatable",
+            });
         }
+        return response.data;
+    };
+    public _handleError = async (error: AxiosResponse) => {
         if (error.request.status !== 200) {
             message.error({
                 content: error.toString(),
@@ -134,36 +117,36 @@ export class AuthApi extends HttpClient {
         super(`${API_AUTH_URL}`);
     }
 
-    public Login = async (data: IAuthorizerUser) =>
-        this.instance.post("/AuthorizeUser", {
+    public Login = async (data: IAuthorizeUserRequest) =>
+        this.instance.post<IAuthorizeUserResponse>("/AuthorizeUser", {
             ...data,
             info: (await publicIp.v4()) || ("" as string),
         });
 
-    public RegisterCompany = (data: IRegisterCompany) =>
-        this.instance.post("/RegisterCompany", data);
+    public RegisterCompany = async (data: IRegisterCompanyRequest) =>
+        this.instance.post<IAuthorizeUserResponse>("/RegisterCompany", data);
 
-    public SendActivationCode = () => this.instance.get("/SendActivationCode");
+    public SendActivationCode = async () => this.instance.get<ISendActivationCodeResponse>("/SendActivationCode");
 
     public ResetPassword = async (Email: string) =>
-        this.instance.post("/ResetPassword", {
+        this.instance.post<IResetPasswordResponse>("/ResetPassword", {
             Email,
             info: (await publicIp.v4()) || ("" as string),
         });
 
-    public RegisterUser = (data: IRegisterUser) =>
-        this.instance.post("/RegisterUser", data);
+    public RegisterUser = async (data: IRegisterUserRequest) =>
+        this.instance.post<IRegisterUserResponse>("/RegisterUser", data);
 
-    public GetManagedToken = (CompanyID: number) =>
-        this.instance.get("/GetManagedToken", {
+    public GetManagedToken = async (CompanyID: number) =>
+        this.instance.get<IGetManagedTokenResponse>("/GetManagedToken", {
             params: { CompanyID },
         });
 
-    public ChangePassword = (data: IChangePassword) =>
-        this.instance.post("/ChangePassword", data);
+    public ChangePassword = async (data: IChangePasswordRequest) =>
+        this.instance.post<IChangePasswordResponse>("/ChangePassword", data);
 
-    public ActivateUser = (params: string) =>
-        this.instance.get("/ActivateUser", {
+    public ActivateUser = async (params: IActivateUserRequest) =>
+        this.instance.get<IActivateUserResponse>("/ActivateUser", {
             params,
         });
 }
@@ -172,95 +155,95 @@ export class ClientApi extends HttpClient {
     public constructor() {
         super(`${API_APP_URL}`);
     }
-    public GetProfileInfo = () => this.instance.get("/GetProfileInfo");
-    public UpdateUser = async (data: IUpdateUser) =>
-        this.instance.post("/UpdateUser", data);
+    public GetProfileInfo = async () => this.instance.get<IGetProfileInfoResponse>("/GetProfileInfo");
+    public UpdateUser = async (data: IUsers) =>
+        this.instance.post<IUpdateUserResponse>("/UpdateUser", data);
 
-    public GetMarketAppList = () => this.instance.get("/GetMarketAppList");
+    public GetMarketAppList = async () => this.instance.get<IMarketAppList>("/GetMarketAppList");
 
-    public DeactivateApp = (AppID: number) =>
-        this.instance.post("/DeactivateApp", {
+    public DeactivateApp = async (AppID: number) =>
+        this.instance.post<IDeactivateAppResponse>("/DeactivateApp", {
             AppID,
         });
 
-    public ActivateApp = (AppID: number) =>
-        this.instance.post("/ActivateApp", {
+    public ActivateApp = async (AppID: number) =>
+        this.instance.post<IDeactivateAppResponse>("/ActivateApp", {
             AppID,
         });
 
-    public GetAppLicenses = (AppType: number) =>
-        this.instance.get("/GetAppLicensesList", {
+    public GetAppLicenses = async (AppType: number) =>
+        this.instance.get<IGetAppLicensesList>("/GetAppLicensesList", {
             params: {
                 AppType,
             },
         });
 
-    public RequestLicense = (AppType: number, Quantity: number) =>
-        this.instance.get("/RequestAppLicense", {
+    public RequestLicense = async (AppType: number, Quantity: number) =>
+        this.instance.get<IRequestLicenseResponse>("/RequestAppLicense", {
             params: { AppType, Quantity },
         });
 
-    public ReleaseLicense = (LicenseID: number) =>
-        this.instance.get("/ReleaseAppLicense", {
+    public ReleaseLicense = async (LicenseID: number) =>
+        this.instance.get<IReleaseLicenseResponse>("/ReleaseAppLicense", {
             params: { LicenseID },
         });
 
-    public DeleteLicense = (LicenseID: number) =>
-        this.instance.get("/DeleteAppLicense", {
+    public DeleteLicense = async (LicenseID: number) =>
+        this.instance.get<IDeleteAppLicenseResponse>("/DeleteAppLicense", {
             params: { LicenseID },
         });
 
-    public GenerateApiKey = (AppID: number) =>
-        this.instance.post("/GenerateApiKey", {
+    public GenerateApiKey = async (AppID: number) =>
+        this.instance.post<IGenerateApiKeyResponse>("/GenerateApiKey", {
             AppID,
         });
 
-    public DeleteApiKey = (AppID: number) =>
+    public DeleteApiKey = async (AppID: number) =>
         this.instance.post("/DeleteApiKey", {
             AppID,
         });
 
-    public GenerateLicenseActivationCode = (AppID: number) =>
-        this.instance.post("/GenerateLicenseActivationCode", {
+    public GenerateLicenseActivationCode = async (AppID: number) =>
+        this.instance.post<IGenerateLicenseActivationCodeResponse>("/GenerateLicenseActivationCode", {
             AppID,
         });
 
-    public GetUserList = () => this.instance.get("/GetUsersInfo");
+    public GetUserList = async () => this.instance.get<IUsers>("/GetUsersInfo");
 
-    public GetCompanyInfo = () => this.instance.get("/GetCompanyInfo");
+    public GetCompanyInfo = async () => this.instance.get<ICompanyData>("/GetCompanyInfo");
 
-    public UpdateCompany = async (data: ICompany) =>
-        this.instance.post("/UpdateCompany", {
+    public UpdateCompany = async (data: ICompanyData) =>
+        this.instance.post<IUpdateCompanyResponse>("/UpdateCompany", {
             ...data,
             info: await publicIp.v4(),
         });
 
-    public ChangeUserStatus = (ID: number, Status: number) =>
-        this.instance.get("/ChangeUserStatus", {
+    public ChangeUserStatus = async (ID: number, Status: number) =>
+        this.instance.get<IChangeUserStatusResponse>("/ChangeUserStatus", {
             params: {
                 ID,
                 Status,
             },
         });
 
-    public GetAppNews = (AppType: number) =>
-        this.instance.get("/GetAppNews", {
+    public GetAppNews = async (AppType: number) =>
+        this.instance.get<INewsList>("/GetAppNews", {
             params: {
                 AppType,
             },
         });
 
-    public UpdateNews = (NewsData: INewsData) =>
+    public UpdateNews = async (NewsData: IUpdateNewsRequest['NewsData']) =>
         this.instance.post("/UpdateAppNews", {
             NewsData,
         });
 
-    public UpdateApp = (AppData: any) =>
+    public UpdateApp = async (AppData: IUpdateAppRequest) =>
         this.instance.post("/UpdateApp", {
             ...AppData,
         });
 
-    public GetPortalNews = (ProductType: number) =>
+    public GetPortalNews = async (ProductType: number) =>
         this.instance.get("/GetPortalNews", {
             params: {
                 ProductType,

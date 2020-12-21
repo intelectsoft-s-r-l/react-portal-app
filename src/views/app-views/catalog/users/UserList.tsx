@@ -88,7 +88,7 @@ export class UserList extends Component<IUserListStoreProps> {
     };
 
     getUsersInfo = () => {
-        return new ClientApi().GetUserList().then((data: any) => {
+        return new ClientApi().GetUserList().then((data) => {
             this.setState({ loading: false });
             if (data) {
                 const { ErrorCode } = data;
