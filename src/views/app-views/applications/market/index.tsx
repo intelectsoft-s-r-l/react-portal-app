@@ -18,6 +18,8 @@ import Utils from "../../../../utils";
 import WithStringTranslate from "../../../../utils/translate";
 import { IState } from "../../../../redux/reducers";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import "../applications.scss";
+
 interface IGridItem {
   deactivateApp: (AppID: number, AppName: string) => void;
   setVisibleModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,7 +44,7 @@ const GridItem = ({
     }
   }, []);
   return (
-    <Card>
+    <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
           <div className="cursor-pointer">
@@ -79,7 +81,7 @@ const GridItem = ({
       </Flex>
       <div>
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
-          <h3 className="mb-0 cursor-pointer ">{data.Name}</h3>
+          <h3 className="app-link mb-0 cursor-pointer">{data.Name}</h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
         <div style={{ minHeight: "70px" }}>
@@ -204,7 +206,7 @@ const Market = () => {
                     xs={24}
                     sm={24}
                     lg={12}
-                    xl={6}
+                    xl={8}
                     xxl={6}
                     key={elm["AppType"]}
                   >

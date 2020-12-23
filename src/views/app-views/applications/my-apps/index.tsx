@@ -24,7 +24,7 @@ const GridItem = ({ deactivateApp, data }: any) => {
     }
   }, []);
   return (
-    <Card>
+    <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
           <div className="cursor-pointer">
@@ -128,7 +128,7 @@ const MyAppList = () => {
                   xs={24}
                   sm={24}
                   lg={12}
-                  xl={6}
+                  xl={8}
                   xxl={6}
                   key={elm["AppType"]}
                 >

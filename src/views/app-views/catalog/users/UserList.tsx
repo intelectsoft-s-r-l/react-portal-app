@@ -84,7 +84,7 @@ export class UserList extends Component<IUserListStoreProps> {
           const filteredUsers = data.Users.filter(
             (user: any) => user.ID !== this.props.ID
           );
-          const evaluatedArray = Utils.sortData(filteredUsers, "ID");
+          const evaluatedArray = Utils.sortData(filteredUsers, "ID").reverse();
           this.setState((prev) => ({
             ...prev,
             usersToSearch: [...evaluatedArray],
