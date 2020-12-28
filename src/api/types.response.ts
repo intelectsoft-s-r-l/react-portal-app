@@ -232,7 +232,7 @@ export interface ICampaignList {
   PhoneList: string;
   ReviewedByUser: string;
   ReviewerComments: string;
-  ScheduleDate: string;
+  ScheduledDate: string;
   Status: number;
 }
 export interface ISMSGetCampaignResponse extends ApiResponse {

@@ -37,10 +37,10 @@ const Licenses = ({ AppType }: { AppType: number }) => {
   );
   const [licenses, setLicenses] = useState<ILicenses[]>([]);
   const [licensesToSearch, setLicensesToSearch] = useState<ILicenses[]>([]);
-  const deleteLicense = (LicenseID: number) => {
+  const deleteLicense = (LicenseID: string) => {
     return new ClientApi().DeleteLicense(LicenseID);
   };
-  const releaseLicense = (LicenseID: number) => {
+  const releaseLicense = (LicenseID: string) => {
     return new ClientApi().ReleaseLicense(LicenseID);
   };
   const deleteRow = (row: ILicenses[]) => {
@@ -53,7 +53,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       onOk: () => {
         if (selectedRows.length > 1) {
           selectedRows.forEach((elm: ILicenses) => {
-            deleteLicense(+elm.ID);
+            deleteLicense(elm.ID);
             data = Utils.deleteArrayRow(data, objKey, elm.ID);
             setLicenses(data);
             setSeletedRows([]);
@@ -64,7 +64,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
             setSeletedRows([]);
             setSelectedKeys([]);
             setLicenses(data);
-            deleteLicense(+elm.ID);
+            deleteLicense(elm.ID);
           }
         }
       },
@@ -102,6 +102,10 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       ),
     },
     {
+      title: "IP",
+      dataIndex: "PrivateIP",
+    },
+    {
       title: "Status",
       dataIndex: "Status",
       render: (Status: number) => (
@@ -128,7 +132,8 @@ const Licenses = ({ AppType }: { AppType: number }) => {
                     onOk: async () => {
                       setSeletedRows([]);
                       setSelectedKeys([]);
-                      await releaseLicense(+elm.ID);
+                      await releaseLicense(elm.ID);
+                      debugger;
                       await getAppLicenses(AppType);
                     },
                   });
@@ -147,7 +152,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
                   onOk: async () => {
                     setSeletedRows([]);
                     setSelectedKeys([]);
-                    await deleteLicense(+elm.ID);
+                    await deleteLicense(elm.ID);
                     await getAppLicenses(AppType);
                   },
                 });

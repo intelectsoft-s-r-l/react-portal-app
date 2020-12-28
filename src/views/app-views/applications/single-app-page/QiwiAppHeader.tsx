@@ -13,12 +13,19 @@ interface IQiwiAppHeader {
   BackOfficeURI?: any;
   ExternalSecurityPolicy?: any;
   setExternalSecurityPolicy: any;
+  apiKey: string;
+  setApiKey: React.Dispatch<React.SetStateAction<string>>;
+  generateApiKey: () => void
+  deleteApiKey: () => void
 }
 const QiwiAppHeader = ({
   AppID,
   BackOfficeURI,
   ExternalSecurityPolicy,
   setExternalSecurityPolicy,
+  apiKey,
+  generateApiKey,
+  deleteApiKey
 }: IQiwiAppHeader) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const updateApp = async (info: IUpdateAppRequest) => {
@@ -40,67 +47,91 @@ const QiwiAppHeader = ({
 
   return (
     <PageHeaderAlt className="bg-white border-bottom mb-3">
-      <Form>
-        <Row justify="space-between">
-          <Col xl={8}>
-            <div className="container-fluid">
-              <h2>Customer ID</h2>
-            </div>
-            <Input
-              value={ExternalSecurityPolicy.CustomerID}
-              name={"CustomerID"}
-              onChange={onChange}
-              suffix={
-                <CardToolbar
-                  code={ExternalSecurityPolicy!.CustomerID}
-                  expand={() => false}
-                  isExpand="false"
-                />
-              }
-            />
-          </Col>
-        </Row>
-        <Row className="mt-3">
-          <Col xl={8}>
-            <div className="container-fluid">
-              <h2>Public Key</h2>
-            </div>
-            <Input
-              value={ExternalSecurityPolicy!.PublicKey}
-              name="PublicKey"
-              onChange={onChange}
-              suffix={
-                <CardToolbar
-                  code={ExternalSecurityPolicy!.PublicKey}
-                  expand={() => false}
-                  isExpand="false"
-                />
-              }
-            />
-            <Button
-              type="ghost"
-              className="mt-3"
-              loading={loading}
-              onClick={() => {
-                setLoading(true);
-                setTimeout(async () => {
-                  return await updateApp({
-                    AppID,
-                    BackOfficeURI,
-                    ExternalSecurityPolicy: Buffer.from(
-                      JSON.stringify(ExternalSecurityPolicy)
-                    ).toString("base64"),
-                  });
-                }, 1000);
-              }}
-            >
-              {" "}
-              <IntlMessage id="auth.Send" />
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </PageHeaderAlt>
+      <Row justify="space-between">
+        <Col xl={8}>
+          <div className="container-fluid">
+            <h2>Customer ID</h2>
+          </div>
+          <Input
+            value={ExternalSecurityPolicy.CustomerID}
+            name={"CustomerID"}
+            onChange={onChange}
+            suffix={
+              <CardToolbar
+                code={ExternalSecurityPolicy!.CustomerID}
+                expand={() => false}
+                isExpand="false"
+              />
+            }
+          />
+        </Col>
+        <Col xl={8}>
+          <div className="container-fluid">
+            <h2>API Key</h2>
+          </div>
+          <Input
+            disabled
+            value={apiKey}
+            suffix={
+              <CardToolbar
+                code={apiKey}
+                expand={() => false}
+                isExpand="false"
+              />
+            }
+          />
+          <Button
+            type="ghost"
+            className="mt-3"
+            onClick={() => generateApiKey()}
+          >
+            <IntlMessage id="app.Generate" />
+          </Button>
+          <Button danger className="mt-3 ml-3" onClick={() => deleteApiKey()}>
+            <IntlMessage id="app.Delete" />
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col xl={8}>
+          <div className="container-fluid">
+            <h2>Public Key</h2>
+          </div>
+          <Input
+            value={ExternalSecurityPolicy!.PublicKey}
+            name="PublicKey"
+            onChange={onChange}
+            suffix={
+              <CardToolbar
+                code={ExternalSecurityPolicy!.PublicKey}
+                expand={() => false}
+                isExpand="false"
+              />
+            }
+          />
+          <Button
+            type="ghost"
+            className="mt-3"
+            loading={loading}
+            onClick={() => {
+              setLoading(true);
+              setTimeout(async () => {
+                return await updateApp({
+                  AppID,
+                  BackOfficeURI,
+                  ExternalSecurityPolicy: Buffer.from(
+                    JSON.stringify(ExternalSecurityPolicy)
+                  ).toString("base64"),
+                });
+              }, 1000);
+            }}
+          >
+            {" "}
+            <IntlMessage id="auth.Send" />
+          </Button>
+        </Col>
+      </Row>
+    </PageHeaderAlt >
   );
 };
 

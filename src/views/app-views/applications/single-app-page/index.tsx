@@ -1,4 +1,4 @@
-import { Card, Menu } from "antd";
+import { Card, Menu, message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -18,10 +18,12 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
 import QiwiAppHeader from "./QiwiAppHeader";
-import { IUpdateAppRequest } from "../../../../api/types.request";
 import { IMarketAppList } from "../../../../api/types.response";
+import Localization from "../../../../utils/Localization";
+import { DONE, UPDATING } from "../../../../constants/Messages";
+import SmsCampaign from "./sms";
 
-enum appTypeEnum {
+enum typeOf {
   Retail = 10,
   Agent = 20,
   Expert = 30,
@@ -30,93 +32,126 @@ enum appTypeEnum {
   WaiterAssistant = 31,
   KitchetAssistant = 32,
   Qiwi = 100,
+  SMS = 50,
 }
-const AppOption = ({ match, location, AppType }: any) => {
-  return (
-    <>
-      {AppType == appTypeEnum.Retail ||
-      AppType == appTypeEnum.Agent ||
-      AppType == appTypeEnum.Expert ||
-      AppType == appTypeEnum.StockManager ||
-      AppType == appTypeEnum.WaiterAssistant ||
-      AppType == appTypeEnum.KitchetAssistant ? (
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={[`${match.url}/:appId/`]}
-          selectedKeys={[location.pathname]}
-        >
-          <Menu.Item key={`${match.url}/description`}>
-            <span>
-              <IntlMessage id="app.Description" />
-            </span>
-            <Link to={"description"} />
-          </Menu.Item>
-          <Menu.Item key={`${match.url}/packages`}>
-            <span>
-              <IntlMessage id="app.Packages" />
-            </span>
-            <Link to={"packages"} />
-          </Menu.Item>
-          <Menu.Item key={`${match.url}/licenses`}>
-            <span>
-              <IntlMessage id="app.Licenses" />
-            </span>
-            <Link to={"licenses"} />
-          </Menu.Item>
-          <Menu.Item key={`${match.url}/devices`}>
-            <span>
-              <IntlMessage id="app.Devices" />
-            </span>
-            <Link to={"devices"} />
-          </Menu.Item>
-        </Menu>
-      ) : AppType == appTypeEnum.MyDiscount ? (
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={[`${match.url}/:appId/`]}
-          selectedKeys={[location.pathname]}
-        >
-          <Menu.Item key={`${match.url}/description`}>
-            <span>
-              <IntlMessage id="app.Description" />
-            </span>
-            <Link to={"description"} />
-          </Menu.Item>
-          <Menu.Item key={`${match.url}/packages`}>
-            <span>
-              <IntlMessage id="app.Packages" />
-            </span>
-            <Link to={"packages"} />
-          </Menu.Item>
-          <Menu.Item key={`${match.url}/news`}>
-            <span>
-              <IntlMessage id="app.News" />
-            </span>
-            <Link to={"news"} />
-          </Menu.Item>
-        </Menu>
-      ) : (
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={[`${match.url}/:appId/`]}
-          selectedKeys={[location.pathname]}
-        >
-          <Menu.Item key={`${match.url}/description`}>
-            <span>
-              <IntlMessage id="app.Description" />
-            </span>
-            <Link to={"description"} />
-          </Menu.Item>
-          <Menu.Item key={`${match.url}/packages`}>
-            <span>
-              <IntlMessage id="app.Packages" />
-            </span>
-            <Link to={"packages"} />
-          </Menu.Item>
-        </Menu>
-      )}
-    </>
-  );
+const Options = ({ AppType, location, match }: any) => {
+  if (
+    AppType === typeOf.Retail ||
+    AppType === typeOf.Agent ||
+    AppType === typeOf.Expert ||
+    AppType === typeOf.StockManager ||
+    AppType === typeOf.WaiterAssistant ||
+    AppType === typeOf.KitchetAssistant
+  ) {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/licenses`}>
+          <span>
+            <IntlMessage id="app.Licenses" />
+          </span>
+          <Link to={"licenses"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/devices`}>
+          <span>
+            <IntlMessage id="app.Devices" />
+          </span>
+          <Link to={"devices"} />
+        </Menu.Item>
+      </Menu>
+    );
+  } else if (AppType === typeOf.MyDiscount) {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/news`}>
+          <span>
+            <IntlMessage id="app.News" />
+          </span>
+          <Link to={"news"} />
+        </Menu.Item>
+      </Menu>
+    );
+  } else if (AppType === typeOf.SMS) {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/campaign`}>
+          <span>Campaign</span>
+          <Link to={"campaign"} />
+        </Menu.Item>
+      </Menu>
+    );
+  } else {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
+        </Menu.Item>
+      </Menu>
+    );
+  }
+};
+const AppOption = (props: any) => {
+  return <Options {...props} />;
 };
 
 const AppRoute = ({
@@ -151,6 +186,10 @@ const AppRoute = ({
       <Route
         path={`${match.url}/news`}
         render={(props) => <News {...props} AppType={AppType} />}
+      />
+      <Route
+        path={`${match.url}/campaign`}
+        render={(props) => <SmsCampaign />}
       />
     </Switch>
   );
@@ -248,6 +287,60 @@ const SingleAppPage = ({ match, location }: any) => {
       }
     });
   }, [appID]);
+  const generateApiKey = () => {
+    Modal.confirm({
+      title: "Are you sure you want to generate a new API Key?",
+      onOk: () => {
+        return new ClientApi().GenerateApiKey(app!.ID).then((data) => {
+          if (data) {
+            if (data.ErrorCode === 0) {
+              message
+                .loading("Loading...", 1)
+                .then(() => {
+                  setApiKey(data.ApiKey);
+                })
+                .then(() =>
+                  message.success({
+                    content: <Localization msg={DONE} />,
+                    key: "updatable",
+                    duration: 1,
+                  })
+                );
+            }
+          }
+        });
+      },
+    });
+  };
+
+  const deleteApiKey = () => {
+    Modal.confirm({
+      title: "Are you sure you want to delete current API Key?",
+      onOk: () =>
+        new ClientApi().DeleteApiKey(app!.ID).then((data) => {
+          if (data) {
+            if (data.ErrorCode === 0) {
+              message
+                .loading({
+                  content: <Localization msg={UPDATING} />,
+                  key: "updatable",
+                })
+                .then(() => {
+                  setApiKey("00000000-0000-0000-0000-000000000000");
+                })
+                .then(() =>
+                  message.success({
+                    content: <Localization msg={DONE} />,
+                    key: "updatable",
+                    duration: 1,
+                  })
+                );
+            }
+          }
+        }),
+      onCancel: () => {},
+    });
+  };
 
   if (!app) {
     return <Loading cover="content" />;
@@ -260,12 +353,12 @@ const SingleAppPage = ({ match, location }: any) => {
         <>
           <AboutItem appData={app} />
 
-          {appID == appTypeEnum.Agent ||
-          appID == appTypeEnum.Expert ||
-          appID == appTypeEnum.Retail ||
-          appID == appTypeEnum.StockManager ||
-          appID == appTypeEnum.WaiterAssistant ||
-          appID == appTypeEnum.KitchetAssistant ? (
+          {appID == typeOf.Agent ||
+          appID == typeOf.Expert ||
+          appID == typeOf.Retail ||
+          appID == typeOf.StockManager ||
+          appID == typeOf.WaiterAssistant ||
+          appID == typeOf.KitchetAssistant ? (
             <IntegrationsHeader
               activationCode={activationCode}
               BackOfficeURI={app!.BackOfficeURI}
@@ -274,14 +367,20 @@ const SingleAppPage = ({ match, location }: any) => {
               apiKey={apiKey}
               setApiKey={setApiKey}
               getMarketApp={getMarketApp}
+              generateApiKey={generateApiKey}
+              deleteApiKey={deleteApiKey}
             />
           ) : null}
-          {+appID === appTypeEnum.Qiwi && (
+          {+appID === typeOf.Qiwi && (
             <QiwiAppHeader
               AppID={app.ID}
               BackOfficeURI={app.BackOfficeURI}
               ExternalSecurityPolicy={ExternalSecurityPolicy}
               setExternalSecurityPolicy={setExternalSecurityPolicy}
+              apiKey={apiKey}
+              generateApiKey={generateApiKey}
+              deleteApiKey={deleteApiKey}
+              setApiKey={setApiKey}
             />
           )}
           <InnerAppLayout

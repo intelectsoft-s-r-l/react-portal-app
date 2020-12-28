@@ -11,68 +11,15 @@ import CardToolbar from "../../../../components/util-components/DemoCard/CardToo
 
 const IntegrationsHeader = ({
   apiKey,
-  setApiKey,
   AppID,
   BackOfficeURI,
   activationCode,
   setActivationCode,
   getMarketApp,
+  generateApiKey,
+  deleteApiKey
 }: any) => {
   const { confirm } = Modal;
-  const generateApiKey = () => {
-    confirm({
-      title: "Are you sure you want to generate a new API Key?",
-      onOk: () => {
-        return new ClientApi().GenerateApiKey(AppID).then((data) => {
-          if (data) {
-            if (data.ErrorCode === 0) {
-              message
-                .loading("Loading...", 1)
-                .then(() => {
-                  setApiKey(data.ApiKey);
-                })
-                .then(() =>
-                  message.success({
-                    content: <Localization msg={DONE} />,
-                    key: "updatable",
-                    duration: 1,
-                  })
-                );
-            }
-          }
-        });
-      },
-    });
-  };
-
-  const deleteApiKey = () => {
-    confirm({
-      title: "Are you sure you want to delete current API Key?",
-      onOk: () =>
-        new ClientApi().DeleteApiKey(AppID).then((data: any) => {
-          if (data) {
-            if (data.ErrorCode === 0) {
-              message
-                .loading({
-                  content: <Localization msg={UPDATING} />,
-                  key: "updatable",
-                })
-                .then(() => {
-                  setApiKey("00000000-0000-0000-0000-000000000000");
-                })
-                .then(() =>
-                  message.success({
-                    content: <Localization msg={DONE} />,
-                    key: "updatable",
-                    duration: 1,
-                  })
-                );
-            }
-          }
-        }),
-      onCancel: () => {},
-    });
-  };
   const generateActivationCode = () => {
     confirm({
       title: "Are you sure you want generate a new activation code?",
@@ -100,7 +47,7 @@ const IntegrationsHeader = ({
               }
             }
           }),
-      onCancel: () => {},
+      onCancel: () => { },
     });
   };
 

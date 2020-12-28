@@ -235,12 +235,12 @@ export class ClientApi extends HttpClient {
       params: { AppType, Quantity },
     });
 
-  public ReleaseLicense = async (LicenseID: number) =>
+  public ReleaseLicense = async (LicenseID: string) =>
     this.instance.get<IReleaseLicenseResponse>("/ReleaseAppLicense", {
       params: { LicenseID },
     });
 
-  public DeleteLicense = async (LicenseID: number) =>
+  public DeleteLicense = async (LicenseID: string) =>
     this.instance.get<IDeleteAppLicenseResponse>("/DeleteAppLicense", {
       params: { LicenseID },
     });

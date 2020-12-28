@@ -98,8 +98,8 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
             {photo ? (
               <img src={photo} alt="photo" style={{ width: "100%" }} />
             ) : (
-              uploadButton
-            )}
+                uploadButton
+              )}
           </Upload>
         </div>
       </Flex>
