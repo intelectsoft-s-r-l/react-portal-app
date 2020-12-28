@@ -23,7 +23,7 @@ export const TopNav = ({
     useEffect(() => {
         if (routeInfo) {
             const title = routeInfo.title;
-            document.title = `${APP_NAME} - ${WithStringTranslate(title)}`;
+            document.title = `${WithStringTranslate(title)} | ${APP_NAME}`;
         } else {
             document.title = APP_NAME;
         }
