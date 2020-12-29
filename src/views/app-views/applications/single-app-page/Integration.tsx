@@ -152,7 +152,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
   };
 
   return (
-    <Row gutter={ROW_GUTTER}>
+    <Row gutter={200}>
       <Col xl={12} className={settings.APIKey ? "mb-4" : "mb-4 d-none"}>
         <div className="container-fluid">
           <h2>API Key</h2>

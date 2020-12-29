@@ -6,24 +6,24 @@ import { ILicenses } from "../../../../api/types.response";
 import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 enum Health {
-  _good = 2,
-  _cold = 7,
-  _dead = 4,
-  _overheat = 3,
-  _overvoltage = 5,
-  _unspecified_failurej = 6,
-  _unknown = 1,
+  _GOOD = 2,
+  _COLD = 7,
+  _DEAD = 4,
+  _OVERHEAT = 3,
+  _OVERVOLTAGE = 5,
+  _UNSPECIFIED_FAILURE = 6,
+  _UNKNOWN = 1,
 }
 enum Plugged {
-  _ac = 1,
-  _usb = 2,
-  _wireless = 4,
+  _AC = 1,
+  _USB = 2,
+  _WIRELESS = 4,
 }
 enum Status {
-  _discharging = 3,
-  _not_charging = 4,
-  _full = 5,
-  _charging = 2,
+  _DISCHARGING = 3,
+  _NOT_CHARGING = 4,
+  _FULL = 5,
+  _CHARGING = 2,
 }
 const tableColumns = [
   {
