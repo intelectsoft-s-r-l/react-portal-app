@@ -5,7 +5,11 @@ import { ILocale } from "../../../../api/types.response";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 
-const Description = ({ LongDescription }: { LongDescription: ILocale }) => {
+const Description = ({
+  LongDescription,
+}: {
+  LongDescription: ILocale | string;
+}) => {
   const [longDesc, setLongDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   useEffect(() => {

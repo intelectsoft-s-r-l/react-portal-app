@@ -4,7 +4,13 @@ import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
 import Avatar from "antd/lib/avatar/avatar";
-import { Link, Redirect, Route, Switch } from "react-router-dom";
+import {
+  Link,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch,
+} from "react-router-dom";
 import Description from "./Description";
 import Licenses from "./Licenses";
 import Packages from "./Packages";
@@ -170,8 +176,11 @@ const Options = ({ AppType, location, match }: any) => {
 const AppOption = (props: any) => {
   return <Options {...props} />;
 };
-
-const AppRoute = ({ match, app }: { [key: string]: any }) => {
+interface IAppRoute {
+  match: RouteComponentProps["match"];
+  app: IMarketAppList;
+}
+const AppRoute = ({ match, app }: IAppRoute) => {
   return (
     <Switch>
       <Redirect exact from={`${match.url}`} to={`${match.url}/description`} />
@@ -183,19 +192,21 @@ const AppRoute = ({ match, app }: { [key: string]: any }) => {
       />
       <Route
         path={`${match.url}/licenses`}
-        render={(props) => <Licenses {...props} AppType={app.AppType} />}
+        render={(props) => <Licenses {...props} AppType={app.AppType ?? 0} />}
       />
       <Route
         path={`${match.url}/packages`}
-        render={(props) => <Packages {...props} packages={app.Packages} />}
+        render={(props) => (
+          <Packages {...props} packages={app.Packages ?? []} />
+        )}
       />
       <Route
         path={`${match.url}/devices`}
-        render={(props) => <Devices {...props} AppType={app.AppType} />}
+        render={(props) => <Devices {...props} AppType={app.AppType ?? 0} />}
       />
       <Route
         path={`${match.url}/news`}
-        render={(props) => <News {...props} AppType={app.AppType} />}
+        render={(props) => <News {...props} AppType={app.AppType ?? 0} />}
       />
       <Route path={`${match.url}/campaign`} render={() => <SmsCampaign />} />
       <Route

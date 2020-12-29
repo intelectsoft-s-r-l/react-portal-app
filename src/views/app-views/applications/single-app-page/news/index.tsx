@@ -85,9 +85,9 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
     </Card>
   );
 };
-const News = ({ AppType }: any) => {
+const News = ({ AppType }: { AppType: number }) => {
   const getNews = (AppType: number) => {
-    return new AppService().GetAppNews(AppType).then((data: any) => {
+    return new AppService().GetAppNews(AppType).then((data) => {
       if (data) {
         if (data.ErrorCode === 0) setNews(data.NewsList);
       }
