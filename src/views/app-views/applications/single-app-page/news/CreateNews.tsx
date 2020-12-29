@@ -7,7 +7,7 @@ import { DONE, UPLOADING } from "../../../../../constants/Messages";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
-import { ClientApi } from "../../../../../api";
+import { AppService } from "../../../../../api";
 import { useSelector } from "react-redux";
 import Localization from "../../../../../utils/Localization";
 import { IState } from "../../../../../redux/reducers";
@@ -43,7 +43,7 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
   const onFinish = () => {
     setLoading(true);
     setTimeout(async () => {
-      return new ClientApi()
+      return new AppService()
         .UpdateNews({
           CompanyID,
           AppType,
@@ -98,8 +98,8 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
             {photo ? (
               <img src={photo} alt="photo" style={{ width: "100%" }} />
             ) : (
-                uploadButton
-              )}
+              uploadButton
+            )}
           </Upload>
         </div>
       </Flex>

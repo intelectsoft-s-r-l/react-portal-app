@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Card, Col, Empty, Menu, Row, Tooltip, Tag } from "antd";
+import { Button, Card, Col, Empty, Menu, Row, Tooltip, Tag, Table } from "antd";
 import {
   EyeOutlined,
   EditOutlined,
@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { ClientApi } from "../../../../../api";
+import { AppService } from "../../../../../api";
 import { ICampaignList } from "../../../../../api/types.response";
 import Flex from "../../../../../components/shared-components/Flex";
 import NewCampaign from "./NewCampaign";
@@ -19,6 +19,8 @@ import moment from "moment";
 import Avatar from "antd/lib/avatar/avatar";
 import { useSelector } from "react-redux";
 import { IState } from "../../../../../redux/reducers";
+import SmsTable from "./SmsTable";
+import EditCampaign from "./EditCampaign";
 
 const ItemAction = ({
   getCampaignList,
@@ -43,7 +45,7 @@ const ItemAction = ({
           <Menu.Item
             key="2"
             onClick={async () => {
-              return await new ClientApi()
+              return await new AppService()
                 .SMS_DeleteCampaign(data.ID)
                 .then((data) => {
                   if (data.ErrorCode === 0) {
@@ -114,10 +116,16 @@ const SmsCampaign = () => {
   const [isNewCampaignVisible, setIsNewCampaignVisible] = useState<boolean>(
     false
   );
+  const [isEditCampaignVisible, setEditCampaignVisible] = useState<boolean>(
+    false
+  );
+  const [selectedCampaign, setSelectedCampaign] = useState<
+    Partial<ICampaignList>
+  >({});
   const [loading, setLoading] = useState<boolean>(true);
   const account = useSelector((state: IState) => state["account"]);
   const getCampaignList = async () => {
-    return await new ClientApi().SMS_GetCampaign().then((data) => {
+    return await new AppService().SMS_GetCampaign().then((data) => {
       setLoading(false);
       if (data) {
         if (data.ErrorCode === 0) {
@@ -126,6 +134,11 @@ const SmsCampaign = () => {
         }
       }
     });
+  };
+
+  const showEditCampaign = (data: ICampaignList) => {
+    setEditCampaignVisible(true);
+    setSelectedCampaign(data);
   };
 
   useEffect(() => {
@@ -141,6 +154,12 @@ const SmsCampaign = () => {
         close={() => setIsNewCampaignVisible(false)}
         getCampaignList={getCampaignList}
       />
+      <EditCampaign
+        visible={isEditCampaignVisible}
+        close={() => setEditCampaignVisible(false)}
+        getCampaignList={getCampaignList}
+        data={selectedCampaign}
+      />
       <Flex justifyContent="between" alignItems="center" className="py-4">
         <h2>Campaign</h2>
         <Button type="primary" onClick={() => setIsNewCampaignVisible(true)}>
@@ -148,21 +167,11 @@ const SmsCampaign = () => {
           <span>New</span>
         </Button>
       </Flex>
-      <Row gutter={16}>
-        {campaignInfo.length > 0 ? (
-          campaignInfo.map((elm) => (
-            <Col xs={24} sm={24} lg={12} xl={12} xxl={8} key={elm.ID}>
-              <GridItem
-                data={elm}
-                getCampaignList={getCampaignList}
-                account={account}
-              />
-            </Col>
-          ))
-        ) : (
-          <Empty />
-        )}
-      </Row>
+      <Table
+        columns={SmsTable(getCampaignList, showEditCampaign)}
+        dataSource={campaignInfo}
+        rowKey={"ID"}
+      />
     </>
   );
 };

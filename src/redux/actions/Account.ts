@@ -4,7 +4,7 @@ import {
   UPDATE_SETTINGS,
 } from "../constants/Account";
 import { onLocaleChange } from "./Theme";
-import { ClientApi } from "../../api";
+import { AppService } from "../../api";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { CHANGE_LOCALE } from "../constants/Theme";
@@ -23,7 +23,7 @@ export const clearSettings = () => ({
 
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
-    return new ClientApi().GetProfileInfo().then((data: any) => {
+    return new AppService().GetProfileInfo().then((data: any) => {
       if (data) {
         const { ErrorCode, User } = data;
         if (ErrorCode === 0) {
@@ -43,7 +43,7 @@ export const getProfileInfo = (): ThunkResult<void> => {
 
 export const setProfileInfo = (accountInfo: IUsers): ThunkResult<void> => {
   return async (dispatch) => {
-    return new ClientApi().UpdateUser(accountInfo).then((data: any) => {
+    return new AppService().UpdateUser(accountInfo).then((data: any) => {
       if (data) {
         if (data.ErrorCode === 0) {
           dispatch(getProfileInfo());

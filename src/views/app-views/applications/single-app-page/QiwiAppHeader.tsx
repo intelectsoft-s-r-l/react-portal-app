@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, message, Row } from "antd";
 import * as React from "react";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import { IUpdateAppRequest } from "../../../../api/types.request";
 import { PageHeaderAlt } from "../../../../components/layout-components/PageHeaderAlt";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
@@ -15,8 +15,8 @@ interface IQiwiAppHeader {
   setExternalSecurityPolicy: any;
   apiKey: string;
   setApiKey: React.Dispatch<React.SetStateAction<string>>;
-  generateApiKey: () => void
-  deleteApiKey: () => void
+  generateApiKey: () => void;
+  deleteApiKey: () => void;
 }
 const QiwiAppHeader = ({
   AppID,
@@ -25,11 +25,11 @@ const QiwiAppHeader = ({
   setExternalSecurityPolicy,
   apiKey,
   generateApiKey,
-  deleteApiKey
+  deleteApiKey,
 }: IQiwiAppHeader) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const updateApp = async (info: IUpdateAppRequest) => {
-    return new ClientApi().UpdateApp(info).then((data) => {
+    return new AppService().UpdateApp(info).then((data) => {
       setLoading(false);
       if (data) {
         if (data.ErrorCode === 0) {
@@ -131,7 +131,7 @@ const QiwiAppHeader = ({
           </Button>
         </Col>
       </Row>
-    </PageHeaderAlt >
+    </PageHeaderAlt>
   );
 };
 

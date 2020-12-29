@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import { ILicenses } from "../../../../api/types.response";
 import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
@@ -59,7 +59,7 @@ const tableColumns = [
 const Devices = ({ AppType }: { AppType: number }) => {
   const [devices, setDevices] = useState<any>();
   const getDevices = async (AppType: number) => {
-    return new ClientApi().GetAppLicenses(AppType).then((data) => {
+    return new AppService().GetAppLicenses(AppType).then((data) => {
       if (data) {
         if (data.ErrorCode === 0) {
           setDevices(

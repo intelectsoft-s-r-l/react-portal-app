@@ -89,6 +89,14 @@ export interface IMarketAppList {
   BackOfficeURI?: string;
   ID: number;
   LicenseActivationCode?: number;
+  ModuleSettings: {
+    APIKey: boolean;
+    ActivationCode: boolean;
+    Backoffice: boolean;
+    License: boolean;
+    ProductType: number;
+    RSAKey: boolean;
+  };
   LicenseActivationCodeValidHours?: number;
   LicenseActivationCodeValidTo?: string;
   LongDescription: ILocale | string;
@@ -218,13 +226,13 @@ export interface IGenerateApiKeyResponse extends ApiResponse {
 }
 
 export interface IGenerateLicenseActivationCodeResponse extends ApiResponse {
-  AppID: number;
+  ActivationCode: string;
 }
 
 export interface ICampaignList {
   Category: number;
   CompanyName: string;
-  CreateDate: string;
+  CreateDate: any;
   Description: string;
   ID: number;
   Message: string;
@@ -232,7 +240,7 @@ export interface ICampaignList {
   PhoneList: string;
   ReviewedByUser: string;
   ReviewerComments: string;
-  ScheduledDate: string;
+  ScheduledDate: any;
   Status: number;
 }
 export interface ISMSGetCampaignResponse extends ApiResponse {

@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import Utils from "../../../../utils";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import CreateLicenseModal from "../CreateLicenseModal";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ILicenses } from "../../../../api/types.response";
@@ -17,7 +17,7 @@ import { ColumnsType } from "antd/lib/table";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
   const getAppLicenses = async (AppType: number) => {
-    return new ClientApi().GetAppLicenses(AppType).then((data) => {
+    return new AppService().GetAppLicenses(AppType).then((data) => {
       if (data) {
         if (data.ErrorCode === 0) {
           // const evaluatedArray = sortData(data.LicensesList);
@@ -38,10 +38,10 @@ const Licenses = ({ AppType }: { AppType: number }) => {
   const [licenses, setLicenses] = useState<ILicenses[]>([]);
   const [licensesToSearch, setLicensesToSearch] = useState<ILicenses[]>([]);
   const deleteLicense = (LicenseID: string) => {
-    return new ClientApi().DeleteLicense(LicenseID);
+    return new AppService().DeleteLicense(LicenseID);
   };
   const releaseLicense = (LicenseID: string) => {
-    return new ClientApi().ReleaseLicense(LicenseID);
+    return new AppService().ReleaseLicense(LicenseID);
   };
   const deleteRow = (row: ILicenses[]) => {
     const objKey = "ID";

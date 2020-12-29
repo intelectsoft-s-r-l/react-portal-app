@@ -1,82 +1,66 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { Col, DatePicker, Form, Input, message, Modal, Row } from "antd";
+import { Col, DatePicker, Form, Input, Modal, Row } from "antd";
+import { ICampaignList } from "../../../../../api/types.response";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
+import { rules } from "./NewCampaign";
 import moment from "moment";
-import { ClientApi } from "../../../../../api";
-import WithStringTranslate from "../../../../../utils/translate";
-import { DONE } from "../../../../../constants/Messages";
+import { AppService } from "../../../../../api";
 
-interface INewCampaign {
+interface IEditCampaign {
   visible: boolean;
   close: () => void;
-  getCampaignList: () => any;
+  getCampaignList: () => void;
+  data: Partial<ICampaignList>;
 }
-
-const rules = {
-  Name: [
-    {
-      required: true,
-      message: "Please input a campaign name!",
-    },
-  ],
-  Description: [
-    {
-      required: true,
-      message: "Please input a short description!",
-    },
-  ],
-  Message: [
-    {
-      required: true,
-      message: "Please input a message!",
-    },
-  ],
-  ScheduledDate: [
-    {
-      required: true,
-      message: "Please insert a scheduled date!",
-    },
-  ],
-};
-const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
-  const [form] = Form.useForm();
+const EditCampaign = ({
+  visible,
+  close,
+  getCampaignList,
+  data,
+}: IEditCampaign) => {
   useEffect(() => {
     if (!visible) return;
     form.resetFields();
-  }, [visible, form]);
+  }, [visible]);
+  const [form] = Form.useForm();
   const onFinish = async (values: any) => {
     const ScheduledDate = moment(values.ScheduledDate["_d"]).format(
       "[/Date(]xZZ[))/]"
     );
-    return await new ClientApi()
+    return new AppService()
       .SMS_UpdateCampaign({
+        ...data,
         ...values,
         ScheduledDate,
       })
       .then((data) => {
         if (data) {
           if (data.ErrorCode === 0) {
-            getCampaignList().then(() =>
-              message.success(WithStringTranslate(DONE), 1)
-            );
+            getCampaignList();
           }
         }
       });
   };
   return (
     <Modal
-      title={"Add campaign"}
+      title="Edit campaign"
       visible={visible}
+      destroyOnClose
+      onCancel={close}
       onOk={() => {
         form.validateFields().then((values) => {
           close();
           onFinish(values);
         });
       }}
-      onCancel={close}
     >
-      <Form form={form} name="newCampaign" layout="vertical">
+      <Form
+        form={form}
+        name="editCampaign"
+        layout="vertical"
+        initialValues={{ ...data, ScheduledDate: moment(data.ScheduledDate) }}
+      >
         <Row gutter={ROW_GUTTER}>
           <Col xs={24} sm={24} md={24}>
             <Form.Item label={"Campaign name"} name="Name" rules={rules.Name}>
@@ -99,16 +83,11 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
           </Col>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
+              name={"ScheduledDate"}
               label={"Scheduled date"}
-              name="ScheduledDate"
               rules={rules.ScheduledDate}
             >
-              <DatePicker
-                format={"DD/MM/YYYY"}
-                disabledDate={(current) =>
-                  current && current.valueOf() < Date.now()
-                }
-              />
+              <DatePicker format={"DD/MM/YYYY"} />
             </Form.Item>
           </Col>
         </Row>
@@ -116,4 +95,4 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
     </Modal>
   );
 };
-export default NewCampaign;
+export default EditCampaign;

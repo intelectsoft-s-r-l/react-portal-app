@@ -7,7 +7,7 @@ import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { updateSettings } from "../../../../redux/actions/Account";
 import { connect } from "react-redux";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
 import Localization from "../../../../utils/Localization";
@@ -21,7 +21,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
   formRef = React.createRef() as any;
 
   public getCompanyInfo = async () => {
-    return new ClientApi().GetCompanyInfo().then((data) => {
+    return new AppService().GetCompanyInfo().then((data) => {
       if (data) {
         const { ErrorCode, Company } = data;
         if (ErrorCode === 0) {
@@ -34,7 +34,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
 
   public updateCompany = async (values: ICompanyData) => {
     const updatedInfo = { Company: { ...this.state, ...values } };
-    return new ClientApi().UpdateCompany(updatedInfo).then(async (data) => {
+    return new AppService().UpdateCompany(updatedInfo).then(async (data) => {
       if (data) {
         const { ErrorCode } = data;
         if (ErrorCode === 0) {

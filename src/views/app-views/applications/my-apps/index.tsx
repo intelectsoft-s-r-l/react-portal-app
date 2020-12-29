@@ -6,7 +6,7 @@ import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
 import { CheckCircleOutlined, ExperimentOutlined } from "@ant-design/icons";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
@@ -73,7 +73,7 @@ const MyAppList = () => {
   const { confirm } = Modal;
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketAppList = async () => {
-    return new ClientApi().GetMarketAppList().then((data: any) => {
+    return new AppService().GetMarketAppList().then((data: any) => {
       setLoading(false);
       if (data) {
         const { ErrorCode, MarketAppList } = data;
@@ -98,11 +98,13 @@ const MyAppList = () => {
           setTimeout(
             () =>
               resolve(
-                new ClientApi().DeactivateApp(AppID).then(async (data: any) => {
-                  if (data) {
-                    if (data.ErrorCode === 0) await getMarketAppList();
-                  }
-                })
+                new AppService()
+                  .DeactivateApp(AppID)
+                  .then(async (data: any) => {
+                    if (data) {
+                      if (data.ErrorCode === 0) await getMarketAppList();
+                    }
+                  })
               ),
             1000
           );

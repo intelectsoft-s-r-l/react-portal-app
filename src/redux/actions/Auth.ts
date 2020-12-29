@@ -9,7 +9,7 @@ import {
 import { message, Modal } from "antd";
 import { getProfileInfo } from "./Account";
 import { ACTIVATE_ACCOUNT, EMAIL_CONFIRM_MSG } from "../../constants/Messages";
-import { AuthApi } from "../../api";
+import { AuthService } from "../../api";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import WithStringTranslate from "../../utils/translate";
@@ -45,7 +45,7 @@ export const hideLoading = () => ({
 });
 
 export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
-  return new AuthApi().SendActivationCode().then((data: any) => {
+  return new AuthService().SendActivationCode().then((data: any) => {
     const { ErrorMessage, ErrorCode } = data;
     if (data) {
       if (ErrorCode === 0)
@@ -63,7 +63,7 @@ export const authorizeUser = (
   userData: IAuthorizeUserRequest
 ): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AuthApi()
+    return new AuthService()
       .Login(userData)
       .then((data) => {
         if (data) {

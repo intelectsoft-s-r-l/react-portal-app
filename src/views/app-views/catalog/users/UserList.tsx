@@ -21,7 +21,7 @@ import "./add_user.scss";
 import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import Localization from "../../../../utils/Localization";
@@ -76,7 +76,7 @@ export class UserList extends Component<IUserListStoreProps> {
   };
 
   getUsersInfo = async () => {
-    return new ClientApi().GetUserList().then((data) => {
+    return new AppService().GetUserList().then((data) => {
       this.setState({ loading: false });
       if (data) {
         const { ErrorCode } = data;
@@ -158,7 +158,7 @@ export class UserList extends Component<IUserListStoreProps> {
   };
 
   handleUserStatus = (userId: number, status: number) => {
-    return new ClientApi().ChangeUserStatus(userId, status);
+    return new AppService().ChangeUserStatus(userId, status);
   };
   dropdownMenu = (row: any) => (
     <Menu>

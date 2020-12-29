@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
 import { useSelector } from "react-redux";
 import Loading from "../../../../components/shared-components/Loading";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import InstallWizard from "./wizard";
 import { MarketContext } from "./MarketContext";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
@@ -117,7 +117,7 @@ const Market = () => {
   const [selectedApp, setSelectedApp] = useState<IMarketAppList>();
   const [appInstalled, setAppInstalled] = useState<boolean>(false);
   const getMarketApps = async () => {
-    return new ClientApi().GetMarketAppList().then((data) => {
+    return new AppService().GetMarketAppList().then((data) => {
       setLoading(false);
       if (data) {
         const { MarketAppList, ErrorCode } = data;
@@ -140,11 +140,13 @@ const Market = () => {
           setTimeout(
             () =>
               resolve(
-                new ClientApi().DeactivateApp(AppID).then(async (data: any) => {
-                  if (data) {
-                    if (data.ErrorCode === 0) await getMarketApps();
-                  }
-                })
+                new AppService()
+                  .DeactivateApp(AppID)
+                  .then(async (data: any) => {
+                    if (data) {
+                      if (data.ErrorCode === 0) await getMarketApps();
+                    }
+                  })
               ),
             1000
           );

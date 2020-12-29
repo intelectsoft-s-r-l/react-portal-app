@@ -11,7 +11,7 @@ import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import IntegrationsHeader from "./IntegrationsHeader";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
@@ -21,7 +21,8 @@ import QiwiAppHeader from "./QiwiAppHeader";
 import { IMarketAppList } from "../../../../api/types.response";
 import Localization from "../../../../utils/Localization";
 import { DONE, UPDATING } from "../../../../constants/Messages";
-import SmsCampaign from "./sms";
+import SmsCampaign from "./SMS";
+import Integration from "./Integration";
 
 enum typeOf {
   Retail = 10,
@@ -73,6 +74,10 @@ const Options = ({ AppType, location, match }: any) => {
           </span>
           <Link to={"devices"} />
         </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
       </Menu>
     );
   } else if (AppType === typeOf.MyDiscount) {
@@ -100,6 +105,10 @@ const Options = ({ AppType, location, match }: any) => {
           </span>
           <Link to={"news"} />
         </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
       </Menu>
     );
   } else if (AppType === typeOf.SMS) {
@@ -125,6 +134,10 @@ const Options = ({ AppType, location, match }: any) => {
           <span>Campaign</span>
           <Link to={"campaign"} />
         </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
       </Menu>
     );
   } else {
@@ -146,6 +159,10 @@ const Options = ({ AppType, location, match }: any) => {
           </span>
           <Link to={"packages"} />
         </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
       </Menu>
     );
   }
@@ -154,42 +171,36 @@ const AppOption = (props: any) => {
   return <Options {...props} />;
 };
 
-const AppRoute = ({
-  match,
-  packages,
-  LongDescription,
-  AppType,
-}: {
-  [key: string]: any;
-}) => {
+const AppRoute = ({ match, app }: { [key: string]: any }) => {
   return (
     <Switch>
       <Redirect exact from={`${match.url}`} to={`${match.url}/description`} />
       <Route
         path={`${match.url}/description`}
         render={(props) => (
-          <Description {...props} LongDescription={LongDescription} />
+          <Description {...props} LongDescription={app.LongDescription} />
         )}
       />
       <Route
         path={`${match.url}/licenses`}
-        render={(props) => <Licenses {...props} AppType={AppType} />}
+        render={(props) => <Licenses {...props} AppType={app.AppType} />}
       />
       <Route
         path={`${match.url}/packages`}
-        render={(props) => <Packages {...props} packages={packages} />}
+        render={(props) => <Packages {...props} packages={app.packages} />}
       />
       <Route
         path={`${match.url}/devices`}
-        render={(props) => <Devices {...props} AppType={AppType} />}
+        render={(props) => <Devices {...props} AppType={app.AppType} />}
       />
       <Route
         path={`${match.url}/news`}
-        render={(props) => <News {...props} AppType={AppType} />}
+        render={(props) => <News {...props} AppType={app.AppType} />}
       />
+      <Route path={`${match.url}/campaign`} render={() => <SmsCampaign />} />
       <Route
-        path={`${match.url}/campaign`}
-        render={(props) => <SmsCampaign />}
+        path={`${match.url}/integration`}
+        render={() => <Integration appData={app} />}
       />
     </Switch>
   );
@@ -256,7 +267,7 @@ const SingleAppPage = ({ match, location }: any) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
   const getMarketApp = async () => {
-    return new ClientApi().GetMarketAppList().then(async (data) => {
+    return new AppService().GetMarketAppList().then(async (data) => {
       setLoading(false);
       if (data) {
         const { ErrorCode, MarketAppList } = data;
@@ -291,7 +302,7 @@ const SingleAppPage = ({ match, location }: any) => {
     Modal.confirm({
       title: "Are you sure you want to generate a new API Key?",
       onOk: () => {
-        return new ClientApi().GenerateApiKey(app!.ID).then((data) => {
+        return new AppService().GenerateApiKey(app!.ID).then((data) => {
           if (data) {
             if (data.ErrorCode === 0) {
               message
@@ -317,7 +328,7 @@ const SingleAppPage = ({ match, location }: any) => {
     Modal.confirm({
       title: "Are you sure you want to delete current API Key?",
       onOk: () =>
-        new ClientApi().DeleteApiKey(app!.ID).then((data) => {
+        new AppService().DeleteApiKey(app!.ID).then((data) => {
           if (data) {
             if (data.ErrorCode === 0) {
               message
@@ -345,33 +356,36 @@ const SingleAppPage = ({ match, location }: any) => {
   if (!app) {
     return <Loading cover="content" />;
   }
+
+  //{appID == typeOf.Agent ||
+  //appID == typeOf.Expert ||
+  //appID == typeOf.Retail ||
+  //appID == typeOf.StockManager ||
+  //appID == typeOf.WaiterAssistant ||
+  //appID == typeOf.KitchetAssistant ? (
+  if (loading) {
+    return <Loading cover="content" />;
+  }
   return (
     <>
-      {loading ? (
-        <Loading cover="content" />
-      ) : app.Status === 1 ? (
+      {app.Status === 1 ? (
         <>
           <AboutItem appData={app} />
+          {/*<IntegrationsHeader
+            activationCode={activationCode}
+            BackOfficeURI={app!.BackOfficeURI}
+            setActivationCode={setActivationCode}
+            AppID={app.ID}
+            apiKey={apiKey}
+            setApiKey={setApiKey}
+            getMarketApp={getMarketApp}
+            generateApiKey={generateApiKey}
+            deleteApiKey={deleteApiKey}
+            ExternalSecurityPolicy={ExternalSecurityPolicy}
+            setExternalSecurityPolicy={setExternalSecurityPolicy}
+            /> */}
 
-          {appID == typeOf.Agent ||
-          appID == typeOf.Expert ||
-          appID == typeOf.Retail ||
-          appID == typeOf.StockManager ||
-          appID == typeOf.WaiterAssistant ||
-          appID == typeOf.KitchetAssistant ? (
-            <IntegrationsHeader
-              activationCode={activationCode}
-              BackOfficeURI={app!.BackOfficeURI}
-              setActivationCode={setActivationCode}
-              AppID={app.ID}
-              apiKey={apiKey}
-              setApiKey={setApiKey}
-              getMarketApp={getMarketApp}
-              generateApiKey={generateApiKey}
-              deleteApiKey={deleteApiKey}
-            />
-          ) : null}
-          {+appID === typeOf.Qiwi && (
+          {/* {+appID === typeOf.Qiwi && (
             <QiwiAppHeader
               AppID={app.ID}
               BackOfficeURI={app.BackOfficeURI}
@@ -382,7 +396,7 @@ const SingleAppPage = ({ match, location }: any) => {
               deleteApiKey={deleteApiKey}
               setApiKey={setApiKey}
             />
-          )}
+                )} */}
           <InnerAppLayout
             sideContent={
               <AppOption
@@ -391,14 +405,7 @@ const SingleAppPage = ({ match, location }: any) => {
                 AppType={app.AppType}
               />
             }
-            mainContent={
-              <AppRoute
-                LongDescription={app.LongDescription}
-                match={match}
-                packages={app.Packages}
-                AppType={app.AppType}
-              />
-            }
+            mainContent={<AppRoute match={match} app={app} />}
           />
         </>
       ) : (

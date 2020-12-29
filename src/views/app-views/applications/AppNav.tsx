@@ -6,7 +6,7 @@ import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
 import { useSelector } from "react-redux";
 import Loading from "../../../components/shared-components/Loading";
-import { ClientApi } from "../../../api";
+import { AppService } from "../../../api";
 import { IState } from "../../../redux/reducers";
 import { IMarketAppList } from "../../../api/types.response";
 
@@ -14,7 +14,7 @@ const AppStoreNav = () => {
   const loading = useSelector((state: IState) => state["auth"]!.loading);
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const renderApps = async () => {
-    return new ClientApi().GetMarketAppList().then((data) => {
+    return new AppService().GetMarketAppList().then((data) => {
       if (data) {
         setApps([...data.MarketAppList]);
       }

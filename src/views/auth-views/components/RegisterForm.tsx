@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import { AuthApi } from "../../../api";
+import { AuthService } from "../../../api";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
 import { ITheme } from "../../../redux/reducers/Theme";
@@ -115,7 +115,7 @@ export const RegisterForm = (props: IRegisterFormProps) => {
         showLoading();
         setTimeout(async () => {
           hideLoading();
-          return new AuthApi()
+          return new AuthService()
             .RegisterCompany({ ...newCompanyData })
             .then((data) => {
               /* 108 is a positive errorcode in this case */

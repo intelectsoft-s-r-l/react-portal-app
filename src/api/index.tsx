@@ -104,38 +104,40 @@ class HttpClient {
     console.log(response);
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
-        const { ErrorCode, Token } = data;
-        if (ErrorCode === 0) {
-          store.dispatch(authenticated(Token));
-          if (response.config.method === "get") {
-            response.config.params = {
-              ...response.config.params,
-              Token,
-            };
-            return await axios
-              .request(response.config)
-              .then((response) => response.data);
+        if (data) {
+          const { ErrorCode, Token } = data;
+          if (ErrorCode === 0) {
+            store.dispatch(authenticated(Token));
+            if (response.config.method === "get") {
+              response.config.params = {
+                ...response.config.params,
+                Token,
+              };
+              return await axios
+                .request(response.config)
+                .then((response) => response.data);
+            }
+            if (response.config.method === "post") {
+              response.config.data = {
+                ...JSON.parse(response.config.data),
+                Token,
+              };
+              return await axios
+                .request(response.config)
+                .then((response) => response.data);
+            }
+          } else {
+            const key = "updatable";
+            message
+              .loading({
+                content: WithStringTranslate(EXPIRE_TIME),
+                key,
+                duration: 1.5,
+              })
+              .then(() => {
+                store.dispatch(signOut());
+              });
           }
-          if (response.config.method === "post") {
-            response.config.data = {
-              ...JSON.parse(response.config.data),
-              Token,
-            };
-            return await axios
-              .request(response.config)
-              .then((response) => response.data);
-          }
-        } else {
-          const key = "updatable";
-          message
-            .loading({
-              content: WithStringTranslate(EXPIRE_TIME),
-              key,
-              duration: 1.5,
-            })
-            .then(() => {
-              store.dispatch(signOut());
-            });
         }
       });
     } else if (
@@ -161,7 +163,7 @@ class HttpClient {
     store.dispatch(hideLoading());
   };
 }
-export class AuthApi extends HttpClient {
+export class AuthService extends HttpClient {
   public constructor() {
     super(`${API_AUTH_URL}`);
   }
@@ -201,7 +203,7 @@ export class AuthApi extends HttpClient {
     });
 }
 
-export class ClientApi extends HttpClient {
+export class AppService extends HttpClient {
   public constructor() {
     super(`${API_APP_URL}`);
   }

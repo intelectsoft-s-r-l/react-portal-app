@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, message, Modal, Row } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 import React from "react";
-import { ClientApi } from "../../../../api";
+import { AppService } from "../../../../api";
 import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { DONE, UPDATING } from "../../../../constants/Messages";
@@ -17,14 +17,16 @@ const IntegrationsHeader = ({
   setActivationCode,
   getMarketApp,
   generateApiKey,
-  deleteApiKey
+  deleteApiKey,
+  ExternalSecurityPolicy,
+  setExternalSecurityPolicy,
 }: any) => {
   const { confirm } = Modal;
   const generateActivationCode = () => {
     confirm({
       title: "Are you sure you want generate a new activation code?",
       onOk: () =>
-        new ClientApi()
+        new AppService()
           .GenerateLicenseActivationCode(AppID)
           .then((data: any) => {
             if (data) {
@@ -47,7 +49,7 @@ const IntegrationsHeader = ({
               }
             }
           }),
-      onCancel: () => { },
+      onCancel: () => {},
     });
   };
 
@@ -61,7 +63,7 @@ const IntegrationsHeader = ({
       key: "updatable",
     });
     setTimeout(() => {
-      return new ClientApi()
+      return new AppService()
         .UpdateApp({ AppID, BackOfficeURI })
         .then((data: any) => {
           if (data) {
