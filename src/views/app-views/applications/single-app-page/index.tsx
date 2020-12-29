@@ -187,7 +187,7 @@ const AppRoute = ({ match, app }: { [key: string]: any }) => {
       />
       <Route
         path={`${match.url}/packages`}
-        render={(props) => <Packages {...props} packages={app.packages} />}
+        render={(props) => <Packages {...props} packages={app.Packages} />}
       />
       <Route
         path={`${match.url}/devices`}
