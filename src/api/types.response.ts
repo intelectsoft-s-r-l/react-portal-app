@@ -89,6 +89,8 @@ export interface IMarketAppList {
   BackOfficeURI?: string;
   ID: number;
   LicenseActivationCode?: number;
+  EncryptionPrivateKey: string;
+  EncryptionPublicKey: string;
   ModuleSettings: {
     APIKey: boolean;
     ActivationCode: boolean;
@@ -227,6 +229,10 @@ export interface IGenerateApiKeyResponse extends ApiResponse {
 
 export interface IGenerateLicenseActivationCodeResponse extends ApiResponse {
   ActivationCode: string;
+}
+export interface IGenerateRsaKeyResponse extends ApiResponse {
+  EncryptionPublicKey: string;
+  EncryptionPrivateKey: string;
 }
 
 export interface ICampaignList {

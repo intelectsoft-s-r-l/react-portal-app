@@ -17,6 +17,7 @@ import {
   IUpdateNewsRequest,
 } from "./types.request";
 import {
+  ApiResponse,
   IActivateUserResponse,
   IAuthorizeUserResponse,
   ICampaignList,
@@ -27,6 +28,7 @@ import {
   IDeleteAppLicenseResponse,
   IGenerateApiKeyResponse,
   IGenerateLicenseActivationCodeResponse,
+  IGenerateRsaKeyResponse,
   IGetAllUsersInfoResponse,
   IGetAppLicensesList,
   IGetCompanyInfoResponse,
@@ -250,6 +252,17 @@ export class AppService extends HttpClient {
   public GenerateApiKey = async (AppID: number) =>
     this.instance.post<IGenerateApiKeyResponse>("/GenerateApiKey", {
       AppID,
+    });
+
+  public GenerateRsaKey = async (AppID: number) =>
+    this.instance.post<IGenerateRsaKeyResponse>("/GenerateRsaKey", {
+      AppID,
+    });
+  public UpdateRsaKey = async (AppID: number, Key: string, KeyType: number) =>
+    this.instance.post("/UpdateRsaKey", {
+      AppID,
+      Key,
+      KeyType,
     });
 
   public DeleteApiKey = async (AppID: number) =>

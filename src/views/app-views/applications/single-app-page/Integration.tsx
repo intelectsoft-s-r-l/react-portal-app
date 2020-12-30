@@ -9,19 +9,28 @@ import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import WithStringTranslate from "../../../../utils/translate";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
+import Flex from "../../../../components/shared-components/Flex";
 
+enum key {
+  PRIVATE = 1,
+  PUBLIC = 2,
+}
 const Integration = ({ appData }: { appData: IMarketAppList }) => {
   const { confirm } = Modal;
   const { ModuleSettings: settings } = appData;
   const [form] = Form.useForm();
   const [activationCode, setActivationCode] = useState<any>();
   const [apiKey, setApiKey] = useState<string>();
+  const [PublicKey, setPublicKey] = useState<string>("");
+  const [PrivateKey, setPrivateKey] = useState<string>("");
   const [backOfficeURI, setBackOfficeURI] = useState<any>("");
   const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
   useEffect(() => {
     setActivationCode(appData.LicenseActivationCode);
     setApiKey(appData.ApyKey);
     setBackOfficeURI(appData!.BackOfficeURI);
+    setPublicKey(appData!.EncryptionPublicKey);
+    setPrivateKey(appData!.EncryptionPrivateKey);
     try {
       setExternalSecurityPolicy(
         JSON.parse(window.atob(appData!.ExternalSecurityPolicy.toString()))
@@ -151,9 +160,45 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
     }));
   };
 
+  const generateRsaKey = async () => {
+    confirm({
+      title: "Are you sure you want to generate new Public and Private Keys?",
+      onOk: async () => {
+        return await new AppService()
+          .GenerateRsaKey(appData.ID)
+          .then((data) => {
+            if (data) {
+              if (data.ErrorCode === 0) {
+                message.success(WithStringTranslate(DONE));
+                setPublicKey(data.EncryptionPublicKey);
+                setPrivateKey(data.EncryptionPrivateKey);
+              }
+            }
+          });
+      },
+    });
+  };
+
+  const updateRsaKey = async (AppID: number, Key: string, KeyType: number) => {
+    message.loading(WithStringTranslate(UPDATING)).then(() =>
+      new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
+        if (data) {
+          if (data.ErrorCode === 0) {
+            message.success(WithStringTranslate(DONE));
+            setPublicKey(data.EncryptionPublicKey);
+            setPrivateKey(data.EncryptionPrivateKey);
+          }
+        }
+      })
+    );
+  };
   return (
-    <Row gutter={200}>
-      <Col xl={12} className={settings.APIKey ? "mb-4" : "mb-4 d-none"}>
+    <Row gutter={ROW_GUTTER} justify="space-between">
+      <Col
+        xl={12}
+        className={settings.APIKey ? "mb-4" : "mb-4 d-none"}
+        style={{ maxWidth: 500 }}
+      >
         <div className="container-fluid">
           <h2>API Key</h2>
         </div>
@@ -171,7 +216,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           <IntlMessage id="app.Delete" />
         </Button>
       </Col>
-      <Col xl={12} className={settings.ActivationCode ? "mb-4" : "mb-4 d-none"}>
+      <Col
+        xl={12}
+        className={settings.ActivationCode ? "mb-4" : "mb-4 d-none"}
+        style={{ maxWidth: 500 }}
+      >
         <div className="container-fluid">
           <h2>Activation Code</h2>
         </div>
@@ -194,7 +243,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           <IntlMessage id="app.Refresh" />
         </Button>
       </Col>
-      <Col xl={12} className={settings.Backoffice ? "mb-4" : "mb-4 d-none"}>
+      <Col
+        xl={12}
+        className={settings.Backoffice ? "mb-4" : "mb-4 d-none"}
+        style={{ maxWidth: 500 }}
+      >
         <div className="container-fluid">
           <h2>Back Office URI</h2>
         </div>
@@ -225,7 +278,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           <IntlMessage id="app.Refresh" />
         </Button>
       </Col>
-      <Col xl={12} className={settings.RSAKey ? "mb-4" : "mb-4 d-none"}>
+      <Col
+        xl={12}
+        className={appData.AppType === 100 ? "mb-4" : "mb-4 d-none"}
+        style={{ maxWidth: 500 }}
+      >
         <div className="container-fluid">
           <h2>Customer ID</h2>
         </div>
@@ -256,24 +313,61 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           <IntlMessage id="app.Refresh" />
         </Button>
       </Col>
-      <Col xl={12} className={settings.RSAKey ? "mb-4" : "mb-4 d-none"}>
+      <Col xl={24} className={settings.RSAKey ? "mb-4" : "mb-4 d-none"}>
+        {settings.Backoffice || settings.ActivationCode || settings.APIKey ? (
+          <hr />
+        ) : null}
         <div className="container-fluid">
-          <h2>Public key</h2>
+          <h2>Public Key</h2>
         </div>
-        <Input
-          name="PublicKey"
-          value={ExternalSecurityPolicy.PublicKey}
-          onChange={onExternalSecurityChange}
-          suffix={
-            <CardToolbar
-              code={ExternalSecurityPolicy.PublicKey}
-              expand={() => false}
-              isExpand="false"
-            />
-          }
-        />
-        <Button type="ghost" htmlType="submit" className="mt-3">
-          <IntlMessage id="app.Refresh" />
+        <Flex alignItems="center">
+          <Input
+            name="PublicKey"
+            value={PublicKey}
+            onChange={(e) => setPublicKey(e.target.value)}
+            suffix={
+              <CardToolbar
+                code={PublicKey}
+                expand={() => false}
+                isExpand="false"
+              />
+            }
+          />
+          <Button
+            type="ghost"
+            style={{ borderColor: "#1890ff" }}
+            className="ml-3 px-4"
+            onClick={() => updateRsaKey(appData.ID, PublicKey, key.PUBLIC)}
+          >
+            <IntlMessage id="app.Refresh" />
+          </Button>
+        </Flex>
+      </Col>
+      <Col xl={24} className={settings.RSAKey ? "mb-4" : "mb-4 d-none"}>
+        <div className="container-fluid">
+          <h2>Private Key</h2>
+        </div>
+        <Flex alignItems="center">
+          <Input
+            name="PrivateKey"
+            value={PrivateKey}
+            onChange={(e) => setPrivateKey(e.target.value)}
+          />
+          <Button
+            type="ghost"
+            style={{ borderColor: "#1890ff" }}
+            className="ml-3 px-4"
+            onClick={() => updateRsaKey(appData.ID, PrivateKey, key.PRIVATE)}
+          >
+            <IntlMessage id="app.Refresh" />
+          </Button>
+        </Flex>
+        <Button
+          type="primary"
+          className="mt-4 px-5"
+          onClick={() => generateRsaKey()}
+        >
+          <IntlMessage id="app.Generate" />
         </Button>
       </Col>
     </Row>

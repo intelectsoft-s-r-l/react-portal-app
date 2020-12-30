@@ -12,6 +12,7 @@ import moment from "moment";
 import EllipsisDropdown from "../../../../../components/shared-components/EllipsisDropdown";
 import { Menu } from "antd";
 import { AppService } from "../../../../../api";
+import { Link, RouteComponentProps } from "react-router-dom";
 
 enum SMS {
   Draft,
@@ -24,7 +25,8 @@ enum SMS {
 }
 const SmsTable = (
   refreshList: () => void,
-  showEditCampaign: (data: ICampaignList) => void
+  showEditCampaign: (data: ICampaignList) => void,
+  match: any
 ) => {
   const getDaysLeft = (date: string) => {
     const oneDay = 24 * 60 * 60 * 1000;
@@ -77,8 +79,10 @@ const SmsTable = (
             menu={
               <Menu>
                 <Menu.Item key="0">
-                  <EyeOutlined />
-                  <span>View</span>
+                  <Link to={`${elm.ID}`}>
+                    <EyeOutlined />
+                    <span style={{ marginLeft: 5 }}>View</span>
+                  </Link>
                 </Menu.Item>
                 <Menu.Item key="1" onClick={() => showEditCampaign(elm)}>
                   <EditOutlined />

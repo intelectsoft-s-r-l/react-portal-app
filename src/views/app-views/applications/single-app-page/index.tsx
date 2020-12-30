@@ -1,4 +1,4 @@
-import { Card, Menu, message, Modal } from "antd";
+import { Card, Empty, Menu, message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -29,6 +29,7 @@ import Localization from "../../../../utils/Localization";
 import { DONE, UPDATING } from "../../../../constants/Messages";
 import SmsCampaign from "./SMS";
 import Integration from "./Integration";
+import CampaignDetails from "./SMS/CampaignDetails";
 
 enum typeOf {
   Retail = 10,
@@ -208,10 +209,17 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/news`}
         render={(props) => <News {...props} AppType={app.AppType ?? 0} />}
       />
-      <Route path={`${match.url}/campaign`} render={() => <SmsCampaign />} />
+      <Route
+        path={`${match.url}/campaign`}
+        render={(props) => <SmsCampaign {...props} />}
+      />
       <Route
         path={`${match.url}/integration`}
         render={() => <Integration appData={app} />}
+      />
+      <Route
+        path={`${match.url}/:ID`}
+        render={(props) => <CampaignDetails {...props} />}
       />
     </Switch>
   );
@@ -273,10 +281,7 @@ const AboutItem = ({ appData }: any) => {
 const SingleAppPage = ({ match, location }: any) => {
   const { appID } = match.params;
   const [app, setApp] = useState<IMarketAppList>();
-  const [apiKey, setApiKey] = useState<string>("");
-  const [activationCode, setActivationCode] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
   const getMarketApp = async () => {
     return new AppService().GetMarketAppList().then(async (data) => {
       setLoading(false);
@@ -286,134 +291,34 @@ const SingleAppPage = ({ match, location }: any) => {
           const currentApp = MarketAppList.find(
             (app) => app.AppType === +appID
           );
-          document.title = `${APP_NAME} - ${currentApp!.Name}`;
+          document.title = `${currentApp!.Name} | ${APP_NAME}`;
           setApp(currentApp);
-          if (currentApp) {
-            setApiKey(currentApp.ApyKey ?? "");
-            setActivationCode(currentApp.LicenseActivationCode ?? 0);
-          }
-          return currentApp;
         }
       }
     });
   };
 
   useEffect(() => {
-    getMarketApp().then((app) => {
-      try {
-        setExternalSecurityPolicy(
-          JSON.parse(window.atob(app!.ExternalSecurityPolicy.toString()))
-        );
-      } catch {
-        setExternalSecurityPolicy({ CustomerID: null, PublicKey: null });
-      }
-    });
+    getMarketApp();
   }, [appID]);
-  const generateApiKey = () => {
-    Modal.confirm({
-      title: "Are you sure you want to generate a new API Key?",
-      onOk: () => {
-        return new AppService().GenerateApiKey(app!.ID).then((data) => {
-          if (data) {
-            if (data.ErrorCode === 0) {
-              message
-                .loading("Loading...", 1)
-                .then(() => {
-                  setApiKey(data.ApiKey);
-                })
-                .then(() =>
-                  message.success({
-                    content: <Localization msg={DONE} />,
-                    key: "updatable",
-                    duration: 1,
-                  })
-                );
-            }
-          }
-        });
-      },
-    });
-  };
-
-  const deleteApiKey = () => {
-    Modal.confirm({
-      title: "Are you sure you want to delete current API Key?",
-      onOk: () =>
-        new AppService().DeleteApiKey(app!.ID).then((data) => {
-          if (data) {
-            if (data.ErrorCode === 0) {
-              message
-                .loading({
-                  content: <Localization msg={UPDATING} />,
-                  key: "updatable",
-                })
-                .then(() => {
-                  setApiKey("00000000-0000-0000-0000-000000000000");
-                })
-                .then(() =>
-                  message.success({
-                    content: <Localization msg={DONE} />,
-                    key: "updatable",
-                    duration: 1,
-                  })
-                );
-            }
-          }
-        }),
-      onCancel: () => {},
-    });
-  };
 
   if (!app) {
-    return <Loading cover="content" />;
+    return null;
   }
-
-  //{appID == typeOf.Agent ||
-  //appID == typeOf.Expert ||
-  //appID == typeOf.Retail ||
-  //appID == typeOf.StockManager ||
-  //appID == typeOf.WaiterAssistant ||
-  //appID == typeOf.KitchetAssistant ? (
   if (loading) {
     return <Loading cover="content" />;
   }
   return (
     <>
-      {app.Status === 1 ? (
+      {app!.Status === 1 ? (
         <>
           <AboutItem appData={app} />
-          {/*<IntegrationsHeader
-            activationCode={activationCode}
-            BackOfficeURI={app!.BackOfficeURI}
-            setActivationCode={setActivationCode}
-            AppID={app.ID}
-            apiKey={apiKey}
-            setApiKey={setApiKey}
-            getMarketApp={getMarketApp}
-            generateApiKey={generateApiKey}
-            deleteApiKey={deleteApiKey}
-            ExternalSecurityPolicy={ExternalSecurityPolicy}
-            setExternalSecurityPolicy={setExternalSecurityPolicy}
-            /> */}
-
-          {/* {+appID === typeOf.Qiwi && (
-            <QiwiAppHeader
-              AppID={app.ID}
-              BackOfficeURI={app.BackOfficeURI}
-              ExternalSecurityPolicy={ExternalSecurityPolicy}
-              setExternalSecurityPolicy={setExternalSecurityPolicy}
-              apiKey={apiKey}
-              generateApiKey={generateApiKey}
-              deleteApiKey={deleteApiKey}
-              setApiKey={setApiKey}
-            />
-                )} */}
           <InnerAppLayout
             sideContent={
               <AppOption
                 location={location}
                 match={match}
-                AppType={app.AppType}
+                AppType={app!.AppType}
               />
             }
             mainContent={<AppRoute match={match} app={app} />}

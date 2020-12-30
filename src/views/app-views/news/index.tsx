@@ -62,7 +62,7 @@ const ArticleItem = ({ newsData }: any) => {
                 <Tooltip title="Edit">
                     <Button icon={<EditOutlined />} onClick={() => {}} />
                 </Tooltip>
-            </div> */}
+           </div> */}
     </Card>
   );
 };
