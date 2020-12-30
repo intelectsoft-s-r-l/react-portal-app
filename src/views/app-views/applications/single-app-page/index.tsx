@@ -183,39 +183,55 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Redirect exact from={`${match.url}`} to={`${match.url}/description`} />
       <Route
         path={`${match.url}/description`}
+        exact
         render={(props) => (
           <Description {...props} LongDescription={app.LongDescription} />
         )}
       />
       <Route
         path={`${match.url}/licenses`}
+        exact
         render={(props) => <Licenses {...props} AppType={app.AppType ?? 0} />}
       />
       <Route
         path={`${match.url}/packages`}
+        exact
         render={(props) => (
           <Packages {...props} packages={app.Packages ?? []} />
         )}
       />
       <Route
         path={`${match.url}/devices`}
+        exact
         render={(props) => <Devices {...props} AppType={app.AppType ?? 0} />}
       />
       <Route
         path={`${match.url}/news`}
+        exact
         render={(props) => <News {...props} AppType={app.AppType ?? 0} />}
       />
       <Route
         path={`${match.url}/campaign`}
+        exact
         render={(props) => <SmsCampaign {...props} />}
       />
       <Route
         path={`${match.url}/integration`}
+        exact
         render={() => <Integration appData={app} />}
       />
       <Route
         path={`${match.url}/campaign_details=:ID`}
+        exact
         render={(props) => <CampaignDetails {...props} />}
+      />
+      <Route
+        path="*"
+        render={({ location }) => (
+          <div>
+            No match for <code>{location.pathname}</code>
+          </div>
+        )}
       />
     </Switch>
   );
