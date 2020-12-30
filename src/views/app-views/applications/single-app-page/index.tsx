@@ -1,4 +1,4 @@
-import { Card, Empty, Menu, message, Modal } from "antd";
+import { Card, Menu } from "antd";
 import React, { useEffect, useState } from "react";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
@@ -16,17 +16,13 @@ import Licenses from "./Licenses";
 import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
-import IntegrationsHeader from "./IntegrationsHeader";
 import { AppService } from "../../../../api";
 import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
-import QiwiAppHeader from "./QiwiAppHeader";
 import { IMarketAppList } from "../../../../api/types.response";
-import Localization from "../../../../utils/Localization";
-import { DONE, UPDATING } from "../../../../constants/Messages";
 import SmsCampaign from "./SMS";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/CampaignDetails";
@@ -278,7 +274,8 @@ const AboutItem = ({ appData }: any) => {
   );
 };
 
-const SingleAppPage = ({ match, location }: any) => {
+interface ISingleAppPage extends RouteComponentProps<{ appID: string }> {}
+const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const { appID } = match.params;
   const [app, setApp] = useState<IMarketAppList>();
   const [loading, setLoading] = useState<boolean>(true);

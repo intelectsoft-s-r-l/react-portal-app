@@ -4,8 +4,10 @@ import Flex from "../../../../../components/shared-components/Flex";
 import { ICampaignList } from "../../../../../api/types.response";
 import { AppService } from "../../../../../api";
 import Loading from "../../../../../components/shared-components/Loading";
+import { RouteComponentProps } from "react-router-dom";
 
-const CampaignDetails = ({ history, match }: any) => {
+interface ICampaignDetails extends RouteComponentProps<{ ID: string }> {}
+const CampaignDetails = ({ history, match }: ICampaignDetails) => {
   const { ID } = match.params;
   const [currentCampaign, setCurrentCampaign] = useState<ICampaignList>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,14 +27,16 @@ const CampaignDetails = ({ history, match }: any) => {
     return <Loading cover="content" />;
   }
   if (!currentCampaign) {
-    return <h4>No campaign found...</h4>;
+    return <h5>No campaign found...</h5>;
   }
   return (
     <>
       <Flex justifyContent="between" alignItems="center" className="py-4">
         <h2>Campaign details</h2>
       </Flex>
-      {currentCampaign && <div>{currentCampaign.Name}</div>}
+      <div>
+        <span>{currentCampaign.Name}</span>
+      </div>
     </>
   );
 };
