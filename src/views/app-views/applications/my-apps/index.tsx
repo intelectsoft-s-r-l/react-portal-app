@@ -114,42 +114,33 @@ const MyAppList = () => {
     });
   };
 
+  if (loading) {
+    return <Loading cover="content" />;
+  }
+
   return (
-    <>
-      {loading ? (
-        <Loading cover="content" />
-      ) : (
-        <div
-          className={`my-4 
+    <div
+      className={`my-4 
                     container-fluid`}
-        >
-          <Row gutter={16}>
-            {apps.length > 0 ? (
-              apps.map((elm) => (
-                <Col
-                  xs={24}
-                  sm={24}
-                  lg={12}
-                  xl={8}
-                  xxl={6}
-                  key={elm["AppType"]}
-                >
-                  <GridItem
-                    deactivateApp={deactivateApp}
-                    data={elm}
-                    key={elm["AppType"]}
-                  />
-                </Col>
-              ))
-            ) : (
-              <Flex justifyContent="center" className="w-100">
-                <Empty />
-              </Flex>
-            )}
-          </Row>
-        </div>
-      )}
-    </>
+    >
+      <Row gutter={16}>
+        {apps.length > 0 ? (
+          apps.map((elm) => (
+            <Col xs={24} sm={24} lg={12} xl={8} xxl={6} key={elm["AppType"]}>
+              <GridItem
+                deactivateApp={deactivateApp}
+                data={elm}
+                key={elm["AppType"]}
+              />
+            </Col>
+          ))
+        ) : (
+          <Flex justifyContent="center" className="w-100">
+            <Empty />
+          </Flex>
+        )}
+      </Row>
+    </div>
   );
 };
 

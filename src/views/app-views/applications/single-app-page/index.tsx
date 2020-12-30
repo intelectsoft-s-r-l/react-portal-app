@@ -218,7 +218,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         render={() => <Integration appData={app} />}
       />
       <Route
-        path={`${match.url}/:ID`}
+        path={`${match.url}/campaign_details=:ID`}
         render={(props) => <CampaignDetails {...props} />}
       />
     </Switch>

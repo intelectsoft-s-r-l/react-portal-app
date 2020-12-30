@@ -24,6 +24,9 @@ const CampaignDetails = ({ history, match }: any) => {
   if (loading) {
     return <Loading cover="content" />;
   }
+  if (!currentCampaign) {
+    return <h4>No campaign found...</h4>;
+  }
   return (
     <>
       <Flex justifyContent="between" alignItems="center" className="py-4">

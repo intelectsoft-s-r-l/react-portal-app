@@ -79,7 +79,7 @@ const SmsTable = (
             menu={
               <Menu>
                 <Menu.Item key="0">
-                  <Link to={`${elm.ID}`}>
+                  <Link to={`campaign_details=${elm.ID}`}>
                     <EyeOutlined />
                     <span style={{ marginLeft: 5 }}>View</span>
                   </Link>
