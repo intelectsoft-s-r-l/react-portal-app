@@ -18,3 +18,12 @@
         }
     }
 }
+
+.app-link {
+  transition: .2s linear;
+
+  &:hover {
+    color: gray;
+  }
+}
+

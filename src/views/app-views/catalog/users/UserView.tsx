@@ -4,20 +4,14 @@ import {
   MobileOutlined,
   MailOutlined,
   UserOutlined,
-  CompassOutlined,
-  CalendarOutlined,
-  FacebookOutlined,
-  InstagramOutlined,
-  TwitterOutlined,
-  GlobalOutlined,
   ApartmentOutlined,
 } from "@ant-design/icons";
-import { UsersProps } from "./UserList";
+import { IUsers } from "../../../../api/types.response";
 
 interface UserViewProps {
-  data: UsersProps;
+  data: IUsers;
   visible: boolean;
-  close: any;
+  close: () => void;
 }
 
 export class UserView extends Component<UserViewProps> {
@@ -32,11 +26,7 @@ export class UserView extends Component<UserViewProps> {
         visible={visible}
       >
         <div className="text-center mt-3">
-          <Avatar
-            size={80}
-            src={data?.Photo}
-            icon={<UserOutlined />}
-          />
+          <Avatar size={80} src={data?.Photo} icon={<UserOutlined />} />
           <h3 className="mt-2 mb-0">
             {data?.FirstName && data?.LastName
               ? data?.FirstName + " " + data?.LastName

@@ -32,7 +32,6 @@ class EditProfile extends Component {
             PhoneNumber,
             Photo,
             setProfileInfo,
-            token,
             onChangeMask,
         } = this.props as any;
 
@@ -44,16 +43,10 @@ class EditProfile extends Component {
             });
             setTimeout(async () => {
                 setProfileInfo({
-                    Token: token,
                     User: {
                         ...account,
                         ...values,
                     },
-                });
-                message.success({
-                    content: <Localization msg={DONE} />,
-                    key,
-                    duration: 2,
                 });
             }, 1000);
         };
@@ -75,7 +68,6 @@ class EditProfile extends Component {
             if (info.file.status === "done") {
                 Utils.getBase64(info.file.originFileObj, (imageUrl: any) => {
                     setProfileInfo({
-                        Token: token,
                         User: { ...account, Photo: imageUrl },
                     });
                 });
@@ -89,7 +81,6 @@ class EditProfile extends Component {
 
         const onRemoveAvater = () => {
             setProfileInfo({
-                Token: token,
                 User: { ...account, Photo: "" },
             });
         };
