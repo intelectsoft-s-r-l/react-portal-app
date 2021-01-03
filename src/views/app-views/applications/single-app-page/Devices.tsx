@@ -57,11 +57,13 @@ const tableColumns = [
   },
 ];
 const Devices = ({ AppType }: { AppType: number }) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const [devices, setDevices] = useState<any>();
   const getDevices = async (AppType: number) => {
     return new AppService().GetAppLicenses(AppType).then((data) => {
       if (data) {
         if (data.ErrorCode === 0) {
+          setLoading(false);
           setDevices(
             data.LicenseList.filter((elm: ILicenses) => elm.Status !== 0)
           );
@@ -79,7 +81,12 @@ const Devices = ({ AppType }: { AppType: number }) => {
           <IntlMessage id="app.Devices" />
         </h2>
       </Flex>
-      <Table columns={tableColumns} dataSource={devices} rowKey="ID" />
+      <Table
+        columns={tableColumns}
+        dataSource={devices}
+        rowKey="ID"
+        loading={loading}
+      />
     </>
   );
 };

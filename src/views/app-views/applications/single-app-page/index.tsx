@@ -297,10 +297,10 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketApp = async () => {
     return new AppService().GetMarketAppList().then(async (data) => {
-      setLoading(false);
       if (data) {
         const { ErrorCode, MarketAppList } = data;
         if (ErrorCode === 0) {
+          setLoading(false);
           const currentApp = MarketAppList.find(
             (app) => app.AppType === +appID
           );
@@ -316,7 +316,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   }, [appID]);
 
   if (!app) {
-    return null;
+    return <Loading cover="content" />;
   }
   if (loading) {
     return <Loading cover="content" />;

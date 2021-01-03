@@ -95,6 +95,7 @@ const News = () => {
     });
   };
   const onSelect = (AppType: number) => {
+    setLoading(true);
     if (AppType !== 0) {
       getPortalNews(AppType);
     } else {
