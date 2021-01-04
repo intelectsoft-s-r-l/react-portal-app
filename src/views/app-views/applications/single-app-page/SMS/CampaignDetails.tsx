@@ -7,7 +7,7 @@ import Loading from "../../../../../components/shared-components/Loading";
 import { RouteComponentProps } from "react-router-dom";
 import "./campaign.scss";
 
-interface ICampaignDetails extends RouteComponentProps<{ ID: string }> {}
+interface ICampaignDetails extends RouteComponentProps<{ ID: string }> { }
 const CampaignDetails = ({ history, match }: ICampaignDetails) => {
   const { ID } = match.params;
   const [currentCampaign, setCurrentCampaign] = useState<ICampaignList>();
@@ -38,25 +38,25 @@ const CampaignDetails = ({ history, match }: ICampaignDetails) => {
       <div className="border p-3">
         <div>
           <span>
-            <b>Name:</b>
+            <b>Name</b>
           </span>
           <p className="campaign-field">{currentCampaign.Name}</p>
         </div>
         <div>
           <span>
-            <b>Description:</b>
+            <b>Description</b>
           </span>
           <p className="campaign-field">{currentCampaign.Description}</p>
         </div>
         <div>
           <span>
-            <b>Message:</b>
+            <b>Message</b>
           </span>
           <p className="campaign-field">{currentCampaign.Message}</p>
         </div>
         <div>
           <span>
-            <b>Reviewer comments:</b>
+            <b>Reviewer comments</b>
           </span>
           <p className="campaign-field">
             {currentCampaign.ReviewerComments ?? "No reviewer comments yet!"}

@@ -14,7 +14,7 @@ import {
 import Description from "./Description";
 import Licenses from "./Licenses";
 import Packages from "./Packages";
-import Devices from "./Devices";
+import Devices from "./devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import { AppService } from "../../../../api";
 import News from "./news";
@@ -197,7 +197,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/packages`}
         exact
         render={(props) => (
-          <Packages {...props} packages={app.Packages ?? []} />
+          <Packages {...props} currentApp={app} />
         )}
       />
       <Route
@@ -290,7 +290,7 @@ const AboutItem = ({ appData }: any) => {
   );
 };
 
-interface ISingleAppPage extends RouteComponentProps<{ appID: string }> {}
+interface ISingleAppPage extends RouteComponentProps<{ appID: string }> { }
 const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const { appID } = match.params;
   const [app, setApp] = useState<IMarketAppList>();
@@ -338,8 +338,8 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
           />
         </>
       ) : (
-        <AboutItem appData={app} />
-      )}
+          <AboutItem appData={app} />
+        )}
     </>
   );
 };
