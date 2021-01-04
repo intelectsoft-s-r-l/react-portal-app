@@ -14,7 +14,7 @@ import {
 import Description from "./Description";
 import Licenses from "./Licenses";
 import Packages from "./Packages";
-import Devices from "./devices";
+import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
 import { AppService } from "../../../../api";
 import News from "./news";
@@ -26,6 +26,8 @@ import { IMarketAppList } from "../../../../api/types.response";
 import SmsCampaign from "./SMS";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/CampaignDetails";
+import Invoice from "./ExchangeOfInvoice/Invoice";
+import Order from "./ExchangeOfInvoice/Order";
 
 enum typeOf {
   Retail = 10,
@@ -37,6 +39,7 @@ enum typeOf {
   KitchetAssistant = 32,
   Qiwi = 100,
   SMS = 50,
+  Exchange = 40
 }
 const Options = ({ AppType, location, match }: any) => {
   if (
@@ -143,7 +146,45 @@ const Options = ({ AppType, location, match }: any) => {
         </Menu.Item>
       </Menu>
     );
-  } else {
+  } else if (AppType === typeOf.Exchange) {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/invoice`}>
+          <span>
+            Invoice
+          </span>
+          <Link to={"invoice"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/order`}>
+          <span>
+            Order
+          </span>
+          <Link to={"order"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
+      </Menu>
+    )
+  }
+  else {
     return (
       <Menu
         mode="inline"
@@ -224,6 +265,13 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/campaign_details=:ID`}
         exact
         render={(props) => <CampaignDetails {...props} />}
+      />
+      <Route
+        path={`${match.url}/invoice`}
+        render={(props) => <Invoice {...props} />}
+      />
+      <Route path={`${match.url}/order`}
+        render={(props) => <Order {...props} />}
       />
       <Route
         path="*"

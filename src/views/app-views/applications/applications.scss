@@ -30,7 +30,7 @@
 .app-avatar {
   transition: .2s box-shadow linear;
   &:hover {
-    box-shadow: 2px 2px 10px #ccc;
+    box-shadow: 1px 1px 5px #ccc;
   }
   border-radius: 10px;
 }

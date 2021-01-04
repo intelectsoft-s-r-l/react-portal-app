@@ -16,10 +16,12 @@ import { ILicenses } from "../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
+  const [loading, setLoading] = useState<boolean>(true)
   const getAppLicenses = async (AppType: number) => {
     return new AppService().GetAppLicenses(AppType).then((data) => {
       if (data) {
         if (data.ErrorCode === 0) {
+          setLoading(false)
           // const evaluatedArray = sortData(data.LicensesList);
           setLicenses(data.LicenseList);
           setLicensesToSearch(data.LicenseList);
@@ -47,9 +49,8 @@ const Licenses = ({ AppType }: { AppType: number }) => {
     const objKey = "ID";
     let data = licenses;
     Modal.confirm({
-      title: `Are you sure you want to delete ${selectedRows.length} ${
-        selectedRows.length > 1 ? "licenses" : "license"
-      }?`,
+      title: `Are you sure you want to delete ${selectedRows.length} ${selectedRows.length > 1 ? "licenses" : "license"
+        }?`,
       onOk: () => {
         if (selectedRows.length > 1) {
           selectedRows.forEach((elm: ILicenses) => {
@@ -179,11 +180,10 @@ const Licenses = ({ AppType }: { AppType: number }) => {
           <Flex>
             {selectedRows.length > 0 && (
               <Tooltip
-                title={`${
-                  selectedRows.length > 1
-                    ? `Delete (${selectedRows.length})`
-                    : "Delete"
-                }`}
+                title={`${selectedRows.length > 1
+                  ? `Delete (${selectedRows.length})`
+                  : "Delete"
+                  }`}
               >
                 <Button
                   className="mr-3"
@@ -215,6 +215,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       <Table
         columns={tableColumns}
         dataSource={licenses}
+        loading={loading}
         rowKey="ID"
         rowSelection={{
           onChange: (key, rows) => {

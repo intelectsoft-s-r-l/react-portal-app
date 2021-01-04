@@ -4,11 +4,11 @@ export interface ApiResponse {
 }
 
 /* Status handlers */
-export interface IChangeCompanyStatusResponse extends ApiResponse {}
+export interface IChangeCompanyStatusResponse extends ApiResponse { }
 
-export interface IChangeMarketAppStatusResponse extends ApiResponse {}
+export interface IChangeMarketAppStatusResponse extends ApiResponse { }
 
-export interface IChangeUserStatusResponse extends ApiResponse {}
+export interface IChangeUserStatusResponse extends ApiResponse { }
 
 /* Users */
 export interface IUsers {
@@ -28,7 +28,7 @@ export interface IUsers {
 export interface IGetAllUsersInfoResponse extends ApiResponse {
   Users: IUsers[];
 }
-export interface IUpdateUserResponse extends ApiResponse {}
+export interface IUpdateUserResponse extends ApiResponse { }
 
 /* Company */
 export interface IGetBasicCompaniesListResponse extends ApiResponse {
@@ -119,8 +119,8 @@ export interface IGetMarketAppListResponse extends ApiResponse {
   MarketAppList: IMarketAppList[];
 }
 
-export interface IUpdateMarketAppResponse extends ApiResponse {}
-export interface IUpdatePackageResponse extends ApiResponse {}
+export interface IUpdateMarketAppResponse extends ApiResponse { }
+export interface IUpdatePackageResponse extends ApiResponse { }
 
 /* News */
 export interface INewsList {
@@ -137,7 +137,7 @@ export interface INewsList {
 export interface IGetNewsResponse extends ApiResponse {
   NewsList: INewsList[];
 }
-export interface IUpdateNewsResponse extends ApiResponse {}
+export interface IUpdateNewsResponse extends ApiResponse { }
 
 /* Profile */
 export interface IGetProfileInfoResponse extends ApiResponse {
@@ -163,7 +163,7 @@ export interface IRegisterClientCompanyResponse extends ApiResponse {
   CompanyID: number;
 }
 
-export interface IUpdateCompanyResponse extends ApiResponse {}
+export interface IUpdateCompanyResponse extends ApiResponse { }
 
 export interface IRefreshTokenResponse extends ApiResponse {
   Token: string;
@@ -173,32 +173,50 @@ export interface IAuthorizeUserResponse extends ApiResponse {
   Token: string;
 }
 
-export interface ISendActivationCodeResponse extends ApiResponse {}
+export interface ISendActivationCodeResponse extends ApiResponse { }
 
-export interface IResetPasswordResponse extends ApiResponse {}
+export interface IResetPasswordResponse extends ApiResponse { }
 
-export interface IRegisterUserResponse extends ApiResponse {}
+export interface IRegisterUserResponse extends ApiResponse { }
 
 export interface IGetManagedTokenResponse extends ApiResponse {
   Token: string;
 }
 
-export interface IChangePasswordResponse extends ApiResponse {}
+export interface IChangePasswordResponse extends ApiResponse { }
 
-export interface IActivateUserResponse extends ApiResponse {}
+export interface IActivateUserResponse extends ApiResponse { }
 
-export interface IDeleteMarketAppPackageResponse extends ApiResponse {}
+export interface IDeleteMarketAppPackageResponse extends ApiResponse { }
 
-export interface IDeactivateAppResponse extends ApiResponse {}
-export interface IActivateAppResponse extends ApiResponse {}
+export interface IDeactivateAppResponse extends ApiResponse { }
+export interface IActivateAppResponse extends ApiResponse { }
 
+export interface IDiagnosticInformation {
+  Battery: {
+    Level: number;
+    Voltage: number;
+    Plugged: number;
+    Status: number;
+    Health: number;
+    Temperature: number;
+    Technology: string;
+  };
+  Memory: {
+    Installed: string;
+    Free: string;
+    Used: string;
+  };
+  CPU: {};
+  WiFi: {};
+}
 export interface ILicenses {
   ApplicationVersion: string;
   CreateDate: string;
   DeviceID: string;
   DeviceName: string;
   DiagnosticInfoDate: string;
-  DiagnosticInformation: string;
+  DiagnosticInformation: string | IDiagnosticInformation;
   ID: string;
   LastAccessDate: string;
   LicenseActivationDate: string;
@@ -217,11 +235,11 @@ export interface IGetAppLicensesList extends ApiResponse {
   LicenseList: ILicenses[];
 }
 
-export interface IRequestLicenseResponse extends ApiResponse {}
+export interface IRequestLicenseResponse extends ApiResponse { }
 
-export interface IReleaseLicenseResponse extends ApiResponse {}
+export interface IReleaseLicenseResponse extends ApiResponse { }
 
-export interface IDeleteAppLicenseResponse extends ApiResponse {}
+export interface IDeleteAppLicenseResponse extends ApiResponse { }
 
 export interface IGenerateApiKeyResponse extends ApiResponse {
   ApiKey: string;
@@ -253,8 +271,8 @@ export interface ISMSGetCampaignResponse extends ApiResponse {
   CampaignList: ICampaignList[];
 }
 
-export interface ISMSDeleteCampaignResponse extends ApiResponse {}
+export interface ISMSDeleteCampaignResponse extends ApiResponse { }
 
-export interface ISMSReviewerUpdateResponse extends ApiResponse {}
+export interface ISMSReviewerUpdateResponse extends ApiResponse { }
 
-export interface ISMSUpdateCampaignResponse extends ApiResponse {}
+export interface ISMSUpdateCampaignResponse extends ApiResponse { }

@@ -1,14 +1,12 @@
-import { Button, Card, Tooltip, List, Empty, Select } from "antd";
-import { EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Card, List, Empty, Select } from "antd";
 import moment from "moment";
 import * as React from "react";
 import Flex from "../../../components/shared-components/Flex";
 import { AppService } from "../../../api";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import { useSelector } from "react-redux";
-import { IState } from "../../../redux/reducers";
 import Loading from "../../../components/shared-components/Loading";
+import { INewsList } from "../../../api/types.response";
 const ArticleItem = ({ newsData }: any) => {
   return (
     <Card style={{ padding: 30 }}>
@@ -67,7 +65,7 @@ const ArticleItem = ({ newsData }: any) => {
   );
 };
 const News = () => {
-  const [news, setNews] = useState<any>();
+  const [news, setNews] = useState<INewsList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [isCreateVisible, setCreateVisible] = useState<boolean>();
   const [edit, setEdit] = useState<boolean>();
@@ -76,7 +74,7 @@ const News = () => {
   const getPortalNews = async (AppType = 0) => {
     return await new AppService()
       .GetPortalNews(AppType)
-      .then((data: any) => {
+      .then((data) => {
         setLoading(false);
         if (data) {
           if (data.ErrorCode === 0) setNews(data.NewsList);
@@ -87,7 +85,7 @@ const News = () => {
       });
   };
   const getApps = async () => {
-    return await new AppService().GetMarketAppList().then((data: any) => {
+    return await new AppService().GetMarketAppList().then((data) => {
       setLoading(false);
       if (data) {
         if (data.ErrorCode === 0) setApps(data.MarketAppList);
@@ -107,50 +105,46 @@ const News = () => {
   }, []);
   return (
     <>
-      {loading ? (
-        <Loading cover="content" />
-      ) : (
-        <>
-          <Flex justifyContent="between" className="mb-4">
-            <h2>
-              <IntlMessage id="news.title" />
-            </h2>
-            <Select
-              defaultValue={0}
-              style={{ width: "150px" }}
-              onChange={onSelect}
-            >
-              <Select.Option value={0}>
-                <b>General</b>
+      <Flex justifyContent="between" className="mb-4">
+        <h2>
+          <IntlMessage id="news.title" />
+        </h2>
+        <Select
+          defaultValue={0}
+          style={{ width: "150px" }}
+          onChange={onSelect}
+        >
+          <Select.Option value={0}>
+            <b>General</b>
+          </Select.Option>
+          {apps &&
+            apps.map((app: any) => (
+              <Select.Option value={app.AppType} key={app.AppType}>
+                {app.Name}
               </Select.Option>
-              {apps &&
-                apps.map((app: any) => (
-                  <Select.Option value={app.AppType} key={app.AppType}>
-                    {app.Name}
-                  </Select.Option>
-                ))}
-            </Select>
-          </Flex>
-          <List style={{ maxWidth: 1000, margin: "0 auto" }}>
-            {news && news.length > 0 ? (
-              news
-                .sort((a: any, b: any) => a.ID - b.ID)
-                .reverse()
-                .map((elm: any) => (
-                  <ArticleItem
-                    newsData={elm}
-                    key={elm.ID}
-                    setSelected={setSelected}
-                    setEdit={setEdit}
-                  />
-                ))
-            ) : (
+            ))}
+        </Select>
+      </Flex>
+      {loading ? (<Loading cover="content" />) : (
+        <List style={{ maxWidth: 1000, margin: "0 auto" }}>
+          {news && news.length > 0 ? (
+            news
+              .sort((a, b) => a.ID - b.ID)
+              .reverse()
+              .map((elm) => (
+                <ArticleItem
+                  newsData={elm}
+                  key={elm.ID}
+                  setSelected={setSelected}
+                  setEdit={setEdit}
+                />
+              ))
+          ) : (
               <Flex className="w-100" justifyContent="center">
                 <Empty />
               </Flex>
             )}
-          </List>
-        </>
+        </List>
       )}
     </>
   );
