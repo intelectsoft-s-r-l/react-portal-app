@@ -31,7 +31,7 @@ export enum Status {
 const Devices = ({ AppType }: { AppType: number }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [devices, setDevices] = useState<any>();
-  const [selectedDevice, setSelectedDevice] = useState<Partial<IDiagnosticInformation>>()
+  const [selectedDevice, setSelectedDevice] = useState<any>()
   const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false)
   const getDevices = async (AppType: number) => {
     return new AppService().GetAppLicenses(AppType).then((data) => {
@@ -92,8 +92,8 @@ const Devices = ({ AppType }: { AppType: number }) => {
               <div className="text-right">
                 <Tooltip title="View">
                   <Button type="primary" className="mr-2" icon={<EyeOutlined />} size="small" onClick={async () => {
-                    await setDeviceViewVisible(true)
-                    await setSelectedDevice(JSON.parse(elm.DiagnosticInformation))
+                    setDeviceViewVisible(true)
+                    setSelectedDevice(JSON.parse(elm.DiagnosticInformation))
                   }} />
                 </Tooltip>
               </div>
@@ -104,7 +104,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
         rowKey="ID"
         loading={loading}
       />
-      <DeviceView data={selectedDevice ?? {}} visible={deviceViewVisible} close={() => setDeviceViewVisible(false)} isTable={true} />
+      <DeviceView data={selectedDevice ?? []} visible={deviceViewVisible} close={() => setDeviceViewVisible(false)} isTable={true} />
     </>
   );
 };

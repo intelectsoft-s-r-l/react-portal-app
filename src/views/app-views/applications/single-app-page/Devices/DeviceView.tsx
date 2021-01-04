@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 import { Drawer, Divider, Progress, Empty, } from 'antd'
 import { IDiagnosticInformation, ILicenses } from '../../../../../api/types.response';
 import { Health, Plugged, Status } from '.';
@@ -14,6 +15,7 @@ interface IDeviceView {
     isTable: boolean;
 }
 const DeviceView = ({ visible, data, close, isTable }: IDeviceView) => {
+
     const healthCheck = (batteryHealth: IDiagnosticInformation["Battery"]["Health"]) => {
         switch (batteryHealth) {
             case Health._COLD:
