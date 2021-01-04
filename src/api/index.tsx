@@ -1,6 +1,6 @@
 import { message } from "antd";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { API_APP_URL, API_AUTH_URL } from "../configs/AppConfig";
+import { API_APP_URL, API_AUTH_URL, API_SMS_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
@@ -12,20 +12,14 @@ import {
   IRegisterCompanyRequest,
   IRegisterUserRequest,
   ISMSReviewerUpdateRequest,
+  ISMSSendSMSRequest,
   IUpdateAppRequest,
   IUpdateCompanyRequest,
-  IUpdateNewsRequest,
 } from "./types.request";
 import {
   ApiResponse,
-  IActivateUserResponse,
   IAuthorizeUserResponse,
   ICampaignList,
-  IChangePasswordResponse,
-  IChangeUserStatusResponse,
-  ICompanyData,
-  IDeactivateAppResponse,
-  IDeleteAppLicenseResponse,
   IGenerateApiKeyResponse,
   IGenerateLicenseActivationCodeResponse,
   IGenerateRsaKeyResponse,
@@ -36,22 +30,15 @@ import {
   IGetMarketAppListResponse,
   IGetNewsResponse,
   IGetProfileInfoResponse,
-  IMarketAppList,
   INewsList,
   IRefreshTokenResponse,
   IRegisterUserResponse,
-  IReleaseLicenseResponse,
-  IRequestLicenseResponse,
   IResetPasswordResponse,
   ISendActivationCodeResponse,
-  ISMSDeleteCampaignResponse,
   ISMSGetCampaignResponse,
-  ISMSReviewerUpdateResponse,
-  ISMSUpdateCampaignResponse,
-  IUpdateCompanyResponse,
-  IUpdateMarketAppResponse,
-  IUpdateNewsResponse,
-  IUpdateUserResponse,
+  ISMSInfoGetByPeriodResponse,
+  ISMSInfoGetDetailByPeriodResponse,
+  ISMSInfoResponse,
   IUsers,
 } from "./types.response";
 const publicIp = require("react-public-ip");
@@ -197,10 +184,10 @@ export class AuthService extends HttpClient {
     });
 
   public ChangePassword = async (data: IChangePasswordRequest) =>
-    this.instance.post<IChangePasswordResponse>("/ChangePassword", data);
+    this.instance.post<ApiResponse>("/ChangePassword", data);
 
   public ActivateUser = async (params: IActivateUserRequest) =>
-    this.instance.get<IActivateUserResponse>("/ActivateUser", {
+    this.instance.get<ApiResponse>("/ActivateUser", {
       params,
     });
 }
@@ -212,18 +199,18 @@ export class AppService extends HttpClient {
   public GetProfileInfo = async () =>
     this.instance.get<IGetProfileInfoResponse>("/GetProfileInfo");
   public UpdateUser = async (data: IUsers) =>
-    this.instance.post<IUpdateUserResponse>("/UpdateUser", data);
+    this.instance.post<ApiResponse>("/UpdateUser", data);
 
   public GetMarketAppList = async () =>
     this.instance.get<IGetMarketAppListResponse>("/GetMarketAppList");
 
   public DeactivateApp = async (AppID: number) =>
-    this.instance.post<IDeactivateAppResponse>("/DeactivateApp", {
+    this.instance.post<ApiResponse>("/DeactivateApp", {
       AppID,
     });
 
   public ActivateApp = async (AppID: number) =>
-    this.instance.post<IDeactivateAppResponse>("/ActivateApp", {
+    this.instance.post<ApiResponse>("/ActivateApp", {
       AppID,
     });
 
@@ -235,17 +222,17 @@ export class AppService extends HttpClient {
     });
 
   public RequestLicense = async (AppType: number, Quantity: number) =>
-    this.instance.get<IRequestLicenseResponse>("/RequestAppLicense", {
+    this.instance.get<ApiResponse>("/RequestAppLicense", {
       params: { AppType, Quantity },
     });
 
   public ReleaseLicense = async (LicenseID: string) =>
-    this.instance.get<IReleaseLicenseResponse>("/ReleaseAppLicense", {
+    this.instance.get<ApiResponse>("/ReleaseAppLicense", {
       params: { LicenseID },
     });
 
   public DeleteLicense = async (LicenseID: string) =>
-    this.instance.get<IDeleteAppLicenseResponse>("/DeleteAppLicense", {
+    this.instance.get<ApiResponse>("/DeleteAppLicense", {
       params: { LicenseID },
     });
 
@@ -285,13 +272,13 @@ export class AppService extends HttpClient {
     this.instance.get<IGetCompanyInfoResponse>("/GetCompanyInfo");
 
   public UpdateCompany = async (data: IUpdateCompanyRequest) =>
-    this.instance.post<IUpdateCompanyResponse>("/UpdateCompany", {
+    this.instance.post<ApiResponse>("/UpdateCompany", {
       ...data,
       info: await publicIp.v4(),
     });
 
   public ChangeUserStatus = async (ID: number, Status: number) =>
-    this.instance.get<IChangeUserStatusResponse>("/ChangeUserStatus", {
+    this.instance.get<ApiResponse>("/ChangeUserStatus", {
       params: {
         ID,
         Status,
@@ -306,12 +293,12 @@ export class AppService extends HttpClient {
     });
 
   public UpdateNews = async (NewsData: INewsList) =>
-    this.instance.post<IUpdateNewsResponse>("/UpdateAppNews", {
+    this.instance.post<ApiResponse>("/UpdateAppNews", {
       NewsData,
     });
 
   public UpdateApp = async (AppData: IUpdateAppRequest) =>
-    this.instance.post<IUpdateMarketAppResponse>("/UpdateApp", {
+    this.instance.post<ApiResponse>("/UpdateApp", {
       ...AppData,
     });
 
@@ -326,26 +313,80 @@ export class AppService extends HttpClient {
     this.instance.get<ISMSGetCampaignResponse>("/SMS/SMSGetCampaign");
 
   public SMS_DeleteCampaign = async (ID: number) =>
-    this.instance.get<ISMSDeleteCampaignResponse>("/SMS/DeleteCampaign", {
+    this.instance.get<ApiResponse>("/SMS/DeleteCampaign", {
       params: {
         ID,
       },
     });
 
   public SMS_ReviewerUpdate = async (reviewerInfo: ISMSReviewerUpdateRequest) =>
-    this.instance.post<ISMSReviewerUpdateResponse>("/SMS/ReviewerUpdate", {
+    this.instance.post<ApiResponse>("/SMS/ReviewerUpdate", {
       ...reviewerInfo,
     });
 
   public SMS_UpdateCampaign = async (campaignInfo: ICampaignList) =>
-    this.instance.post<ISMSUpdateCampaignResponse>("/SMS/UpdateCampaign", {
+    this.instance.post<ApiResponse>("/SMS/UpdateCampaign", {
       ...campaignInfo,
     });
 }
 
-export class fakeAPI extends HttpClient {
-  constructor() {
-    super("http://api/mock.io/v1");
+export class SmsService extends HttpClient {
+  public constructor() {
+    super(`${API_SMS_URL}`);
   }
-  public FakePostCall = () => this.instance.post("/979095de");
+
+  public CheckApiKey = async (APIKey: number) =>
+    this.instance.get<ApiResponse>("/CheckApiKey", {
+      params: {
+        APIKey,
+      },
+    });
+
+  public GetInfo = async () => this.instance.get<ISMSInfoResponse>("/GetInfo");
+
+  public Info_GetByPeriod = async (
+    APIKey: number,
+    DateStart: string,
+    DateEnd: string
+  ) =>
+    this.instance.get<ISMSInfoGetByPeriodResponse>("/Info/GetByPeriod", {
+      params: {
+        APIKey,
+        DateStart,
+        DateEnd,
+      },
+    });
+
+  public Info_GetDetailByPeriod = async (
+    APIKey: number,
+    DateStart: string,
+    DateEnd: string
+  ) =>
+    this.instance.get<ISMSInfoGetDetailByPeriodResponse>(
+      "/Info/GetDetailByPeriond",
+      {
+        params: {
+          APIKey,
+          DateStart,
+          DateEnd,
+        },
+      }
+    );
+
+  public Info_GetTotal = async (APIKey: number) =>
+    this.instance.get<ISMSInfoResponse>("info/GetTotal", {
+      params: {
+        APIKey,
+      },
+    });
+
+  public SendSMS = async (data: ISMSSendSMSRequest) =>
+    this.instance.post<ApiResponse>("/SendSMS", {
+      ...data,
+    });
+
+  public SendSMSByPhoneList = async (data: ISMSSendSMSRequest) =>
+    this.instance.post<ApiResponse>("/SendSMSByPhoneList", {
+      ...data,
+    });
 }

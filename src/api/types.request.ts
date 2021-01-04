@@ -86,3 +86,10 @@ export interface ISMSReviewerUpdateRequest extends ApiRequest {
   ReviewerComments: string;
   Status?: number;
 }
+
+export interface ISMSSendSMSRequest {
+  APIKey: string;
+  Message: string;
+  MessageType: number;
+  Phone: string[] | string;
+}
