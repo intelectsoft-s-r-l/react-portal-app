@@ -78,7 +78,7 @@ export interface IPackages {
 }
 
 export interface IMarketAppList {
-  AppType?: number;
+  AppType: number;
   ApyKey?: string;
   BackOfficeURI?: string;
   ID: number;
@@ -115,6 +115,7 @@ export interface IGetMarketAppListResponse extends ApiResponse {
 
 /* News */
 export interface INewsList {
+  CompanyName?: string;
   CompanyID?: number;
   AppType?: number;
   Content: string;

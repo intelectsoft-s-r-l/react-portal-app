@@ -39,7 +39,7 @@ enum typeOf {
   KitchetAssistant = 32,
   Qiwi = 100,
   SMS = 50,
-  Exchange = 40
+  Exchange = 40,
 }
 const Options = ({ AppType, location, match }: any) => {
   if (
@@ -166,15 +166,11 @@ const Options = ({ AppType, location, match }: any) => {
           <Link to={"packages"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/invoice`}>
-          <span>
-            Invoice
-          </span>
+          <span>Invoice</span>
           <Link to={"invoice"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/order`}>
-          <span>
-            Order
-          </span>
+          <span>Order</span>
           <Link to={"order"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/integration`}>
@@ -182,9 +178,8 @@ const Options = ({ AppType, location, match }: any) => {
           <Link to={"integration"} />
         </Menu.Item>
       </Menu>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <Menu
         mode="inline"
@@ -237,9 +232,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/packages`}
         exact
-        render={(props) => (
-          <Packages {...props} currentApp={app} />
-        )}
+        render={(props) => <Packages {...props} currentApp={app} />}
       />
       <Route
         path={`${match.url}/devices`}
@@ -270,7 +263,8 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/invoice`}
         render={(props) => <Invoice {...props} />}
       />
-      <Route path={`${match.url}/order`}
+      <Route
+        path={`${match.url}/order`}
         render={(props) => <Order {...props} />}
       />
       <Route
@@ -338,7 +332,7 @@ const AboutItem = ({ appData }: any) => {
   );
 };
 
-interface ISingleAppPage extends RouteComponentProps<{ appID: string }> { }
+interface ISingleAppPage extends RouteComponentProps<{ appID: string }> {}
 const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const { appID } = match.params;
   const [app, setApp] = useState<IMarketAppList>();
@@ -386,8 +380,8 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
           />
         </>
       ) : (
-          <AboutItem appData={app} />
-        )}
+        <AboutItem appData={app} />
+      )}
     </>
   );
 };
