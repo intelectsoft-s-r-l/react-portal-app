@@ -30,16 +30,15 @@ export const SideNav = ({
     useEffect(() => {
         if (routeInfo) {
             const title = routeInfo.title;
-            document.title = `${APP_NAME} - ${WithStringTranslate(title)}`;
+            document.title = `${WithStringTranslate(title)} | ${APP_NAME}`;
         } else {
             document.title = APP_NAME;
         }
     }, [routeInfo]);
     return (
         <Sider
-            className={`side-nav ${
-                sideNavTheme === SIDE_NAV_DARK ? "side-nav-dark" : ""
-            }`}
+            className={`side-nav ${sideNavTheme === SIDE_NAV_DARK ? "side-nav-dark" : ""
+                }`}
             width={SIDE_NAV_WIDTH}
             collapsed={navCollapsed}
         >
