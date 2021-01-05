@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import * as React from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Button, Form, Input, Divider, Alert, Modal } from "antd";
+import { Button, Form, Input, Divider, Alert } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { GoogleSVG, FacebookSVG } from "../../../assets/svg/icon";
 import CustomIcon from "../../../components/util-components/CustomIcon";
