@@ -1,5 +1,6 @@
 import { message } from "antd";
 import { JSEncrypt } from "jsencrypt";
+import moment from "moment";
 
 class Utils {
   /**
@@ -244,6 +245,10 @@ class Utils {
    */
   static sortData(array: any, key: any) {
     return array.slice().sort((a: any, b: any) => a[key] - b[key]);
+  }
+
+  static handleDotNetDate(date: any) {
+    return moment(date).format("[/Date(]xZZ[)/]");
   }
 }
 

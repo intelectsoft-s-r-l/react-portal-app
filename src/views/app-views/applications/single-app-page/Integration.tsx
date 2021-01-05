@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { IMarketAppList } from "../../../../api/types.response";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
 import { AppService } from "../../../../api";
-import Localization from "../../../../utils/Localization";
-import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
+import { DONE, UPDATING } from "../../../../constants/Messages";
 import WithStringTranslate from "../../../../utils/translate";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
@@ -49,20 +48,6 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
             if (data) {
               if (data.ErrorCode === 0) {
                 setActivationCode(data.ActivationCode);
-                //message
-                //.loading({
-                //content: <Localization msg={UPDATING} />,
-                //key: "updatable",
-                //})
-                //.then(() => {
-                //setActivationCode(data.ActivationCode);
-                //})
-                //.then(() =>
-                //message.success({
-                //content: <Localization msg={DONE} />,
-                //duration: 1,
-                //})
-                //);
               }
             }
           }),
@@ -80,20 +65,6 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
             if (data) {
               if (data.ErrorCode === 0) {
                 setApiKey(data.ApiKey);
-                //message
-                //.loading({
-                //content: WithStringTranslate(UPLOADING),
-                //key: "updatable",
-                //})
-                //.then(() => {
-                //setApiKey(data.ApiKey);
-                //})
-                //.then(() =>
-                //message.success({
-                //content: <Localization msg={DONE} />,
-                //duration: 1,
-                //})
-                //);
               }
             }
           });
@@ -108,20 +79,6 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           if (data) {
             if (data.ErrorCode === 0) {
               setApiKey("00000000-0000-0000-0000-000000000000");
-              //message
-              //.loading({
-              //content: <Localization msg={UPDATING} />,
-              //key: "updatable",
-              //})
-              //.then(() => {
-              //setApiKey("00000000-0000-0000-0000-000000000000");
-              //})
-              //.then(() =>
-              //message.success({
-              //content: <Localization msg={DONE} />,
-              //duration: 1,
-              //})
-              //);
             }
           }
         }),

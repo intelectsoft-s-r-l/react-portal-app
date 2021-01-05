@@ -69,13 +69,13 @@ class HttpClient {
     this.instance.interceptors.request.use(
       (config) => {
         console.log(config);
-        if (config.method === "get") {
+        if (config.method === "get" && config.baseURL !== API_SMS_URL) {
           config.params = {
             ...config.params,
             Token: this._token,
           };
         }
-        if (config.method === "post") {
+        if (config.method === "post" && config.baseURL !== API_SMS_URL) {
           config.data = {
             ...config.data,
             Token: this._token,
@@ -345,7 +345,7 @@ export class SmsService extends HttpClient {
   public GetInfo = async () => this.instance.get<ISMSInfoResponse>("/GetInfo");
 
   public Info_GetByPeriod = async (
-    APIKey: number,
+    APIKey: string,
     DateStart: string,
     DateEnd: string
   ) =>
@@ -358,7 +358,7 @@ export class SmsService extends HttpClient {
     });
 
   public Info_GetDetailByPeriod = async (
-    APIKey: number,
+    APIKey: string,
     DateStart: string,
     DateEnd: string
   ) =>
@@ -373,7 +373,7 @@ export class SmsService extends HttpClient {
       }
     );
 
-  public Info_GetTotal = async (APIKey: number) =>
+  public Info_GetTotal = async (APIKey: string) =>
     this.instance.get<ISMSInfoResponse>("info/GetTotal", {
       params: {
         APIKey,

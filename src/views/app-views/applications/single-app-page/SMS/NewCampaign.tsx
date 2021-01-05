@@ -6,6 +6,7 @@ import moment from "moment";
 import { AppService } from "../../../../../api";
 import WithStringTranslate from "../../../../../utils/translate";
 import { DONE } from "../../../../../constants/Messages";
+import Utils from "../../../../../utils";
 
 interface INewCampaign {
   visible: boolean;
@@ -46,9 +47,7 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
     form.resetFields();
   }, [visible, form]);
   const onFinish = async (values: any) => {
-    const ScheduledDate = moment(values.ScheduledDate["_d"]).format(
-      "[/Date(]xZZ[))/]"
-    );
+    const ScheduledDate = Utils.handleDotNetDate(values.ScheduledDate["_d"]);
     return await new AppService()
       .SMS_UpdateCampaign({
         ...values,

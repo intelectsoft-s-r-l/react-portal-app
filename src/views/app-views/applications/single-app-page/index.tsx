@@ -28,6 +28,7 @@ import Integration from "./Integration";
 import CampaignDetails from "./SMS/CampaignDetails";
 import Invoice from "./ExchangeOfInvoice/Invoice";
 import Order from "./ExchangeOfInvoice/Order";
+import SmsList from "./SMS/SmsList";
 
 enum typeOf {
   Retail = 10,
@@ -139,6 +140,10 @@ const Options = ({ AppType, location, match }: any) => {
         <Menu.Item key={`${match.url}/campaign`}>
           <span>Campaign</span>
           <Link to={"campaign"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/sms-list`}>
+          <span>SMS List</span>
+          <Link to={"sms-list"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/integration`}>
           <span>Integration</span>
@@ -266,6 +271,10 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/order`}
         render={(props) => <Order {...props} />}
+      />
+      <Route
+        path={`${match.url}/sms-list`}
+        render={(props) => <SmsList {...props} APIKey={app.ApyKey} />}
       />
       <Route
         path="*"

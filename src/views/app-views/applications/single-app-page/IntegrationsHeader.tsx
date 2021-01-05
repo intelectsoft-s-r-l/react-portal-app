@@ -1,13 +1,11 @@
-import { Button, Col, Form, Input, message, Modal, Row } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
 import React from "react";
+import { Button, Col, Form, Input, message, Modal, Row } from "antd";
 import { AppService } from "../../../../api";
 import PageHeaderAlt from "../../../../components/layout-components/PageHeaderAlt";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { DONE, UPDATING } from "../../../../constants/Messages";
-import Localization from "../../../../utils/Localization";
-import CopyToClipboard from "react-copy-to-clipboard";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
+import WithStringTranslate from "../../../../utils/translate";
 
 const IntegrationsHeader = ({
   apiKey,
@@ -33,7 +31,7 @@ const IntegrationsHeader = ({
               if (data.ErrorCode === 0) {
                 message
                   .loading({
-                    content: <Localization msg={UPDATING} />,
+                    content: WithStringTranslate(UPDATING),
                     key: "updatable",
                   })
                   .then(() => {
@@ -41,7 +39,7 @@ const IntegrationsHeader = ({
                   })
                   .then(() =>
                     message.success({
-                      content: <Localization msg={DONE} />,
+                      content: WithStringTranslate(DONE),
                       key: "updatable",
                       duration: 1,
                     })
@@ -59,7 +57,7 @@ const IntegrationsHeader = ({
     BackOfficeURI: string;
   }) => {
     message.loading({
-      content: <Localization msg={UPDATING} />,
+      content: WithStringTranslate(UPDATING),
       key: "updatable",
     });
     setTimeout(() => {
@@ -70,7 +68,7 @@ const IntegrationsHeader = ({
             if (data.ErrorCode === 0) {
               getMarketApp().then(() =>
                 message.success({
-                  content: <Localization msg={DONE} />,
+                  content: WithStringTranslate(DONE),
                   key: "updatable",
                   duration: 1,
                 })

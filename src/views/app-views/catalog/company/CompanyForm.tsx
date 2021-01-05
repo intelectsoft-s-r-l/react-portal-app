@@ -10,11 +10,11 @@ import { connect } from "react-redux";
 import { AppService } from "../../../../api";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
-import Localization from "../../../../utils/Localization";
 import { IState } from "../../../../redux/reducers";
 import { ITheme } from "../../../../redux/reducers/Theme";
 import { ICompanyData } from "../../../../api/types.response";
 import { UploadChangeParam } from "antd/lib/upload";
+import WithStringTranslate from "../../../../utils/translate";
 class CompanyForm extends Component<{ [key: string]: any }> {
   inputMaskRef = React.createRef() as any;
   state = {} as { [key: string]: any };
@@ -40,7 +40,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
         if (ErrorCode === 0) {
           await this.getCompanyInfo();
           message.success({
-            content: <Localization msg={DONE} />,
+            content: WithStringTranslate(DONE),
             key: "updatable",
           });
         }
@@ -55,7 +55,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
     const onFinish = async (values: ICompanyData) => {
       const key = "updatable";
       message.loading({
-        content: <Localization msg={UPDATING} />,
+        content: WithStringTranslate(UPDATING),
         key,
       });
       setTimeout(async () => {
@@ -71,7 +71,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
       const key = "updatable";
       if (info.file.status === "uploading") {
         message.loading({
-          content: <Localization msg={UPLOADING} />,
+          content: WithStringTranslate(UPLOADING),
           key,
           duration: 2,
         });

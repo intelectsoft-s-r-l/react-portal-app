@@ -24,7 +24,6 @@ import EllipsisDropdown from "../../../../components/shared-components/EllipsisD
 import { AppService } from "../../../../api";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import Localization from "../../../../utils/Localization";
 import { IState } from "../../../../redux/reducers";
 import { IAuth } from "../../../../redux/reducers/Auth";
 import { IAccount } from "../../../../redux/reducers/Account";
@@ -221,7 +220,7 @@ export class UserList extends Component<IUserListStoreProps> {
         <Menu.Item
           onClick={async () => {
             Modal.confirm({
-              title: <Localization msg={"users.Disable.Title"} />,
+              title: WithStringTranslate("users.Disable.Title"),
               onOk: async () => {
                 await this.handleUserStatus(row.ID, status.disabled);
                 await this.getUsersInfo();

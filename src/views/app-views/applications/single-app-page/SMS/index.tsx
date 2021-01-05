@@ -7,7 +7,7 @@ import { ICampaignList } from "../../../../../api/types.response";
 import Flex from "../../../../../components/shared-components/Flex";
 import NewCampaign from "./NewCampaign";
 import Loading from "../../../../../components/shared-components/Loading";
-import SmsTable from "./SmsTable";
+import SmsTable from "./SmsCampaignTable";
 import EditCampaign from "./EditCampaign";
 import { Route, RouteComponentProps } from "react-router-dom";
 
