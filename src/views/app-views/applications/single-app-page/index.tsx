@@ -26,6 +26,8 @@ import { IMarketAppList } from "../../../../api/types.response";
 import SmsCampaign from "./SMS";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/CampaignDetails";
+import Invoice from "./ExchangeOfInvoice/Invoice";
+import Order from "./ExchangeOfInvoice/Order";
 
 enum typeOf {
   Retail = 10,
@@ -37,6 +39,7 @@ enum typeOf {
   KitchetAssistant = 32,
   Qiwi = 100,
   SMS = 50,
+  Exchange = 40,
 }
 const Options = ({ AppType, location, match }: any) => {
   if (
@@ -143,6 +146,39 @@ const Options = ({ AppType, location, match }: any) => {
         </Menu.Item>
       </Menu>
     );
+  } else if (AppType === typeOf.Exchange) {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/invoice`}>
+          <span>Invoice</span>
+          <Link to={"invoice"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/order`}>
+          <span>Order</span>
+          <Link to={"order"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
+      </Menu>
+    );
   } else {
     return (
       <Menu
@@ -196,9 +232,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/packages`}
         exact
-        render={(props) => (
-          <Packages {...props} packages={app.Packages ?? []} />
-        )}
+        render={(props) => <Packages {...props} currentApp={app} />}
       />
       <Route
         path={`${match.url}/devices`}
@@ -224,6 +258,14 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/campaign_details=:ID`}
         exact
         render={(props) => <CampaignDetails {...props} />}
+      />
+      <Route
+        path={`${match.url}/invoice`}
+        render={(props) => <Invoice {...props} />}
+      />
+      <Route
+        path={`${match.url}/order`}
+        render={(props) => <Order {...props} />}
       />
       <Route
         path="*"
@@ -297,10 +339,10 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketApp = async () => {
     return new AppService().GetMarketAppList().then(async (data) => {
-      setLoading(false);
       if (data) {
         const { ErrorCode, MarketAppList } = data;
         if (ErrorCode === 0) {
+          setLoading(false);
           const currentApp = MarketAppList.find(
             (app) => app.AppType === +appID
           );
@@ -316,7 +358,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   }, [appID]);
 
   if (!app) {
-    return null;
+    return <Loading cover="content" />;
   }
   if (loading) {
     return <Loading cover="content" />;

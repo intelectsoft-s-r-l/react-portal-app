@@ -7,6 +7,7 @@ import CreateNews from "./CreateNews";
 import moment from "moment";
 import EditNews from "./EditNews";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
+import Loading from "../../../../../components/shared-components/Loading";
 
 interface INewsList {
   AppType: number;
@@ -86,10 +87,14 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
   );
 };
 const News = ({ AppType }: { AppType: number }) => {
+  const [loading, setLoading] = useState<boolean>(true)
   const getNews = (AppType: number) => {
     return new AppService().GetAppNews(AppType).then((data) => {
       if (data) {
-        if (data.ErrorCode === 0) setNews(data.NewsList);
+        if (data.ErrorCode === 0) {
+          setLoading(false)
+          setNews(data.NewsList);
+        }
       }
     });
   };
@@ -100,6 +105,9 @@ const News = ({ AppType }: { AppType: number }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [news, setNews] = useState<any>();
   const [selectedNew, setSelectedNew] = useState<any>();
+  if (loading) {
+    return <Loading cover="content" />
+  }
   return (
     <>
       <CreateNews
@@ -142,10 +150,10 @@ const News = ({ AppType }: { AppType: number }) => {
               />
             ))
         ) : (
-          <Flex className="w-100" justifyContent="center">
-            <Empty />
-          </Flex>
-        )}
+            <Flex className="w-100" justifyContent="center">
+              <Empty />
+            </Flex>
+          )}
       </List>
     </>
   );

@@ -47,7 +47,7 @@ const GridItem = ({
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
               icon={<ExperimentOutlined />}
@@ -71,13 +71,13 @@ const GridItem = ({
             </span>
           </Tag>
         ) : (
-          <Tag className="text-capitalize" color="cyan">
-            <CheckCircleOutlined />
-            <span className="ml-2 font-weight-semibold">
-              <IntlMessage id={"app.status.Installed"} />
-            </span>
-          </Tag>
-        )}
+            <Tag className="text-capitalize" color="cyan">
+              <CheckCircleOutlined />
+              <span className="ml-2 font-weight-semibold">
+                <IntlMessage id={"app.status.Installed"} />
+              </span>
+            </Tag>
+          )}
       </Flex>
       <div>
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
@@ -152,7 +152,7 @@ const Market = () => {
           );
         });
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   };
 
@@ -178,58 +178,58 @@ const Market = () => {
       {loading ? (
         <Loading cover="content" />
       ) : (
-        <MarketContext.Provider
-          value={{
-            visibleModal,
-            appInstalled,
-            setAppInstalled,
-            handleOk,
-            handleCancel,
-            terms,
-            current,
-            setCurrent,
-            isAccepted,
-            setIsAccepted,
-            selectedApp,
-            termsAccepted,
-            setTermsAccepted,
-            getMarketApps,
-          }}
-        >
-          <InstallWizard apps={apps} />
-          <div
-            className={`my-4 
-                    container-fluid`}
+          <MarketContext.Provider
+            value={{
+              visibleModal,
+              appInstalled,
+              setAppInstalled,
+              handleOk,
+              handleCancel,
+              terms,
+              current,
+              setCurrent,
+              isAccepted,
+              setIsAccepted,
+              selectedApp,
+              termsAccepted,
+              setTermsAccepted,
+              getMarketApps,
+            }}
           >
-            <Row gutter={16}>
-              {apps.length > 0 && !loading ? (
-                apps.map((elm) => (
-                  <Col
-                    xs={24}
-                    sm={24}
-                    lg={12}
-                    xl={8}
-                    xxl={6}
-                    key={elm["AppType"]}
-                  >
-                    <GridItem
-                      setVisibleModal={setVisibleModal}
-                      deactivateApp={deactivateApp}
-                      data={elm}
+            <InstallWizard apps={apps} />
+            <div
+              className={`my-4 
+                    container-fluid`}
+            >
+              <Row gutter={16}>
+                {apps.length > 0 && !loading ? (
+                  apps.map((elm) => (
+                    <Col
+                      xs={24}
+                      sm={24}
+                      lg={12}
+                      xl={8}
+                      xxl={6}
                       key={elm["AppType"]}
-                      setSelectedApp={setSelectedApp}
-                    />
-                  </Col>
-                ))
-              ) : (
-                <Flex justifyContent="center" className="w-100">
-                  <Empty />
-                </Flex>
-              )}
-            </Row>
-          </div>
-        </MarketContext.Provider>
-      )}
+                    >
+                      <GridItem
+                        setVisibleModal={setVisibleModal}
+                        deactivateApp={deactivateApp}
+                        data={elm}
+                        key={elm["AppType"]}
+                        setSelectedApp={setSelectedApp}
+                      />
+                    </Col>
+                  ))
+                ) : (
+                    <Flex justifyContent="center" className="w-100">
+                      <Empty />
+                    </Flex>
+                  )}
+              </Row>
+            </div>
+          </MarketContext.Provider>
+        )}
     </>
   );
 };

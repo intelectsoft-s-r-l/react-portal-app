@@ -1,7 +1,5 @@
 {
-
-
-    "InDevelopment": "В разработке",
+  "InDevelopment": "В разработке",
   "auth.SignIn": "Войти",
   "auth.DontHaveAnAccountYet": "У вас нет аккаунта?",
   "auth.SignUp": "Регистрация",
@@ -47,14 +45,13 @@
   "auth.ConfirmRegistration.Msg2": "платформе! Проверьте вашу почту и подтвердите регистрацию кликнув по ссылке которую мы отправили!",
   "auth.GoToLogin": "Перейти к логину",
 
-
   "sidenav.home": "Главная",
   "sidenav.dashboard": "Панель",
 
-    "sidenav.news": "Новости",
-    "sidenav.applications": "Приложения",
-    "sidenav.my-applications": "Мои приложения",
-    "sidenav.market": "Маркет",
+  "sidenav.news": "Новости",
+  "sidenav.applications": "Приложения",
+  "sidenav.my-applications": "Мои приложения",
+  "sidenav.market": "Маркет",
   "sidenav.catalog": "Каталог",
   "sidenav.catalog.company": "Компания",
   "sidenav.catalog.group": "Группы",
@@ -68,25 +65,21 @@
   "sidenav.payment": "Платежи",
   "sidenav.payment.invoices": "Счета",
 
-
-
   "sidenav.audit": "Аудит",
   "sidenav.audit.All": "Все",
   "sidenav.audit.loginHistory": "История аутентификации",
   "sidenav.audit.actions": "Действия",
 
   "sidenav.reports": "Отчеты",
-    "sidenav.other": "Другие",
+  "sidenav.other": "Другие",
 
   "header.logout.message": "Вы уверены что хотите выйти?",
   "header.logout.button": "Выйти",
   "header.applications": "Приложения",
 
-
   "header.profile.AccountSettings": "Настройки Аккаунта",
   "header.profile.HelpCenter": "Помощь",
   "header.profile.SignOut": "Выйти",
-
 
   "message.language.success": "Вы успешно сменили язык!",
   "message.Uploading": "Загружается...",
@@ -94,11 +87,9 @@
   "message.Updating": "Обновляется...",
   "message.Done": "Готово!",
   "message.Error": "Что-то пошло не так! Попробуйте еще раз!",
-    "message.NewPassword": "Новый пароль был отправлен на на вашу почту!",
-    "message.EmailConfirmMsg": "Сообщение о подтверждении реигстрации было отправлено на почту!",
-    "message.ExpireTime": "Время истекло! Перенаправляем вас на страницу аутентификации...",
-
-
+  "message.NewPassword": "Новый пароль был отправлен на на вашу почту!",
+  "message.EmailConfirmMsg": "Сообщение о подтверждении реигстрации было отправлено на почту!",
+  "message.ExpireTime": "Время истекло! Перенаправляем вас на страницу аутентификации...",
 
   "account.sidenav.EditProfile": "Редактирование профиля",
   "account.sidenav.ChangePassword": "Сменить пароль",
@@ -106,7 +97,7 @@
   "account.sidenav.Notification": "Уведомления",
 
   "account.EditProfile.FirstName": "Имя",
-	"account.EditProfile.LastName": "Фамилия",
+  "account.EditProfile.LastName": "Фамилия",
   "account.EditProfile.Email": "Электронная почта",
   "account.EditProfile.DateOfBirth": "Дата рождения",
   "account.EditProfile.PhoneNumber": "Номер телефона",
@@ -118,7 +109,6 @@
   "account.EditProfile.ChangeAvatar": "Сменить Аватар",
   "account.EditProfile.Remove": "Удалить",
 
-
   "account.ChangePassword.CurrentPassword": "Текущий Пароль",
   "account.ChangePassword.Title": "Сменить Пароль",
   "account.ChangePassword.NewPassword": "Новый Пароль",
@@ -128,7 +118,6 @@
   "account.ChangePassword.Success": "Пароль изменен!",
   "account.ChangePassword.Error": "Что-то пошло не так...",
   "account.ChangePassword.IncorrectPassword": "Неправильный введенный пароль! Попробуйте снова!",
-
 
   "account.Billing.Title": "Оплата",
   "account.Billing.PleaseAddCreditCard": "Пожалуйста добавьте кредитную карту!",
@@ -142,7 +131,6 @@
   "account.Billing.Modal.ExpiryDate": "Истекает",
   "account.Billing.Modal.CVVCode": "Код CVV",
   "account.Billing.Modal.SaveCard": "Сохранить карту",
-
 
   "account.company.BIC": "BIC",
   "account.company.Bank": "Банк",
@@ -161,7 +149,6 @@
   "account.company.WebSite": "Веб-сайт",
   "account.company.ShortName": "Короткое название",
 
-
   "theme.Title": "Тема",
   "theme.Navigation": "Навигация",
   "theme.HeaderNavColor": "Цвет заголовка навигации",
@@ -176,46 +163,45 @@
   "theme.Locale": "Локализация",
   "theme.Language": "Язык",
 
-    "users.ViewDetails": "Просмотр",
-    "users.Edit": "Редактирование",
-    "users.Disable": "Деактивировать",
-    "users.Activate": "Активировать",
-    "users.SendCode": "Отправить код активации",
-    "users.Disable.Title": "Вы уверены что хотите деактивировать этого пользователя?",
-    "users.Invite": "Пригласить",
-    "users.table.User": "Пользователь",
-    "users.table.Role": "Роль",
-    "users.table.LastOnline": "Посл. визит",
-    "users.table.Status": "Статус",
-    "users.status.Active": "Активный",
-    "users.status.NotActivated": "Неактивный",
-    "users.status.Disabled": "Деактивированный",
+  "users.ViewDetails": "Просмотр",
+  "users.Edit": "Редактирование",
+  "users.Disable": "Деактивировать",
+  "users.Activate": "Активировать",
+  "users.SendCode": "Отправить код активации",
+  "users.Disable.Title": "Вы уверены что хотите деактивировать этого пользователя?",
+  "users.Invite": "Пригласить",
+  "users.table.User": "Пользователь",
+  "users.table.Role": "Роль",
+  "users.table.LastOnline": "Посл. визит",
+  "users.table.Status": "Статус",
+  "users.status.Active": "Активный",
+  "users.status.NotActivated": "Неактивный",
+  "users.status.Disabled": "Деактивированный",
 
-    "app.Delete": "Удалить",
-    "app.status.Installed": "Установлено",
-    "app.status.NotInstalled": "Установить",
-    "app.Generate": "Генерировать",
-    "app.Refresh": "Обновить",
-    "app.Description": "Описание",
-    "app.Packages": "Тарифы",
-    "app.News": "Новости",
-    "app.Licenses": "Лицензии",
-    "app.Devices": "Устройства",
-    "app.News.Add": "Добавить",
-    "app.Search": "Поиск",
-    "app.uninstall.title": "Вы уверены что хотите удалить",
+  "app.Delete": "Удалить",
+  "app.status.Installed": "Установлено",
+  "app.status.NotInstalled": "Установить",
+  "app.Generate": "Генерировать",
+  "app.Refresh": "Обновить",
+  "app.Description": "Описание",
+  "app.Packages": "Тарифы",
+  "app.News": "Новости",
+  "app.Licenses": "Лицензии",
+  "app.Devices": "Устройства",
+  "app.News.Add": "Добавить",
+  "app.Search": "Поиск",
+  "app.uninstall.title": "Вы уверены что хотите удалить",
 
+  "news.title": "Новости",
 
-    "news.title": "Новости",
-
-
-    "wizard.title": "Установка приложения",
-    "wizard.terms": "Я прочитал и согласен с условиями пользовательского соглашения",
-    "wizard.next": "Далее",
-    "wizard.cancel": "Отмена",
-    "wizard.go": "Перейти к приложению",
-    "wizard.ok": "ОК",
-    "wizard.install.success.title": "Успешная установка",
-    "wizard.install.success.content": "Приложение было успешно установлено.",
-    "wizard.install.error.title": "Установка не удалась"
+  "wizard.title": "Установка приложения",
+  "wizard.terms": "Я прочитал и согласен с условиями пользовательского соглашения",
+  "wizard.next": "Далее",
+  "wizard.cancel": "Отмена",
+  "wizard.go": "Перейти к приложению",
+  "wizard.ok": "ОК",
+  "wizard.install.success.title": "Успешная установка",
+  "wizard.install.success.content": "Приложение было успешно установлено.",
+  "wizard.install.error.title": "Установка не удалась"
 }
+

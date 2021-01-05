@@ -1,9 +1,12 @@
 import { Card, Col, Empty, Row, Tag } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { IPackages } from "../../../../api/types.response";
+import { IMarketAppList, IPackages } from "../../../../api/types.response";
+import Loading from "../../../../components/shared-components/Loading";
+import { AppService } from "../../../../api";
+import { RouteComponentProps } from "react-router-dom";
 
 const ItemHeader = ({ packages }: { packages: IPackages }) => {
   return (
@@ -17,8 +20,8 @@ const ItemHeader = ({ packages }: { packages: IPackages }) => {
           {packages.Status === 1 ? (
             <CheckCircleOutlined />
           ) : (
-            <ClockCircleOutlined />
-          )}
+              <ClockCircleOutlined />
+            )}
           <span className="ml-2 font-weight-semibold">
             {packages.Status === 1 ? "Active" : "Not Active"}
           </span>
@@ -51,7 +54,24 @@ const CardItem = ({ packages }: { packages: IPackages }) => {
     </Card>
   );
 };
-const Packages = ({ packages }: { packages: IPackages[] }) => {
+const Packages = ({ currentApp }: { currentApp: IMarketAppList }) => {
+  const [packages, setPackages] = useState<IPackages[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const getAppPackages = () => {
+    return new AppService().GetMarketAppList().then((data) => {
+      if (data && data.ErrorCode === 0) {
+        setLoading(false);
+        const currentPackages = data.MarketAppList.find(app => app.AppType == currentApp!.AppType);
+        setPackages(currentPackages?.Packages ?? [])
+      }
+    })
+  }
+  useEffect(() => {
+    getAppPackages();
+  }, [])
+  if (loading) {
+    return <Loading cover="content" />
+  }
   return (
     <>
       <h2 className="mb-4">
@@ -68,10 +88,10 @@ const Packages = ({ packages }: { packages: IPackages[] }) => {
                 </Col>
               ))
           ) : (
-            <Flex className="w-100" justifyContent="center">
-              <Empty />
-            </Flex>
-          )}
+              <Flex className="w-100" justifyContent="center">
+                <Empty />
+              </Flex>
+            )}
         </Row>
       </div>
     </>

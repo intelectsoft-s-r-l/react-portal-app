@@ -27,7 +27,7 @@ const GridItem = ({ deactivateApp, data }: any) => {
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
               icon={<ExperimentOutlined />}
@@ -45,7 +45,7 @@ const GridItem = ({ deactivateApp, data }: any) => {
       </Flex>
       <div>
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
-          <h3 className="mb-0 cursor-pointer ">{data.Name}</h3>
+          <h3 className="app-link mb-0 cursor-pointer ">{data.Name}</h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
         <div style={{ minHeight: "70px" }}>
@@ -110,7 +110,7 @@ const MyAppList = () => {
           );
         });
       },
-      onCancel: () => {},
+      onCancel: () => { },
     });
   };
 
@@ -135,10 +135,10 @@ const MyAppList = () => {
             </Col>
           ))
         ) : (
-          <Flex justifyContent="center" className="w-100">
-            <Empty />
-          </Flex>
-        )}
+            <Flex justifyContent="center" className="w-100">
+              <Empty />
+            </Flex>
+          )}
       </Row>
     </div>
   );
