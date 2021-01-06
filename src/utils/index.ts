@@ -250,6 +250,11 @@ class Utils {
   static handleDotNetDate(date: any) {
     return moment(date).format("[/Date(]xZZ[)/]");
   }
+
+  static toMilliSeconds(date: string) {
+    const newDate = new Date(date);
+    return newDate.getMilliseconds();
+  }
 }
 
 export default Utils;

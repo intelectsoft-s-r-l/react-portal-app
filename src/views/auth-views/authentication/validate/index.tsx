@@ -2,7 +2,6 @@ import React, { useState, useLayoutEffect } from "react";
 import axios from "axios";
 import ErrorOne from "../../errors/error-page-1/index";
 import Success from "../success/index";
-import { AuthService } from "../../../../api";
 import { API_AUTH_URL } from "../../../../configs/AppConfig";
 import { RouteComponentProps } from "react-router-dom";
 

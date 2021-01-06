@@ -41,6 +41,7 @@ enum typeOf {
   Qiwi = 100,
   SMS = 50,
   Exchange = 40,
+  MobilePetrolExpertCash = 131,
 }
 const Options = ({ AppType, location, match }: any) => {
   if (
@@ -49,7 +50,8 @@ const Options = ({ AppType, location, match }: any) => {
     AppType === typeOf.Expert ||
     AppType === typeOf.StockManager ||
     AppType === typeOf.WaiterAssistant ||
-    AppType === typeOf.KitchetAssistant
+    AppType === typeOf.KitchetAssistant ||
+    AppType === typeOf.MobilePetrolExpertCash
   ) {
     return (
       <Menu

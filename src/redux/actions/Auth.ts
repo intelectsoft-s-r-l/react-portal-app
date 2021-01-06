@@ -28,7 +28,7 @@ export const signOut = () => ({
   type: SIGNOUT,
 });
 
-export const showAuthMessage = (message: string | JSX.Element) => ({
+export const showAuthMessage = (message: string) => ({
   type: SHOW_AUTH_MESSAGE,
   message,
 });
@@ -45,7 +45,7 @@ export const hideLoading = () => ({
 });
 
 export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
-  return new AuthService().SendActivationCode().then((data: any) => {
+  return new AuthService().SendActivationCode().then((data) => {
     const { ErrorMessage, ErrorCode } = data;
     if (data) {
       if (ErrorCode === 0)
@@ -54,7 +54,7 @@ export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
           key: "updatable",
           duration: 2,
         });
-      else dispatch(showAuthMessage(ErrorMessage));
+      else dispatch(showAuthMessage(ErrorMessage ?? ""));
     }
   });
 };

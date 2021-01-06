@@ -73,7 +73,7 @@ const News = () => {
       .GetPortalNews(AppType)
       .then((data) => {
         setLoading(false);
-        if (data.ErrorCode === 0) setNews(data.NewsList);
+        if (data && data.ErrorCode === 0) setNews(data.NewsList);
       })
       .then(() => {
         getApps();
@@ -82,7 +82,7 @@ const News = () => {
   const getApps = async () => {
     return await new AppService().GetMarketAppList().then((data) => {
       setLoading(false);
-      if (data.ErrorCode === 0) setApps(data.MarketAppList);
+      if (data && data.ErrorCode === 0) setApps(data.MarketAppList);
     });
   };
   const onSelect = (AppType: number) => {
@@ -94,7 +94,13 @@ const News = () => {
     }
   };
   useEffect(() => {
-    getPortalNews();
+    let mounted = true;
+    if (mounted) {
+      getPortalNews();
+    }
+    return () => {
+      mounted = false;
+    };
   }, []);
   return (
     <>
@@ -122,7 +128,7 @@ const News = () => {
             news
               .sort((a, b) => a.ID - b.ID)
               .reverse()
-              .map((elm) => <ArticleItem newsData={elm} />)
+              .map((elm) => <ArticleItem newsData={elm} key={elm.ID} />)
           ) : (
             <Flex className="w-100" justifyContent="center">
               <Empty />

@@ -1,5 +1,10 @@
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CancelTokenSource,
+} from "axios";
 import { message } from "antd";
-import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { API_APP_URL, API_AUTH_URL, API_SMS_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
@@ -46,50 +51,53 @@ const publicIp = require("react-public-ip");
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
 }
-class HttpClient {
+export default class HttpClient {
   public readonly instance: AxiosInstance;
-  public _token: string;
+  private _token: string;
+  public _source: CancelTokenSource;
 
-  public constructor(baseURL: string) {
+  public constructor(baseURL = "") {
     this.instance = axios.create({
       baseURL,
     });
+    this._source = axios.CancelToken.source();
     this._token = store.getState().auth.token;
     this._initializeResponseInterceptor();
     this._initializeRequestInterceptor();
   }
+  private _RefreshToken = async () =>
+    this.instance.get<IRefreshTokenResponse>(`${API_AUTH_URL}/RefreshToken`);
 
-  public _initializeResponseInterceptor = () => {
+  private _initializeResponseInterceptor = () => {
     this.instance.interceptors.response.use(
       this._handleResponse,
       this._handleError
     );
   };
-  public _initializeRequestInterceptor = () => {
-    this.instance.interceptors.request.use(
-      (config) => {
-        console.log(config);
-        if (config.method === "get" && config.baseURL !== API_SMS_URL) {
-          config.params = {
-            ...config.params,
-            Token: this._token,
-          };
-        }
-        if (config.method === "post" && config.baseURL !== API_SMS_URL) {
-          config.data = {
-            ...config.data,
-            Token: this._token,
-          };
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
+  private _initializeRequestInterceptor = () => {
+    this.instance.interceptors.request.use(this._handleRequest, (error) =>
+      Promise.reject(error)
     );
   };
-  private _RefreshToken = async () =>
-    this.instance.get<IRefreshTokenResponse>(`${API_AUTH_URL}/RefreshToken`);
+  private _handleRequest = (config: AxiosRequestConfig) => {
+    console.log(config);
+    if (config.method === "get" && config.baseURL !== API_SMS_URL) {
+      config.params = {
+        ...config.params,
+        Token: this._token,
+      };
+    }
+    if (config.method === "post" && config.baseURL !== API_SMS_URL) {
+      config.data = {
+        ...config.data,
+        Token: this._token,
+      };
+    }
+    config.cancelToken = this._source.token;
+    return config;
+  };
 
-  public _handleResponse = (response: AxiosResponse) => {
+  private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
@@ -137,14 +145,13 @@ class HttpClient {
       message.error({
         content: response.data.ErrorMessage,
         key: "updatable",
+        duration: 2.5,
       });
     }
-    if (response.data) {
-      return response.data;
-    }
+    if (response && response.data) return response.data;
   };
-  public _handleError = async (error: AxiosResponse) => {
-    if (error.request.status !== 200) {
+  private _handleError = async (error: AxiosResponse) => {
+    if (error && error.request && error.request.status !== 200) {
       message.error({
         content: error.toString(),
         key: "updatable",
@@ -154,6 +161,7 @@ class HttpClient {
     store.dispatch(hideLoading());
   };
 }
+
 export class AuthService extends HttpClient {
   public constructor() {
     super(`${API_AUTH_URL}`);
@@ -348,29 +356,29 @@ export class SmsService extends HttpClient {
 
   public Info_GetByPeriod = async (
     APIKey: string,
-    DateStart: string,
-    DateEnd: string
+    DateTicksStart: number,
+    DateTicksEnd: number
   ) =>
     this.instance.get<ISMSInfoGetByPeriodResponse>("/Info/GetByPeriod", {
       params: {
         APIKey,
-        DateStart,
-        DateEnd,
+        DateTicksStart,
+        DateTicksEnd,
       },
     });
 
   public Info_GetDetailByPeriod = async (
     APIKey: string,
-    DateStart: string,
-    DateEnd: string
+    DateTicksStart: number,
+    DateTicksEnd: number
   ) =>
     this.instance.get<ISMSInfoGetDetailByPeriodResponse>(
       "/Info/GetDetailByPeriond",
       {
         params: {
           APIKey,
-          DateStart,
-          DateEnd,
+          DateTicksStart,
+          DateTicksEnd,
         },
       }
     );

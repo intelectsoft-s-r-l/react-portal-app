@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { SmsService } from "../../../../../api";
 import Flex from "../../../../../components/shared-components/Flex";
-import Utils from "../../../../../utils";
+import moment from "moment";
 interface ISMSList extends RouteComponentProps {
   APIKey: string;
 }
@@ -12,8 +12,8 @@ const SmsList = (props: ISMSList) => {
     new SmsService()
       .Info_GetDetailByPeriod(
         props.APIKey,
-        Utils.handleDotNetDate("01-01-2019"),
-        Utils.handleDotNetDate("01-01-2021")
+        moment("2019-01-01").valueOf(),
+        moment("2021-01-01").valueOf()
       )
       .then((data) => console.log(data));
   useEffect(() => {

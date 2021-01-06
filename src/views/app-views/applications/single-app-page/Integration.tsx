@@ -226,9 +226,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           className="mt-3"
           onClick={() =>
             updateCredentials({
-              ExternalSecurityPolicy: Buffer.from(
-                JSON.stringify(ExternalSecurityPolicy)
-              ).toString("base64"),
+              BackOfficeURI: backOfficeURI,
             })
           }
         >
