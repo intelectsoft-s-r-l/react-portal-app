@@ -359,7 +359,7 @@ export class SmsService extends HttpClient {
     DateTicksStart: number,
     DateTicksEnd: number
   ) =>
-    this.instance.get<ISMSInfoGetByPeriodResponse>("/Info/GetByPeriond", {
+    this.instance.get<ISMSInfoGetByPeriodResponse>("/Info/GetByPeriod", {
       params: {
         APIKey,
         DateTicksStart,
@@ -373,7 +373,7 @@ export class SmsService extends HttpClient {
     DateTicksEnd: number
   ) =>
     this.instance.get<ISMSInfoGetDetailByPeriodResponse>(
-      "/Info/GetDetailByPeriond",
+      "/Info/GetDetailByPeriod",
       {
         params: {
           APIKey,
@@ -387,6 +387,9 @@ export class SmsService extends HttpClient {
     this.instance.get<ISMSInfoResponse>("info/GetTotal", {
       params: {
         APIKey,
+      },
+      headers: {
+        Authorization: `Basic ${Base64.encode("username:password")}`,
       },
     });
 

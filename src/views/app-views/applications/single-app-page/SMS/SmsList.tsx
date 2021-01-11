@@ -40,7 +40,7 @@ const SmsList = (props: ISMSList) => {
       .then((data) => console.log(data));
 
   useEffect(() => {
-    getInfoByPeriod();
+    getInfoTotal();
   }, []);
   if (loading) {
     return <Loading cover="content" />;
