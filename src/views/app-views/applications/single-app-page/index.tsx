@@ -22,7 +22,7 @@ import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
-import { IMarketAppList } from "../../../../api/types.response";
+import { ILocale, IMarketAppList } from "../../../../api/types.response";
 import SmsCampaign from "./SMS";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/CampaignDetails";
@@ -292,23 +292,9 @@ const AppRoute = ({ match, app }: IAppRoute) => {
 
 const AboutItem = ({ appData }: any) => {
   const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
-  const [shortDesc, setShortDesc] = useState<any>();
-  const [longDesc, setLongDesc] = useState<any>();
+  const shortDesc = JSON.parse(window.atob(ShortDescription));
+  const longDesc = JSON.parse(window.atob(LongDescription));
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
-  useEffect(() => {
-    try {
-      setShortDesc(JSON.parse(window.atob(ShortDescription)));
-    } catch {
-      setShortDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
-  useEffect(() => {
-    try {
-      setLongDesc(JSON.parse(window.atob(LongDescription)));
-    } catch {
-      setLongDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
   return (
     <Card className="mb-5">
       <Flex>
@@ -326,13 +312,13 @@ const AboutItem = ({ appData }: any) => {
           </Flex>
           <div>
             <span className="text-muted ">
-              {shortDesc ? shortDesc[locale] : null}
+              {shortDesc ? shortDesc[locale] : ""}
             </span>
             {Status === 0 && (
               <p
                 className="mt-4"
                 dangerouslySetInnerHTML={{
-                  __html: longDesc ? longDesc[locale] : null,
+                  __html: longDesc ? longDesc[locale] : "",
                 }}
               ></p>
             )}

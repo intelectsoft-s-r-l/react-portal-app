@@ -110,7 +110,7 @@ const MyAppList = () => {
           );
         });
       },
-      onCancel: () => { },
+      onCancel: () => {},
     });
   };
 
@@ -135,10 +135,10 @@ const MyAppList = () => {
             </Col>
           ))
         ) : (
-            <Flex justifyContent="center" className="w-100">
-              <Empty />
-            </Flex>
-          )}
+          <Flex justifyContent="center" className="w-100">
+            <Empty />
+          </Flex>
+        )}
       </Row>
     </div>
   );
