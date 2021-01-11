@@ -218,7 +218,7 @@ const AppOption = (props: any) => {
 };
 interface IAppRoute {
   match: RouteComponentProps["match"];
-  app: IMarketAppList;
+  app: Partial<IMarketAppList>;
 }
 const AppRoute = ({ match, app }: IAppRoute) => {
   return (
@@ -228,7 +228,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/description`}
         exact
         render={(props) => (
-          <Description {...props} LongDescription={app.LongDescription} />
+          <Description {...props} LongDescription={app.LongDescription ?? ""} />
         )}
       />
       <Route
@@ -276,7 +276,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       />
       <Route
         path={`${match.url}/sms-list`}
-        render={(props) => <SmsList {...props} APIKey={app.ApyKey} />}
+        render={(props) => <SmsList {...props} APIKey={app.ApyKey ?? ""} />}
       />
       <Route
         path="*"
@@ -292,8 +292,18 @@ const AppRoute = ({ match, app }: IAppRoute) => {
 
 const AboutItem = ({ appData }: any) => {
   const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
-  const shortDesc = JSON.parse(window.atob(ShortDescription));
-  const longDesc = JSON.parse(window.atob(LongDescription));
+
+  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
+  const [longDesc, setLongDesc] = useState<Partial<ILocale>>({});
+  useEffect(() => {
+    try {
+      setShortDesc(JSON.parse(window.atob(ShortDescription)));
+      setLongDesc(JSON.parse(window.atob(LongDescription)));
+    } catch {
+      setShortDesc({ en: "", ru: "", ro: "" });
+      setLongDesc({ en: "", ru: "", ro: "" });
+    }
+  }, []);
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   return (
     <Card className="mb-5">
@@ -311,14 +321,12 @@ const AboutItem = ({ appData }: any) => {
             <h2 className="mr-3">{Name} </h2>
           </Flex>
           <div>
-            <span className="text-muted ">
-              {shortDesc ? shortDesc[locale] : ""}
-            </span>
+            <span className="text-muted ">{shortDesc[locale] ?? ""}</span>
             {Status === 0 && (
               <p
                 className="mt-4"
                 dangerouslySetInnerHTML={{
-                  __html: longDesc ? longDesc[locale] : "",
+                  __html: longDesc[locale] ?? "",
                 }}
               ></p>
             )}
@@ -335,7 +343,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const [app, setApp] = useState<IMarketAppList>();
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketApp = async () => {
-    return new AppService().GetMarketAppList().then(async (data) => {
+    return await new AppService().GetMarketAppList().then(async (data) => {
       if (data) {
         const { ErrorCode, MarketAppList } = data;
         if (ErrorCode === 0) {

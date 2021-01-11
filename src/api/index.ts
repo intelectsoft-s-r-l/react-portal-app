@@ -359,7 +359,7 @@ export class SmsService extends HttpClient {
     DateTicksStart: number,
     DateTicksEnd: number
   ) =>
-    this.instance.get<ISMSInfoGetByPeriodResponse>("/Info/GetByPeriod", {
+    this.instance.get<ISMSInfoGetByPeriodResponse>("/Info/GetByPeriond", {
       params: {
         APIKey,
         DateTicksStart,

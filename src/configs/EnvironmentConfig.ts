@@ -1,7 +1,7 @@
 const dev = {
   API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
-  API_AUTH_URL: "http://192.168.1.182:7979/ISAuthService/json",
-  API_SMS_URL: "https://api.edi.md/SMSService/json",
+  API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
+  API_SMS_URL: "https://dev.edi.md/SMSService/json",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -15,7 +15,7 @@ const test = {
 const prod = {
   API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
   API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
-  API_SMS_URL: "https://api.edi.md/SMSService/json",
+  API_SMS_URL: "https://dev.edi.md/SMSService/json",
   SUBDIR_PATH: "/testclientportal",
 };
 
