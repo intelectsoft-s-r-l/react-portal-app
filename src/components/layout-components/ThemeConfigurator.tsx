@@ -20,6 +20,7 @@ import IntlMessage from "../util-components/IntlMessage";
 import Utils from "../../utils/index";
 import { IState } from "../../redux/reducers";
 import { ITheme } from "../../redux/reducers/Theme";
+import { SUBDIR_PATH } from "../../configs/AppConfig";
 
 export interface IListOption {
   name?: string | ReactNode;
@@ -69,6 +70,7 @@ const ThemeConfigurator = ({
   const isNavTop = navType === NAV_TYPE_TOP;
   const AppCurrentLocale = AppLocale[locale];
   const isCollapse = navCollapsed;
+
   const ontopNavColorClick = (value: any) => {
     if (value === white) {
       onHeaderNavColorChange("#193550");

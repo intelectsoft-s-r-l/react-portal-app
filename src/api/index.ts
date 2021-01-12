@@ -93,6 +93,12 @@ export default class HttpClient {
         Token: this._token,
       };
     }
+    if (config.baseURL === API_SMS_URL) {
+      config.auth = {
+        username: "1",
+        password: "1",
+      };
+    }
     config.cancelToken = this._source.token;
     return config;
   };
@@ -387,9 +393,6 @@ export class SmsService extends HttpClient {
     this.instance.get<ISMSInfoResponse>("info/GetTotal", {
       params: {
         APIKey,
-      },
-      headers: {
-        Authorization: `Basic ${Base64.encode("username:password")}`,
       },
     });
 

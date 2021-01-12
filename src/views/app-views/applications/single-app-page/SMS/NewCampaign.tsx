@@ -51,6 +51,7 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
     return await new AppService()
       .SMS_UpdateCampaign({
         ...values,
+        Status: 1,
         ScheduledDate,
       })
       .then((data) => {

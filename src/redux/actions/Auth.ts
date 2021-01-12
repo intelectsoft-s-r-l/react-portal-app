@@ -14,8 +14,9 @@ import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import WithStringTranslate from "../../utils/translate";
 import axios from "axios";
-import { API_AUTH_URL } from "../../configs/AppConfig";
+import { API_AUTH_URL, SUBDIR_PATH } from "../../configs/AppConfig";
 import { IAuthorizeUserRequest } from "../../api/types.request";
+import { onHeaderNavColorChange } from "./Theme";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -71,6 +72,8 @@ export const authorizeUser = (
           if (ErrorCode === 0) {
             dispatch(authenticated(Token));
             dispatch(getProfileInfo());
+            if (SUBDIR_PATH === "/testclientportal")
+              dispatch(onHeaderNavColorChange("#DE4436"));
           } else if (ErrorCode === 102) {
             dispatch(showAuthMessage(ErrorMessage!.toString()));
           } else if (ErrorCode === 108) {

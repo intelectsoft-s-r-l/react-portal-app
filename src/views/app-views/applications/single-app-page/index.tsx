@@ -28,7 +28,7 @@ import Integration from "./Integration";
 import CampaignDetails from "./SMS/CampaignDetails";
 import Invoice from "./ExchangeOfInvoice/Invoice";
 import Order from "./ExchangeOfInvoice/Order";
-import SmsList from "./SMS/SmsList";
+import SmsDashboard from "./SMS/SmsDashboard";
 
 enum typeOf {
   Retail = 10,
@@ -127,11 +127,9 @@ const Options = ({ AppType, location, match }: any) => {
         defaultSelectedKeys={[`${match.url}/:appId/`]}
         selectedKeys={[location.pathname]}
       >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
+        <Menu.Item key={`${match.url}/dashboard`}>
+          <span>Dashboard</span>
+          <Link to={"dashboard"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/packages`}>
           <span>
@@ -143,13 +141,15 @@ const Options = ({ AppType, location, match }: any) => {
           <span>Campaign</span>
           <Link to={"campaign"} />
         </Menu.Item>
-        <Menu.Item key={`${match.url}/sms-list`}>
-          <span>SMS List</span>
-          <Link to={"sms-list"} />
-        </Menu.Item>
         <Menu.Item key={`${match.url}/integration`}>
           <span>Integration</span>
           <Link to={"integration"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
         </Menu.Item>
       </Menu>
     );
@@ -275,8 +275,10 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         render={(props) => <Order {...props} />}
       />
       <Route
-        path={`${match.url}/sms-list`}
-        render={(props) => <SmsList {...props} APIKey={app.ApyKey ?? ""} />}
+        path={`${match.url}/dashboard`}
+        render={(props) => (
+          <SmsDashboard {...props} APIKey={app.ApyKey ?? ""} />
+        )}
       />
       <Route
         path="*"

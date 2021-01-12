@@ -8,6 +8,7 @@ import NavSearch from "./NavSearch";
 import {
   toggleCollapsedNav,
   onMobileNavToggle,
+  onHeaderNavColorChange,
 } from "../../redux/actions/Theme";
 import {
   NAV_TYPE_TOP,
@@ -16,12 +17,12 @@ import {
 } from "../../constants/ThemeConstant";
 import utils from "../../utils";
 import NavProfile from "./NavProfile";
-import AppNavGrid from "../../views/app-views/applications/AppNavGrid";
 import AppStoreNav from "../../views/app-views/applications/AppNav";
 import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
 import { AppService } from "../../api";
+import { SUBDIR_PATH } from "../../configs/AppConfig";
 
 const { Header } = Layout;
 
@@ -106,10 +107,10 @@ const HeaderNav = (props: any) => {
               <div
                 className={`text-${
                   headerNavColor === "#ffffff" ? "dark" : "white"
-                }`}
+                } px-5`}
                 style={{ fontSize: "20px" }}
               >
-                {currentCompany}
+                {`ATENTIE! Administrati: ${currentCompany}`}
               </div>
             ) : null}
           </div>
