@@ -55,7 +55,9 @@ const SmsTable = (
           <span className="font-weight-semibold">
             {getDaysLeft(date) > 1
               ? `${getDaysLeft(date)} days left`
-              : `${getDaysLeft(date)} day left`}
+              : getDaysLeft(date) === 1
+              ? `${getDaysLeft(date)} day left`
+              : "Today"}
           </span>
         </Tag>
       ),
