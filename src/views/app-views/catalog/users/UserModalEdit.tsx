@@ -5,7 +5,7 @@ import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import AppLocale from "../../../../lang";
 import { AppService } from "../../../../api";
 import { DONE, UPDATING } from "../../../../constants/Messages";
-import Localization from "../../../../utils/Localization";
+import TranslateText from "../../../../utils/translate";
 
 export const UserModalEdit = ({
   data,
@@ -29,7 +29,7 @@ export const UserModalEdit = ({
   const onFinish = (values: any) => {
     const key = "updatable";
     message.loading({
-      content: <Localization msg={UPDATING} />,
+      content: TranslateText(UPDATING),
       key,
     });
     setTimeout(async () => {
@@ -37,7 +37,7 @@ export const UserModalEdit = ({
         if (data) {
           if (data.ErrorCode === 0) {
             message.success({
-              content: <Localization msg={DONE} />,
+              content: TranslateText(DONE),
               key: "updatable",
             });
             getUsersInfo();

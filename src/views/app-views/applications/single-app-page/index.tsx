@@ -1,5 +1,6 @@
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { Card, Menu } from "antd";
-import React, { useEffect, useState } from "react";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
@@ -22,12 +23,13 @@ import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
-import { IMarketAppList } from "../../../../api/types.response";
-import SmsCampaign from "./SMS";
+import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
-import CampaignDetails from "./SMS/CampaignDetails";
+import CampaignDetails from "./SMS/campaign/CampaignDetails";
 import Invoice from "./ExchangeOfInvoice/Invoice";
 import Order from "./ExchangeOfInvoice/Order";
+import SmsDashboard from "./SMS/dashboard";
 
 enum typeOf {
   Retail = 10,
@@ -40,6 +42,7 @@ enum typeOf {
   Qiwi = 100,
   SMS = 50,
   Exchange = 40,
+  MobilePetrolExpertCash = 131,
 }
 const Options = ({ AppType, location, match }: any) => {
   if (
@@ -48,7 +51,8 @@ const Options = ({ AppType, location, match }: any) => {
     AppType === typeOf.Expert ||
     AppType === typeOf.StockManager ||
     AppType === typeOf.WaiterAssistant ||
-    AppType === typeOf.KitchetAssistant
+    AppType === typeOf.KitchetAssistant ||
+    AppType === typeOf.MobilePetrolExpertCash
   ) {
     return (
       <Menu
@@ -129,6 +133,10 @@ const Options = ({ AppType, location, match }: any) => {
             <IntlMessage id="app.Description" />
           </span>
           <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/dashboard`}>
+          <span>Dashboard</span>
+          <Link to={"dashboard"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/packages`}>
           <span>
@@ -211,7 +219,7 @@ const AppOption = (props: any) => {
 };
 interface IAppRoute {
   match: RouteComponentProps["match"];
-  app: IMarketAppList;
+  app: Partial<IMarketAppList>;
 }
 const AppRoute = ({ match, app }: IAppRoute) => {
   return (
@@ -221,7 +229,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/description`}
         exact
         render={(props) => (
-          <Description {...props} LongDescription={app.LongDescription} />
+          <Description {...props} LongDescription={app.LongDescription ?? ""} />
         )}
       />
       <Route
@@ -268,6 +276,12 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         render={(props) => <Order {...props} />}
       />
       <Route
+        path={`${match.url}/dashboard`}
+        render={(props) => (
+          <SmsDashboard {...props} APIKey={app.ApyKey ?? ""} />
+        )}
+      />
+      <Route
         path="*"
         render={({ location }) => (
           <div>
@@ -281,23 +295,19 @@ const AppRoute = ({ match, app }: IAppRoute) => {
 
 const AboutItem = ({ appData }: any) => {
   const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
-  const [shortDesc, setShortDesc] = useState<any>();
-  const [longDesc, setLongDesc] = useState<any>();
-  const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
+
+  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
+  const [longDesc, setLongDesc] = useState<Partial<ILocale>>({});
   useEffect(() => {
     try {
       setShortDesc(JSON.parse(window.atob(ShortDescription)));
-    } catch {
-      setShortDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
-  useEffect(() => {
-    try {
       setLongDesc(JSON.parse(window.atob(LongDescription)));
     } catch {
+      setShortDesc({ en: "", ru: "", ro: "" });
       setLongDesc({ en: "", ru: "", ro: "" });
     }
   }, []);
+  const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   return (
     <Card className="mb-5">
       <Flex>
@@ -314,14 +324,12 @@ const AboutItem = ({ appData }: any) => {
             <h2 className="mr-3">{Name} </h2>
           </Flex>
           <div>
-            <span className="text-muted ">
-              {shortDesc ? shortDesc[locale] : null}
-            </span>
+            <span className="text-muted ">{shortDesc[locale] ?? ""}</span>
             {Status === 0 && (
               <p
                 className="mt-4"
                 dangerouslySetInnerHTML={{
-                  __html: longDesc ? longDesc[locale] : null,
+                  __html: longDesc[locale] ?? "",
                 }}
               ></p>
             )}
@@ -338,7 +346,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const [app, setApp] = useState<IMarketAppList>();
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketApp = async () => {
-    return new AppService().GetMarketAppList().then(async (data) => {
+    return await new AppService().GetMarketAppList().then(async (data) => {
       if (data) {
         const { ErrorCode, MarketAppList } = data;
         if (ErrorCode === 0) {

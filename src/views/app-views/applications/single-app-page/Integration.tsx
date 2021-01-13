@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import { IMarketAppList } from "../../../../api/types.response";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
 import { AppService } from "../../../../api";
-import Localization from "../../../../utils/Localization";
-import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
-import WithStringTranslate from "../../../../utils/translate";
+import { DONE, UPDATING } from "../../../../constants/Messages";
+import TranslateText from "../../../../utils/translate";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import Flex from "../../../../components/shared-components/Flex";
@@ -15,7 +14,7 @@ enum key {
   PRIVATE = 1,
   PUBLIC = 2,
 }
-const Integration = ({ appData }: { appData: IMarketAppList }) => {
+const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
   const { confirm } = Modal;
   const { ModuleSettings: settings } = appData;
   const [form] = Form.useForm();
@@ -29,8 +28,8 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
     setActivationCode(appData.LicenseActivationCode);
     setApiKey(appData.ApyKey);
     setBackOfficeURI(appData!.BackOfficeURI);
-    setPublicKey(appData!.EncryptionPublicKey);
-    setPrivateKey(appData!.EncryptionPrivateKey);
+    setPublicKey(appData!.EncryptionPublicKey ?? "");
+    setPrivateKey(appData!.EncryptionPrivateKey ?? "");
     try {
       setExternalSecurityPolicy(
         JSON.parse(window.atob(appData!.ExternalSecurityPolicy.toString()))
@@ -44,25 +43,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
       title: "Are you sure you want generate a new activation code?",
       onOk: () =>
         new AppService()
-          .GenerateLicenseActivationCode(appData.ID)
+          .GenerateLicenseActivationCode(appData.ID ?? 0)
           .then((data) => {
             if (data) {
               if (data.ErrorCode === 0) {
                 setActivationCode(data.ActivationCode);
-                //message
-                //.loading({
-                //content: <Localization msg={UPDATING} />,
-                //key: "updatable",
-                //})
-                //.then(() => {
-                //setActivationCode(data.ActivationCode);
-                //})
-                //.then(() =>
-                //message.success({
-                //content: <Localization msg={DONE} />,
-                //duration: 1,
-                //})
-                //);
               }
             }
           }),
@@ -75,25 +60,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
       title: "Are you sure you want to generate a new API Key?",
       onOk: async () => {
         return await new AppService()
-          .GenerateApiKey(appData!.ID)
+          .GenerateApiKey(appData!.ID ?? 0)
           .then((data) => {
             if (data) {
               if (data.ErrorCode === 0) {
                 setApiKey(data.ApiKey);
-                //message
-                //.loading({
-                //content: WithStringTranslate(UPLOADING),
-                //key: "updatable",
-                //})
-                //.then(() => {
-                //setApiKey(data.ApiKey);
-                //})
-                //.then(() =>
-                //message.success({
-                //content: <Localization msg={DONE} />,
-                //duration: 1,
-                //})
-                //);
               }
             }
           });
@@ -104,24 +75,10 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
     confirm({
       title: "Are you sure you want to delete current API Key?",
       onOk: () =>
-        new AppService().DeleteApiKey(appData!.ID).then((data) => {
+        new AppService().DeleteApiKey(appData!.ID ?? 0).then((data) => {
           if (data) {
             if (data.ErrorCode === 0) {
               setApiKey("00000000-0000-0000-0000-000000000000");
-              //message
-              //.loading({
-              //content: <Localization msg={UPDATING} />,
-              //key: "updatable",
-              //})
-              //.then(() => {
-              //setApiKey("00000000-0000-0000-0000-000000000000");
-              //})
-              //.then(() =>
-              //message.success({
-              //content: <Localization msg={DONE} />,
-              //duration: 1,
-              //})
-              //);
             }
           }
         }),
@@ -132,7 +89,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
   const updateCredentials = (data: any) => {
     message
       .loading({
-        content: WithStringTranslate(UPDATING),
+        content: TranslateText(UPDATING),
         key: "updatable",
         duration: 1,
       })
@@ -143,7 +100,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
             if (data) {
               if (data.ErrorCode === 0) {
                 message.success({
-                  content: WithStringTranslate(DONE),
+                  content: TranslateText(DONE),
                   duration: 1,
                 });
               }
@@ -165,11 +122,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
       title: "Are you sure you want to generate new Public and Private Keys?",
       onOk: async () => {
         return await new AppService()
-          .GenerateRsaKey(appData.ID)
+          .GenerateRsaKey(appData.ID ?? 0)
           .then((data) => {
             if (data) {
               if (data.ErrorCode === 0) {
-                message.success(WithStringTranslate(DONE));
+                message.success(TranslateText(DONE));
                 setPublicKey(data.EncryptionPublicKey);
                 setPrivateKey(data.EncryptionPrivateKey);
               }
@@ -180,11 +137,11 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
   };
 
   const updateRsaKey = async (AppID: number, Key: string, KeyType: number) => {
-    message.loading(WithStringTranslate(UPDATING)).then(() =>
+    message.loading(TranslateText(UPDATING)).then(() =>
       new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
         if (data) {
           if (data.ErrorCode === 0) {
-            message.success(WithStringTranslate(DONE));
+            message.success(TranslateText(DONE));
             setPublicKey(data.EncryptionPublicKey);
             setPrivateKey(data.EncryptionPrivateKey);
           }
@@ -196,7 +153,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
     <Row gutter={ROW_GUTTER} justify="space-between">
       <Col
         xl={12}
-        className={settings.APIKey ? "mb-4" : "mb-4 d-none"}
+        className={settings!.APIKey ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -218,7 +175,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
       </Col>
       <Col
         xl={12}
-        className={settings.ActivationCode ? "mb-4" : "mb-4 d-none"}
+        className={settings!.ActivationCode ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -245,7 +202,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
       </Col>
       <Col
         xl={12}
-        className={settings.Backoffice ? "mb-4" : "mb-4 d-none"}
+        className={settings!.Backoffice ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -269,9 +226,7 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           className="mt-3"
           onClick={() =>
             updateCredentials({
-              ExternalSecurityPolicy: Buffer.from(
-                JSON.stringify(ExternalSecurityPolicy)
-              ).toString("base64"),
+              BackOfficeURI: backOfficeURI,
             })
           }
         >
@@ -313,8 +268,10 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
           <IntlMessage id="app.Refresh" />
         </Button>
       </Col>
-      <Col xl={24} className={settings.RSAKey ? "mb-4" : "mb-4 d-none"}>
-        {settings.Backoffice || settings.ActivationCode || settings.APIKey ? (
+      <Col xl={24} className={settings!.RSAKey ? "mb-4" : "mb-4 d-none"}>
+        {settings!.Backoffice ||
+        settings!.ActivationCode ||
+        settings!.APIKey ? (
           <hr />
         ) : null}
         <div className="container-fluid">
@@ -337,13 +294,15 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
             type="ghost"
             style={{ borderColor: "#1890ff" }}
             className="ml-3 px-4"
-            onClick={() => updateRsaKey(appData.ID, PublicKey, key.PUBLIC)}
+            onClick={() =>
+              updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
+            }
           >
             <IntlMessage id="app.Refresh" />
           </Button>
         </Flex>
       </Col>
-      <Col xl={24} className={settings.RSAKey ? "mb-4" : "mb-4 d-none"}>
+      <Col xl={24} className={settings!.RSAKey ? "mb-4" : "mb-4 d-none"}>
         <div className="container-fluid">
           <h2>Private Key</h2>
         </div>
@@ -357,7 +316,9 @@ const Integration = ({ appData }: { appData: IMarketAppList }) => {
             type="ghost"
             style={{ borderColor: "#1890ff" }}
             className="ml-3 px-4"
-            onClick={() => updateRsaKey(appData.ID, PrivateKey, key.PRIVATE)}
+            onClick={() =>
+              updateRsaKey(appData!.ID ?? 0, PrivateKey, key.PRIVATE)
+            }
           >
             <IntlMessage id="app.Refresh" />
           </Button>

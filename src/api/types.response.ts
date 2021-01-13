@@ -79,7 +79,7 @@ export interface IPackages {
 
 export interface IMarketAppList {
   AppType: number;
-  ApyKey?: string;
+  ApyKey: string;
   BackOfficeURI?: string;
   ID: number;
   LicenseActivationCode?: number;

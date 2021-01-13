@@ -13,26 +13,23 @@ import {
 import moment from "moment";
 import UserView from "./UserView";
 import AvatarStatus from "../../../../components/shared-components/AvatarStatus";
-import "../hand_gesture.scss";
 import { connect } from "react-redux";
 import { UserModalEdit } from "./UserModalEdit";
 import { UserModalAdd } from "./UserModalAdd";
-import "./add_user.scss";
 import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
 import { AppService } from "../../../../api";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import Localization from "../../../../utils/Localization";
 import { IState } from "../../../../redux/reducers";
 import { IAuth } from "../../../../redux/reducers/Auth";
 import { IAccount } from "../../../../redux/reducers/Account";
 import { ITheme } from "../../../../redux/reducers/Theme";
-import WithStringTranslate from "../../../../utils/translate";
+import TranslateText from "../../../../utils/translate";
 import { IUsers } from "../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
-
+import "./add_user.scss";
 export enum status {
   inactive = 0,
   active = 1,
@@ -221,7 +218,7 @@ export class UserList extends Component<IUserListStoreProps> {
         <Menu.Item
           onClick={async () => {
             Modal.confirm({
-              title: <Localization msg={"users.Disable.Title"} />,
+              title: TranslateText("users.Disable.Title"),
               onOk: async () => {
                 await this.handleUserStatus(row.ID, status.disabled);
                 await this.getUsersInfo();
@@ -318,7 +315,7 @@ export class UserList extends Component<IUserListStoreProps> {
         <Flex className="mb-1" mobileFlex={false} justifyContent="between">
           <div className="mr-md-3 mb-3">
             <Input
-              placeholder={WithStringTranslate("app.Search")}
+              placeholder={TranslateText("app.Search")}
               prefix={<SearchOutlined />}
               onChange={(e) => this.onSearch(e)}
             />

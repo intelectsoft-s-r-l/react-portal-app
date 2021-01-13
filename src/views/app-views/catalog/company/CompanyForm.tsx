@@ -7,55 +7,64 @@ import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { updateSettings } from "../../../../redux/actions/Account";
 import { connect } from "react-redux";
-import { AppService } from "../../../../api";
+import HttpClient, { AppService } from "../../../../api";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
-import Localization from "../../../../utils/Localization";
 import { IState } from "../../../../redux/reducers";
 import { ITheme } from "../../../../redux/reducers/Theme";
 import { ICompanyData } from "../../../../api/types.response";
 import { UploadChangeParam } from "antd/lib/upload";
+import TranslateText from "../../../../utils/translate";
 class CompanyForm extends Component<{ [key: string]: any }> {
   inputMaskRef = React.createRef() as any;
   state = {} as { [key: string]: any };
   formRef = React.createRef() as any;
+  mounted = true;
 
-  public getCompanyInfo = async () => {
+  private getCompanyInfo = async () => {
     return new AppService().GetCompanyInfo().then((data) => {
       if (data) {
         const { ErrorCode, Company } = data;
         if (ErrorCode === 0) {
           this.setState(Company);
-          this.formRef["current"].setFieldsValue(Company);
+          if (this.formRef["current"])
+            this.formRef["current"].setFieldsValue(Company);
         }
       }
     });
   };
 
-  public updateCompany = async (values: ICompanyData) => {
+  private updateCompany = async (values: ICompanyData) => {
     const updatedInfo = { Company: { ...this.state, ...values } };
-    return new AppService().UpdateCompany(updatedInfo).then(async (data) => {
-      if (data) {
-        const { ErrorCode } = data;
-        if (ErrorCode === 0) {
-          await this.getCompanyInfo();
-          message.success({
-            content: <Localization msg={DONE} />,
-            key: "updatable",
-          });
+    return new AppService()
+      .UpdateCompany(updatedInfo)
+      .then(async (data) => {
+        if (data) {
+          const { ErrorCode } = data;
+          if (ErrorCode === 0) {
+            await this.getCompanyInfo();
+            message.success({
+              content: TranslateText(DONE),
+              key: "updatable",
+            });
+          }
         }
-      }
-    });
+      })
+      .catch((error) => console.log("error"));
   };
   componentDidMount() {
-    this.getCompanyInfo();
+    if (this.mounted) this.getCompanyInfo();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {
     const onFinish = async (values: ICompanyData) => {
       const key = "updatable";
       message.loading({
-        content: <Localization msg={UPDATING} />,
+        content: TranslateText(UPDATING),
         key,
       });
       setTimeout(async () => {
@@ -71,7 +80,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
       const key = "updatable";
       if (info.file.status === "uploading") {
         message.loading({
-          content: <Localization msg={UPLOADING} />,
+          content: TranslateText(UPLOADING),
           key,
           duration: 2,
         });

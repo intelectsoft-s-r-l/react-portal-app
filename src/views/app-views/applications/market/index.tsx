@@ -15,7 +15,7 @@ import InstallWizard from "./wizard";
 import { MarketContext } from "./MarketContext";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import Utils from "../../../../utils";
-import WithStringTranslate from "../../../../utils/translate";
+import TranslateText from "../../../../utils/translate";
 import { IState } from "../../../../redux/reducers";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
 import "../applications.scss";
@@ -71,13 +71,13 @@ const GridItem = ({
             </span>
           </Tag>
         ) : (
-            <Tag className="text-capitalize" color="cyan">
-              <CheckCircleOutlined />
-              <span className="ml-2 font-weight-semibold">
-                <IntlMessage id={"app.status.Installed"} />
-              </span>
-            </Tag>
-          )}
+          <Tag className="text-capitalize" color="cyan">
+            <CheckCircleOutlined />
+            <span className="ml-2 font-weight-semibold">
+              <IntlMessage id={"app.status.Installed"} />
+            </span>
+          </Tag>
+        )}
       </Flex>
       <div>
         <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
@@ -134,7 +134,7 @@ const Market = () => {
 
   const deactivateApp = (AppID: number, AppName: string) => {
     confirm({
-      title: `${WithStringTranslate("app.uninstall.title")} ${AppName}?`,
+      title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
       onOk: () => {
         return new Promise((resolve) => {
           setTimeout(
@@ -152,7 +152,7 @@ const Market = () => {
           );
         });
       },
-      onCancel: () => { },
+      onCancel: () => {},
     });
   };
 
@@ -178,58 +178,58 @@ const Market = () => {
       {loading ? (
         <Loading cover="content" />
       ) : (
-          <MarketContext.Provider
-            value={{
-              visibleModal,
-              appInstalled,
-              setAppInstalled,
-              handleOk,
-              handleCancel,
-              terms,
-              current,
-              setCurrent,
-              isAccepted,
-              setIsAccepted,
-              selectedApp,
-              termsAccepted,
-              setTermsAccepted,
-              getMarketApps,
-            }}
-          >
-            <InstallWizard apps={apps} />
-            <div
-              className={`my-4 
+        <MarketContext.Provider
+          value={{
+            visibleModal,
+            appInstalled,
+            setAppInstalled,
+            handleOk,
+            handleCancel,
+            terms,
+            current,
+            setCurrent,
+            isAccepted,
+            setIsAccepted,
+            selectedApp,
+            termsAccepted,
+            setTermsAccepted,
+            getMarketApps,
+          }}
+        >
+          <InstallWizard apps={apps} />
+          <div
+            className={`my-4 
                     container-fluid`}
-            >
-              <Row gutter={16}>
-                {apps.length > 0 && !loading ? (
-                  apps.map((elm) => (
-                    <Col
-                      xs={24}
-                      sm={24}
-                      lg={12}
-                      xl={8}
-                      xxl={6}
+          >
+            <Row gutter={16}>
+              {apps.length > 0 && !loading ? (
+                apps.map((elm) => (
+                  <Col
+                    xs={24}
+                    sm={24}
+                    lg={12}
+                    xl={8}
+                    xxl={6}
+                    key={elm["AppType"]}
+                  >
+                    <GridItem
+                      setVisibleModal={setVisibleModal}
+                      deactivateApp={deactivateApp}
+                      data={elm}
                       key={elm["AppType"]}
-                    >
-                      <GridItem
-                        setVisibleModal={setVisibleModal}
-                        deactivateApp={deactivateApp}
-                        data={elm}
-                        key={elm["AppType"]}
-                        setSelectedApp={setSelectedApp}
-                      />
-                    </Col>
-                  ))
-                ) : (
-                    <Flex justifyContent="center" className="w-100">
-                      <Empty />
-                    </Flex>
-                  )}
-              </Row>
-            </div>
-          </MarketContext.Provider>
-        )}
+                      setSelectedApp={setSelectedApp}
+                    />
+                  </Col>
+                ))
+              ) : (
+                <Flex justifyContent="center" className="w-100">
+                  <Empty />
+                </Flex>
+              )}
+            </Row>
+          </div>
+        </MarketContext.Provider>
+      )}
     </>
   );
 };

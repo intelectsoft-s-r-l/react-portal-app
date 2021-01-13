@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppService } from "../../../../../../api";
 import Loading from "../../../../../../components/shared-components/Loading";

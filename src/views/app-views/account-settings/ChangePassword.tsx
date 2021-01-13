@@ -7,10 +7,10 @@ import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import AppLocale from "../../../lang";
 import { AuthService } from "../../../api";
 import { DONE } from "../../../constants/Messages";
-import Localization from "../../../utils/Localization";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
 import { ITheme } from "../../../redux/reducers/Theme";
+import TranslateText from "../../../utils/translate";
 
 export class ChangePassword extends Component {
   private changePasswordFormRef = React.createRef<any>();
@@ -31,7 +31,7 @@ export class ChangePassword extends Component {
           if (data) {
             if (data.ErrorCode === 0)
               message.success({
-                content: <Localization msg={DONE} />,
+                content: TranslateText(DONE),
                 key: "updatable",
               });
           }

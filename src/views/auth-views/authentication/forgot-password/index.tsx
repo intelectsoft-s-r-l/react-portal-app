@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { AuthService } from "../../../../api";
 import { NEW_PASSWORD } from "../../../../constants/Messages";
-import Localization from "../../../../utils/Localization";
+import TranslateText from "../../../../utils/translate";
 
 const backgroundStyle = {
   backgroundImage: `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`,
@@ -26,7 +26,7 @@ const ForgotPassword = () => {
         if (data.ErrorCode === 0) {
           form.resetFields();
           message.success({
-            content: <Localization msg={NEW_PASSWORD} />,
+            content: TranslateText(NEW_PASSWORD),
             key: "updatable",
           });
         }

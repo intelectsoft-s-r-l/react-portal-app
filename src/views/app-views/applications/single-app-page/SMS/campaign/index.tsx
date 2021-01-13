@@ -2,14 +2,14 @@ import * as React from "react";
 import { Button, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { AppService } from "../../../../../api";
-import { ICampaignList } from "../../../../../api/types.response";
-import Flex from "../../../../../components/shared-components/Flex";
+import { AppService } from "../../../../../../api";
+import { ICampaignList } from "../../../../../../api/types.response";
+import Flex from "../../../../../../components/shared-components/Flex";
 import NewCampaign from "./NewCampaign";
-import Loading from "../../../../../components/shared-components/Loading";
-import SmsTable from "./SmsTable";
+import Loading from "../../../../../../components/shared-components/Loading";
+import SmsTable from "./SmsCampaignTable";
 import EditCampaign from "./EditCampaign";
-import { Route, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 
 const SmsCampaign = ({ match }: RouteComponentProps) => {
   const [campaignInfo, setCampaignInfo] = useState<ICampaignList[]>([]);

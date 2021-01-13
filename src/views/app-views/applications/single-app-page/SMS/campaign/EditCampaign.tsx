@@ -1,11 +1,11 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { Col, DatePicker, Form, Input, Modal, Row } from "antd";
-import { ICampaignList } from "../../../../../api/types.response";
-import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
+import { ICampaignList } from "../../../../../../api/types.response";
+import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { rules } from "./NewCampaign";
 import moment from "moment";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../../api";
 
 interface IEditCampaign {
   visible: boolean;

@@ -12,10 +12,11 @@ import { ACTIVATE_ACCOUNT, EMAIL_CONFIRM_MSG } from "../../constants/Messages";
 import { AuthService } from "../../api";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
-import WithStringTranslate from "../../utils/translate";
+import TranslateText from "../../utils/translate";
 import axios from "axios";
-import { API_AUTH_URL } from "../../configs/AppConfig";
+import { API_AUTH_URL, SUBDIR_PATH } from "../../configs/AppConfig";
 import { IAuthorizeUserRequest } from "../../api/types.request";
+import { onHeaderNavColorChange } from "./Theme";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -28,7 +29,7 @@ export const signOut = () => ({
   type: SIGNOUT,
 });
 
-export const showAuthMessage = (message: string | JSX.Element) => ({
+export const showAuthMessage = (message: string) => ({
   type: SHOW_AUTH_MESSAGE,
   message,
 });
@@ -45,16 +46,16 @@ export const hideLoading = () => ({
 });
 
 export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
-  return new AuthService().SendActivationCode().then((data: any) => {
+  return new AuthService().SendActivationCode().then((data) => {
     const { ErrorMessage, ErrorCode } = data;
     if (data) {
       if (ErrorCode === 0)
         message.success({
-          content: WithStringTranslate(EMAIL_CONFIRM_MSG),
+          content: TranslateText(EMAIL_CONFIRM_MSG),
           key: "updatable",
           duration: 2,
         });
-      else dispatch(showAuthMessage(ErrorMessage));
+      else dispatch(showAuthMessage(ErrorMessage ?? ""));
     }
   });
 };
@@ -71,11 +72,13 @@ export const authorizeUser = (
           if (ErrorCode === 0) {
             dispatch(authenticated(Token));
             dispatch(getProfileInfo());
+            if (SUBDIR_PATH === "/testclientportal")
+              dispatch(onHeaderNavColorChange("#DE4436"));
           } else if (ErrorCode === 102) {
             dispatch(showAuthMessage(ErrorMessage!.toString()));
           } else if (ErrorCode === 108) {
             Modal.confirm({
-              content: WithStringTranslate(ACTIVATE_ACCOUNT),
+              content: TranslateText(ACTIVATE_ACCOUNT),
               onOk: async () => {
                 return await axios
                   .get(`${API_AUTH_URL}/SendActivationCode`, {
@@ -86,7 +89,7 @@ export const authorizeUser = (
                   .then((response: any) => {
                     if (response.data.ErrorCode === 0) {
                       message.success({
-                        content: WithStringTranslate(EMAIL_CONFIRM_MSG),
+                        content: TranslateText(EMAIL_CONFIRM_MSG),
                         key: "updatable",
                         duration: 2,
                       });

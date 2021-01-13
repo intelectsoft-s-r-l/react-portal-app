@@ -7,7 +7,7 @@ import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
 import { AppService } from "../../../../../api";
-import Localization from "../../../../../utils/Localization";
+import TranslateText from "../../../../../utils/translate";
 const EditNews = ({ visible, close, news, getNews }: any) => {
   const [form] = Form.useForm();
   const [Photo, setPhoto] = useState<any>();
@@ -27,13 +27,13 @@ const EditNews = ({ visible, close, news, getNews }: any) => {
   const onUploadAvatar = (info: any) => {
     if (info.file.status === "uploading") {
       message.loading({
-        content: <Localization msg={UPLOADING} />,
+        content: TranslateText(UPLOADING),
         key: "updatable",
       });
     }
     if (info.file.status === "done") {
       message.success({
-        content: <Localization msg={DONE} />,
+        content: TranslateText(DONE),
         key: "updatable",
         duration: 1,
       });
