@@ -1,5 +1,5 @@
 import { Button, Card, List, Col, Empty, Row, Tooltip } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { AppService } from "../../../../../api";
 import Flex from "../../../../../components/shared-components/Flex";
@@ -8,22 +8,20 @@ import moment from "moment";
 import EditNews from "./EditNews";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import Loading from "../../../../../components/shared-components/Loading";
+import { INewsList } from "../../../../../api/types.response";
 
-interface INewsList {
-  AppType: number;
-  CompanyID: number;
-  Content: string;
-  Header: string;
-  ID: number;
-  Photo: string;
+interface IArticleItem {
+  newsData: INewsList;
+  setEdit: Dispatch<SetStateAction<boolean>>;
+  edit: boolean;
+  setSelectedNew: Dispatch<SetStateAction<INewsList | undefined>>;
 }
-interface INews {
-  ErrorCode: number;
-  ErrorMessage: string;
-  NewsList: INewsList[];
-}
-
-const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
+const ArticleItem = ({
+  newsData,
+  setEdit,
+  edit,
+  setSelectedNew,
+}: IArticleItem) => {
   return (
     <Card style={{ padding: 30 }}>
       <Flex justifyContent="between" alignItems="center" className="mt-3">
@@ -66,7 +64,7 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
           {newsData.Photo && (
             <img
               src={newsData.Photo}
-              alt="Photo"
+              alt="News article"
               style={{ maxWidth: "100%" }}
             />
           )}
@@ -87,12 +85,12 @@ const ArticleItem = ({ newsData, setEdit, edit, setSelectedNew }: any) => {
   );
 };
 const News = ({ AppType }: { AppType: number }) => {
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   const getNews = (AppType: number) => {
     return new AppService().GetAppNews(AppType).then((data) => {
       if (data) {
         if (data.ErrorCode === 0) {
-          setLoading(false)
+          setLoading(false);
           setNews(data.NewsList);
         }
       }
@@ -103,10 +101,12 @@ const News = ({ AppType }: { AppType: number }) => {
   }, []);
   const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
-  const [news, setNews] = useState<any>();
-  const [selectedNew, setSelectedNew] = useState<any>();
+  const [news, setNews] = useState<INewsList[]>([]);
+  const [selectedNew, setSelectedNew] = useState<INewsList | undefined>(
+    undefined
+  );
   if (loading) {
-    return <Loading cover="content" />
+    return <Loading cover="content" />;
   }
   return (
     <>
@@ -150,10 +150,10 @@ const News = ({ AppType }: { AppType: number }) => {
               />
             ))
         ) : (
-            <Flex className="w-100" justifyContent="center">
-              <Empty />
-            </Flex>
-          )}
+          <Flex className="w-100" justifyContent="center">
+            <Empty />
+          </Flex>
+        )}
       </List>
     </>
   );

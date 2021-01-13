@@ -10,7 +10,7 @@ import { AppService } from "../../../../api";
 import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
-import WithStringTranslate from "../../../../utils/translate";
+import TranslateText from "../../../../utils/translate";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
 
 const GridItem = ({ deactivateApp, data }: any) => {
@@ -92,7 +92,7 @@ const MyAppList = () => {
 
   const deactivateApp = (AppID: number, AppName: string) => {
     confirm({
-      title: `${WithStringTranslate("app.uninstall.title")} ${AppName}?`,
+      title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
       onOk: () => {
         return new Promise((resolve) => {
           setTimeout(

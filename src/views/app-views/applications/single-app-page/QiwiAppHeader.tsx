@@ -6,7 +6,7 @@ import { PageHeaderAlt } from "../../../../components/layout-components/PageHead
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { DONE } from "../../../../constants/Messages";
-import WithStringTranslate from "../../../../utils/translate";
+import TranslateText from "../../../../utils/translate";
 
 interface IQiwiAppHeader {
   AppID: number;
@@ -33,7 +33,7 @@ const QiwiAppHeader = ({
       setLoading(false);
       if (data) {
         if (data.ErrorCode === 0) {
-          message.success(WithStringTranslate(DONE), 1);
+          message.success(TranslateText(DONE), 1);
         }
       }
     });

@@ -1,13 +1,14 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Flex from "../../../../../components/shared-components/Flex";
-import { ICampaignList } from "../../../../../api/types.response";
-import { AppService } from "../../../../../api";
-import Loading from "../../../../../components/shared-components/Loading";
+import Flex from "../../../../../../components/shared-components/Flex";
+import { ICampaignList } from "../../../../../../api/types.response";
+import { AppService } from "../../../../../../api";
+import Loading from "../../../../../../components/shared-components/Loading";
 import { RouteComponentProps } from "react-router-dom";
+import { Card } from "antd";
 import "./campaign.scss";
 
-interface ICampaignDetails extends RouteComponentProps<{ ID: string }> { }
+interface ICampaignDetails extends RouteComponentProps<{ ID: string }> {}
 const CampaignDetails = ({ history, match }: ICampaignDetails) => {
   const { ID } = match.params;
   const [currentCampaign, setCurrentCampaign] = useState<ICampaignList>();
@@ -35,7 +36,7 @@ const CampaignDetails = ({ history, match }: ICampaignDetails) => {
       <Flex justifyContent="between" alignItems="center" className="py-4">
         <h2>Campaign details</h2>
       </Flex>
-      <div className="border p-3">
+      <Card>
         <div>
           <span>
             <b>Name</b>
@@ -62,7 +63,7 @@ const CampaignDetails = ({ history, match }: ICampaignDetails) => {
             {currentCampaign.ReviewerComments ?? "No reviewer comments yet!"}
           </p>
         </div>
-      </div>
+      </Card>
     </>
   );
 };

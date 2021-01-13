@@ -19,7 +19,7 @@ import { clearSettings } from "../../redux/actions/Account";
 import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
-import WithStringTranslate from "../../utils/translate";
+import TranslateText from "../../utils/translate";
 interface INavProfile {
   signOut?: () => void;
   FirstName?: string;
@@ -44,7 +44,7 @@ const NavProfile = ({ signOut, FirstName, Photo, locale }: INavProfile) => {
   const { confirm } = Modal;
   const confirmLogout = () => {
     confirm({
-      title: WithStringTranslate("header.logout.message"),
+      title: TranslateText("header.logout.message"),
       onOk: () => {
         return new Promise((resolve) => {
           setTimeout(() => {

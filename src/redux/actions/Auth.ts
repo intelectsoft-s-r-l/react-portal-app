@@ -12,7 +12,7 @@ import { ACTIVATE_ACCOUNT, EMAIL_CONFIRM_MSG } from "../../constants/Messages";
 import { AuthService } from "../../api";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
-import WithStringTranslate from "../../utils/translate";
+import TranslateText from "../../utils/translate";
 import axios from "axios";
 import { API_AUTH_URL, SUBDIR_PATH } from "../../configs/AppConfig";
 import { IAuthorizeUserRequest } from "../../api/types.request";
@@ -51,7 +51,7 @@ export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
     if (data) {
       if (ErrorCode === 0)
         message.success({
-          content: WithStringTranslate(EMAIL_CONFIRM_MSG),
+          content: TranslateText(EMAIL_CONFIRM_MSG),
           key: "updatable",
           duration: 2,
         });
@@ -78,7 +78,7 @@ export const authorizeUser = (
             dispatch(showAuthMessage(ErrorMessage!.toString()));
           } else if (ErrorCode === 108) {
             Modal.confirm({
-              content: WithStringTranslate(ACTIVATE_ACCOUNT),
+              content: TranslateText(ACTIVATE_ACCOUNT),
               onOk: async () => {
                 return await axios
                   .get(`${API_AUTH_URL}/SendActivationCode`, {
@@ -89,7 +89,7 @@ export const authorizeUser = (
                   .then((response: any) => {
                     if (response.data.ErrorCode === 0) {
                       message.success({
-                        content: WithStringTranslate(EMAIL_CONFIRM_MSG),
+                        content: TranslateText(EMAIL_CONFIRM_MSG),
                         key: "updatable",
                         duration: 2,
                       });

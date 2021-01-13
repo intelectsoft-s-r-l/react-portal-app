@@ -7,14 +7,14 @@ import {
 } from "@ant-design/icons";
 import Tag from "antd/es/tag";
 import { ColumnsType } from "antd/lib/table";
-import { ICampaignList } from "../../../../../api/types.response";
+import { ICampaignList } from "../../../../../../api/types.response";
 import moment from "moment";
-import EllipsisDropdown from "../../../../../components/shared-components/EllipsisDropdown";
+import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
 import { Menu } from "antd";
-import { AppService } from "../../../../../api";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { AppService } from "../../../../../../api";
+import { Link } from "react-router-dom";
 
-enum SMS {
+enum smsState {
   Draft,
   Verifying,
   Declined,

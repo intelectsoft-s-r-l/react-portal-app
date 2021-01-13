@@ -1,32 +1,17 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Doughnut } from "react-chartjs-2";
-import { Badge, Card, Col, Row, Select, Table } from "antd";
+import { Badge, Card, Col, Row, Table } from "antd";
 import { RouteComponentProps } from "react-router-dom";
-import { SmsService } from "../../../../../api";
-import { ISMSInfoResponse } from "../../../../../api/types.response";
-import DonutChartWidget from "../../../../../components/shared-components/DonutChartWidget";
-import Flex from "../../../../../components/shared-components/Flex";
-import {
-  COLORS,
-  COLOR_1,
-  COLOR_2,
-  COLOR_3,
-  COLOR_4,
-  COLOR_5,
-  COLOR_6,
-} from "../../../../../constants/ChartConstant";
-import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
+import { SmsService } from "../../../../../../api";
+import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
+import Flex from "../../../../../../components/shared-components/Flex";
+import { COLORS } from "../../../../../../constants/ChartConstant";
+import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import moment from "moment";
-import StatisticWidget from "../../../../../components/shared-components/StatisticWidget";
-import ChartWidget from "../../../../../components/shared-components/ChartWidget";
+import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
+
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
-}
-
-enum totalInfo {
-  INCOME = 0,
-  SENT = 1,
 }
 
 const tableColumns = [

@@ -5,7 +5,7 @@ import { IMarketAppList } from "../../../../api/types.response";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
 import { AppService } from "../../../../api";
 import { DONE, UPDATING } from "../../../../constants/Messages";
-import WithStringTranslate from "../../../../utils/translate";
+import TranslateText from "../../../../utils/translate";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import Flex from "../../../../components/shared-components/Flex";
@@ -89,7 +89,7 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
   const updateCredentials = (data: any) => {
     message
       .loading({
-        content: WithStringTranslate(UPDATING),
+        content: TranslateText(UPDATING),
         key: "updatable",
         duration: 1,
       })
@@ -100,7 +100,7 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
             if (data) {
               if (data.ErrorCode === 0) {
                 message.success({
-                  content: WithStringTranslate(DONE),
+                  content: TranslateText(DONE),
                   duration: 1,
                 });
               }
@@ -126,7 +126,7 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
           .then((data) => {
             if (data) {
               if (data.ErrorCode === 0) {
-                message.success(WithStringTranslate(DONE));
+                message.success(TranslateText(DONE));
                 setPublicKey(data.EncryptionPublicKey);
                 setPrivateKey(data.EncryptionPrivateKey);
               }
@@ -137,11 +137,11 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
   };
 
   const updateRsaKey = async (AppID: number, Key: string, KeyType: number) => {
-    message.loading(WithStringTranslate(UPDATING)).then(() =>
+    message.loading(TranslateText(UPDATING)).then(() =>
       new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
         if (data) {
           if (data.ErrorCode === 0) {
-            message.success(WithStringTranslate(DONE));
+            message.success(TranslateText(DONE));
             setPublicKey(data.EncryptionPublicKey);
             setPrivateKey(data.EncryptionPrivateKey);
           }

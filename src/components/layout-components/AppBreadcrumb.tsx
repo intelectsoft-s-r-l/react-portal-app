@@ -4,44 +4,44 @@ import { Breadcrumb } from "antd";
 import navigationConfig from "../../configs/NavigationConfig";
 import IntlMessage from "../util-components/IntlMessage";
 let breadcrumbData = {
-    "/app": <IntlMessage id="home" />,
+  "/app": <IntlMessage id="home" />,
 } as { [key: string]: any };
 
 navigationConfig.forEach((elm, i) => {
-    const assignBreadcrumb = (obj: any) =>
-        (breadcrumbData[obj.path] = <IntlMessage id={obj.title} />);
-    assignBreadcrumb(elm);
-    if (elm.submenu) {
+  const assignBreadcrumb = (obj: any) =>
+    (breadcrumbData[obj.path] = <IntlMessage id={obj.title} />);
+  assignBreadcrumb(elm);
+  if (elm.submenu) {
+    elm.submenu.forEach((elm) => {
+      assignBreadcrumb(elm);
+      if (elm.submenu) {
         elm.submenu.forEach((elm) => {
-            assignBreadcrumb(elm);
-            if (elm.submenu) {
-                elm.submenu.forEach((elm) => {
-                    assignBreadcrumb(elm);
-                });
-            }
+          assignBreadcrumb(elm);
         });
-    }
+      }
+    });
+  }
 });
 
 const BreadcrumbRoute = withRouter((props) => {
-    const { location } = props;
-    const pathSnippets = location.pathname.split("/").filter((i) => i);
-    const buildBreadcrumb = pathSnippets.map((_, index) => {
-        const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
-        return (
-            <Breadcrumb.Item key={url}>
-                {/*<Link to={url}>{breadcrumbData[url]}</Link>*/}
-            </Breadcrumb.Item>
-        );
-    });
+  const { location } = props;
+  const pathSnippets = location.pathname.split("/").filter((i: any) => i);
+  const buildBreadcrumb = pathSnippets.map((_: any, index: any) => {
+    const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
+    return (
+      <Breadcrumb.Item key={url}>
+        {/*<Link to={url}>{breadcrumbData[url]}</Link>*/}
+      </Breadcrumb.Item>
+    );
+  });
 
-    return <Breadcrumb>{buildBreadcrumb}</Breadcrumb>;
+  return <Breadcrumb>{buildBreadcrumb}</Breadcrumb>;
 });
 
 export class AppBreadcrumb extends Component {
-    render() {
-        return <BreadcrumbRoute />;
-    }
+  render() {
+    return <BreadcrumbRoute />;
+  }
 }
 
 export default AppBreadcrumb;

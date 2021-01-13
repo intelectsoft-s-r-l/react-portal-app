@@ -13,7 +13,7 @@ import { IState } from "../../../redux/reducers";
 import { IAccount } from "../../../redux/reducers/Account";
 import { ITheme } from "../../../redux/reducers/Theme";
 import { IAuth } from "../../../redux/reducers/Auth";
-import WithStringTranslate from "../../../utils/translate";
+import TranslateText from "../../../utils/translate";
 
 class EditProfile extends Component {
   render() {
@@ -33,7 +33,7 @@ class EditProfile extends Component {
     const onFinish = (values: any) => {
       const key = "updatable";
       message.loading({
-        content: WithStringTranslate(UPDATING),
+        content: TranslateText(UPDATING),
         key,
       });
       setTimeout(async () => {
@@ -54,7 +54,7 @@ class EditProfile extends Component {
       const key = "updatable";
       if (info.file.status === "uploading") {
         message.loading({
-          content: WithStringTranslate(UPLOADING),
+          content: TranslateText(UPLOADING),
           key,
           duration: 2,
         });
@@ -67,7 +67,7 @@ class EditProfile extends Component {
           });
         });
         message.success({
-          content: WithStringTranslate(UPLOADED),
+          content: TranslateText(UPLOADED),
           key,
           duration: 2,
         });

@@ -9,7 +9,7 @@ import { API_APP_URL, API_AUTH_URL, API_SMS_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
 import store from "../redux/store";
-import WithStringTranslate from "../utils/translate";
+import TranslateText from "../utils/translate";
 import {
   IActivateUserRequest,
   IAuthorizeUserRequest,
@@ -93,12 +93,13 @@ export default class HttpClient {
         Token: this._token,
       };
     }
-    if (config.baseURL === API_SMS_URL) {
-      config.auth = {
-        username: "1",
-        password: "1",
-      };
-    }
+    //if (config.baseURL === API_SMS_URL) {
+    //config.withCredentials = true;
+    //config.auth = {
+    //username: "1",
+    //password: "1",
+    //};
+    //}
     config.cancelToken = this._source.token;
     return config;
   };
@@ -133,7 +134,7 @@ export default class HttpClient {
             const key = "updatable";
             message
               .loading({
-                content: WithStringTranslate(EXPIRE_TIME),
+                content: TranslateText(EXPIRE_TIME),
                 key,
                 duration: 1.5,
               })

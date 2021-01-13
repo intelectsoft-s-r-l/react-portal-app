@@ -14,7 +14,7 @@ import { IState } from "../../../../redux/reducers";
 import { ITheme } from "../../../../redux/reducers/Theme";
 import { ICompanyData } from "../../../../api/types.response";
 import { UploadChangeParam } from "antd/lib/upload";
-import WithStringTranslate from "../../../../utils/translate";
+import TranslateText from "../../../../utils/translate";
 class CompanyForm extends Component<{ [key: string]: any }> {
   inputMaskRef = React.createRef() as any;
   state = {} as { [key: string]: any };
@@ -44,7 +44,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
           if (ErrorCode === 0) {
             await this.getCompanyInfo();
             message.success({
-              content: WithStringTranslate(DONE),
+              content: TranslateText(DONE),
               key: "updatable",
             });
           }
@@ -64,7 +64,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
     const onFinish = async (values: ICompanyData) => {
       const key = "updatable";
       message.loading({
-        content: WithStringTranslate(UPDATING),
+        content: TranslateText(UPDATING),
         key,
       });
       setTimeout(async () => {
@@ -80,7 +80,7 @@ class CompanyForm extends Component<{ [key: string]: any }> {
       const key = "updatable";
       if (info.file.status === "uploading") {
         message.loading({
-          content: WithStringTranslate(UPLOADING),
+          content: TranslateText(UPLOADING),
           key,
           duration: 2,
         });

@@ -10,7 +10,7 @@ import TextEditor from "../TextEditor";
 import { AppService } from "../../../../../api";
 import { useSelector } from "react-redux";
 import { IState } from "../../../../../redux/reducers";
-import WithStringTranslate from "../../../../../utils/translate";
+import TranslateText from "../../../../../utils/translate";
 
 const CreateNews = ({ getNews, AppType, visible, close }: any) => {
   const [form] = Form.useForm();
@@ -31,7 +31,7 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
     }
     if (info.file.status === "done") {
       message.success({
-        content: WithStringTranslate(DONE),
+        content: TranslateText(DONE),
         key: "updatable",
         duration: 1,
       });

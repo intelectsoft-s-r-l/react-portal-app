@@ -1,5 +1,6 @@
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { Card, Menu } from "antd";
-import React, { useEffect, useState } from "react";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
@@ -23,12 +24,12 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
-import SmsCampaign from "./SMS";
+import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
-import CampaignDetails from "./SMS/CampaignDetails";
+import CampaignDetails from "./SMS/campaign/CampaignDetails";
 import Invoice from "./ExchangeOfInvoice/Invoice";
 import Order from "./ExchangeOfInvoice/Order";
-import SmsDashboard from "./SMS/SmsDashboard";
+import SmsDashboard from "./SMS/dashboard";
 
 enum typeOf {
   Retail = 10,
@@ -127,6 +128,12 @@ const Options = ({ AppType, location, match }: any) => {
         defaultSelectedKeys={[`${match.url}/:appId/`]}
         selectedKeys={[location.pathname]}
       >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
         <Menu.Item key={`${match.url}/dashboard`}>
           <span>Dashboard</span>
           <Link to={"dashboard"} />
@@ -144,12 +151,6 @@ const Options = ({ AppType, location, match }: any) => {
         <Menu.Item key={`${match.url}/integration`}>
           <span>Integration</span>
           <Link to={"integration"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
         </Menu.Item>
       </Menu>
     );

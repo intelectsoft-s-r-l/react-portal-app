@@ -1,12 +1,11 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Col, DatePicker, Form, Input, message, Modal, Radio, Row } from "antd";
-import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
-import moment from "moment";
-import { AppService } from "../../../../../api";
-import WithStringTranslate from "../../../../../utils/translate";
-import { DONE } from "../../../../../constants/Messages";
-import Utils from "../../../../../utils";
+import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
+import { AppService } from "../../../../../../api";
+import TranslateText from "../../../../../../utils/translate";
+import { DONE } from "../../../../../../constants/Messages";
+import Utils from "../../../../../../utils";
 
 interface INewCampaign {
   visible: boolean;
@@ -73,14 +72,13 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
     return await new AppService()
       .SMS_UpdateCampaign({
         ...values,
-        Status: 1,
         ScheduledDate: ScheduledDate(),
       })
       .then((data) => {
         if (data) {
           if (data.ErrorCode === 0) {
             getCampaignList().then(() =>
-              message.success(WithStringTranslate(DONE), 1)
+              message.success(TranslateText(DONE), 1)
             );
           }
         }
