@@ -10,16 +10,18 @@ import { connect } from "react-redux";
 import { AppService } from "../../../../api";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
-import { IState } from "../../../../redux/reducers";
-import { ITheme } from "../../../../redux/reducers/Theme";
 import { ICompanyData } from "../../../../api/types.response";
 import { UploadChangeParam } from "antd/lib/upload";
 import TranslateText from "../../../../utils/translate";
-class CompanyForm extends Component<{ [key: string]: any }> {
-  inputMaskRef = React.createRef() as any;
+import { FormInstance } from "antd/lib/form";
+class CompanyForm extends Component<{
+  onChangeMask: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}> {
   state = {} as ICompanyData;
-  formRef = React.createRef() as any;
-  mounted = true;
+  private formRef = React.createRef() as React.RefObject<
+    FormInstance<ICompanyData>
+  >;
+  private mounted = true;
 
   private getCompanyInfo = async () => {
     return new AppService().GetCompanyInfo().then((data) => {
@@ -378,11 +380,4 @@ const mapDispatchToProps = {
   updateSettings,
 };
 
-const mapStateToProps = ({ theme }: IState) => {
-  const { locale } = theme as ITheme;
-  return {
-    locale,
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyForm);
+export default connect(null, mapDispatchToProps)(CompanyForm);
