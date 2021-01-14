@@ -71,31 +71,34 @@ export class UserList extends Component<IUserListStoreProps> {
     registerUserModalVisible: false,
     loading: true,
   };
+  private mounted = true;
   getUsersInfo = async () => {
     return new AppService().GetUserList().then((data) => {
       this.setState({ loading: false });
-      if (data) {
-        const { ErrorCode } = data;
-        if (ErrorCode === 0) {
-          const filteredUsers = data.Users.filter(
-            (user: any) => user.ID !== this.props.ID
-          );
-          const evaluatedArray = Utils.sortData(filteredUsers, "ID").reverse();
-          this.setState((prev) => ({
-            ...prev,
-            usersToSearch: [...evaluatedArray],
-          }));
-          this.setState((prev) => ({
-            ...prev,
-            users: [...evaluatedArray],
-          }));
-        }
+      if (data && data.ErrorCode === 0) {
+        // Don't show current user in the list
+        const filteredUsers = data.Users.filter(
+          (user: any) => user.ID !== this.props.ID
+        );
+
+        // Always show last registered user first in the list
+        const evaluatedArray = Utils.sortData(filteredUsers, "ID").reverse();
+
+        if (this.mounted)
+          this.setState({
+            users: evaluatedArray,
+            usersToSearch: evaluatedArray,
+          });
       }
     });
   };
 
   componentDidMount() {
     this.getUsersInfo();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   showUserProfile = (userInfo: IUsers) => {
