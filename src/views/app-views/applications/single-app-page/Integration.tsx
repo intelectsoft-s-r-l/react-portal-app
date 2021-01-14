@@ -14,30 +14,46 @@ enum key {
   PRIVATE = 1,
   PUBLIC = 2,
 }
-const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
+const Integration = ({
+  currentApp,
+}: {
+  currentApp: Partial<IMarketAppList>;
+}) => {
   const { confirm } = Modal;
-  const { ModuleSettings: settings } = appData;
+  const [appData, setApp] = useState<any>();
+  const getMarketApp = async () => {
+    return new AppService().GetMarketAppList().then((data) => {
+      if (data && data.ErrorCode === 0) {
+        const app = data.MarketAppList.find(
+          (app) => app.AppType === currentApp!.AppType
+        );
+        setApp(app);
+        setActivationCode(app!.LicenseActivationCode ?? 0);
+        setApiKey(app!.ApyKey ?? "");
+        setBackOfficeURI(app!.BackOfficeURI ?? "");
+        setPublicKey(app!.EncryptionPublicKey ?? "");
+        setPrivateKey(app!.EncryptionPrivateKey ?? "");
+        try {
+          setExternalSecurityPolicy(
+            JSON.parse(window.atob(app!.ExternalSecurityPolicy.toString()))
+          );
+        } catch {
+          setExternalSecurityPolicy({ CustomerID: null, PublicKey: null });
+        }
+      }
+    });
+  };
+  useEffect(() => {
+    getMarketApp();
+  }, []);
   const [form] = Form.useForm();
-  const [activationCode, setActivationCode] = useState<any>();
-  const [apiKey, setApiKey] = useState<string>();
+  const [activationCode, setActivationCode] = useState<number>(0);
+  const [apiKey, setApiKey] = useState<string>("");
   const [PublicKey, setPublicKey] = useState<string>("");
   const [PrivateKey, setPrivateKey] = useState<string>("");
-  const [backOfficeURI, setBackOfficeURI] = useState<any>("");
+  const [backOfficeURI, setBackOfficeURI] = useState<string>("");
   const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
-  useEffect(() => {
-    setActivationCode(appData.LicenseActivationCode);
-    setApiKey(appData.ApyKey);
-    setBackOfficeURI(appData!.BackOfficeURI);
-    setPublicKey(appData!.EncryptionPublicKey ?? "");
-    setPrivateKey(appData!.EncryptionPrivateKey ?? "");
-    try {
-      setExternalSecurityPolicy(
-        JSON.parse(window.atob(appData!.ExternalSecurityPolicy.toString()))
-      );
-    } catch {
-      setExternalSecurityPolicy({ CustomerID: null, PublicKey: null });
-    }
-  }, []);
+  useEffect(() => {}, []);
   const generateActivationCode = () => {
     confirm({
       title: "Are you sure you want generate a new activation code?",
@@ -45,10 +61,8 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
         new AppService()
           .GenerateLicenseActivationCode(appData.ID ?? 0)
           .then((data) => {
-            if (data) {
-              if (data.ErrorCode === 0) {
-                setActivationCode(data.ActivationCode);
-              }
+            if (data && data.ErrorCode === 0) {
+              setActivationCode(data.ActivationCode);
             }
           }),
       onCancel: () => {},
@@ -86,26 +100,22 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
     });
   };
 
-  const updateCredentials = (data: any) => {
-    message
-      .loading({
-        content: TranslateText(UPDATING),
-        key: "updatable",
-        duration: 1,
-      })
-      .then(() => {
-        return new AppService()
-          .UpdateApp({ AppID: appData.ID, ...data })
-          .then((data) => {
-            if (data) {
-              if (data.ErrorCode === 0) {
-                message.success({
-                  content: TranslateText(DONE),
-                  duration: 1,
-                });
-              }
-            }
+  const updateCredentials = async (data: any) => {
+    message.loading({
+      content: TranslateText(UPDATING),
+      key: "updatable",
+      duration: 1,
+    });
+    return new AppService()
+      .UpdateApp({ AppID: appData.ID, ...data })
+      .then((data) => {
+        if (data && data.ErrorCode === 0) {
+          message.success({
+            content: TranslateText(DONE),
+            key: "updatable",
+            duration: 1,
           });
+        }
       });
   };
 
@@ -124,12 +134,10 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
         return await new AppService()
           .GenerateRsaKey(appData.ID ?? 0)
           .then((data) => {
-            if (data) {
-              if (data.ErrorCode === 0) {
-                message.success(TranslateText(DONE));
-                setPublicKey(data.EncryptionPublicKey);
-                setPrivateKey(data.EncryptionPrivateKey);
-              }
+            if (data && data.ErrorCode === 0) {
+              message.success(TranslateText(DONE));
+              setPublicKey(data.EncryptionPublicKey);
+              setPrivateKey(data.EncryptionPrivateKey);
             }
           });
       },
@@ -137,23 +145,31 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
   };
 
   const updateRsaKey = async (AppID: number, Key: string, KeyType: number) => {
-    message.loading(TranslateText(UPDATING)).then(() =>
-      new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
-        if (data) {
-          if (data.ErrorCode === 0) {
-            message.success(TranslateText(DONE));
-            setPublicKey(data.EncryptionPublicKey);
-            setPrivateKey(data.EncryptionPrivateKey);
-          }
-        }
-      })
-    );
+    message.loading({
+      content: TranslateText(UPDATING),
+      key: "updatable",
+      duration: 1,
+    });
+    return new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
+      if (data && data.ErrorCode === 0) {
+        message.success({
+          content: TranslateText(DONE),
+          key: "updatable",
+          duration: 1,
+        });
+        setPublicKey(data.EncryptionPublicKey);
+        setPrivateKey(data.EncryptionPrivateKey);
+      }
+    });
   };
+  if (!appData) {
+    return null;
+  }
   return (
     <Row gutter={ROW_GUTTER} justify="space-between">
       <Col
         xl={12}
-        className={settings!.APIKey ? "mb-4" : "mb-4 d-none"}
+        className={appData.ModuleSettings!.APIKey ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -175,7 +191,9 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
       </Col>
       <Col
         xl={12}
-        className={settings!.ActivationCode ? "mb-4" : "mb-4 d-none"}
+        className={
+          appData!.ModuleSettings!.ActivationCode ? "mb-4" : "mb-4 d-none"
+        }
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -202,7 +220,7 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
       </Col>
       <Col
         xl={12}
-        className={settings!.Backoffice ? "mb-4" : "mb-4 d-none"}
+        className={appData!.ModuleSettings!.Backoffice ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -268,10 +286,13 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
           <IntlMessage id="app.Refresh" />
         </Button>
       </Col>
-      <Col xl={24} className={settings!.RSAKey ? "mb-4" : "mb-4 d-none"}>
-        {settings!.Backoffice ||
-        settings!.ActivationCode ||
-        settings!.APIKey ? (
+      <Col
+        xl={24}
+        className={appData.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
+      >
+        {appData.ModuleSettings!.Backoffice ||
+        appData.ModuleSettings!.ActivationCode ||
+        appData.ModuleSettings!.APIKey ? (
           <hr />
         ) : null}
         <div className="container-fluid">
@@ -302,7 +323,10 @@ const Integration = ({ appData }: { appData: Partial<IMarketAppList> }) => {
           </Button>
         </Flex>
       </Col>
-      <Col xl={24} className={settings!.RSAKey ? "mb-4" : "mb-4 d-none"}>
+      <Col
+        xl={24}
+        className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
+      >
         <div className="container-fluid">
           <h2>Private Key</h2>
         </div>

@@ -260,7 +260,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/integration`}
         exact
-        render={() => <Integration appData={app} />}
+        render={() => <Integration currentApp={app} />}
       />
       <Route
         path={`${match.url}/campaign_details=:ID`}
