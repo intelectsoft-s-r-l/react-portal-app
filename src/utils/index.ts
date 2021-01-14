@@ -218,6 +218,34 @@ class Utils {
     reader.readAsDataURL(img);
   }
 
+  static beforeUploadArticle(file: any): any {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function (event) {
+        const image: any = document.createElement("img");
+        image.src = event!.target!.result;
+        image.onload = function () {
+          const isSquare = image.width === image.height;
+          const isJpgOrPng =
+            file.type === "image/jpeg" || file.type === "image/png";
+          if (!isSquare) {
+            message.error("Image must be 1:1 format!");
+          }
+
+          if (!isJpgOrPng) {
+            message.error("You can only upload JPG/PNG file!");
+          }
+          if (isSquare && isJpgOrPng) {
+            resolve();
+          } else {
+            reject();
+          }
+        };
+      };
+    });
+  }
+
   static beforeUpload(file: any) {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
