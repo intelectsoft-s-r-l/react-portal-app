@@ -1,15 +1,22 @@
-import { Row, Col, Input, Modal, Form, message } from "antd";
+import { Row, Col, Input, Modal, Form } from "antd";
 import React, { useState } from "react";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import { AuthService } from "../../../../api";
+
+interface IUserModalAdd {
+  onCancel: () => void;
+  visible: boolean;
+  CompanyID: number;
+  getUsersInfo: () => Promise<void>;
+}
+
 export const UserModalAdd = ({
-  onCreate,
   onCancel,
   visible,
   CompanyID,
   getUsersInfo,
-}: any) => {
+}: IUserModalAdd) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 

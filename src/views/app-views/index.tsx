@@ -36,7 +36,7 @@ export const AppViews = () => {
         />
         <Route
           path={`${APP_PREFIX_PATH}/catalog/users`}
-          component={lazy(() => import(`./catalog/users/UserList`))}
+          component={lazy(() => import(`./catalog/users/`))}
         />
         <Route
           path={`${APP_PREFIX_PATH}/catalog/group`}

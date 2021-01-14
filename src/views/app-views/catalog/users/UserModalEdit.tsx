@@ -2,18 +2,22 @@ import React, { useEffect } from "react";
 import { Input, Row, Col, Form, Modal, message } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
-import AppLocale from "../../../../lang";
 import { AppService } from "../../../../api";
 import { DONE, UPDATING } from "../../../../constants/Messages";
 import TranslateText from "../../../../utils/translate";
-
+import { IUsers } from "../../../../api/types.response";
+interface IUserModalEdit {
+    data: IUsers;
+    visible: boolean;
+    onCancel: () => void;
+    getUsersInfo: () => void;
+}
 export const UserModalEdit = ({
   data,
   visible,
   onCancel,
-  locale,
   getUsersInfo,
-}: any) => {
+}: IUserModalEdit) => {
   const [form] = Form.useForm();
 
   /*  Destroy initialValues of form after Modal is closed */
@@ -25,7 +29,6 @@ export const UserModalEdit = ({
   const updateUser = (data: any) => {
     return new AppService().UpdateUser(data);
   };
-  const currentAppLocale = AppLocale[locale];
   const onFinish = (values: any) => {
     const key = "updatable";
     message.loading({
