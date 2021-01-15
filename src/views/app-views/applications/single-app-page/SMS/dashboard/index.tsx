@@ -9,6 +9,7 @@ import { COLORS } from "../../../../../../constants/ChartConstant";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
+import Loading from "../../../../../../components/shared-components/Loading";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -42,11 +43,13 @@ const SmsDashboard = (props: ISmsDashboard) => {
       )
       .then((data) => {
         if (data && data.ErrorCode === 0) {
+          setLoading(false);
           setSmsList(data.SMSList);
         }
       });
   const [smsInfo, setSmsInfo] = useState<any>([]);
   const [smsList, setSmsList] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
   const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
@@ -88,6 +91,10 @@ const SmsDashboard = (props: ISmsDashboard) => {
     }
     return arr;
   };
+
+  if (loading) {
+    return <Loading cover="content" />;
+  }
 
   return (
     <>

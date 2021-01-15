@@ -10,7 +10,7 @@ import { IMarketAppList, INewsList } from "../../../api/types.response";
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
     <Card style={{ padding: 30 }}>
-      <Flex justifyContent="between" alignItems="center" className="mt-3">
+      <Flex justifyContent="between" alignItems="start" className="mt-3">
         <div style={{ maxWidth: 500 }}>
           <Flex flexDirection="column">
             <div
