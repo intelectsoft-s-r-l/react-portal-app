@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, Row, Table } from "antd";
+import { Badge, Card, Col, Row, Table, Tag } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import { SmsService } from "../../../../../../api";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
@@ -10,12 +10,19 @@ import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
 import Loading from "../../../../../../components/shared-components/Loading";
+import { ISMSList } from "../../../../../../api/types.response";
+import { ColumnsType } from "antd/es/table/interface";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
 }
 
-const tableColumns = [
+enum EnSmsType {
+  INFO = 0,
+  ADS = 1,
+}
+
+const tableColumns: ColumnsType<ISMSList> = [
   {
     title: "Created",
     dataIndex: "Created",
@@ -27,6 +34,14 @@ const tableColumns = [
   {
     title: "Message type",
     dataIndex: "MessageType",
+    render: (_) => (
+      <Tag
+        className="text-capitalize"
+        color={_.MessageType === EnSmsType.INFO ? "orange" : "cyan"}
+      >
+        {_.MessageType === EnSmsType.INFO ? "Informational" : "Advertisement"}
+      </Tag>
+    ),
   },
   {
     title: "State",
