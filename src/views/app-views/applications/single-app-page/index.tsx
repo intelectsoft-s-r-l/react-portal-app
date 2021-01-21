@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { useEffect, useState } from "react";
 import { Card, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";

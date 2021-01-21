@@ -10,7 +10,7 @@ const AppNavGrid = (props: any) => {
     <>
       {props.apps &&
         props.apps.map((app: any) => (
-          <Menu.Item key={app.Name} className="app-list__item" {...props}>
+          <Menu.Item key={app.Name} {...props} className="app-list__item">
             <NavLink to={`${APP_PREFIX_PATH}/applications/${app.AppType}`}>
               <div className="text-center">
                 <Avatar
