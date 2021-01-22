@@ -46,7 +46,7 @@ enum appEnum {
   MobilePetrolExpertCash = 131,
 }
 const Options = ({ AppType, location, match, moduleSettings }: any) => {
-  if (moduleSettings.BackOfficeURI) {
+  if (moduleSettings.Backoffice) {
     return (
       <Menu
         mode="inline"
