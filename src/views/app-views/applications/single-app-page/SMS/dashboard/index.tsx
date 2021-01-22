@@ -32,10 +32,6 @@ enum EnSmsState {
   DeliveryToBulkSMS = 100,
 }
 
-const RowElement = ({ children }: any) => {
-  return <div>{children}</div>;
-};
-
 const tableColumns: ColumnsType<ISMSList> = [
   {
     title: "Phone",
@@ -89,8 +85,11 @@ const SmsDashboard = (props: ISmsDashboard) => {
     moment().clone().endOf("month"),
   ]);
 
+  // TODO: REPLACE TICKS WITH DATE DD-MM-YYYY
+  const [tableLoading, setTableLoading] = useState<boolean>(true);
   const onChange = async (value: any) => {
     setDate([value[0], value[1]]);
+    setTableLoading(true);
     return await new SmsService()
       .Info_GetDetailByPeriod(
         props.APIKey,
@@ -98,19 +97,16 @@ const SmsDashboard = (props: ISmsDashboard) => {
         Utils.parseToTicks(value[1])
       )
       .then((data) => {
+        setTableLoading(false);
         if (data && data.ErrorCode === 0) setSmsList(data.SMSList);
       });
   };
   const getSmsList = async () =>
     await new SmsService()
-      .Info_GetDetailByPeriod(
-        props.APIKey,
-        Utils.parseToTicks(date[0]),
-        Utils.parseToTicks(date[1])
-      )
+      .Info_GetDetailByPeriod(props.APIKey, date[0]._d, date[1]._d)
       .then((data) => {
         if (data && data.ErrorCode === 0) {
-          setLoading(false);
+          setTableLoading(false);
           setSmsList(data.SMSList);
         }
       });
@@ -122,6 +118,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
   const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
   const getSmsInfo = async () =>
     await new SmsService().Info_GetTotal(props.APIKey).then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
         setStatusData([
           data.SentThisMonth,
@@ -193,7 +190,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
                   columns={tableColumns}
                   dataSource={smsList}
                   rowKey="SentDate"
-                  loading={loading}
+                  loading={tableLoading}
                   onRow={(record) => {
                     return {
                       onMouseOver: (event) => {
