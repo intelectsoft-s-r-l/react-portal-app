@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, Row, Table, Tag } from "antd";
+import { Badge, Card, Col, DatePicker, Popover, Row, Table, Tag } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import { SmsService } from "../../../../../../api";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
@@ -12,8 +12,7 @@ import StatisticWidget from "../../../../../../components/shared-components/Stat
 import Loading from "../../../../../../components/shared-components/Loading";
 import { ISMSList } from "../../../../../../api/types.response";
 import { ColumnsType } from "antd/es/table/interface";
-import { ENGINE_METHOD_PKEY_ASN1_METHS } from "constants";
-
+import Utils from "../../../../../../utils";
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
 }
@@ -33,18 +32,15 @@ enum EnSmsState {
   DeliveryToBulkSMS = 100,
 }
 
+const RowElement = ({ children }: any) => {
+  return <div>{children}</div>;
+};
+
 const tableColumns: ColumnsType<ISMSList> = [
   {
     title: "Phone",
     dataIndex: "Phone",
     render: (Phone) => <span>{Phone}</span>,
-  },
-  {
-    title: "Created",
-    dataIndex: "Created",
-    render: (Created) => (
-      <span>{moment.unix(Created.slice(6, 16)).format("DD/MM/YYYY")}</span>
-    ),
   },
   {
     title: "Sent date",
@@ -88,12 +84,29 @@ const tableColumns: ColumnsType<ISMSList> = [
   },
 ];
 const SmsDashboard = (props: ISmsDashboard) => {
+  const [date, setDate] = useState<any>([
+    moment().clone().startOf("month"),
+    moment().clone().endOf("month"),
+  ]);
+
+  const onChange = async (value: any) => {
+    setDate([value[0], value[1]]);
+    return await new SmsService()
+      .Info_GetDetailByPeriod(
+        props.APIKey,
+        Utils.parseToTicks(value[0]),
+        Utils.parseToTicks(value[1])
+      )
+      .then((data) => {
+        if (data && data.ErrorCode === 0) setSmsList(data.SMSList);
+      });
+  };
   const getSmsList = async () =>
     await new SmsService()
       .Info_GetDetailByPeriod(
         props.APIKey,
-        moment("2019-01-01").valueOf() * 10000 + 621355968000000000,
-        moment(new Date()).valueOf() * 10000 + 621355968000000000
+        Utils.parseToTicks(date[0]),
+        Utils.parseToTicks(date[1])
       )
       .then((data) => {
         if (data && data.ErrorCode === 0) {
@@ -165,12 +178,32 @@ const SmsDashboard = (props: ISmsDashboard) => {
           </Row>
           <Row gutter={ROW_GUTTER}>
             <Col span={24}>
-              <Card title="SMS Transactions List">
+              <Card
+                title="SMS Transactions List"
+                extra={
+                  <DatePicker.RangePicker
+                    format={"DD/MM/YYYY"}
+                    defaultValue={date}
+                    onChange={onChange}
+                  />
+                }
+              >
                 <Table
                   className="no-border-last"
                   columns={tableColumns}
                   dataSource={smsList}
                   rowKey="SentDate"
+                  loading={loading}
+                  onRow={(record) => {
+                    return {
+                      onMouseOver: (event) => {
+                        event.currentTarget.setAttribute(
+                          "title",
+                          "Message: " + record.Message
+                        );
+                      },
+                    };
+                  }}
                 />
               </Card>
             </Col>
