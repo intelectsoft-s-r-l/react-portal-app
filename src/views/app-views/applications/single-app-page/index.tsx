@@ -31,8 +31,9 @@ import Invoice from "./ExchangeOfInvoice/Invoice";
 import Order from "./ExchangeOfInvoice/Order";
 import SmsDashboard from "./SMS/dashboard";
 
-enum typeOf {
+enum appEnum {
   Retail = 10,
+  CashSalesExpertMobile = 11,
   Agent = 20,
   Expert = 30,
   MyDiscount = 60,
@@ -44,16 +45,8 @@ enum typeOf {
   Exchange = 40,
   MobilePetrolExpertCash = 131,
 }
-const Options = ({ AppType, location, match }: any) => {
-  if (
-    AppType === typeOf.Retail ||
-    AppType === typeOf.Agent ||
-    AppType === typeOf.Expert ||
-    AppType === typeOf.StockManager ||
-    AppType === typeOf.WaiterAssistant ||
-    AppType === typeOf.KitchetAssistant ||
-    AppType === typeOf.MobilePetrolExpertCash
-  ) {
+const Options = ({ AppType, location, match, moduleSettings }: any) => {
+  if (moduleSettings.BackOfficeURI) {
     return (
       <Menu
         mode="inline"
@@ -90,7 +83,7 @@ const Options = ({ AppType, location, match }: any) => {
         </Menu.Item>
       </Menu>
     );
-  } else if (AppType === typeOf.MyDiscount) {
+  } else if (AppType === appEnum.MyDiscount) {
     return (
       <Menu
         mode="inline"
@@ -121,7 +114,7 @@ const Options = ({ AppType, location, match }: any) => {
         </Menu.Item>
       </Menu>
     );
-  } else if (AppType === typeOf.SMS) {
+  } else if (AppType === appEnum.SMS) {
     return (
       <Menu
         mode="inline"
@@ -154,7 +147,7 @@ const Options = ({ AppType, location, match }: any) => {
         </Menu.Item>
       </Menu>
     );
-  } else if (AppType === typeOf.Exchange) {
+  } else if (AppType === appEnum.Exchange) {
     return (
       <Menu
         mode="inline"
@@ -382,6 +375,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
                 location={location}
                 match={match}
                 AppType={app!.AppType}
+                moduleSettings={app.ModuleSettings}
               />
             }
             mainContent={<AppRoute match={match} app={app} />}
