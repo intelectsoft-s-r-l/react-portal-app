@@ -1,4 +1,5 @@
 import { message } from "antd";
+// @ts-ignore
 import { JSEncrypt } from "jsencrypt";
 import moment from "moment";
 
