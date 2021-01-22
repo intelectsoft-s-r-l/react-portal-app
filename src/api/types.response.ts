@@ -220,7 +220,7 @@ export interface IGenerateApiKeyResponse extends ApiResponse {
 }
 
 export interface IGenerateLicenseActivationCodeResponse extends ApiResponse {
-  ActivationCode: string;
+  ActivationCode: number;
 }
 export interface IGenerateRsaKeyResponse extends ApiResponse {
   EncryptionPublicKey: string;

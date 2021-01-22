@@ -95,10 +95,10 @@ const EditNews = ({ visible, close, news, getNews }: any) => {
             className="avatar-uploader"
             listType="picture-card"
             customRequest={Utils.dummyRequest}
-            beforeUpload={(info) => Utils.beforeUpload(info)}
+            beforeUpload={Utils.beforeUploadArticle}
           >
             {Photo ? (
-              <img src={Photo} alt="photo" style={{ width: "100%" }} />
+              <img src={Photo} alt="News article" style={{ width: "100%" }} />
             ) : (
               uploadButton
             )}

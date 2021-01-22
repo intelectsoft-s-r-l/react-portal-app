@@ -93,10 +93,14 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
             className="avatar-uploader"
             listType="picture-card"
             customRequest={Utils.dummyRequest}
-            beforeUpload={(info) => Utils.beforeUpload(info)}
+            beforeUpload={Utils.beforeUploadArticle}
           >
             {photo ? (
-              <img src={photo} alt="photo" style={{ width: "100%" }} />
+              <img
+                src={photo}
+                alt="News article"
+                style={{ maxWidth: "100%" }}
+              />
             ) : (
               uploadButton
             )}

@@ -1,5 +1,6 @@
-import { Button, Card, List, Col, Empty, Row, Tooltip } from "antd";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Button, Card, List, Empty, Tooltip, Menu, Modal, Tag } from "antd";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { AppService } from "../../../../../api";
 import Flex from "../../../../../components/shared-components/Flex";
@@ -9,22 +10,116 @@ import EditNews from "./EditNews";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import Loading from "../../../../../components/shared-components/Loading";
 import { INewsList } from "../../../../../api/types.response";
+import EllipsisDropdown from "../../../../../components/shared-components/EllipsisDropdown";
 
 interface IArticleItem {
   newsData: INewsList;
   setEdit: Dispatch<SetStateAction<boolean>>;
   edit: boolean;
   setSelectedNew: Dispatch<SetStateAction<INewsList | undefined>>;
+  refreshNews: (AppType: number) => void;
+  AppType: number;
+}
+enum newsEnum {
+  ACTIVE = 1,
+  DISABLED = 2,
 }
 const ArticleItem = ({
   newsData,
   setEdit,
   edit,
   setSelectedNew,
+  refreshNews,
+  AppType,
 }: IArticleItem) => {
   return (
-    <Card style={{ padding: 30 }}>
-      <Flex justifyContent="between" alignItems="center" className="mt-3">
+    <Card
+      style={{ padding: "20px" }}
+      title={
+        <Tag color={newsData.Status === newsEnum.DISABLED ? "red" : "cyan"}>
+          {newsData.Status === newsEnum.DISABLED ? (
+            <CloseCircleOutlined />
+          ) : (
+            <CheckCircleOutlined />
+          )}
+        </Tag>
+      }
+      extra={
+        <EllipsisDropdown
+          menu={
+            <Menu>
+              {newsData.Status === newsEnum.DISABLED ? (
+                <Menu.Item
+                  onClick={async () => {
+                    Modal.confirm({
+                      title: "Are you sure you want to activate this article?",
+                      onOk: async () => {
+                        return await new AppService()
+                          .UpdateNews({
+                            ...newsData,
+                            Status: newsEnum.ACTIVE,
+                          })
+                          .then((data) => {
+                            if (data && data.ErrorCode === 0)
+                              refreshNews(AppType);
+                          });
+                      },
+                    });
+                  }}
+                >
+                  <Flex alignItems="center">
+                    <CheckCircleOutlined />
+                    <span className="ml-2">
+                      <IntlMessage id={"users.Activate"} />
+                    </span>
+                  </Flex>
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  onClick={async () => {
+                    Modal.confirm({
+                      title: "Are you sure you want to disable this article?",
+                      onOk: async () => {
+                        return await new AppService()
+                          .UpdateNews({
+                            ...newsData,
+                            Status: newsEnum.DISABLED,
+                          })
+                          .then((data) => {
+                            if (data && data.ErrorCode === 0)
+                              refreshNews(AppType);
+                          });
+                      },
+                    });
+                  }}
+                >
+                  <Flex alignItems="center">
+                    <CloseCircleOutlined />
+                    <span className="ml-2">
+                      <IntlMessage id={"users.Disable"} />
+                    </span>
+                  </Flex>
+                </Menu.Item>
+              )}
+              <Menu.Item
+                onClick={() => {
+                  setSelectedNew(newsData);
+                  setEdit(true);
+                }}
+              >
+                <Flex alignItems="center">
+                  <EditOutlined />
+                  <span className="ml-2">
+                    <IntlMessage id={"users.Edit"} />
+                  </span>
+                </Flex>
+              </Menu.Item>
+            </Menu>
+          }
+        />
+      }
+    >
+      <Flex justifyContent="between" alignItems="start" className="mt-3">
         <div style={{ maxWidth: 500 }}>
           <Flex flexDirection="column">
             <div
@@ -41,16 +136,6 @@ const ArticleItem = ({
           </Flex>
           <div style={{ position: "absolute", bottom: 15 }}>
             <Flex alignItems="center">
-              <span>{newsData.CompanyName}</span>
-              <span
-                style={{
-                  fontSize: 20,
-                  color: "black",
-                  margin: "0 5px 0",
-                }}
-              >
-                &nbsp;&bull;&nbsp;
-              </span>
               <span style={{ color: "black" }}>
                 {newsData.CreateDate &&
                   moment
@@ -70,29 +155,16 @@ const ArticleItem = ({
           )}
         </div>
       </Flex>
-      <div style={{ position: "absolute", top: 20, right: 20 }}>
-        <Tooltip title="Edit">
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => {
-              setSelectedNew(newsData);
-              setEdit(true);
-            }}
-          />
-        </Tooltip>
-      </div>
     </Card>
   );
 };
 const News = ({ AppType }: { AppType: number }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const getNews = (AppType: number) => {
-    return new AppService().GetAppNews(AppType).then((data) => {
-      if (data) {
-        if (data.ErrorCode === 0) {
-          setLoading(false);
-          setNews(data.NewsList);
-        }
+  const getNews = async (AppType: number) => {
+    return await new AppService().GetAppNews(AppType).then((data) => {
+      if (data && data.ErrorCode === 0) {
+        setLoading(false);
+        setNews(data.NewsList);
       }
     });
   };
@@ -143,6 +215,8 @@ const News = ({ AppType }: { AppType: number }) => {
             .map((elm: any) => (
               <ArticleItem
                 newsData={elm}
+                AppType={AppType}
+                refreshNews={getNews}
                 key={elm.ID}
                 setEdit={setEdit}
                 edit={edit}
