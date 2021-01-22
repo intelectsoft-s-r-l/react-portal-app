@@ -12,6 +12,7 @@ import StatisticWidget from "../../../../../../components/shared-components/Stat
 import Loading from "../../../../../../components/shared-components/Loading";
 import { ISMSList } from "../../../../../../api/types.response";
 import { ColumnsType } from "antd/es/table/interface";
+import { ENGINE_METHOD_PKEY_ASN1_METHS } from "constants";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -22,30 +23,68 @@ enum EnSmsType {
   ADS = 1,
 }
 
+enum EnSmsState {
+  Pending = 0,
+  DeliverySuccessful = 1,
+  FailedDelivery = 2,
+  MessageBuffered = 3,
+  AcceptedSmsc = 8,
+  RejectedSmsc = 16,
+  DeliveryToBulkSMS = 100,
+}
+
 const tableColumns: ColumnsType<ISMSList> = [
+  {
+    title: "Phone",
+    dataIndex: "Phone",
+    render: (Phone) => <span>{Phone}</span>,
+  },
   {
     title: "Created",
     dataIndex: "Created",
+    render: (Created) => (
+      <span>{moment.unix(Created.slice(6, 16)).format("DD/MM/YYYY")}</span>
+    ),
   },
   {
     title: "Sent date",
     dataIndex: "SentDate",
+    render: (SentDate) => (
+      <span>{moment.unix(SentDate.slice(6, 16)).format("DD/MM/YYYY")}</span>
+    ),
   },
   {
     title: "Message type",
     dataIndex: "MessageType",
-    render: (_) => (
+    render: (MessageType) => (
       <Tag
         className="text-capitalize"
-        color={_.MessageType === EnSmsType.INFO ? "orange" : "cyan"}
+        color={MessageType === EnSmsType.INFO ? "orange" : "cyan"}
       >
-        {_.MessageType === EnSmsType.INFO ? "Informational" : "Advertisement"}
+        {MessageType === EnSmsType.INFO ? "Informational" : "Advertisement"}
       </Tag>
     ),
   },
   {
     title: "State",
     dataIndex: "State",
+    render: (State) => (
+      <Tag className="text-capitalize" color={"gray"}>
+        {State === EnSmsState.DeliveryToBulkSMS
+          ? "Bulk delivery"
+          : State === EnSmsState.FailedDelivery
+          ? "Failed delivery"
+          : State === EnSmsState.RejectedSmsc
+          ? "Rejected"
+          : State === EnSmsState.AcceptedSmsc
+          ? "Accepted"
+          : State === EnSmsState.MessageBuffered
+          ? "Buffered"
+          : State === EnSmsState.Pending
+          ? "Pending"
+          : "Success"}
+      </Tag>
+    ),
   },
 ];
 const SmsDashboard = (props: ISmsDashboard) => {
@@ -53,8 +92,8 @@ const SmsDashboard = (props: ISmsDashboard) => {
     await new SmsService()
       .Info_GetDetailByPeriod(
         props.APIKey,
-        moment("2019-01-01").valueOf() * 10000,
-        moment("2021-01-01").valueOf() * 10000
+        moment("2019-01-01").valueOf() * 10000 + 621355968000000000,
+        moment(new Date()).valueOf() * 10000 + 621355968000000000
       )
       .then((data) => {
         if (data && data.ErrorCode === 0) {

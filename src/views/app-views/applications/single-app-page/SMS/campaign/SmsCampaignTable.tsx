@@ -14,7 +14,7 @@ import { Menu } from "antd";
 import { AppService } from "../../../../../../api";
 import { Link } from "react-router-dom";
 
-enum SMS {
+enum EnSmsType {
   Draft,
   Verifying,
   Declined,

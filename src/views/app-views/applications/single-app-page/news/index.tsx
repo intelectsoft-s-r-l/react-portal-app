@@ -54,7 +54,7 @@ const ArticleItem = ({
                     Modal.confirm({
                       title: "Are you sure you want to activate this article?",
                       onOk: async () => {
-                        return new AppService()
+                        return await new AppService()
                           .UpdateNews({
                             ...newsData,
                             Status: newsEnum.ACTIVE,

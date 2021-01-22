@@ -45,7 +45,11 @@ enum appEnum {
   Exchange = 40,
   MobilePetrolExpertCash = 131,
 }
-const Options = ({ AppType, location, match, moduleSettings }: any) => {
+interface IOptions extends RouteComponentProps {
+  AppType: number;
+  moduleSettings: IMarketAppList["ModuleSettings"];
+}
+const Options = ({ AppType, location, match, moduleSettings }: IOptions) => {
   if (moduleSettings.Backoffice) {
     return (
       <Menu
