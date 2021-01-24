@@ -376,16 +376,16 @@ export class SmsService extends HttpClient {
 
   public Info_GetDetailByPeriod = async (
     APIKey: string,
-    DateTicksStart: number,
-    DateTicksEnd: number
+    DateStart: string,
+    DateEnd: string
   ) =>
     this.instance.get<ISMSInfoGetDetailByPeriodResponse>(
       "/Info/GetDetailByPeriod",
       {
         params: {
           APIKey,
-          DateTicksStart,
-          DateTicksEnd,
+          DateStart,
+          DateEnd,
         },
       }
     );

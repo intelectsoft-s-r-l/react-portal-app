@@ -85,16 +85,21 @@ const SmsDashboard = (props: ISmsDashboard) => {
     moment().clone().endOf("month"),
   ]);
 
-  // TODO: REPLACE TICKS WITH DATE DD-MM-YYYY
   const [tableLoading, setTableLoading] = useState<boolean>(true);
+  const [smsInfo, setSmsInfo] = useState<any>([]);
+  const [smsList, setSmsList] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [statusData, setStatusData] = useState<any>([]);
+  const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
+  const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
   const onChange = async (value: any) => {
     setDate([value[0], value[1]]);
     setTableLoading(true);
     return await new SmsService()
       .Info_GetDetailByPeriod(
         props.APIKey,
-        Utils.parseToTicks(value[0]),
-        Utils.parseToTicks(value[1])
+        value[0].format("DD-MM-YYYY"),
+        value[1].format("DD-MM-YYYY")
       )
       .then((data) => {
         setTableLoading(false);
@@ -103,19 +108,17 @@ const SmsDashboard = (props: ISmsDashboard) => {
   };
   const getSmsList = async () =>
     await new SmsService()
-      .Info_GetDetailByPeriod(props.APIKey, date[0]._d, date[1]._d)
+      .Info_GetDetailByPeriod(
+        props.APIKey,
+        date[0].format("DD-MM-YYYY"),
+        date[1].format("DD-MM-YYYY")
+      )
       .then((data) => {
         if (data && data.ErrorCode === 0) {
           setTableLoading(false);
           setSmsList(data.SMSList);
         }
       });
-  const [smsInfo, setSmsInfo] = useState<any>([]);
-  const [smsList, setSmsList] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [statusData, setStatusData] = useState<any>([]);
-  const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
-  const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
   const getSmsInfo = async () =>
     await new SmsService().Info_GetTotal(props.APIKey).then((data) => {
       setLoading(false);
@@ -179,7 +182,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
                 title="SMS Transactions List"
                 extra={
                   <DatePicker.RangePicker
-                    format={"DD/MM/YYYY"}
+                    format={"DD-MM-YYYY"}
                     defaultValue={date}
                     onChange={onChange}
                   />
