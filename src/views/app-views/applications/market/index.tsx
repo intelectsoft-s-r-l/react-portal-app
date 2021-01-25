@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, Dispatch, useEffect, useState } from "react";
 import { Button, Row, Col, Tag, Avatar, Card, Modal, Empty } from "antd";
 import {
   VerticalAlignBottomOutlined,
@@ -19,20 +19,19 @@ import TranslateText from "../../../../utils/translate";
 import { IState } from "../../../../redux/reducers";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
 import "../applications.scss";
-import axios from "axios";
 
-interface IGridItem {
+interface IGridItem<T> {
   deactivateApp: (AppID: number, AppName: string) => void;
-  setVisibleModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedApp: (data: IMarketAppList) => void;
-  data: IMarketAppList;
+  setVisibleModal: Dispatch<SetStateAction<boolean>>;
+  setSelectedApp: (data: T) => void;
+  data: T;
 }
 const GridItem = ({
   deactivateApp,
   setVisibleModal,
   setSelectedApp,
   data,
-}: IGridItem) => {
+}: IGridItem<IMarketAppList>) => {
   const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   useEffect(() => {
@@ -125,13 +124,13 @@ const Market = () => {
   const [selectedApp, setSelectedApp] = useState<IMarketAppList>();
   const [appInstalled, setAppInstalled] = useState<boolean>(false);
   const getMarketApps = async () => {
-    try {
-      return instance.GetMarketAppList().then((data) => {
-        setLoading(false);
+    return instance.GetMarketAppList().then((data) => {
+      setLoading(false);
+      if (data && data.ErrorCode === 0) {
         const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
         setApps(evaluatedArr);
-      });
-    } catch {}
+      }
+    });
   };
   useEffect(() => {
     getMarketApps();

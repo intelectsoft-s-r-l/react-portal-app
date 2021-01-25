@@ -12,8 +12,12 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import TranslateText from "../../../../utils/translate";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
-import axios from "axios";
-const GridItem = ({ deactivateApp, data }: any) => {
+
+interface IGridItem {
+  deactivateApp: (ID: number, Name: string) => void;
+  data: IMarketAppList;
+}
+const GridItem = ({ deactivateApp, data }: IGridItem) => {
   const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   useEffect(() => {
@@ -74,15 +78,15 @@ const MyAppList = () => {
   const { confirm } = Modal;
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketAppList = async () => {
-    try {
-      return instance.GetMarketAppList().then((data) => {
-        setLoading(false);
+    return instance.GetMarketAppList().then((data) => {
+      setLoading(false);
+      if (data && data.ErrorCode === 0) {
         const activeApps = data.MarketAppList.filter(
           (marketApp: IMarketAppList) => marketApp.Status !== 0
         );
         setApps(Utils.sortData(activeApps, "ID"));
-      });
-    } catch {}
+      }
+    });
   };
 
   useEffect(() => {
@@ -101,9 +105,7 @@ const MyAppList = () => {
                 new AppService()
                   .DeactivateApp(AppID)
                   .then(async (data: any) => {
-                    if (data) {
-                      if (data.ErrorCode === 0) await getMarketAppList();
-                    }
+                    if (data && data.ErrorCode === 0) await getMarketAppList();
                   })
               ),
             1000

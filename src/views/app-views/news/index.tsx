@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
 import { IMarketAppList, INewsList } from "../../../api/types.response";
+
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
     <Card style={{ padding: 30 }}>

@@ -103,40 +103,38 @@ export default class HttpClient {
     console.log(response);
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
-        if (data) {
-          const { ErrorCode, Token } = data;
-          if (ErrorCode === 0) {
-            store.dispatch(authenticated(Token));
-            if (response.config.method === "get") {
-              response.config.params = {
-                ...response.config.params,
-                Token,
-              };
-              return await axios
-                .request(response.config)
-                .then((response) => response.data);
-            }
-            if (response.config.method === "post") {
-              response.config.data = {
-                ...JSON.parse(response.config.data),
-                Token,
-              };
-              return await axios
-                .request(response.config)
-                .then((response) => response.data);
-            }
-          } else {
-            const key = "updatable";
-            message
-              .loading({
-                content: TranslateText(EXPIRE_TIME),
-                key,
-                duration: 1.5,
-              })
-              .then(() => {
-                store.dispatch(signOut());
-              });
+        if (data && data.ErrorCode === 0) {
+          const { Token } = data;
+          store.dispatch(authenticated(Token));
+          if (response.config.method === "get") {
+            response.config.params = {
+              ...response.config.params,
+              Token,
+            };
+            return await axios
+              .request(response.config)
+              .then((response) => response.data);
           }
+          if (response.config.method === "post") {
+            response.config.data = {
+              ...JSON.parse(response.config.data),
+              Token,
+            };
+            return await axios
+              .request(response.config)
+              .then((response) => response.data);
+          }
+        } else {
+          const key = "updatable";
+          message
+            .loading({
+              content: TranslateText(EXPIRE_TIME),
+              key,
+              duration: 1.5,
+            })
+            .then(() => {
+              store.dispatch(signOut());
+            });
         }
       });
     } else if (
@@ -164,6 +162,7 @@ export default class HttpClient {
   };
 }
 
+// Auth Api
 export class AuthService extends HttpClient {
   public constructor() {
     super(`${API_AUTH_URL}`);
@@ -204,6 +203,7 @@ export class AuthService extends HttpClient {
     });
 }
 
+// Client Api
 export class AppService extends HttpClient {
   public constructor() {
     super(`${API_APP_URL}`);
@@ -342,6 +342,7 @@ export class AppService extends HttpClient {
     });
 }
 
+// SMS Api
 export class SmsService extends HttpClient {
   public constructor() {
     super(`${API_SMS_URL}`);
