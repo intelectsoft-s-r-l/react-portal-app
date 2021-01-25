@@ -19,10 +19,11 @@ const Integration = ({
 }: {
   currentApp: Partial<IMarketAppList>;
 }) => {
+  const instance = new AppService();
   const { confirm } = Modal;
   const [appData, setApp] = useState<any>();
   const getMarketApp = async () => {
-    return new AppService().GetMarketAppList().then((data) => {
+    return instance.GetMarketAppList().then((data) => {
       if (data && data.ErrorCode === 0) {
         const app = data.MarketAppList.find(
           (app) => app.AppType === currentApp!.AppType
@@ -45,6 +46,7 @@ const Integration = ({
   };
   useEffect(() => {
     getMarketApp();
+    return () => instance._source.cancel();
   }, []);
   const [form] = Form.useForm();
   const [activationCode, setActivationCode] = useState<number>(0);
@@ -58,13 +60,11 @@ const Integration = ({
     confirm({
       title: "Are you sure you want generate a new activation code?",
       onOk: () =>
-        new AppService()
-          .GenerateLicenseActivationCode(appData.ID ?? 0)
-          .then((data) => {
-            if (data && data.ErrorCode === 0) {
-              setActivationCode(data.ActivationCode);
-            }
-          }),
+        instance.GenerateLicenseActivationCode(appData.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            setActivationCode(data.ActivationCode);
+          }
+        }),
       onCancel: () => {},
     });
   };
@@ -73,15 +73,11 @@ const Integration = ({
     confirm({
       title: "Are you sure you want to generate a new API Key?",
       onOk: async () => {
-        return await new AppService()
-          .GenerateApiKey(appData!.ID ?? 0)
-          .then((data) => {
-            if (data) {
-              if (data.ErrorCode === 0) {
-                setApiKey(data.ApiKey);
-              }
-            }
-          });
+        return instance.GenerateApiKey(appData!.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            setApiKey(data.ApiKey);
+          }
+        });
       },
     });
   };
@@ -89,11 +85,9 @@ const Integration = ({
     confirm({
       title: "Are you sure you want to delete current API Key?",
       onOk: () =>
-        new AppService().DeleteApiKey(appData!.ID ?? 0).then((data) => {
-          if (data) {
-            if (data.ErrorCode === 0) {
-              setApiKey("00000000-0000-0000-0000-000000000000");
-            }
+        instance.DeleteApiKey(appData!.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            setApiKey("00000000-0000-0000-0000-000000000000");
           }
         }),
       onCancel: () => {},
@@ -106,17 +100,15 @@ const Integration = ({
       key: "updatable",
       duration: 1,
     });
-    return new AppService()
-      .UpdateApp({ AppID: appData.ID, ...data })
-      .then((data) => {
-        if (data && data.ErrorCode === 0) {
-          message.success({
-            content: TranslateText(DONE),
-            key: "updatable",
-            duration: 1,
-          });
-        }
-      });
+    return instance.UpdateApp({ AppID: appData.ID, ...data }).then((data) => {
+      if (data && data.ErrorCode === 0) {
+        message.success({
+          content: TranslateText(DONE),
+          key: "updatable",
+          duration: 1,
+        });
+      }
+    });
   };
 
   const onExternalSecurityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,15 +123,13 @@ const Integration = ({
     confirm({
       title: "Are you sure you want to generate new Public and Private Keys?",
       onOk: async () => {
-        return await new AppService()
-          .GenerateRsaKey(appData.ID ?? 0)
-          .then((data) => {
-            if (data && data.ErrorCode === 0) {
-              message.success(TranslateText(DONE));
-              setPublicKey(data.EncryptionPublicKey);
-              setPrivateKey(data.EncryptionPrivateKey);
-            }
-          });
+        return await instance.GenerateRsaKey(appData.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            message.success(TranslateText(DONE));
+            setPublicKey(data.EncryptionPublicKey);
+            setPrivateKey(data.EncryptionPrivateKey);
+          }
+        });
       },
     });
   };
@@ -150,7 +140,7 @@ const Integration = ({
       key: "updatable",
       duration: 1,
     });
-    return new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
+    return instance.UpdateRsaKey(AppID, Key, KeyType).then((data) => {
       if (data && data.ErrorCode === 0) {
         message.success({
           content: TranslateText(DONE),

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Dispatch, SetStateAction } from "react";
 import { Form, Avatar, Button, Input, Row, Col, message, Upload } from "antd";
 import MaskedInput from "antd-mask-input";
 import { UserOutlined } from "@ant-design/icons";
@@ -14,30 +14,32 @@ import { ICompanyData } from "../../../../api/types.response";
 import { UploadChangeParam } from "antd/lib/upload";
 import TranslateText from "../../../../utils/translate";
 import { FormInstance } from "antd/lib/form";
+import Loading from "../../../../components/shared-components/Loading";
 class CompanyForm extends Component<{
   onChangeMask: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }> {
   state = {} as ICompanyData;
   private formRef = React.createRef() as React.RefObject<
     FormInstance<ICompanyData>
   >;
-  private mounted = true;
+  private instance = new AppService();
 
   private getCompanyInfo = async () => {
-    return new AppService().GetCompanyInfo().then((data) => {
+    return this.instance.GetCompanyInfo().then((data) => {
       if (data && data.ErrorCode === 0) {
-        if (this.mounted) {
-          this.setState(data.Company);
-          if (this.formRef["current"])
-            this.formRef["current"].setFieldsValue(data.Company);
-        }
+        this.props.setLoading(false);
+        this.setState(data.Company);
+        if (this.formRef["current"])
+          this.formRef["current"].setFieldsValue(data.Company);
       }
     });
   };
 
   private updateCompany = async (values: ICompanyData) => {
     const updatedInfo = { Company: { ...this.state, ...values } };
-    return new AppService().UpdateCompany(updatedInfo).then(async (data) => {
+    return this.instance.UpdateCompany(updatedInfo).then(async (data) => {
       if (data && data.ErrorCode === 0) {
         await this.getCompanyInfo();
         message.success({
@@ -52,7 +54,7 @@ class CompanyForm extends Component<{
   }
 
   componentWillUnmount() {
-    this.mounted = false;
+    this.instance._source.cancel();
   }
 
   render() {
@@ -90,6 +92,10 @@ class CompanyForm extends Component<{
       const deletedImage = { Logo: "" };
       this.updateCompany(deletedImage).then(() => this.setState(deletedImage));
     };
+
+    if (this.props.loading) {
+      return <Loading cover="content" />;
+    }
 
     return (
       <>

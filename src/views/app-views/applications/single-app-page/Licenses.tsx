@@ -16,21 +16,21 @@ import { ILicenses } from "../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
+  const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
   const getAppLicenses = async (AppType: number) => {
-    return new AppService().GetAppLicenses(AppType).then((data) => {
-      if (data) {
-        if (data.ErrorCode === 0) {
-          setLoading(false);
-          // const evaluatedArray = sortData(data.LicensesList);
-          setLicenses(data.LicenseList);
-          setLicensesToSearch(data.LicenseList);
-        }
+    return instance.GetAppLicenses(AppType).then((data) => {
+      if (data && data.ErrorCode === 0) {
+        setLoading(false);
+        // const evaluatedArray = sortData(data.LicensesList);
+        setLicenses(data.LicenseList);
+        setLicensesToSearch(data.LicenseList);
       }
     });
   };
   useEffect(() => {
     getAppLicenses(AppType);
+    return () => instance._source.cancel();
   }, []);
   const [selectedKeys, setSelectedKeys] = useState<any>([]);
   const [selectedRows, setSeletedRows] = useState<ILicenses[]>([]);

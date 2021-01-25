@@ -93,15 +93,10 @@ export default class HttpClient {
         Token: this._token,
       };
     }
-    //if (config.baseURL === API_SMS_URL) {
-    //config.withCredentials = true;
-    //config.auth = {
-    //username: "1",
-    //password: "1",
-    //};
-    //}
     config.cancelToken = this._source.token;
-    return config;
+    return {
+      ...config,
+    };
   };
 
   private _handleResponse = (response: AxiosResponse) => {

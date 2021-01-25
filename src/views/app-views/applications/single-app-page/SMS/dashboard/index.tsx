@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Badge, Card, Col, DatePicker, Popover, Row, Table, Tag } from "antd";
 import { RouteComponentProps } from "react-router-dom";
-import { SmsService } from "../../../../../../api";
+import { AppService, SmsService } from "../../../../../../api";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
 import Flex from "../../../../../../components/shared-components/Flex";
 import { COLORS } from "../../../../../../constants/ChartConstant";
@@ -42,7 +42,7 @@ const tableColumns: ColumnsType<ISMSList> = [
     title: "Sent date",
     dataIndex: "SentDate",
     render: (SentDate) => (
-      <span>{moment.unix(SentDate.slice(6, 16)).format("DD/MM/YYYY")}</span>
+      <span>{moment.unix(SentDate.slice(6, 16)).format("DD-MM-YYYY")}</span>
     ),
   },
   {
@@ -80,14 +80,17 @@ const tableColumns: ColumnsType<ISMSList> = [
   },
 ];
 const SmsDashboard = (props: ISmsDashboard) => {
+  const instance = new SmsService();
   const [date, setDate] = useState<any>([
     moment().clone().startOf("month"),
     moment().clone().endOf("month"),
   ]);
 
   const [tableLoading, setTableLoading] = useState<boolean>(true);
-  const [smsInfo, setSmsInfo] = useState<any>([]);
-  const [smsList, setSmsList] = useState<any>([]);
+  const [smsInfo, setSmsInfo] = useState<{ title: string; value: number }[]>(
+    []
+  );
+  const [smsList, setSmsList] = useState<ISMSList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
@@ -95,34 +98,26 @@ const SmsDashboard = (props: ISmsDashboard) => {
   const onChange = async (value: any) => {
     setDate([value[0], value[1]]);
     setTableLoading(true);
-    return await new SmsService()
-      .Info_GetDetailByPeriod(
-        props.APIKey,
-        value[0].format("DD-MM-YYYY"),
-        value[1].format("DD-MM-YYYY")
-      )
-      .then((data) => {
-        setTableLoading(false);
-        if (data && data.ErrorCode === 0) setSmsList(data.SMSList);
-      });
+    getSmsList(value[0].format("DD-MM-YYYY"), value[1].format("DD-MM-YYYY"));
   };
-  const getSmsList = async () =>
-    await new SmsService()
-      .Info_GetDetailByPeriod(
-        props.APIKey,
-        date[0].format("DD-MM-YYYY"),
-        date[1].format("DD-MM-YYYY")
-      )
+  const getSmsList = async (
+    // give default values
+    firstDate = date[0].format("DD-MM-YYYY"),
+    secondDate = date[1].format("DD-MM-YYYY")
+  ) => {
+    return await instance
+      .Info_GetDetailByPeriod(props.APIKey, firstDate, secondDate)
       .then((data) => {
         if (data && data.ErrorCode === 0) {
           setTableLoading(false);
           setSmsList(data.SMSList);
         }
       });
-  const getSmsInfo = async () =>
-    await new SmsService().Info_GetTotal(props.APIKey).then((data) => {
-      setLoading(false);
+  };
+  const getSmsInfo = async () => {
+    return instance.Info_GetTotal(props.APIKey).then((data) => {
       if (data && data.ErrorCode === 0) {
+        setLoading(false);
         setStatusData([
           data.SentThisMonth,
           data.FailedDelivery,
@@ -136,11 +131,16 @@ const SmsDashboard = (props: ISmsDashboard) => {
         ]);
       }
     });
-
+  };
   useEffect(() => {
     getSmsInfo();
-    getSmsList();
+    return () => instance._source.cancel();
   }, []);
+  useEffect(() => {
+    getSmsList();
+    return () => instance._source.cancel();
+  }, []);
+
   const jointStatusData = () => {
     let arr: any = [];
     for (let i = 0; i < statusData.length; i++) {

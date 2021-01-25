@@ -4,14 +4,14 @@ import { ExperimentOutlined } from "@ant-design/icons";
 import React from "react";
 import "./applications.scss";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 const AppNavGrid = (props: any) => {
   return (
     <>
       {props.apps &&
         props.apps.map((app: any) => (
           <Menu.Item key={app.Name} {...props} className="app-list__item">
-            <NavLink to={`${APP_PREFIX_PATH}/applications/${app.AppType}`}>
+            <Link to={`${APP_PREFIX_PATH}/id/${app.AppType}`}>
               <div className="text-center">
                 <Avatar
                   src={app.Photo}
@@ -22,7 +22,7 @@ const AppNavGrid = (props: any) => {
                 />
               </div>
               <p className="text-center">{app.Name}</p>
-            </NavLink>
+            </Link>
           </Menu.Item>
         ))}
     </>

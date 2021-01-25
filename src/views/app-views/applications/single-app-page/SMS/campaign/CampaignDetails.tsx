@@ -10,20 +10,20 @@ import "./campaign.scss";
 
 interface ICampaignDetails extends RouteComponentProps<{ ID: string }> {}
 const CampaignDetails = ({ history, match }: ICampaignDetails) => {
+  const instance = new AppService();
   const { ID } = match.params;
   const [currentCampaign, setCurrentCampaign] = useState<ICampaignList>();
   const [loading, setLoading] = useState<boolean>(true);
   const getCampaign = async () =>
-    await new AppService().SMS_GetCampaign().then((data) => {
-      if (data) {
-        if (data.ErrorCode === 0) {
-          setLoading(false);
-          setCurrentCampaign(data.CampaignList.find((camp) => camp.ID === +ID));
-        }
+    await instance.SMS_GetCampaign().then((data) => {
+      if (data && data.ErrorCode === 0) {
+        setLoading(false);
+        setCurrentCampaign(data.CampaignList.find((camp) => camp.ID === +ID));
       }
     });
   useEffect(() => {
     getCampaign();
+    return () => instance._source.cancel();
   }, [match]);
   if (loading) {
     return <Loading cover="content" />;

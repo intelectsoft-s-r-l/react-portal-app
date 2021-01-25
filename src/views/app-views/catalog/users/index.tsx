@@ -71,11 +71,12 @@ export class UserList extends Component<IUserListStoreProps> {
     registerUserModalVisible: false,
     loading: true,
   };
-  private mounted = true;
+
+  private instance = new AppService();
   getUsersInfo = async () => {
-    return new AppService().GetUserList().then((data) => {
-      this.setState({ loading: false });
+    return this.instance.GetUserList().then((data) => {
       if (data && data.ErrorCode === 0) {
+        this.setState({ loading: false });
         // Don't show current user in the list
         const filteredUsers = data.Users.filter(
           (user: any) => user.ID !== this.props.ID
@@ -84,11 +85,10 @@ export class UserList extends Component<IUserListStoreProps> {
         // Always show last registered user first in the list
         const evaluatedArray = Utils.sortData(filteredUsers, "ID").reverse();
 
-        if (this.mounted)
-          this.setState({
-            users: evaluatedArray,
-            usersToSearch: evaluatedArray,
-          });
+        this.setState({
+          users: evaluatedArray,
+          usersToSearch: evaluatedArray,
+        });
       }
     });
   };
@@ -98,7 +98,7 @@ export class UserList extends Component<IUserListStoreProps> {
   }
 
   componentWillUnmount() {
-    this.mounted = false;
+    this.instance._source.cancel();
   }
 
   showUserProfile = (userInfo: IUsers) => {
@@ -157,7 +157,7 @@ export class UserList extends Component<IUserListStoreProps> {
   };
 
   handleUserStatus = (userId: number, status: number) => {
-    return new AppService().ChangeUserStatus(userId, status);
+    return this.instance.ChangeUserStatus(userId, status);
   };
   dropdownMenu = (row: any) => (
     <Menu>

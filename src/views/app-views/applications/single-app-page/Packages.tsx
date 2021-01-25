@@ -55,10 +55,12 @@ const CardItem = ({ packages }: { packages: IPackages }) => {
   );
 };
 const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
+  // API instance
+  const instance = new AppService();
   const [packages, setPackages] = useState<IPackages[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const getAppPackages = () => {
-    return new AppService().GetMarketAppList().then((data) => {
+  useEffect(() => {
+    instance.GetMarketAppList().then((data) => {
       if (data && data.ErrorCode === 0) {
         setLoading(false);
         const currentPackages = data.MarketAppList.find(
@@ -67,10 +69,9 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
         setPackages(currentPackages?.Packages ?? []);
       }
     });
-  };
-  useEffect(() => {
-    getAppPackages();
+    return () => instance._source.cancel();
   }, []);
+
   if (loading) {
     return <Loading cover="content" />;
   }

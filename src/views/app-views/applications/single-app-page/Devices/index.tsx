@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, Table, Tooltip } from "antd";
-import { EyeOutlined } from '@ant-design/icons'
+import { EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { AppService } from "../../../../../api";
-import { IDiagnosticInformation, ILicenses } from "../../../../../api/types.response";
+import {
+  IDiagnosticInformation,
+  ILicenses,
+} from "../../../../../api/types.response";
 import Flex from "../../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import DeviceView from "./DeviceView";
@@ -20,7 +23,7 @@ export enum Plugged {
   _AC = 1,
   _USB = 2,
   _WIRELESS = 4,
-  _NOT_PLUGGED = -1
+  _NOT_PLUGGED = -1,
 }
 export enum Status {
   _DISCHARGING = 3,
@@ -29,24 +32,24 @@ export enum Status {
   _CHARGING = 2,
 }
 const Devices = ({ AppType }: { AppType: number }) => {
+  const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
   const [devices, setDevices] = useState<any>();
-  const [selectedDevice, setSelectedDevice] = useState<any>()
-  const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false)
+  const [selectedDevice, setSelectedDevice] = useState<any>();
+  const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false);
   const getDevices = async (AppType: number) => {
-    return new AppService().GetAppLicenses(AppType).then((data) => {
-      if (data) {
-        if (data.ErrorCode === 0) {
-          setLoading(false);
-          setDevices(
-            data.LicenseList.filter((elm: ILicenses) => elm.Status !== 0)
-          );
-        }
+    return instance.GetAppLicenses(AppType).then((data) => {
+      if (data && data.ErrorCode === 0) {
+        setLoading(false);
+        setDevices(
+          data.LicenseList.filter((elm: ILicenses) => elm.Status !== 0)
+        );
       }
     });
   };
   useEffect(() => {
     getDevices(AppType);
+    return () => instance._source.cancel();
   }, []);
   return (
     <>
@@ -74,7 +77,9 @@ const Devices = ({ AppType }: { AppType: number }) => {
             dataIndex: "LastAccessDate",
             render: (date: ILicenses["LastAccessDate"]) => (
               <span>
-                {date ? moment.unix(+date.slice(6, 16)).format("DD/MM/YYYY") : " "}
+                {date
+                  ? moment.unix(+date.slice(6, 16)).format("DD/MM/YYYY")
+                  : " "}
               </span>
             ),
           },
@@ -91,20 +96,31 @@ const Devices = ({ AppType }: { AppType: number }) => {
             render: (_, elm) => (
               <div className="text-right">
                 <Tooltip title="View">
-                  <Button type="primary" className="mr-2" icon={<EyeOutlined />} size="small" onClick={async () => {
-                    setDeviceViewVisible(true)
-                    setSelectedDevice(JSON.parse(elm.DiagnosticInformation))
-                  }} />
+                  <Button
+                    type="primary"
+                    className="mr-2"
+                    icon={<EyeOutlined />}
+                    size="small"
+                    onClick={async () => {
+                      setDeviceViewVisible(true);
+                      setSelectedDevice(JSON.parse(elm.DiagnosticInformation));
+                    }}
+                  />
                 </Tooltip>
               </div>
-            )
-          }
+            ),
+          },
         ]}
         dataSource={devices}
         rowKey="ID"
         loading={loading}
       />
-      <DeviceView data={selectedDevice ?? []} visible={deviceViewVisible} close={() => setDeviceViewVisible(false)} isTable={true} />
+      <DeviceView
+        data={selectedDevice ?? []}
+        visible={deviceViewVisible}
+        close={() => setDeviceViewVisible(false)}
+        isTable={true}
+      />
     </>
   );
 };
