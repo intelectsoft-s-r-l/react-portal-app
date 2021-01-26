@@ -1,11 +1,12 @@
 import * as React from "react";
-import { useEffect } from "react";
-import { Col, DatePicker, Form, Input, Modal, Row } from "antd";
+import { useEffect, useState } from "react";
+import { Col, DatePicker, Form, Input, Modal, Row, Upload } from "antd";
 import { ICampaignList } from "../../../../../../api/types.response";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { rules } from "./NewCampaign";
 import moment from "moment";
 import { AppService } from "../../../../../../api";
+import Utils from "../../../../../../utils";
 
 interface IEditCampaign {
   visible: boolean;
@@ -19,12 +20,51 @@ const EditCampaign = ({
   getCampaignList,
   data,
 }: IEditCampaign) => {
-  useEffect(() => {
-    if (!visible) return;
-    form.resetFields();
-  }, [visible]);
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [phoneNumbers, setPhoneNumbers] = useState<Partial<string[]>>([]);
+
+  useEffect(() => {
+    setPhoneNumbers([data.PhoneList]);
+  }, [visible]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      PhoneList: phoneNumbers
+        .filter((el: any) => el != "")
+        .join(",")
+        .replace(/,\s+/g, ""),
+    });
+  }, [phoneNumbers, setPhoneNumbers]);
+
+  const onChange = (info: any) => {
+    if (info.file.status === "done") {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        if (e.target.result.match(/,/)) {
+          setPhoneNumbers((prev) => [...prev, e.target.result]);
+        } else if (e.target.result.match(/;/)) {
+          setPhoneNumbers((prev) => [
+            ...prev,
+            e.target.result.replaceAll(";", ","),
+          ]);
+        } else {
+          // If there are spaces or new lines
+          setPhoneNumbers((prev) => [
+            ...prev,
+            e.target.result
+              .split(/[\s\n]/)
+              .slice(0, -1)
+              .join(","),
+          ]);
+        }
+      };
+      reader.readAsText(info.file.originFileObj);
+    }
+  };
+
   const onFinish = async (values: any) => {
+    setLoading(true);
     const ScheduledDate = moment(values.ScheduledDate["_d"]).format(
       "[/Date(]xZZ[))/]"
     );
@@ -35,10 +75,9 @@ const EditCampaign = ({
         ScheduledDate,
       })
       .then((data) => {
-        if (data) {
-          if (data.ErrorCode === 0) {
-            getCampaignList();
-          }
+        if (data && data.ErrorCode === 0) {
+          setLoading(false);
+          getCampaignList();
         }
       });
   };
@@ -48,10 +87,11 @@ const EditCampaign = ({
       visible={visible}
       destroyOnClose
       onCancel={close}
+      confirmLoading={loading}
       onOk={() => {
-        form.validateFields().then((values) => {
+        form.validateFields().then(async (values) => {
+          await onFinish(values);
           close();
-          onFinish(values);
         });
       }}
     >
@@ -79,6 +119,37 @@ const EditCampaign = ({
           <Col xs={24} sm={24} md={24}>
             <Form.Item label={"Message"} name="Message" rules={rules.Message}>
               <Input.TextArea />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={24}>
+            <Form.Item
+              label={"Receivers"}
+              name="PhoneList"
+              rules={rules.PhoneList}
+              extra={
+                <>
+                  <small>
+                    {phoneNumbers.length > 0
+                      ? ""
+                      : "You have no contacts just yet. "}
+                    <Upload
+                      onChange={onChange}
+                      multiple={true}
+                      customRequest={Utils.dummyRequest}
+                      showUploadList={false}
+                    >
+                      <small>
+                        <a>Attach file</a>
+                      </small>
+                    </Upload>
+                  </small>
+                </>
+              }
+            >
+              <Input.TextArea
+                placeholder="Insert phone numbers, each phone number should be followed by comma."
+                onChange={(e) => setPhoneNumbers([e.target.value])}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>

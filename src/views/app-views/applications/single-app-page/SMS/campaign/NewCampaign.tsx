@@ -105,7 +105,10 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
 
   useEffect(() => {
     form.setFieldsValue({
-      PhoneList: phoneNumbers.join(",").replace(/\s+/g, ""),
+      PhoneList: phoneNumbers
+        .filter((el: string) => el != "")
+        .join(",")
+        .replace(/\s+/g, ""),
     });
   }, [phoneNumbers, setPhoneNumbers]);
 
@@ -182,7 +185,10 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
                 </>
               }
             >
-              <Input.TextArea placeholder="Insert phone numbers, each phone number should be followed by comma." />
+              <Input.TextArea
+                placeholder="Insert phone numbers, each phone number should be followed by comma."
+                onChange={(e) => setPhoneNumbers([e.target.value])}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>

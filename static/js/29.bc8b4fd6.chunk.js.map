@@ -1,0 +1,1 @@
+{"version":3,"sources":["views/app-views/security/history/index.tsx"],"names":["History"],"mappings":"+HAAA,2BAMeA,UAJC,WACd,OAAO","file":"static/js/29.bc8b4fd6.chunk.js","sourcesContent":["import React from \"react\";\n\nconst History = () => {\n  return <div>History component works!</div>;\n};\n\nexport default History;\n"],"sourceRoot":""}
