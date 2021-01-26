@@ -1,5 +1,5 @@
-import { Row, Col, Input, Modal, Form } from "antd";
 import React, { useState } from "react";
+import { Row, Col, Input, Modal, Form } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import { AuthService } from "../../../../api";
@@ -20,39 +20,28 @@ export const UserModalAdd = ({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const registerUser = (values: any) => {
-    return new AuthService().RegisterUser({
-      ...values,
-      CompanyID,
-      UiLanguage: 0,
-    });
-  };
-
-  const onFinish = (values: any) => {
-    registerUser(values).then((data: any) => {
-      if (data) {
-        if (data.ErrorCode === 0) {
+  const onFinish = async (values: any) => {
+    setLoading(true);
+    return await new AuthService()
+      .RegisterUser({ ...values, CompanyID, UiLanguage: 0 })
+      .then((data) => {
+        if (data && data.ErrorCode === 0) {
+          setLoading(false);
           getUsersInfo();
         }
-      }
-    });
+      });
   };
   return (
     <Modal
       title={"Invite user"}
       visible={visible}
-      okText={<IntlMessage id={"account.EditProfile.SaveChange"} />}
       onCancel={onCancel}
       confirmLoading={loading}
       onOk={() => {
-        setLoading(true);
-        setTimeout(() => {
-          setLoading(false);
-          form.validateFields().then((values) => {
-            onCancel();
-            onFinish(values);
-          });
-        }, 1000);
+        form.validateFields().then(async (values) => {
+          await onFinish(values);
+          onCancel();
+        });
       }}
     >
       <Form form={form} name="basicInformation" layout="vertical">

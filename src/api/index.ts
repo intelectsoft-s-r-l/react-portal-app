@@ -51,6 +51,10 @@ const publicIp = require("react-public-ip");
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
 }
+
+// Resolve loaders inside axios interceptors,
+// so I wouldn't have to call the loaders in every component
+//
 export default class HttpClient {
   public readonly instance: AxiosInstance;
   private _token: string;

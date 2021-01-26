@@ -74,8 +74,10 @@ export class UserList extends Component<IUserListStoreProps> {
 
   private instance = new AppService();
   getUsersInfo = async () => {
+    this.setState({ loading: true });
     return this.instance.GetUserList().then((data) => {
       if (data && data.ErrorCode === 0) {
+        this.setState({ loading: false });
         this.setState({ loading: false });
         // Don't show current user in the list
         const filteredUsers = data.Users.filter(

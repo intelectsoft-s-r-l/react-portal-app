@@ -24,7 +24,10 @@ const EditCampaign = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [phoneNumbers, setPhoneNumbers] = useState<Partial<string[]>>([]);
 
+  /*  Destroy initialValues of form after Modal is closed */
   useEffect(() => {
+    if (!visible) return;
+    form.resetFields();
     setPhoneNumbers([data.PhoneList]);
   }, [visible]);
 
