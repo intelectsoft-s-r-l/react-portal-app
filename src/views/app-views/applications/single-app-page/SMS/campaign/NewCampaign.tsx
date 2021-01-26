@@ -84,6 +84,11 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
       reader.onload = (e: any) => {
         if (e.target.result.match(/,/)) {
           setPhoneNumbers((prev) => [...prev, e.target.result]);
+        } else if (e.target.result.match(/;/)) {
+          setPhoneNumbers((prev) => [
+            ...prev,
+            e.target.result.replaceAll(";", ","),
+          ]);
         } else {
           setPhoneNumbers((prev) => [
             ...prev,
@@ -99,8 +104,9 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
   };
 
   useEffect(() => {
-    console.log(phoneNumbers);
-    form.setFieldsValue({ PhoneList: phoneNumbers.join(",").trim() });
+    form.setFieldsValue({
+      PhoneList: phoneNumbers.join(",").replace(/\s+/g, ""),
+    });
   }, [phoneNumbers, setPhoneNumbers]);
 
   const onFinish = async (values: any) => {
