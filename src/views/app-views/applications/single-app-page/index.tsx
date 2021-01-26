@@ -11,10 +11,9 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  useLocation,
 } from "react-router-dom";
 import Description from "./Description";
-import Licenses from "./Licenses";
+import Licenses from "./Licenses/Licenses";
 import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
@@ -31,7 +30,6 @@ import CampaignDetails from "./SMS/campaign/CampaignDetails";
 import Invoice from "./ExchangeOfInvoice/Invoice";
 import SmsDashboard from "./SMS/dashboard";
 import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
-import { useQuery } from "../../../../utils/hooks/useQuery";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
 
@@ -111,6 +109,10 @@ const Options = ({
             <IntlMessage id="app.Description" />
           </span>
           <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/dashboard`}>
+          <span>Dashboard</span>
+          <Link to={"dashboard"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/packages`}>
           <span>

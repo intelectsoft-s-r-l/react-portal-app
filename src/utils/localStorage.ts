@@ -1,4 +1,4 @@
-import { APP_NAME, SUBDIR_PATH } from "../configs/AppConfig";
+import { SUBDIR_PATH } from "../configs/AppConfig";
 import { IState } from "../redux/reducers";
 
 // Pass in Redux store's state to save it to the user's browser local storage

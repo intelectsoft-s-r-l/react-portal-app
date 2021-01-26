@@ -1,10 +1,20 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Col, DatePicker, Form, Input, message, Modal, Radio, Row } from "antd";
+import {
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Modal,
+  Radio,
+  Row,
+  Upload,
+} from "antd";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { AppService } from "../../../../../../api";
 import TranslateText from "../../../../../../utils/translate";
-import { DONE } from "../../../../../../constants/Messages";
+import { DONE, UPLOADING } from "../../../../../../constants/Messages";
 import Utils from "../../../../../../utils";
 
 interface INewCampaign {
@@ -37,6 +47,10 @@ export const rules = {
       required: true,
       message: "Please input a phone list!",
     },
+    {
+      pattern: /^\d+(,\d+)*$/,
+      message: "Numbers should be followed by comma",
+    },
   ],
   ScheduledDate: [
     {
@@ -58,10 +72,37 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
   const [form] = Form.useForm();
   const [radioVal, setRadioVal] = useState<number>(0);
   const [date, setDate] = useState<any>();
+  const [phoneNumbers, setPhoneNumbers] = useState<string[]>([]);
   useEffect(() => {
     if (!visible) return;
     form.resetFields();
   }, [visible, form]);
+
+  const onChange = (info: any) => {
+    if (info.file.status === "done") {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        if (e.target.result.match(/,/)) {
+          setPhoneNumbers((prev) => [...prev, e.target.result]);
+        } else {
+          setPhoneNumbers((prev) => [
+            ...prev,
+            e.target.result
+              .split(/[\s\n]/)
+              .slice(0, -1)
+              .join(","),
+          ]);
+        }
+      };
+      reader.readAsText(info.file.originFileObj);
+    }
+  };
+
+  useEffect(() => {
+    console.log(phoneNumbers);
+    form.setFieldsValue({ PhoneList: phoneNumbers.join(",").trim() });
+  }, [phoneNumbers, setPhoneNumbers]);
+
   const onFinish = async (values: any) => {
     const ScheduledDate = () => {
       if (radioVal === send.DELAY) {
@@ -75,13 +116,8 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
         ScheduledDate: ScheduledDate(),
       })
       .then((data) => {
-        if (data) {
-          if (data.ErrorCode === 0) {
-            getCampaignList().then(() =>
-              message.success(TranslateText(DONE), 1)
-            );
-          }
-        }
+        if (data && data.ErrorCode === 0)
+          getCampaignList().then(() => message.success(TranslateText(DONE), 1));
       });
   };
   return (
@@ -123,9 +159,21 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
               name="PhoneList"
               rules={rules.PhoneList}
               extra={
-                <small>
-                  You have no contacts just yet. <a href="/#">Add contact</a>
-                </small>
+                <>
+                  <small>
+                    You have no contacts just yet.{" "}
+                    <Upload
+                      onChange={onChange}
+                      multiple={true}
+                      customRequest={Utils.dummyRequest}
+                      showUploadList={false}
+                    >
+                      <small>
+                        <a>Attach file</a>
+                      </small>
+                    </Upload>
+                  </small>
+                </>
               }
             >
               <Input.TextArea placeholder="Insert phone numbers, each phone number should be followed by comma." />

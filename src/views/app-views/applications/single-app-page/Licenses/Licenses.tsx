@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, Modal, Table, Tag, Tooltip } from "antd";
-import Flex from "../../../../components/shared-components/Flex";
+import Flex from "../../../../../components/shared-components/Flex";
 import {
   PlusOutlined,
   SearchOutlined,
@@ -8,11 +8,11 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
-import Utils from "../../../../utils";
-import { AppService } from "../../../../api";
-import CreateLicenseModal from "../CreateLicenseModal";
-import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { ILicenses } from "../../../../api/types.response";
+import Utils from "../../../../../utils";
+import { AppService } from "../../../../../api";
+import CreateLicenseModal from "./CreateLicenseModal";
+import IntlMessage from "../../../../../components/util-components/IntlMessage";
+import { ILicenses } from "../../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
