@@ -41,6 +41,7 @@ interface IUserListStoreProps {
   CompanyID: number;
   ID?: number;
   sendActivationCode: (ID: number) => void;
+  loading: boolean;
 }
 
 interface UserListStateProps {
@@ -54,7 +55,6 @@ interface UserListStateProps {
   editModalVisible: boolean;
   newUserModalVisible: boolean;
   registerUserModalVisible: boolean;
-  loading: boolean;
 }
 
 export class UserList extends Component<IUserListStoreProps> {
@@ -69,16 +69,12 @@ export class UserList extends Component<IUserListStoreProps> {
     editModalVisible: false,
     newUserModalVisible: false,
     registerUserModalVisible: false,
-    loading: true,
   };
 
   private instance = new AppService();
   getUsersInfo = async () => {
-    this.setState({ loading: true });
     return this.instance.GetUserList().then((data) => {
       if (data && data.ErrorCode === 0) {
-        this.setState({ loading: false });
-        this.setState({ loading: false });
         // Don't show current user in the list
         const filteredUsers = data.Users.filter(
           (user: any) => user.ID !== this.props.ID
@@ -381,7 +377,7 @@ export class UserList extends Component<IUserListStoreProps> {
           </div>
         </Flex>
         <Table
-          loading={this.state.loading}
+          loading={this.props.loading}
           columns={tableColumns}
           dataSource={users}
           rowKey="ID"
@@ -422,7 +418,7 @@ export class UserList extends Component<IUserListStoreProps> {
 }
 
 const mapStateToProps = ({ auth, theme, account }: IState) => {
-  const { token } = auth as IAuth;
+  const { token, loading } = auth as IAuth;
   const { CompanyID, ID } = account as IAccount;
   const { locale } = theme as ITheme;
   return { token, locale, CompanyID, ID };
