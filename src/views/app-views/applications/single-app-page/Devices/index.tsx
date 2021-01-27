@@ -31,6 +31,12 @@ export enum Status {
   _FULL = 5,
   _CHARGING = 2,
 }
+enum EnOsType {
+  WINDOWS = 1,
+  ANDROID = 2,
+  IOS = 3,
+  LINUX = 4,
+}
 const Devices = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,6 +69,21 @@ const Devices = ({ AppType }: { AppType: number }) => {
           {
             title: "Device Name",
             dataIndex: "DeviceName",
+          },
+          {
+            title: "OS Type",
+            dataIndex: "OSType",
+            render: (OSType) => (
+              <span>
+                {OSType === EnOsType.WINDOWS
+                  ? "Winows"
+                  : OSType === EnOsType.ANDROID
+                  ? "Android"
+                  : OSType === EnOsType.IOS
+                  ? "iOS"
+                  : "Linux"}
+              </span>
+            ),
           },
           {
             title: "OS Version",

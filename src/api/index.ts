@@ -54,7 +54,7 @@ declare module "axios" {
 
 // Resolve loaders inside axios interceptors,
 // so I wouldn't have to call the loaders in every component
-//
+
 export default class HttpClient {
   public readonly instance: AxiosInstance;
   private _token: string;
