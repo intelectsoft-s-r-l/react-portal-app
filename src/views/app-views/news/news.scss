@@ -1,0 +1,21 @@
+.article {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 1365px) {
+  .article {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .article-item.photo {
+    order: 1;
+    margin-bottom: 15px;
+  }
+  .article-item.content {
+    order: 2;
+  }
+}

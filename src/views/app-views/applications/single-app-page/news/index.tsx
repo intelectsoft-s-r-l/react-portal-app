@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Button, Card, List, Empty, Tooltip, Menu, Modal, Tag } from "antd";
+import { Button, Card, List, Empty, Menu, Modal, Tag } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { AppService } from "../../../../../api";
@@ -11,6 +11,7 @@ import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import Loading from "../../../../../components/shared-components/Loading";
 import { INewsList } from "../../../../../api/types.response";
 import EllipsisDropdown from "../../../../../components/shared-components/EllipsisDropdown";
+import "../../../news/news.scss";
 
 interface IArticleItem {
   newsData: INewsList;
@@ -119,8 +120,8 @@ const ArticleItem = ({
         />
       }
     >
-      <Flex justifyContent="between" alignItems="start" className="mt-3">
-        <div style={{ maxWidth: 500 }}>
+      <div className="mt-3 article">
+        <div style={{ maxWidth: 500 }} className="article-item content">
           <Flex flexDirection="column">
             <div
               dangerouslySetInnerHTML={{
@@ -145,7 +146,7 @@ const ArticleItem = ({
             </Flex>
           </div>
         </div>
-        <div className="ml-5" style={{ maxWidth: 300 }}>
+        <div className="ml-5 article-item photo" style={{ maxWidth: 300 }}>
           {newsData.Photo && (
             <img
               src={newsData.Photo}
@@ -154,14 +155,15 @@ const ArticleItem = ({
             />
           )}
         </div>
-      </Flex>
+      </div>
     </Card>
   );
 };
 const News = ({ AppType }: { AppType: number }) => {
+  const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
   const getNews = async (AppType: number) => {
-    return await new AppService().GetAppNews(AppType).then((data) => {
+    return await instance.GetAppNews(AppType).then((data) => {
       if (data && data.ErrorCode === 0) {
         setLoading(false);
         setNews(data.NewsList);
@@ -170,6 +172,9 @@ const News = ({ AppType }: { AppType: number }) => {
   };
   useEffect(() => {
     getNews(AppType);
+    return () => {
+      instance._source.cancel();
+    };
   }, []);
   const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, Dispatch, useEffect, useState } from "react";
 import { Button, Row, Col, Tag, Avatar, Card, Modal, Empty } from "antd";
 import {
   VerticalAlignBottomOutlined,
@@ -20,18 +20,18 @@ import { IState } from "../../../../redux/reducers";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
 import "../applications.scss";
 
-interface IGridItem {
+interface IGridItem<T> {
   deactivateApp: (AppID: number, AppName: string) => void;
-  setVisibleModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedApp: (data: IMarketAppList) => void;
-  data: IMarketAppList;
+  setVisibleModal: Dispatch<SetStateAction<boolean>>;
+  setSelectedApp: (data: T) => void;
+  data: T;
 }
 const GridItem = ({
   deactivateApp,
   setVisibleModal,
   setSelectedApp,
   data,
-}: IGridItem) => {
+}: IGridItem<IMarketAppList>) => {
   const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   useEffect(() => {
@@ -46,7 +46,7 @@ const GridItem = ({
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
+        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
           <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
@@ -80,7 +80,7 @@ const GridItem = ({
         )}
       </Flex>
       <div>
-        <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
+        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
           <h3 className="app-link mb-0 cursor-pointer">{data.Name}</h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
@@ -104,8 +104,15 @@ const GridItem = ({
     </Card>
   );
 };
+function getSource(instance: any, source: any) {
+  if (source.current == null) {
+    source.current = instance._source;
+  }
+  return source.current;
+}
 
 const Market = () => {
+  const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [terms, setTerms] = useState<Partial<ILocale>>({});
@@ -117,19 +124,17 @@ const Market = () => {
   const [selectedApp, setSelectedApp] = useState<IMarketAppList>();
   const [appInstalled, setAppInstalled] = useState<boolean>(false);
   const getMarketApps = async () => {
-    return new AppService().GetMarketAppList().then((data) => {
+    return instance.GetMarketAppList().then((data) => {
       setLoading(false);
-      if (data) {
-        const { MarketAppList, ErrorCode } = data;
-        if (ErrorCode === 0) {
-          const evaluatedArr = Utils.sortData(MarketAppList, "ID");
-          setApps(evaluatedArr);
-        }
+      if (data && data.ErrorCode === 0) {
+        const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
+        setApps(evaluatedArr);
       }
     });
   };
   useEffect(() => {
     getMarketApps();
+    return () => instance._source.cancel();
   }, []);
 
   const deactivateApp = (AppID: number, AppName: string) => {

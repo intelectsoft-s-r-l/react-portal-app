@@ -47,16 +47,38 @@ export const hideLoading = () => ({
 
 export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
   return new AuthService().SendActivationCode().then((data) => {
-    const { ErrorMessage, ErrorCode } = data;
-    if (data) {
-      if (ErrorCode === 0)
-        message.success({
-          content: TranslateText(EMAIL_CONFIRM_MSG),
-          key: "updatable",
-          duration: 2,
+    if (data && data.ErrorCode === 0)
+      message.success({
+        content: TranslateText(EMAIL_CONFIRM_MSG),
+        key: "updatable",
+        duration: 2,
+      });
+    else dispatch(showAuthMessage(data.ErrorMessage ?? ""));
+  });
+};
+
+const handleAccountActivation = (Token: string) => {
+  Modal.confirm({
+    content: TranslateText(ACTIVATE_ACCOUNT),
+    onOk: async () => {
+      // I'm calling axios here and not the thunk,
+      // because I don't know how to pass the token inside the thunk
+      return await axios
+        .get(`${API_AUTH_URL}/SendActivationCode`, {
+          params: {
+            Token,
+          },
+        })
+        .then((response) => {
+          if (response.data.ErrorCode === 0) {
+            message.success({
+              content: TranslateText(EMAIL_CONFIRM_MSG),
+              key: "updatable",
+              duration: 2,
+            });
+          }
         });
-      else dispatch(showAuthMessage(ErrorMessage ?? ""));
-    }
+    },
   });
 };
 
@@ -72,33 +94,13 @@ export const authorizeUser = (
           if (ErrorCode === 0) {
             dispatch(authenticated(Token));
             dispatch(getProfileInfo());
-            if (SUBDIR_PATH === "/testclientportal")
+            if (SUBDIR_PATH === "/testclientportal") {
               dispatch(onHeaderNavColorChange("#DE4436"));
+            }
           } else if (ErrorCode === 102) {
             dispatch(showAuthMessage(ErrorMessage!.toString()));
           } else if (ErrorCode === 108) {
-            Modal.confirm({
-              content: TranslateText(ACTIVATE_ACCOUNT),
-              onOk: async () => {
-                return await axios
-                  .get(`${API_AUTH_URL}/SendActivationCode`, {
-                    params: {
-                      Token,
-                    },
-                  })
-                  .then((response: any) => {
-                    if (response.data.ErrorCode === 0) {
-                      message.success({
-                        content: TranslateText(EMAIL_CONFIRM_MSG),
-                        key: "updatable",
-                        duration: 2,
-                      });
-                    } else {
-                      dispatch(showAuthMessage("Error: Internal Error"));
-                    }
-                  });
-              },
-            });
+            handleAccountActivation(Token);
           } else {
             dispatch(hideLoading());
             dispatch(showAuthMessage(ErrorMessage!.toString()));

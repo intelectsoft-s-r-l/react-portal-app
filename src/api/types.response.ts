@@ -235,7 +235,7 @@ export interface ICampaignList {
   ID: number;
   Message: string;
   Name: string;
-  PhoneList: string;
+  PhoneList?: string;
   ReviewedByUser: string;
   ReviewerComments: string;
   ScheduledDate: any;

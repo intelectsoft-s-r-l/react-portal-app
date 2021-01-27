@@ -9,6 +9,7 @@ import TranslateText from "../../../../utils/translate";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import Flex from "../../../../components/shared-components/Flex";
+import Loading from "../../../../components/shared-components/Loading";
 
 enum key {
   PRIVATE = 1,
@@ -19,11 +20,21 @@ const Integration = ({
 }: {
   currentApp: Partial<IMarketAppList>;
 }) => {
+  const instance = new AppService();
   const { confirm } = Modal;
   const [appData, setApp] = useState<any>();
+  const [form] = Form.useForm();
+  const [activationCode, setActivationCode] = useState<number>(0);
+  const [apiKey, setApiKey] = useState<string>("");
+  const [PublicKey, setPublicKey] = useState<string>("");
+  const [PrivateKey, setPrivateKey] = useState<string>("");
+  const [backOfficeURI, setBackOfficeURI] = useState<string>("");
+  const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
+  const [loading, setLoading] = useState<boolean>(true);
   const getMarketApp = async () => {
-    return new AppService().GetMarketAppList().then((data) => {
+    return await instance.GetMarketAppList().then((data) => {
       if (data && data.ErrorCode === 0) {
+        setLoading(false);
         const app = data.MarketAppList.find(
           (app) => app.AppType === currentApp!.AppType
         );
@@ -45,20 +56,13 @@ const Integration = ({
   };
   useEffect(() => {
     getMarketApp();
+    return () => instance._source.cancel();
   }, []);
-  const [form] = Form.useForm();
-  const [activationCode, setActivationCode] = useState<number>(0);
-  const [apiKey, setApiKey] = useState<string>("");
-  const [PublicKey, setPublicKey] = useState<string>("");
-  const [PrivateKey, setPrivateKey] = useState<string>("");
-  const [backOfficeURI, setBackOfficeURI] = useState<string>("");
-  const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
-  useEffect(() => {}, []);
   const generateActivationCode = () => {
     confirm({
       title: "Are you sure you want generate a new activation code?",
-      onOk: () =>
-        new AppService()
+      onOk: async () =>
+        await instance
           .GenerateLicenseActivationCode(appData.ID ?? 0)
           .then((data) => {
             if (data && data.ErrorCode === 0) {
@@ -72,28 +76,21 @@ const Integration = ({
   const generateApiKey = () => {
     confirm({
       title: "Are you sure you want to generate a new API Key?",
-      onOk: async () => {
-        return await new AppService()
-          .GenerateApiKey(appData!.ID ?? 0)
-          .then((data) => {
-            if (data) {
-              if (data.ErrorCode === 0) {
-                setApiKey(data.ApiKey);
-              }
-            }
-          });
-      },
+      onOk: async () =>
+        await instance.GenerateApiKey(appData!.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            setApiKey(data.ApiKey);
+          }
+        }),
     });
   };
   const deleteApiKey = () => {
     confirm({
       title: "Are you sure you want to delete current API Key?",
-      onOk: () =>
-        new AppService().DeleteApiKey(appData!.ID ?? 0).then((data) => {
-          if (data) {
-            if (data.ErrorCode === 0) {
-              setApiKey("00000000-0000-0000-0000-000000000000");
-            }
+      onOk: async () =>
+        await instance.DeleteApiKey(appData!.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            setApiKey("00000000-0000-0000-0000-000000000000");
           }
         }),
       onCancel: () => {},
@@ -106,17 +103,15 @@ const Integration = ({
       key: "updatable",
       duration: 1,
     });
-    return new AppService()
-      .UpdateApp({ AppID: appData.ID, ...data })
-      .then((data) => {
-        if (data && data.ErrorCode === 0) {
-          message.success({
-            content: TranslateText(DONE),
-            key: "updatable",
-            duration: 1,
-          });
-        }
-      });
+    return instance.UpdateApp({ AppID: appData.ID, ...data }).then((data) => {
+      if (data && data.ErrorCode === 0) {
+        message.success({
+          content: TranslateText(DONE),
+          key: "updatable",
+          duration: 1,
+        });
+      }
+    });
   };
 
   const onExternalSecurityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,17 +125,14 @@ const Integration = ({
   const generateRsaKey = async () => {
     confirm({
       title: "Are you sure you want to generate new Public and Private Keys?",
-      onOk: async () => {
-        return await new AppService()
-          .GenerateRsaKey(appData.ID ?? 0)
-          .then((data) => {
-            if (data && data.ErrorCode === 0) {
-              message.success(TranslateText(DONE));
-              setPublicKey(data.EncryptionPublicKey);
-              setPrivateKey(data.EncryptionPrivateKey);
-            }
-          });
-      },
+      onOk: async () =>
+        await instance.GenerateRsaKey(appData.ID ?? 0).then((data) => {
+          if (data && data.ErrorCode === 0) {
+            message.success(TranslateText(DONE));
+            setPublicKey(data.EncryptionPublicKey);
+            setPrivateKey(data.EncryptionPrivateKey);
+          }
+        }),
     });
   };
 
@@ -150,7 +142,7 @@ const Integration = ({
       key: "updatable",
       duration: 1,
     });
-    return new AppService().UpdateRsaKey(AppID, Key, KeyType).then((data) => {
+    return instance.UpdateRsaKey(AppID, Key, KeyType).then((data) => {
       if (data && data.ErrorCode === 0) {
         message.success({
           content: TranslateText(DONE),
@@ -162,6 +154,9 @@ const Integration = ({
       }
     });
   };
+  if (loading) {
+    return <Loading cover="content" />;
+  }
   if (!appData) {
     return null;
   }

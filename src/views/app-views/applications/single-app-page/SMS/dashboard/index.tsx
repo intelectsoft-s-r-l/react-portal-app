@@ -1,18 +1,17 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, Row, Table, Tag } from "antd";
+import { Badge, Card, Col, DatePicker, Row, Table, Tag } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import { SmsService } from "../../../../../../api";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
 import Flex from "../../../../../../components/shared-components/Flex";
 import { COLORS } from "../../../../../../constants/ChartConstant";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
-import moment from "moment";
+import moment, { MomentInput } from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
 import Loading from "../../../../../../components/shared-components/Loading";
 import { ISMSList } from "../../../../../../api/types.response";
 import { ColumnsType } from "antd/es/table/interface";
-import { ENGINE_METHOD_PKEY_ASN1_METHS } from "constants";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -40,17 +39,10 @@ const tableColumns: ColumnsType<ISMSList> = [
     render: (Phone) => <span>{Phone}</span>,
   },
   {
-    title: "Created",
-    dataIndex: "Created",
-    render: (Created) => (
-      <span>{moment.unix(Created.slice(6, 16)).format("DD/MM/YYYY")}</span>
-    ),
-  },
-  {
     title: "Sent date",
     dataIndex: "SentDate",
     render: (SentDate) => (
-      <span>{moment.unix(SentDate.slice(6, 16)).format("DD/MM/YYYY")}</span>
+      <span>{moment.unix(SentDate.slice(6, 16)).format("DD-MM-YYYY")}</span>
     ),
   },
   {
@@ -88,28 +80,44 @@ const tableColumns: ColumnsType<ISMSList> = [
   },
 ];
 const SmsDashboard = (props: ISmsDashboard) => {
-  const getSmsList = async () =>
-    await new SmsService()
-      .Info_GetDetailByPeriod(
-        props.APIKey,
-        moment("2019-01-01").valueOf() * 10000 + 621355968000000000,
-        moment(new Date()).valueOf() * 10000 + 621355968000000000
-      )
-      .then((data) => {
-        if (data && data.ErrorCode === 0) {
-          setLoading(false);
-          setSmsList(data.SMSList);
-        }
-      });
-  const [smsInfo, setSmsInfo] = useState<any>([]);
-  const [smsList, setSmsList] = useState<any>([]);
+  const instance = new SmsService();
+  const [date, setDate] = useState<any>([
+    moment().clone().startOf("month"),
+    moment().clone().endOf("month"),
+  ]);
+
+  const [tableLoading, setTableLoading] = useState<boolean>(true);
+  const [smsInfo, setSmsInfo] = useState<{ title: string; value: number }[]>(
+    []
+  );
+  const [smsList, setSmsList] = useState<ISMSList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
   const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
-  const getSmsInfo = async () =>
-    await new SmsService().Info_GetTotal(props.APIKey).then((data) => {
+  const onChange = async (value: any) => {
+    setDate([value[0], value[1]]);
+    setTableLoading(true);
+    getSmsList(value[0].format("DD-MM-YYYY"), value[1].format("DD-MM-YYYY"));
+  };
+  const getSmsList = async (
+    // give default values
+    firstDate = date[0].format("DD-MM-YYYY"),
+    secondDate = date[1].format("DD-MM-YYYY")
+  ) => {
+    return await instance
+      .Info_GetDetailByPeriod(props.APIKey, firstDate, secondDate)
+      .then((data) => {
+        if (data && data.ErrorCode === 0) {
+          setTableLoading(false);
+          setSmsList(data.SMSList);
+        }
+      });
+  };
+  const getSmsInfo = async () => {
+    return instance.Info_GetTotal(props.APIKey).then((data) => {
       if (data && data.ErrorCode === 0) {
+        setLoading(false);
         setStatusData([
           data.SentThisMonth,
           data.FailedDelivery,
@@ -123,11 +131,16 @@ const SmsDashboard = (props: ISmsDashboard) => {
         ]);
       }
     });
-
+  };
   useEffect(() => {
     getSmsInfo();
-    getSmsList();
+    return () => instance._source.cancel();
   }, []);
+  useEffect(() => {
+    getSmsList();
+    return () => instance._source.cancel();
+  }, []);
+
   const jointStatusData = () => {
     let arr: any = [];
     for (let i = 0; i < statusData.length; i++) {
@@ -165,12 +178,32 @@ const SmsDashboard = (props: ISmsDashboard) => {
           </Row>
           <Row gutter={ROW_GUTTER}>
             <Col span={24}>
-              <Card title="SMS Transactions List">
+              <Card
+                title="SMS Transactions List"
+                extra={
+                  <DatePicker.RangePicker
+                    format={"DD-MM-YYYY"}
+                    defaultValue={date}
+                    onChange={onChange}
+                  />
+                }
+              >
                 <Table
                   className="no-border-last"
                   columns={tableColumns}
                   dataSource={smsList}
                   rowKey="SentDate"
+                  loading={tableLoading}
+                  onRow={(record) => {
+                    return {
+                      onMouseOver: (event) => {
+                        event.currentTarget.setAttribute(
+                          "title",
+                          "Message: " + record.Message
+                        );
+                      },
+                    };
+                  }}
                 />
               </Card>
             </Col>

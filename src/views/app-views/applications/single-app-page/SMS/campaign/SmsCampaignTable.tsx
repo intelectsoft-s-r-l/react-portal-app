@@ -1,16 +1,17 @@
 import * as React from "react";
 import {
   ClockCircleOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
   EditOutlined,
   EyeOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import Tag from "antd/es/tag";
 import { ColumnsType } from "antd/lib/table";
 import { ICampaignList } from "../../../../../../api/types.response";
 import moment from "moment";
 import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
-import { Menu } from "antd";
+import { Menu, Tag, Modal } from "antd";
 import { AppService } from "../../../../../../api";
 import { Link } from "react-router-dom";
 
@@ -22,6 +23,11 @@ enum EnSmsType {
   Processing,
   Done,
   Hidden,
+}
+enum EnCampaignStatus {
+  INACTIVE = 0,
+  ACTIVE = 1,
+  DELETED = 2,
 }
 const SmsTable = (
   refreshList: () => void,
@@ -80,27 +86,72 @@ const SmsTable = (
           <EllipsisDropdown
             menu={
               <Menu>
-                <Menu.Item key="0">
+                {elm.Status === EnCampaignStatus.INACTIVE ? (
+                  <Menu.Item
+                    key="0"
+                    onClick={async () => {
+                      Modal.confirm({
+                        title:
+                          "Are you sure you want to activate this campaign?",
+                        onOk: async () => {
+                          return await new AppService()
+                            .SMS_UpdateCampaign({
+                              ...elm,
+                              Status: EnCampaignStatus.ACTIVE,
+                            })
+                            .then((data) => {
+                              if (data && data.ErrorCode === 0) refreshList();
+                            });
+                        },
+                      });
+                    }}
+                  >
+                    <CheckCircleOutlined />
+                    <span>Activate</span>
+                  </Menu.Item>
+                ) : (
+                  <Menu.Item
+                    key="0"
+                    onClick={async () => {
+                      Modal.confirm({
+                        title:
+                          "Are you sure you want to deactivate this campaign?",
+                        onOk: async () => {
+                          return await new AppService()
+                            .SMS_UpdateCampaign({
+                              ...elm,
+                              Status: EnCampaignStatus.INACTIVE,
+                            })
+                            .then((data) => {
+                              if (data && data.ErrorCode === 0) refreshList();
+                            });
+                        },
+                      });
+                    }}
+                  >
+                    <CloseCircleOutlined />
+                    <span>Deactiate</span>
+                  </Menu.Item>
+                )}
+                <Menu.Item key="1">
                   <Link to={`campaign_details=${elm.ID}`}>
                     <EyeOutlined />
                     <span style={{ marginLeft: 5 }}>View</span>
                   </Link>
                 </Menu.Item>
-                <Menu.Item key="1" onClick={() => showEditCampaign(elm)}>
+                <Menu.Item key="2" onClick={() => showEditCampaign(elm)}>
                   <EditOutlined />
                   <span>Edit</span>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
-                  key="2"
+                  key="3"
                   onClick={async () => {
                     return await new AppService()
                       .SMS_DeleteCampaign(elm.ID)
                       .then((data) => {
-                        if (data) {
-                          if (data.ErrorCode === 0) {
-                            refreshList();
-                          }
+                        if (data && data.ErrorCode === 0) {
+                          refreshList();
                         }
                       });
                   }}

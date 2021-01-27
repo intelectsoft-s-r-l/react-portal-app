@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Input, Row, Col, Form, Modal, message } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
@@ -7,10 +7,10 @@ import { DONE, UPDATING } from "../../../../constants/Messages";
 import TranslateText from "../../../../utils/translate";
 import { IUsers } from "../../../../api/types.response";
 interface IUserModalEdit {
-    data: IUsers;
-    visible: boolean;
-    onCancel: () => void;
-    getUsersInfo: () => void;
+  data: IUsers;
+  visible: boolean;
+  onCancel: () => void;
+  getUsersInfo: () => void;
 }
 export const UserModalEdit = ({
   data,
@@ -19,6 +19,7 @@ export const UserModalEdit = ({
   getUsersInfo,
 }: IUserModalEdit) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
 
   /*  Destroy initialValues of form after Modal is closed */
   useEffect(() => {
@@ -26,28 +27,17 @@ export const UserModalEdit = ({
     form.resetFields();
   }, [visible, form]);
 
-  const updateUser = (data: any) => {
-    return new AppService().UpdateUser(data);
-  };
-  const onFinish = (values: any) => {
-    const key = "updatable";
-    message.loading({
-      content: TranslateText(UPDATING),
-      key,
-    });
-    setTimeout(async () => {
-      updateUser({ User: { ...data, ...values } }).then((data: any) => {
-        if (data) {
-          if (data.ErrorCode === 0) {
-            message.success({
-              content: TranslateText(DONE),
-              key: "updatable",
-            });
-            getUsersInfo();
-          }
+  const onFinish = async (values: any) => {
+    setLoading(true);
+    return await new AppService()
+      // @ts-ignore
+      .UpdateUser({ User: { ...data, ...values } })
+      .then((data) => {
+        if (data && data.ErrorCode === 0) {
+          setLoading(false);
+          getUsersInfo();
         }
       });
-    }, 1000);
   };
   const onFinishFailed = () => {};
 
@@ -56,12 +46,12 @@ export const UserModalEdit = ({
       destroyOnClose
       title={"Edit user"}
       visible={visible}
-      okText={<IntlMessage id={"account.EditProfile.SaveChange"} />}
       onCancel={onCancel}
+      confirmLoading={loading}
       onOk={() => {
-        form.validateFields().then((values) => {
+        form.validateFields().then(async (values) => {
+          await onFinish(values);
           onCancel();
-          onFinish(values);
         });
       }}
     >

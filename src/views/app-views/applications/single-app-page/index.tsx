@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Card, Menu } from "antd";
+import { Card, Empty, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
@@ -13,7 +13,7 @@ import {
   Switch,
 } from "react-router-dom";
 import Description from "./Description";
-import Licenses from "./Licenses";
+import Licenses from "./Licenses/Licenses";
 import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
@@ -28,8 +28,10 @@ import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/campaign/CampaignDetails";
 import Invoice from "./ExchangeOfInvoice/Invoice";
-import Order from "./ExchangeOfInvoice/Order";
 import SmsDashboard from "./SMS/dashboard";
+import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
+import OrderDashboard from "./ExchangeOfOrder/dashboard";
+import Order from "./ExchangeOfOrder/order";
 
 enum appEnum {
   Retail = 10,
@@ -42,14 +44,22 @@ enum appEnum {
   KitchetAssistant = 32,
   Qiwi = 100,
   SMS = 50,
-  Exchange = 40,
+  ExchangeOfInvoice = 40,
+  ExchangeOfOrder = 41,
   MobilePetrolExpertCash = 131,
 }
 interface IOptions extends RouteComponentProps {
   AppType: number;
   moduleSettings: IMarketAppList["ModuleSettings"];
+  AppName: string;
 }
-const Options = ({ AppType, location, match, moduleSettings }: IOptions) => {
+const Options = ({
+  AppType,
+  AppName,
+  location,
+  match,
+  moduleSettings,
+}: IOptions) => {
   if (moduleSettings.Backoffice) {
     return (
       <Menu
@@ -99,6 +109,10 @@ const Options = ({ AppType, location, match, moduleSettings }: IOptions) => {
             <IntlMessage id="app.Description" />
           </span>
           <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/dashboard`}>
+          <span>Dashboard</span>
+          <Link to={"dashboard"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/packages`}>
           <span>
@@ -151,7 +165,7 @@ const Options = ({ AppType, location, match, moduleSettings }: IOptions) => {
         </Menu.Item>
       </Menu>
     );
-  } else if (AppType === appEnum.Exchange) {
+  } else if (AppType === appEnum.ExchangeOfInvoice) {
     return (
       <Menu
         mode="inline"
@@ -164,6 +178,10 @@ const Options = ({ AppType, location, match, moduleSettings }: IOptions) => {
           </span>
           <Link to={"description"} />
         </Menu.Item>
+        <Menu.Item key={`${match.url}/dashboard`}>
+          <span>Dashboard</span>
+          <Link to={"dashboard"} />
+        </Menu.Item>
         <Menu.Item key={`${match.url}/packages`}>
           <span>
             <IntlMessage id="app.Packages" />
@@ -173,6 +191,35 @@ const Options = ({ AppType, location, match, moduleSettings }: IOptions) => {
         <Menu.Item key={`${match.url}/invoice`}>
           <span>Invoice</span>
           <Link to={"invoice"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/integration`}>
+          <span>Integration</span>
+          <Link to={"integration"} />
+        </Menu.Item>
+      </Menu>
+    );
+  } else if (AppType === appEnum.ExchangeOfOrder) {
+    return (
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={[`${match.url}/:appId/`]}
+        selectedKeys={[location.pathname]}
+      >
+        <Menu.Item key={`${match.url}/description`}>
+          <span>
+            <IntlMessage id="app.Description" />
+          </span>
+          <Link to={"description"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/dashboard`}>
+          <span>Dashboard</span>
+          <Link to={"dashboard"} />
+        </Menu.Item>
+        <Menu.Item key={`${match.url}/packages`}>
+          <span>
+            <IntlMessage id="app.Packages" />
+          </span>
+          <Link to={"packages"} />
         </Menu.Item>
         <Menu.Item key={`${match.url}/order`}>
           <span>Order</span>
@@ -216,7 +263,7 @@ const AppOption = (props: any) => {
 };
 interface IAppRoute {
   match: RouteComponentProps["match"];
-  app: Partial<IMarketAppList>;
+  app: any;
 }
 const AppRoute = ({ match, app }: IAppRoute) => {
   return (
@@ -268,15 +315,16 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/invoice`}
         render={(props) => <Invoice {...props} />}
       />
-      <Route
-        path={`${match.url}/order`}
-        render={(props) => <Order {...props} />}
-      />
+      <Route path={`${match.url}/order`} render={(props) => <Order />} />
       <Route
         path={`${match.url}/dashboard`}
-        render={(props) => (
-          <SmsDashboard {...props} APIKey={app.ApyKey ?? ""} />
-        )}
+        render={(props) => {
+          if (app.AppType === appEnum.SMS)
+            return <SmsDashboard {...props} APIKey={app.ApyKey} />;
+          else if (app.AppType === appEnum.ExchangeOfInvoice)
+            return <InvoiceDashboard />;
+          else return <OrderDashboard />;
+        }}
       />
       <Route
         path="*"
@@ -337,36 +385,37 @@ const AboutItem = ({ appData }: any) => {
   );
 };
 
-interface ISingleAppPage extends RouteComponentProps<{ appID: string }> {}
+interface ISingleAppPage
+  extends RouteComponentProps<{ [key: string]: string }> {}
 const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const { appID } = match.params;
-  const [app, setApp] = useState<IMarketAppList>();
+  const [app, setApp] = useState<Partial<IMarketAppList>>();
   const [loading, setLoading] = useState<boolean>(true);
-  const getMarketApp = async () => {
-    return await new AppService().GetMarketAppList().then(async (data) => {
-      if (data) {
-        const { ErrorCode, MarketAppList } = data;
-        if (ErrorCode === 0) {
-          setLoading(false);
-          const currentApp = MarketAppList.find(
-            (app) => app.AppType === +appID
-          );
-          document.title = `${currentApp!.Name} | ${APP_NAME}`;
-          setApp(currentApp);
-        }
-      }
-    });
-  };
+  useEffect(() => {
+    console.log(appID);
+  }, []);
 
   useEffect(() => {
-    getMarketApp();
+    let mounted = true;
+    new AppService().GetMarketAppList().then(async (data) => {
+      if (mounted && data && data.ErrorCode === 0) {
+        setLoading(false);
+        const currentApp = data.MarketAppList.find(
+          (app) => app.AppType === +appID
+        );
+        document.title = `${currentApp!.Name} | ${APP_NAME}`;
+        setApp(currentApp);
+      }
+    });
+    return function cleanup() {
+      mounted = false;
+    };
   }, [appID]);
 
-  if (!app) {
-    return <Loading cover="content" />;
-  }
   if (loading) {
     return <Loading cover="content" />;
+  } else if (!app) {
+    return <Empty />;
   }
   return (
     <>
@@ -379,7 +428,8 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
                 location={location}
                 match={match}
                 AppType={app!.AppType}
-                moduleSettings={app.ModuleSettings}
+                moduleSettings={app!.ModuleSettings}
+                AppName={app!.Name}
               />
             }
             mainContent={<AppRoute match={match} app={app} />}

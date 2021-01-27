@@ -13,7 +13,11 @@ import { IState } from "../../../../redux/reducers";
 import TranslateText from "../../../../utils/translate";
 import { ILocale, IMarketAppList } from "../../../../api/types.response";
 
-const GridItem = ({ deactivateApp, data }: any) => {
+interface IGridItem {
+  deactivateApp: (ID: number, Name: string) => void;
+  data: IMarketAppList;
+}
+const GridItem = ({ deactivateApp, data }: IGridItem) => {
   const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   useEffect(() => {
@@ -26,7 +30,7 @@ const GridItem = ({ deactivateApp, data }: any) => {
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
+        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
           <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
@@ -44,7 +48,7 @@ const GridItem = ({ deactivateApp, data }: any) => {
         </Tag>
       </Flex>
       <div>
-        <Link to={`${APP_PREFIX_PATH}/applications/${data.AppType}`}>
+        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
           <h3 className="app-link mb-0 cursor-pointer ">{data.Name}</h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
@@ -69,25 +73,25 @@ const GridItem = ({ deactivateApp, data }: any) => {
   );
 };
 const MyAppList = () => {
+  const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const { confirm } = Modal;
   const [loading, setLoading] = useState<boolean>(true);
   const getMarketAppList = async () => {
-    return new AppService().GetMarketAppList().then((data: any) => {
+    return instance.GetMarketAppList().then((data) => {
       setLoading(false);
-      if (data) {
-        const { ErrorCode, MarketAppList } = data;
-        if (ErrorCode === 0) {
-          const activeApps = MarketAppList.filter(
-            (marketApp: IMarketAppList) => marketApp.Status !== 0
-          );
-          setApps(Utils.sortData(activeApps, "ID"));
-        }
+      if (data && data.ErrorCode === 0) {
+        const activeApps = data.MarketAppList.filter(
+          (marketApp: IMarketAppList) => marketApp.Status !== 0
+        );
+        setApps(Utils.sortData(activeApps, "ID"));
       }
     });
   };
+
   useEffect(() => {
     getMarketAppList();
+    return () => instance._source.cancel();
   }, []);
 
   const deactivateApp = (AppID: number, AppName: string) => {
@@ -101,9 +105,7 @@ const MyAppList = () => {
                 new AppService()
                   .DeactivateApp(AppID)
                   .then(async (data: any) => {
-                    if (data) {
-                      if (data.ErrorCode === 0) await getMarketAppList();
-                    }
+                    if (data && data.ErrorCode === 0) await getMarketAppList();
                   })
               ),
             1000
@@ -119,10 +121,7 @@ const MyAppList = () => {
   }
 
   return (
-    <div
-      className={`my-4 
-                    container-fluid`}
-    >
+    <div className={`my-4 container-fluid`}>
       <Row gutter={16}>
         {apps.length > 0 ? (
           apps.map((elm) => (

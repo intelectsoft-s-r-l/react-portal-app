@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
 import { IMarketAppList, INewsList } from "../../../api/types.response";
+
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
     <Card style={{ padding: 30 }}>
@@ -68,19 +69,17 @@ const News = () => {
   const [news, setNews] = useState<INewsList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [apps, setApps] = useState<IMarketAppList[]>();
+  const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
-    return await new AppService()
-      .GetPortalNews(AppType)
-      .then((data) => {
-        setLoading(false);
-        if (data && data.ErrorCode === 0) setNews(data.NewsList);
-      })
-      .then(() => {
-        getApps();
-      });
+    return await instance.GetPortalNews(AppType).then((data) => {
+      setLoading(false);
+      if (data && data.ErrorCode === 0) {
+        setNews(data.NewsList);
+      }
+    });
   };
   const getApps = async () => {
-    return await new AppService().GetMarketAppList().then((data) => {
+    return await instance.GetMarketAppList().then((data) => {
       setLoading(false);
       if (data && data.ErrorCode === 0) setApps(data.MarketAppList);
     });
@@ -94,13 +93,12 @@ const News = () => {
     }
   };
   useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      getPortalNews();
-    }
-    return () => {
-      mounted = false;
-    };
+    getPortalNews();
+    return () => instance._source.cancel();
+  }, []);
+  useEffect(() => {
+    getApps();
+    return () => instance._source.cancel();
   }, []);
   return (
     <>

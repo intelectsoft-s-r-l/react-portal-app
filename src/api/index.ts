@@ -51,6 +51,10 @@ const publicIp = require("react-public-ip");
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
 }
+
+// Resolve loaders inside axios interceptors,
+// so I wouldn't have to call the loaders in every component
+
 export default class HttpClient {
   public readonly instance: AxiosInstance;
   private _token: string;
@@ -93,61 +97,55 @@ export default class HttpClient {
         Token: this._token,
       };
     }
-    //if (config.baseURL === API_SMS_URL) {
-    //config.withCredentials = true;
-    //config.auth = {
-    //username: "1",
-    //password: "1",
-    //};
-    //}
     config.cancelToken = this._source.token;
-    return config;
+    return {
+      ...config,
+    };
   };
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
-        if (data) {
-          const { ErrorCode, Token } = data;
-          if (ErrorCode === 0) {
-            store.dispatch(authenticated(Token));
-            if (response.config.method === "get") {
-              response.config.params = {
-                ...response.config.params,
-                Token,
-              };
-              return await axios
-                .request(response.config)
-                .then((response) => response.data);
-            }
-            if (response.config.method === "post") {
-              response.config.data = {
-                ...JSON.parse(response.config.data),
-                Token,
-              };
-              return await axios
-                .request(response.config)
-                .then((response) => response.data);
-            }
-          } else {
-            const key = "updatable";
-            message
-              .loading({
-                content: TranslateText(EXPIRE_TIME),
-                key,
-                duration: 1.5,
-              })
-              .then(() => {
-                store.dispatch(signOut());
-              });
+        if (data && data.ErrorCode === 0) {
+          const { Token } = data;
+          store.dispatch(authenticated(Token));
+          if (response.config.method === "get") {
+            response.config.params = {
+              ...response.config.params,
+              Token,
+            };
+            return await axios
+              .request(response.config)
+              .then((response) => response.data);
           }
+          if (response.config.method === "post") {
+            response.config.data = {
+              ...JSON.parse(response.config.data),
+              Token,
+            };
+            return await axios
+              .request(response.config)
+              .then((response) => response.data);
+          }
+        } else {
+          const key = "updatable";
+          message
+            .loading({
+              content: TranslateText(EXPIRE_TIME),
+              key,
+              duration: 1.5,
+            })
+            .then(() => {
+              store.dispatch(signOut());
+            });
         }
       });
     } else if (
       response.data.ErrorCode !== 0 &&
       response.data.ErrorCode !== 108 &&
-      response.data.ErrorCode !== -1
+      response.data.ErrorCode !== -1 &&
+      response.data.ErrorCode !== 102
     ) {
       message.error({
         content: response.data.ErrorMessage,
@@ -155,7 +153,7 @@ export default class HttpClient {
         duration: 2.5,
       });
     }
-    if (response && response.data) return response.data;
+    return response.data;
   };
   private _handleError = async (error: AxiosResponse) => {
     if (error && error.request && error.request.status !== 200) {
@@ -169,6 +167,7 @@ export default class HttpClient {
   };
 }
 
+// Auth Api
 export class AuthService extends HttpClient {
   public constructor() {
     super(`${API_AUTH_URL}`);
@@ -209,6 +208,7 @@ export class AuthService extends HttpClient {
     });
 }
 
+// Client Api
 export class AppService extends HttpClient {
   public constructor() {
     super(`${API_APP_URL}`);
@@ -347,6 +347,7 @@ export class AppService extends HttpClient {
     });
 }
 
+// SMS Api
 export class SmsService extends HttpClient {
   public constructor() {
     super(`${API_SMS_URL}`);
@@ -376,16 +377,16 @@ export class SmsService extends HttpClient {
 
   public Info_GetDetailByPeriod = async (
     APIKey: string,
-    DateTicksStart: number,
-    DateTicksEnd: number
+    DateStart: string,
+    DateEnd: string
   ) =>
     this.instance.get<ISMSInfoGetDetailByPeriodResponse>(
       "/Info/GetDetailByPeriod",
       {
         params: {
           APIKey,
-          DateTicksStart,
-          DateTicksEnd,
+          DateStart,
+          DateEnd,
         },
       }
     );

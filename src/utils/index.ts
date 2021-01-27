@@ -284,6 +284,10 @@ class Utils {
     const newDate = new Date(date);
     return newDate.getMilliseconds();
   }
+
+  static parseToTicks(date: number): number {
+    return date * 10000 + 621355968000000000;
+  }
 }
 
 export default Utils;

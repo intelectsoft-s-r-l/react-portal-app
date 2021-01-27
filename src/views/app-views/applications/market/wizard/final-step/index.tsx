@@ -15,14 +15,12 @@ const FinalStep = () => {
   useLayoutEffect(() => {
     dispatch(showLoading());
     setTimeout(() => {
-      dispatch(hideLoading());
       return new AppService().ActivateApp(selectedApp.ID).then((data: any) => {
-        if (data) {
-          if (data.ErrorCode === 0) {
-            setIsInstalled(true);
-          } else {
-            setIsInstalled(false);
-          }
+        if (data && data.ErrorCode === 0) {
+          dispatch(hideLoading());
+          setIsInstalled(true);
+        } else {
+          setIsInstalled(false);
         }
       });
     }, 2500);

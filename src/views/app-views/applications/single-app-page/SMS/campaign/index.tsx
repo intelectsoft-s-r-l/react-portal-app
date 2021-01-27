@@ -12,6 +12,7 @@ import EditCampaign from "./EditCampaign";
 import { RouteComponentProps } from "react-router-dom";
 
 const SmsCampaign = ({ match }: RouteComponentProps) => {
+  const instance = new AppService();
   const [campaignInfo, setCampaignInfo] = useState<ICampaignList[]>([]);
   const [isNewCampaignVisible, setIsNewCampaignVisible] = useState<boolean>(
     false
@@ -22,15 +23,14 @@ const SmsCampaign = ({ match }: RouteComponentProps) => {
   const [selectedCampaign, setSelectedCampaign] = useState<
     Partial<ICampaignList>
   >({});
-  const [loading, setLoading] = useState<boolean>(true);
+  const [tableLoading, setTableLoading] = useState<boolean>(false);
   const getCampaignList = async () => {
-    return await new AppService().SMS_GetCampaign().then((data) => {
-      setLoading(false);
-      if (data) {
-        if (data.ErrorCode === 0) {
-          setCampaignInfo(data.CampaignList);
-          return Promise;
-        }
+    setTableLoading(true);
+    return await instance.SMS_GetCampaign().then((data) => {
+      if (data && data.ErrorCode === 0) {
+        setTableLoading(false);
+        setCampaignInfo(data.CampaignList);
+        return Promise;
       }
     });
   };
@@ -42,10 +42,8 @@ const SmsCampaign = ({ match }: RouteComponentProps) => {
 
   useEffect(() => {
     getCampaignList();
+    return () => instance._source.cancel();
   }, []);
-  if (loading) {
-    return <Loading cover="content" />;
-  }
   return (
     <>
       <NewCampaign
@@ -67,6 +65,7 @@ const SmsCampaign = ({ match }: RouteComponentProps) => {
         </Button>
       </Flex>
       <Table
+        loading={tableLoading}
         columns={SmsTable(getCampaignList, showEditCampaign, match)}
         dataSource={campaignInfo}
         rowKey={"ID"}

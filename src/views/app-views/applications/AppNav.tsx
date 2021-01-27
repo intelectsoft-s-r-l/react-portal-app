@@ -14,14 +14,19 @@ const AppStoreNav = () => {
   const loading = useSelector((state: IState) => state["auth"]!.loading);
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const renderApps = async () => {
-    return new AppService().GetMarketAppList().then((data) => {
+    return await new AppService().GetMarketAppList().then((data) => {
       if (data) {
-        setApps([...data.MarketAppList]);
+        setApps(data.MarketAppList);
       }
     });
   };
   const menu = (
-    <Menu style={{ width: "330px", minHeight: loading ? "300px" : "auto" }}>
+    <Menu
+      style={{
+        width: "330px",
+        minHeight: loading ? "300px" : "auto",
+      }}
+    >
       {loading ? (
         <Loading cover="content" align="center" />
       ) : (

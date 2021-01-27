@@ -1,7 +1,7 @@
-import { Row, Modal, Form, Col, Input, message } from "antd";
+import { Row, Modal, Form, Col, Input } from "antd";
 import React, { useState } from "react";
-import { ROW_GUTTER } from "../../../constants/ThemeConstant";
-import { AppService } from "../../../api";
+import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
+import { AppService } from "../../../../../api";
 
 const CreateLicenseModal = ({
   AppType,
@@ -11,13 +11,11 @@ const CreateLicenseModal = ({
 }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     return new AppService()
       .RequestLicense(AppType, values.Quantity)
-      .then((data: any) => {
-        if (data) {
-          if (data.ErrorCode === 0) getAppLicenses(AppType);
-        }
+      .then((data) => {
+        if (data && data.ErrorCode === 0) getAppLicenses(AppType);
       });
   };
   const onOk = () => {
