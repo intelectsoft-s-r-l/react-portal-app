@@ -51,6 +51,7 @@ import {
   ISMSInfoResponse,
   IUsers,
 } from "./types.response";
+import { IAccount } from "../redux/reducers/Account";
 const publicIp = require("react-public-ip");
 
 declare module "axios" {
@@ -222,7 +223,7 @@ export class AppService extends HttpClient {
   }
   public GetProfileInfo = async () =>
     this.instance.get<IGetProfileInfoResponse>("/GetProfileInfo");
-  public UpdateUser = async (data: IUsers) =>
+  public UpdateUser = async (data: { User: IAccount }) =>
     this.instance.post<ApiResponse>("/UpdateUser", data);
 
   public GetMarketAppList = async () =>
