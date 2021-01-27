@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
 import { IState } from "../../../../../redux/reducers";
-import TranslateText from "../../../../../utils/translate";
+import WithStringTranslate from "../../../../../utils/translate";
 import { MarketContext } from "../MarketContext";
 import FinalStep from "./final-step";
 import TermsModal from "./TermsWizard";
@@ -20,9 +20,9 @@ const steps = [
   },
 ];
 const InstallWizard = ({ apps }: any) => {
-  const loading = useSelector((state: IState) => state["auth"]!.loading);
   const locale = useSelector((state: IState) => state["theme"]!.locale);
   const {
+    wizardLoading,
     current,
     visibleModal,
     handleCancel,
@@ -38,7 +38,7 @@ const InstallWizard = ({ apps }: any) => {
   } = useContext(MarketContext);
   return (
     <Modal
-      title={TranslateText("wizard.title")}
+      title={WithStringTranslate("wizard.title")}
       visible={visibleModal}
       onOk={() => setCurrent(current + 1)}
       destroyOnClose
@@ -49,11 +49,11 @@ const InstallWizard = ({ apps }: any) => {
             handleCancel();
             termsAccepted && (await getMarketApps());
           }}
-          disabled={loading}
+          disabled={wizardLoading}
         >
           {termsAccepted
-            ? TranslateText("wizard.ok")
-            : TranslateText("wizard.cancel")}
+            ? WithStringTranslate("wizard.ok")
+            : WithStringTranslate("wizard.cancel")}
         </Button>,
         <Button
           key="next"
@@ -62,10 +62,10 @@ const InstallWizard = ({ apps }: any) => {
             setCurrent(current + 1);
             !termsAccepted && setTermsAccepted(true);
           }}
-          disabled={!isAccepted || loading}
+          disabled={!isAccepted || wizardLoading}
         >
           {termsAccepted ? (
-            <Link to={`${APP_PREFIX_PATH}/applications/${selectedApp.AppType}`}>
+            <Link to={`${APP_PREFIX_PATH}/id/${selectedApp.AppType}`}>
               <IntlMessage id="wizard.go" />
             </Link>
           ) : (
@@ -78,5 +78,4 @@ const InstallWizard = ({ apps }: any) => {
     </Modal>
   );
 };
-
 export default InstallWizard;
