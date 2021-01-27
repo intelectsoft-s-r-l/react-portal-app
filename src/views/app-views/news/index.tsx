@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
 import { IMarketAppList, INewsList } from "../../../api/types.response";
+import { useSelector } from "react-redux";
+import { IState } from "../../../redux/reducers";
 
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
@@ -67,12 +69,11 @@ const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
 };
 const News = () => {
   const [news, setNews] = useState<INewsList[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const loading = useSelector((state: IState) => state.auth!.loading);
   const [apps, setApps] = useState<IMarketAppList[]>();
   const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
     return await instance.GetPortalNews(AppType).then((data) => {
-      setLoading(false);
       if (data && data.ErrorCode === 0) {
         setNews(data.NewsList);
       }
@@ -80,12 +81,10 @@ const News = () => {
   };
   const getApps = async () => {
     return await instance.GetMarketAppList().then((data) => {
-      setLoading(false);
       if (data && data.ErrorCode === 0) setApps(data.MarketAppList);
     });
   };
   const onSelect = (AppType: number) => {
-    setLoading(true);
     if (AppType !== 0) {
       getPortalNews(AppType);
     } else {
