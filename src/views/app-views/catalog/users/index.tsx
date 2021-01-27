@@ -38,7 +38,7 @@ export enum status {
 interface IUserListStoreProps {
   token?: string;
   locale?: string;
-  CompanyID: number;
+  CompanyID?: number;
   ID?: number;
   sendActivationCode: (ID: number) => void;
   loading: boolean;
@@ -400,7 +400,6 @@ export class UserList extends Component<IUserListStoreProps> {
         />
         <UserModalAdd
           getUsersInfo={this.getUsersInfo}
-          CompanyID={this.props.CompanyID}
           onCancel={this.closeNewUserModal}
           visible={this.state.newUserModalVisible}
         />

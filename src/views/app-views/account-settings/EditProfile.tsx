@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Avatar, Button, Input, Row, Col, message, Upload } from "antd";
+import { Form, Avatar, Button, Input, Row, Col, Upload } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import Flex from "../../../components/shared-components/Flex";
@@ -7,15 +7,27 @@ import { setProfileInfo } from "../../../redux/actions/Account";
 import { connect } from "react-redux";
 import MaskedInput from "antd-mask-input/build/main/lib/MaskedInput";
 import Utils from "../../../utils";
-import { UPDATING, UPLOADED, UPLOADING } from "../../../constants/Messages";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { IState } from "../../../redux/reducers";
 import { IAccount } from "../../../redux/reducers/Account";
 import { ITheme } from "../../../redux/reducers/Theme";
 import { IAuth } from "../../../redux/reducers/Auth";
-import TranslateText from "../../../utils/translate";
 
-class EditProfile extends Component {
+interface IEditProfile {
+  setProfileInfo: (accountInfo: { User: IAccount }) => void;
+  locale?: string;
+  CompanyID?: number;
+  ID?: number;
+  loading?: boolean;
+  account?: IAccount;
+  Email?: string;
+  FirstName?: string;
+  LastName?: string;
+  PhoneNumber?: string;
+  Photo?: string;
+}
+class EditProfile extends Component<IEditProfile> {
+  state = {};
   render() {
     let {
       account,
@@ -27,23 +39,19 @@ class EditProfile extends Component {
       PhoneNumber,
       Photo,
       setProfileInfo,
-      onChangeMask,
-    } = this.props as any;
+      loading,
+    } = this.props;
 
+    const onChangeMask = (e: any) => {
+      this.setState({ [e.target.name]: e.target.value });
+    };
     const onFinish = (values: any) => {
-      const key = "updatable";
-      message.loading({
-        content: TranslateText(UPDATING),
-        key,
+      setProfileInfo({
+        User: {
+          ...account,
+          ...values,
+        },
       });
-      setTimeout(async () => {
-        setProfileInfo({
-          User: {
-            ...account,
-            ...values,
-          },
-        });
-      }, 1000);
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -51,25 +59,11 @@ class EditProfile extends Component {
     };
 
     const onUploadAavater = (info: any) => {
-      const key = "updatable";
-      if (info.file.status === "uploading") {
-        message.loading({
-          content: TranslateText(UPLOADING),
-          key,
-          duration: 2,
-        });
-        return;
-      }
       if (info.file.status === "done") {
-        Utils.getBase64(info.file.originFileObj, (imageUrl: any) => {
+        Utils.getBase64(info.file.originFileObj, (imageUrl: string) => {
           setProfileInfo({
             User: { ...account, Photo: imageUrl },
           });
-        });
-        message.success({
-          content: TranslateText(UPLOADED),
-          key,
-          duration: 2,
         });
       }
     };
@@ -185,6 +179,7 @@ class EditProfile extends Component {
                   </Col>
                 </Row>
                 <Button type="primary" htmlType="submit">
+                  {" "}
                   <IntlMessage id={"account.EditProfile.SaveChange"} />
                 </Button>
               </Col>
@@ -211,8 +206,9 @@ const mapStateToProps = ({ account, theme, auth }: IState) => {
     Photo,
   } = account as IAccount;
   const { locale } = theme as ITheme;
-  const { token } = auth as IAuth;
+  const { token, loading } = auth as IAuth;
   return {
+    loading,
     account,
     CompanyID,
     Email,
