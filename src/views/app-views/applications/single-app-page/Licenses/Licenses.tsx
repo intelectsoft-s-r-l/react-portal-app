@@ -14,14 +14,15 @@ import CreateLicenseModal from "./CreateLicenseModal";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { ILicenses } from "../../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
+import { useSelector } from "react-redux";
+import { IState } from "../../../../../redux/reducers";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
-  const [loading, setLoading] = useState<boolean>(true);
+  const loading = useSelector((state: IState) => state.auth?.loading);
   const getAppLicenses = async (AppType: number) => {
     return instance.GetAppLicenses(AppType).then((data) => {
       if (data && data.ErrorCode === 0) {
-        setLoading(false);
         // const evaluatedArray = sortData(data.LicensesList);
         setLicenses(data.LicenseList);
         setLicensesToSearch(data.LicenseList);
@@ -113,7 +114,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       render: (Status: number) => (
         <div>
           <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
-            {Status === 1 ? "Available" : "Not Available"}
+            {Status === 1 ? "Activated" : "Not Activated"}
           </Tag>
         </div>
       ),
@@ -135,7 +136,6 @@ const Licenses = ({ AppType }: { AppType: number }) => {
                       setSeletedRows([]);
                       setSelectedKeys([]);
                       await releaseLicense(elm.ID);
-                      debugger;
                       await getAppLicenses(AppType);
                     },
                   });

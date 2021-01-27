@@ -7,6 +7,8 @@ import { IMarketAppList, IPackages } from "../../../../api/types.response";
 import Loading from "../../../../components/shared-components/Loading";
 import { AppService } from "../../../../api";
 import { RouteComponentProps } from "react-router-dom";
+import { IState } from "../../../../redux/reducers";
+import { useSelector } from "react-redux";
 
 const ItemHeader = ({ packages }: { packages: IPackages }) => {
   return (
@@ -58,23 +60,19 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
   // API instance
   const instance = new AppService();
   const [packages, setPackages] = useState<IPackages[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const loading = useSelector((state: IState) => state.auth?.loading);
   useEffect(() => {
     instance.GetMarketAppList().then((data) => {
       if (data && data.ErrorCode === 0) {
-        setLoading(false);
         const currentPackages = data.MarketAppList.find(
           (app) => app.AppType == currentApp!.AppType
         );
         setPackages(currentPackages?.Packages ?? []);
       }
     });
-    return () => instance._source.cancel();
   }, []);
 
-  if (loading) {
-    return <Loading cover="content" />;
-  }
+  if (loading) return <Loading />;
   return (
     <>
       <h2 className="mb-4">
