@@ -45,16 +45,20 @@ const GridItem = ({
   }, []);
   return (
     <Card style={{ maxHeight: 368 }}>
+      {" "}
       <Flex className="mb-3 " justifyContent="between">
+        {" "}
         <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
+          {" "}
           <div className="cursor-pointer app-avatar">
+            {" "}
             <Avatar
               src={data.Photo}
               icon={<ExperimentOutlined />}
               shape="square"
               size={60}
-            />
-          </div>
+            />{" "}
+          </div>{" "}
         </Link>
         {data.Status === 0 ? (
           <Tag
@@ -65,31 +69,43 @@ const GridItem = ({
               setSelectedApp(data);
             }}
           >
-            <VerticalAlignBottomOutlined />
-            <span className="ml-2 font-weight-semibold">
-              <IntlMessage id={"app.status.NotInstalled"} />
+            <VerticalAlignBottomOutlined />{" "}
+            <span
+              className="ml-2
+  font-weight-semibold"
+            >
+              {" "}
+              <IntlMessage id={"app.status.NotInstalled"} />{" "}
             </span>
           </Tag>
         ) : (
           <Tag className="text-capitalize" color="cyan">
-            <CheckCircleOutlined />
+            <CheckCircleOutlined />{" "}
             <span className="ml-2 font-weight-semibold">
-              <IntlMessage id={"app.status.Installed"} />
-            </span>
+              <IntlMessage id={"app.status.Installed"} />{" "}
+            </span>{" "}
           </Tag>
-        )}
-      </Flex>
+        )}{" "}
+      </Flex>{" "}
       <div>
         <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
-          <h3 className="app-link mb-0 cursor-pointer">{data.Name}</h3>
-        </Link>
-        <p className="text-muted">By IntelectSoft</p>
+          {" "}
+          <h3
+            className="app-link
+mb-0 cursor-pointer"
+          >
+            {data.Name}
+          </h3>{" "}
+        </Link>{" "}
+        <p className="text-muted">By IntelectSoft</p>{" "}
         <div style={{ minHeight: "70px" }}>
-          {shortDesc ? shortDesc[locale] : null}
-        </div>
-      </div>
+          {" "}
+          {shortDesc ? shortDesc[locale] : null}{" "}
+        </div>{" "}
+      </div>{" "}
       <Flex justifyContent="between" alignItems="center">
-        <div className="text-muted">Free</div>
+        {" "}
+        <div className="text-muted">Free</div>{" "}
         <Button
           onClick={() => deactivateApp(data.ID, data.Name)}
           danger
@@ -98,9 +114,9 @@ const GridItem = ({
             visibility: data.Status === 1 ? "visible" : "hidden",
           }}
         >
-          <IntlMessage id={"app.Delete"} />
-        </Button>
-      </Flex>
+          <IntlMessage id={"app.Delete"} />{" "}
+        </Button>{" "}
+      </Flex>{" "}
     </Card>
   );
 };
@@ -115,6 +131,7 @@ const Market = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [wizardLoading, setWizardLoading] = useState<boolean>(false);
   const [terms, setTerms] = useState<Partial<ILocale>>({});
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const { confirm } = Modal;
@@ -125,8 +142,8 @@ const Market = () => {
   const [appInstalled, setAppInstalled] = useState<boolean>(false);
   const getMarketApps = async () => {
     return instance.GetMarketAppList().then((data) => {
-      setLoading(false);
       if (data && data.ErrorCode === 0) {
+        setLoading(false);
         const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
         setApps(evaluatedArr);
       }
@@ -140,21 +157,9 @@ const Market = () => {
   const deactivateApp = (AppID: number, AppName: string) => {
     confirm({
       title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
-      onOk: () => {
-        return new Promise((resolve) => {
-          setTimeout(
-            () =>
-              resolve(
-                new AppService()
-                  .DeactivateApp(AppID)
-                  .then(async (data: any) => {
-                    if (data) {
-                      if (data.ErrorCode === 0) await getMarketApps();
-                    }
-                  })
-              ),
-            1000
-          );
+      onOk: async () => {
+        return await instance.DeactivateApp(AppID).then(async (data: any) => {
+          if (data && data.ErrorCode === 0) await getMarketApps();
         });
       },
       onCancel: () => {},
@@ -169,6 +174,7 @@ const Market = () => {
   };
 
   useEffect(() => {
+    // Cleanup installation state after closing the installation modal
     if (!visibleModal) {
       setTimeout(() => {
         setCurrent(0);
@@ -178,63 +184,62 @@ const Market = () => {
     }
   }, [visibleModal]);
 
+  if (loading) return <Loading cover="content" />;
   return (
     <>
-      {loading ? (
-        <Loading cover="content" />
-      ) : (
-        <MarketContext.Provider
-          value={{
-            visibleModal,
-            appInstalled,
-            setAppInstalled,
-            handleOk,
-            handleCancel,
-            terms,
-            current,
-            setCurrent,
-            isAccepted,
-            setIsAccepted,
-            selectedApp,
-            termsAccepted,
-            setTermsAccepted,
-            getMarketApps,
-          }}
-        >
-          <InstallWizard apps={apps} />
-          <div
-            className={`my-4 
+      <MarketContext.Provider
+        value={{
+          visibleModal,
+          appInstalled,
+          setAppInstalled,
+          handleOk,
+          handleCancel,
+          terms,
+          current,
+          setCurrent,
+          isAccepted,
+          setIsAccepted,
+          selectedApp,
+          termsAccepted,
+          setTermsAccepted,
+          getMarketApps,
+          wizardLoading,
+          setWizardLoading,
+        }}
+      >
+        <InstallWizard apps={apps} />
+        <div
+          className={`my-4 
                     container-fluid`}
-          >
-            <Row gutter={16}>
-              {apps.length > 0 && !loading ? (
-                apps.map((elm) => (
-                  <Col
-                    xs={24}
-                    sm={24}
-                    lg={12}
-                    xl={8}
-                    xxl={6}
+        >
+          <Row gutter={16}>
+            {apps.length > 0 && !loading ? (
+              apps.map((elm) => (
+                <Col
+                  xs={24}
+                  sm={24}
+                  lg={12}
+                  xl={8}
+                  xxl={6}
+                  key={elm["AppType"]}
+                >
+                  <GridItem
+                    setVisibleModal={setVisibleModal}
+                    deactivateApp={deactivateApp}
+                    data={elm}
                     key={elm["AppType"]}
-                  >
-                    <GridItem
-                      setVisibleModal={setVisibleModal}
-                      deactivateApp={deactivateApp}
-                      data={elm}
-                      key={elm["AppType"]}
-                      setSelectedApp={setSelectedApp}
-                    />
-                  </Col>
-                ))
-              ) : (
-                <Flex justifyContent="center" className="w-100">
-                  <Empty />
-                </Flex>
-              )}
-            </Row>
-          </div>
-        </MarketContext.Provider>
-      )}
+                    setSelectedApp={setSelectedApp}
+                  />
+                </Col>
+              ))
+            ) : (
+              <Flex justifyContent="center" className="w-100">
+                <Empty />
+              </Flex>
+            )}
+          </Row>
+        </div>
+      </MarketContext.Provider>
     </>
   );
 };

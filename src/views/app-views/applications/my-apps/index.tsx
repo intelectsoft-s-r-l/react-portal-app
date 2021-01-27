@@ -75,11 +75,10 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
 const MyAppList = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
+  const loading = useSelector((state: IState) => state["auth"]!.loading);
   const { confirm } = Modal;
-  const [loading, setLoading] = useState<boolean>(true);
   const getMarketAppList = async () => {
     return instance.GetMarketAppList().then((data) => {
-      setLoading(false);
       if (data && data.ErrorCode === 0) {
         const activeApps = data.MarketAppList.filter(
           (marketApp: IMarketAppList) => marketApp.Status !== 0
@@ -102,11 +101,9 @@ const MyAppList = () => {
           setTimeout(
             () =>
               resolve(
-                new AppService()
-                  .DeactivateApp(AppID)
-                  .then(async (data: any) => {
-                    if (data && data.ErrorCode === 0) await getMarketAppList();
-                  })
+                new AppService().DeactivateApp(AppID).then(async (data) => {
+                  if (data && data.ErrorCode === 0) await getMarketAppList();
+                })
               ),
             1000
           );
