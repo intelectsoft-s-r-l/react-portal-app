@@ -10,7 +10,6 @@ import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
 import { ITheme } from "../../../redux/reducers/Theme";
 import TranslateText from "../../../utils/translate";
-import { FormInstance } from "antd/lib/form";
 
 type onFinish = {
   currentPassword: string;

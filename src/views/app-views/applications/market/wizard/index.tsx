@@ -1,10 +1,8 @@
-import { Button, Checkbox, Modal, Steps } from "antd";
-import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { Button, Modal } from "antd";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
-import { IState } from "../../../../../redux/reducers";
 import WithStringTranslate from "../../../../../utils/translate";
 import { MarketContext } from "../MarketContext";
 import FinalStep from "./final-step";
@@ -19,19 +17,15 @@ const steps = [
     content: <FinalStep />,
   },
 ];
-const InstallWizard = ({ apps }: any) => {
-  const locale = useSelector((state: IState) => state["theme"]!.locale);
+const InstallWizard = () => {
   const {
     current,
     visibleModal,
     handleCancel,
     setCurrent,
     isAccepted,
-    setIsAccepted,
     termsAccepted,
     setTermsAccepted,
-    appInstalled,
-    setAppInstalled,
     selectedApp,
     getMarketApps,
     loading,

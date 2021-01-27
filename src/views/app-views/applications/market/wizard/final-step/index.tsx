@@ -1,9 +1,8 @@
 import React, { useContext, useLayoutEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppService } from "../../../../../../api";
 import Loading from "../../../../../../components/shared-components/Loading";
-import { hideLoading, showLoading } from "../../../../../../redux/actions/Auth";
-import { IState } from "../../../../../../redux/reducers";
+import { showLoading } from "../../../../../../redux/actions/Auth";
 import { MarketContext } from "../../MarketContext";
 import FinalWizard from "./AppInstalled";
 

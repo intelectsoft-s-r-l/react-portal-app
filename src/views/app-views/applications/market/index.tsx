@@ -203,7 +203,7 @@ const Market = () => {
           loading,
         }}
       >
-        <InstallWizard apps={apps} />
+        <InstallWizard />
         {loading ? (
           <Loading cover="content" />
         ) : (
