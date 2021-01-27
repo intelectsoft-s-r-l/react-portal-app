@@ -2,6 +2,7 @@ import { Empty } from "antd";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { ILocale } from "../../../../api/types.response";
+import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 
