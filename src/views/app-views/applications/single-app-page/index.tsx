@@ -75,7 +75,6 @@ const Options = ({
       <Menu.Item
         key={`${match.url}/dashboard`}
         className={
-          AppType === EnApp.MyDiscount ||
           AppType === EnApp.SMS ||
           AppType === EnApp.ExchangeOfInvoice ||
           AppType === EnApp.ExchangeOfOrder
@@ -260,8 +259,7 @@ const AboutItem = ({ appData }: any) => {
   );
 };
 
-interface ISingleAppPage
-  extends RouteComponentProps<{ [key: string]: string }> {}
+interface ISingleAppPage extends RouteComponentProps<{ appID: string }> {}
 const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const { appID } = match.params;
   const instance = new AppService();
