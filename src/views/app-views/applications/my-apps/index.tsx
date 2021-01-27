@@ -96,17 +96,9 @@ const MyAppList = () => {
   const deactivateApp = (AppID: number, AppName: string) => {
     confirm({
       title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
-      onOk: () => {
-        return new Promise((resolve) => {
-          setTimeout(
-            () =>
-              resolve(
-                new AppService().DeactivateApp(AppID).then(async (data) => {
-                  if (data && data.ErrorCode === 0) await getMarketAppList();
-                })
-              ),
-            1000
-          );
+      onOk: async () => {
+        return await instance.DeactivateApp(AppID).then(async (data) => {
+          if (data && data.ErrorCode === 0) await getMarketAppList();
         });
       },
       onCancel: () => {},

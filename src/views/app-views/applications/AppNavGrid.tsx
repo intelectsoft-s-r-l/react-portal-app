@@ -1,32 +1,38 @@
+import React from "react";
 import { Menu } from "antd";
 import { Avatar } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
-import React from "react";
-import "./applications.scss";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
-import { Link } from "react-router-dom";
-const AppNavGrid = (props: any) => {
+import { NavLink, RouteComponentProps, withRouter } from "react-router-dom";
+import { IMarketAppList } from "../../../api/types.response";
+import { MenuItemProps } from "antd/lib/menu/MenuItem";
+import "./applications.scss";
+
+interface IAppNavGrid extends MenuItemProps, RouteComponentProps {
+  apps: IMarketAppList[];
+}
+
+const AppNavGrid = (props: IAppNavGrid) => {
   return (
     <>
-      {props.apps &&
-        props.apps.map((app: any) => (
-          <Menu.Item key={app.Name} {...props} className="app-list__item">
-            <Link to={`${APP_PREFIX_PATH}/id/${app.AppType}`}>
-              <div className="text-center">
-                <Avatar
-                  src={app.Photo}
-                  icon={<ExperimentOutlined />}
-                  shape="square"
-                  alt={app.Name}
-                  style={{ marginBottom: "10px" }}
-                />
-              </div>
-              <p className="text-center">{app.Name}</p>
-            </Link>
-          </Menu.Item>
-        ))}
+      {props.apps.map((app) => (
+        <Menu.Item key={app.AppType} {...props} className="app-list__item">
+          <NavLink to={`${APP_PREFIX_PATH}/id/${app.AppType}`}>
+            <div className="text-center">
+              <Avatar
+                src={app.Photo}
+                icon={<ExperimentOutlined />}
+                shape="square"
+                alt={app.Name}
+                style={{ marginBottom: "10px" }}
+              />
+            </div>
+            <p className="text-center">{app.Name}</p>
+          </NavLink>
+        </Menu.Item>
+      ))}
     </>
   );
 };
 
-export default AppNavGrid;
+export default withRouter(AppNavGrid);
