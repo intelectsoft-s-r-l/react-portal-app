@@ -33,7 +33,7 @@ import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
 
-enum appEnum {
+enum EnApp {
   Retail = 10,
   CashSalesExpertMobile = 11,
   Agent = 20,
@@ -60,203 +60,78 @@ const Options = ({
   match,
   moduleSettings,
 }: IOptions) => {
-  if (moduleSettings.Backoffice) {
-    return (
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={[`${match.url}/:appId/`]}
-        selectedKeys={[location.pathname]}
+  return (
+    <Menu
+      mode="inline"
+      defaultSelectedKeys={[`${match.url}/:appId/`]}
+      selectedKeys={[location.pathname]}
+    >
+      <Menu.Item key={`${match.url}/description`}>
+        <span>
+          <IntlMessage id="app.Description" />
+        </span>
+        <Link to={"description"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/dashboard`}
+        className={
+          AppType === EnApp.MyDiscount ||
+          AppType === EnApp.SMS ||
+          AppType === EnApp.ExchangeOfInvoice ||
+          AppType === EnApp.ExchangeOfOrder
+            ? ""
+            : "d-none"
+        }
       >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/packages`}>
-          <span>
-            <IntlMessage id="app.Packages" />
-          </span>
-          <Link to={"packages"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/licenses`}>
-          <span>
-            <IntlMessage id="app.Licenses" />
-          </span>
-          <Link to={"licenses"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/devices`}>
-          <span>
-            <IntlMessage id="app.Devices" />
-          </span>
-          <Link to={"devices"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/integration`}>
-          <span>Integration</span>
-          <Link to={"integration"} />
-        </Menu.Item>
-      </Menu>
-    );
-  } else if (AppType === appEnum.MyDiscount) {
-    return (
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={[`${match.url}/:appId/`]}
-        selectedKeys={[location.pathname]}
+        <span>Dashboard</span>
+        <Link to={"dashboard"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/campaign`}
+        className={AppType === EnApp.SMS ? "" : "d-none"}
       >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/dashboard`}>
-          <span>Dashboard</span>
-          <Link to={"dashboard"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/packages`}>
-          <span>
-            <IntlMessage id="app.Packages" />
-          </span>
-          <Link to={"packages"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/news`}>
-          <span>
-            <IntlMessage id="app.News" />
-          </span>
-          <Link to={"news"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/integration`}>
-          <span>Integration</span>
-          <Link to={"integration"} />
-        </Menu.Item>
-      </Menu>
-    );
-  } else if (AppType === appEnum.SMS) {
-    return (
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={[`${match.url}/:appId/`]}
-        selectedKeys={[location.pathname]}
+        <span>Campaign</span>
+        <Link to={"campaign"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/news`}
+        className={AppType === EnApp.MyDiscount ? "" : "d-none"}
       >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/dashboard`}>
-          <span>Dashboard</span>
-          <Link to={"dashboard"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/packages`}>
-          <span>
-            <IntlMessage id="app.Packages" />
-          </span>
-          <Link to={"packages"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/campaign`}>
-          <span>Campaign</span>
-          <Link to={"campaign"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/integration`}>
-          <span>Integration</span>
-          <Link to={"integration"} />
-        </Menu.Item>
-      </Menu>
-    );
-  } else if (AppType === appEnum.ExchangeOfInvoice) {
-    return (
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={[`${match.url}/:appId/`]}
-        selectedKeys={[location.pathname]}
+        <span>
+          <IntlMessage id="app.News" />
+        </span>
+        <Link to={"news"} />
+      </Menu.Item>
+      <Menu.Item key={`${match.url}/packages`}>
+        <span>
+          <IntlMessage id="app.Packages" />
+        </span>
+        <Link to={"packages"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/licenses`}
+        className={moduleSettings.License ? "" : "d-none"}
       >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/dashboard`}>
-          <span>Dashboard</span>
-          <Link to={"dashboard"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/packages`}>
-          <span>
-            <IntlMessage id="app.Packages" />
-          </span>
-          <Link to={"packages"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/invoice`}>
-          <span>Invoice</span>
-          <Link to={"invoice"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/integration`}>
-          <span>Integration</span>
-          <Link to={"integration"} />
-        </Menu.Item>
-      </Menu>
-    );
-  } else if (AppType === appEnum.ExchangeOfOrder) {
-    return (
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={[`${match.url}/:appId/`]}
-        selectedKeys={[location.pathname]}
+        <span>
+          <IntlMessage id="app.Licenses" />
+        </span>
+        <Link to={"licenses"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/devices`}
+        className={moduleSettings.License ? "" : "d-none"}
       >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/dashboard`}>
-          <span>Dashboard</span>
-          <Link to={"dashboard"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/packages`}>
-          <span>
-            <IntlMessage id="app.Packages" />
-          </span>
-          <Link to={"packages"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/order`}>
-          <span>Order</span>
-          <Link to={"order"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/integration`}>
-          <span>Integration</span>
-          <Link to={"integration"} />
-        </Menu.Item>
-      </Menu>
-    );
-  } else {
-    return (
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={[`${match.url}/:appId/`]}
-        selectedKeys={[location.pathname]}
-      >
-        <Menu.Item key={`${match.url}/description`}>
-          <span>
-            <IntlMessage id="app.Description" />
-          </span>
-          <Link to={"description"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/packages`}>
-          <span>
-            <IntlMessage id="app.Packages" />
-          </span>
-          <Link to={"packages"} />
-        </Menu.Item>
-        <Menu.Item key={`${match.url}/integration`}>
-          <span>Integration</span>
-          <Link to={"integration"} />
-        </Menu.Item>
-      </Menu>
-    );
-  }
+        <span>
+          <IntlMessage id="app.Devices" />
+        </span>
+        <Link to={"devices"} />
+      </Menu.Item>
+      <Menu.Item key={`${match.url}/integration`}>
+        <span>Integration</span>
+        <Link to={"integration"} />
+      </Menu.Item>
+    </Menu>
+  );
 };
 const AppOption = (props: any) => {
   return <Options {...props} />;
@@ -319,9 +194,9 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/dashboard`}
         render={(props) => {
-          if (app.AppType === appEnum.SMS)
+          if (app.AppType === EnApp.SMS)
             return <SmsDashboard {...props} APIKey={app.ApyKey} />;
-          else if (app.AppType === appEnum.ExchangeOfInvoice)
+          else if (app.AppType === EnApp.ExchangeOfInvoice)
             return <InvoiceDashboard />;
           else return <OrderDashboard />;
         }}
@@ -389,16 +264,13 @@ interface ISingleAppPage
   extends RouteComponentProps<{ [key: string]: string }> {}
 const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const { appID } = match.params;
+  const instance = new AppService();
   const [app, setApp] = useState<Partial<IMarketAppList>>();
   const [loading, setLoading] = useState<boolean>(true);
-  useEffect(() => {
-    console.log(appID);
-  }, []);
 
   useEffect(() => {
-    let mounted = true;
-    new AppService().GetMarketAppList().then(async (data) => {
-      if (mounted && data && data.ErrorCode === 0) {
+    instance.GetMarketAppList().then(async (data) => {
+      if (data && data.ErrorCode === 0) {
         setLoading(false);
         const currentApp = data.MarketAppList.find(
           (app) => app.AppType === +appID
@@ -407,16 +279,13 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
         setApp(currentApp);
       }
     });
-    return function cleanup() {
-      mounted = false;
-    };
   }, [appID]);
 
-  if (loading) {
-    return <Loading cover="content" />;
-  } else if (!app) {
+  if (loading) return <Loading />;
+  if (!app) {
     return <Empty />;
   }
+
   return (
     <>
       {app!.Status === 1 ? (
