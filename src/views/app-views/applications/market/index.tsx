@@ -130,8 +130,7 @@ function getSource(instance: any, source: any) {
 const Market = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [wizardLoading, setWizardLoading] = useState<boolean>(false);
+  const loading = useSelector((state: IState) => state.auth!.loading);
   const [terms, setTerms] = useState<Partial<ILocale>>({});
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const { confirm } = Modal;
@@ -143,7 +142,6 @@ const Market = () => {
   const getMarketApps = async () => {
     return instance.GetMarketAppList().then((data) => {
       if (data && data.ErrorCode === 0) {
-        setLoading(false);
         const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
         setApps(evaluatedArr);
       }
@@ -184,7 +182,6 @@ const Market = () => {
     }
   }, [visibleModal]);
 
-  if (loading) return <Loading cover="content" />;
   return (
     <>
       <MarketContext.Provider
@@ -203,42 +200,45 @@ const Market = () => {
           termsAccepted,
           setTermsAccepted,
           getMarketApps,
-          wizardLoading,
-          setWizardLoading,
+          loading,
         }}
       >
         <InstallWizard apps={apps} />
-        <div
-          className={`my-4 
+        {loading ? (
+          <Loading cover="content" />
+        ) : (
+          <div
+            className={`my-4 
                     container-fluid`}
-        >
-          <Row gutter={16}>
-            {apps.length > 0 && !loading ? (
-              apps.map((elm) => (
-                <Col
-                  xs={24}
-                  sm={24}
-                  lg={12}
-                  xl={8}
-                  xxl={6}
-                  key={elm["AppType"]}
-                >
-                  <GridItem
-                    setVisibleModal={setVisibleModal}
-                    deactivateApp={deactivateApp}
-                    data={elm}
+          >
+            <Row gutter={16}>
+              {apps.length > 0 && !loading ? (
+                apps.map((elm) => (
+                  <Col
+                    xs={24}
+                    sm={24}
+                    lg={12}
+                    xl={8}
+                    xxl={6}
                     key={elm["AppType"]}
-                    setSelectedApp={setSelectedApp}
-                  />
-                </Col>
-              ))
-            ) : (
-              <Flex justifyContent="center" className="w-100">
-                <Empty />
-              </Flex>
-            )}
-          </Row>
-        </div>
+                  >
+                    <GridItem
+                      setVisibleModal={setVisibleModal}
+                      deactivateApp={deactivateApp}
+                      data={elm}
+                      key={elm["AppType"]}
+                      setSelectedApp={setSelectedApp}
+                    />
+                  </Col>
+                ))
+              ) : (
+                <Flex justifyContent="center" className="w-100">
+                  <Empty />
+                </Flex>
+              )}
+            </Row>
+          </div>
+        )}
       </MarketContext.Provider>
     </>
   );

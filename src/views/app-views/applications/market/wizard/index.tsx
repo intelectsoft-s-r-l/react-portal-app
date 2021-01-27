@@ -22,7 +22,6 @@ const steps = [
 const InstallWizard = ({ apps }: any) => {
   const locale = useSelector((state: IState) => state["theme"]!.locale);
   const {
-    wizardLoading,
     current,
     visibleModal,
     handleCancel,
@@ -35,6 +34,7 @@ const InstallWizard = ({ apps }: any) => {
     setAppInstalled,
     selectedApp,
     getMarketApps,
+    loading,
   } = useContext(MarketContext);
   return (
     <Modal
@@ -49,7 +49,7 @@ const InstallWizard = ({ apps }: any) => {
             handleCancel();
             termsAccepted && (await getMarketApps());
           }}
-          disabled={wizardLoading}
+          disabled={loading}
         >
           {termsAccepted
             ? WithStringTranslate("wizard.ok")
@@ -62,7 +62,7 @@ const InstallWizard = ({ apps }: any) => {
             setCurrent(current + 1);
             !termsAccepted && setTermsAccepted(true);
           }}
-          disabled={!isAccepted || wizardLoading}
+          disabled={!isAccepted || loading}
         >
           {termsAccepted ? (
             <Link to={`${APP_PREFIX_PATH}/id/${selectedApp.AppType}`}>
