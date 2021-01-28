@@ -38,6 +38,7 @@ import {
   IGetCompanyInfoResponse,
   IGetManagedTokenResponse,
   IGetMarketAppListResponse,
+  IGetMarketAppListShortResponse,
   IGetNewsResponse,
   IGetProfileInfoResponse,
   INewsList,
@@ -88,7 +89,10 @@ export default class HttpClient {
   };
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
-    store.dispatch(showLoading());
+    // Don't dispatch the loader if we're calling the appnav api,
+    // to avoid re-render
+    // FIXME: fix this further
+    if (config.url != "GetAppList") store.dispatch(showLoading());
     if (config.method === "get" && config.baseURL !== API_SMS_URL) {
       config.params = {
         ...config.params,
@@ -109,7 +113,10 @@ export default class HttpClient {
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
-    store.dispatch(hideLoading());
+    // Don't dispatch the loader if we're calling the appnav api,
+    // to avoid re-render
+    // FIXME: fix this further
+    if (response.config.url != "/GetAppList") store.dispatch(hideLoading());
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
         if (data && data.ErrorCode === 0) {
@@ -225,6 +232,8 @@ export class AppService extends HttpClient {
 
   public GetMarketAppList = async () =>
     this.instance.get<IGetMarketAppListResponse>("/GetMarketAppList");
+  public GetMarketAppListShort = async () =>
+    this.instance.get<IGetMarketAppListShortResponse>("GetAppList");
 
   public DeactivateApp = async (AppID: number) =>
     this.instance.post<ApiResponse>("/DeactivateApp", {

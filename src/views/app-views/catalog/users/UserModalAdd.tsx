@@ -24,7 +24,7 @@ export const UserModalAdd = ({
 
   const onFinish = async (values: any) => {
     return await new AuthService()
-      .RegisterUser({ ...values, CompanyID, UiLanguage })
+      .RegisterUser({ ...values, CompanyID, UiLanguage: 0 })
       .then((data) => {
         if (data && data.ErrorCode === 0) {
           getUsersInfo();

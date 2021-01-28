@@ -104,6 +104,14 @@ export interface IMarketAppList {
   TermsOfUse: ILocale | string;
   ExternalSecurityPolicy: any;
 }
+
+export interface IMarketAppListShort {
+  AppType: number;
+  ID: number;
+  Name: string;
+  Photo: string;
+  ShortDescription?: string;
+}
 export interface ILocale {
   en: string;
   ro: string;
@@ -111,6 +119,10 @@ export interface ILocale {
 }
 export interface IGetMarketAppListResponse extends ApiResponse {
   MarketAppList: IMarketAppList[];
+}
+
+export interface IGetMarketAppListShortResponse extends ApiResponse {
+  AppList: IMarketAppListShort[];
 }
 
 /* News */
