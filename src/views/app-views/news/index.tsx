@@ -6,7 +6,11 @@ import { AppService } from "../../../api";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
-import { IMarketAppList, INewsList } from "../../../api/types.response";
+import {
+  IMarketAppList,
+  IMarketAppListShort,
+  INewsList,
+} from "../../../api/types.response";
 import { useSelector } from "react-redux";
 import { IState } from "../../../redux/reducers";
 
@@ -70,7 +74,7 @@ const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
 const News = () => {
   const [news, setNews] = useState<INewsList[]>([]);
   const loading = useSelector((state: IState) => state.auth!.loading);
-  const [apps, setApps] = useState<IMarketAppList[]>();
+  const [apps, setApps] = useState<IMarketAppListShort[]>();
   const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
     return await instance.GetPortalNews(AppType).then((data) => {
@@ -80,8 +84,8 @@ const News = () => {
     });
   };
   const getApps = async () => {
-    return await instance.GetMarketAppList().then((data) => {
-      if (data && data.ErrorCode === 0) setApps(data.MarketAppList);
+    return await instance.GetMarketAppListShort().then((data) => {
+      if (data && data.ErrorCode === 0) setApps(data.AppList);
     });
   };
   const onSelect = (AppType: number) => {
