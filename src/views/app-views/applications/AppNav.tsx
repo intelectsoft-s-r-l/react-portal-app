@@ -24,8 +24,8 @@ const AppStoreNav = () => {
         .get(`${API_APP_URL}/GetMarketAppList`, { params: { Token } })
         .then((response) => {
           const { data } = response;
+          setLoading(false);
           if (data && data.ErrorCode === 0) {
-            setLoading(false);
             setApps(data.MarketAppList);
           }
         });
@@ -34,7 +34,7 @@ const AppStoreNav = () => {
   const menu = (
     <Menu
       style={{
-        width: "330px",
+        maxWidth: "330px",
         minHeight: loading ? "300px" : "auto",
       }}
     >
@@ -43,7 +43,7 @@ const AppStoreNav = () => {
       ) : apps.length > 0 ? (
         <AppNavGrid apps={apps ?? []} />
       ) : (
-        <Empty />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
     </Menu>
   );
