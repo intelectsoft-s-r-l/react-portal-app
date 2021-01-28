@@ -74,9 +74,7 @@ class CompanyForm extends Component<ICompanyForm> {
         content: TranslateText(UPDATING),
         key: "updatable",
       });
-      setTimeout(async () => {
-        this.updateCompany(values);
-      }, 1000);
+      this.updateCompany(values);
     };
 
     const onFinishFailed = (errorInfo: any) => {
