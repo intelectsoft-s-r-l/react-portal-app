@@ -17,9 +17,9 @@ const AppStoreNav = () => {
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
   const Token = useSelector((state: IState) => state.auth?.token);
   useEffect(() => {
-    // TODO: Replace this with a new GetMarketAppList function,
-    // that returns only Name and Logo of App
     if (menuIsOpen) {
+      // TODO: Replace this with a new GetMarketAppList function,
+      // that returns only Name and Logo of App
       axios
         .get(`${API_APP_URL}/GetMarketAppList`, { params: { Token } })
         .then((response) => {

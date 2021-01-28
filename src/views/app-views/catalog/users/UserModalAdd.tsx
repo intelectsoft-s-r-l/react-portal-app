@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Row, Col, Input, Modal, Form } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
@@ -20,10 +20,11 @@ export const UserModalAdd = ({
   const [form] = Form.useForm();
   const loading = useSelector((state: IState) => state.auth?.loading);
   const CompanyID = useSelector((state: IState) => state.account?.CompanyID);
+  const UiLanguage = useSelector((state: IState) => state.account?.UiLanguage);
 
   const onFinish = async (values: any) => {
     return await new AuthService()
-      .RegisterUser({ ...values, CompanyID, UiLanguage: 0 })
+      .RegisterUser({ ...values, CompanyID, UiLanguage })
       .then((data) => {
         if (data && data.ErrorCode === 0) {
           getUsersInfo();
