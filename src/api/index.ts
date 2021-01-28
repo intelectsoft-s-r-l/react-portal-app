@@ -89,10 +89,7 @@ export default class HttpClient {
   };
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
-    // Don't dispatch the loader if we're calling the appnav api,
-    // to avoid re-render
-    // FIXME: fix this further
-    if (config.url != "GetAppList") store.dispatch(showLoading());
+    store.dispatch(showLoading());
     if (config.method === "get" && config.baseURL !== API_SMS_URL) {
       config.params = {
         ...config.params,
@@ -113,10 +110,7 @@ export default class HttpClient {
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
-    // Don't dispatch the loader if we're calling the appnav api,
-    // to avoid re-render
-    // FIXME: fix this further
-    if (response.config.url != "/GetAppList") store.dispatch(hideLoading());
+    store.dispatch(hideLoading());
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
         if (data && data.ErrorCode === 0) {
