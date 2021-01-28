@@ -1,5 +1,15 @@
 import React, { Component, Dispatch, SetStateAction } from "react";
-import { Form, Avatar, Button, Input, Row, Col, message, Upload } from "antd";
+import {
+  Form,
+  Avatar,
+  Button,
+  Input,
+  Row,
+  Col,
+  message,
+  Upload,
+  Empty,
+} from "antd";
 import MaskedInput from "antd-mask-input";
 import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
@@ -96,6 +106,9 @@ class CompanyForm extends Component<ICompanyForm> {
 
     if (this.props.loading) {
       return <Loading cover="content" />;
+    }
+    if (Object.keys(this.state).length === 0) {
+      return <Empty />;
     }
 
     return (
