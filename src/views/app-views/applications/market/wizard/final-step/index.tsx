@@ -1,10 +1,9 @@
+import { Result } from "antd";
 import React, { useContext, useLayoutEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { AppService } from "../../../../../../api";
 import Loading from "../../../../../../components/shared-components/Loading";
-import { showLoading } from "../../../../../../redux/actions/Auth";
+import TranslateText from "../../../../../../utils/translate";
 import { MarketContext } from "../../MarketContext";
-import FinalWizard from "./AppInstalled";
 
 const FinalStep = () => {
   const { selectedApp, wizLoading, setWizLoading } = useContext(MarketContext);
@@ -23,7 +22,25 @@ const FinalStep = () => {
     }, 2500);
   }, []);
   return (
-    <>{wizLoading ? <Loading /> : <FinalWizard isInstalled={isInstalled} />}</>
+    <>
+      {wizLoading ? (
+        <Loading />
+      ) : (
+        <Result
+          status={isInstalled ? "success" : "error"}
+          title={
+            isInstalled
+              ? TranslateText("wizard.install.success.title")
+              : TranslateText("wizard.install.error.title")
+          }
+          subTitle={
+            isInstalled
+              ? TranslateText("wizard.install.success.content")
+              : TranslateText("message.Error")
+          }
+        />
+      )}
+    </>
   );
 };
 
