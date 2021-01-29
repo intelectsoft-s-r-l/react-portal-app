@@ -21,26 +21,21 @@ const FinalStep = () => {
       });
     }, 2500);
   }, []);
+  if (wizLoading) return <Loading />;
   return (
-    <>
-      {wizLoading ? (
-        <Loading />
-      ) : (
-        <Result
-          status={isInstalled ? "success" : "error"}
-          title={
-            isInstalled
-              ? TranslateText("wizard.install.success.title")
-              : TranslateText("wizard.install.error.title")
-          }
-          subTitle={
-            isInstalled
-              ? TranslateText("wizard.install.success.content")
-              : TranslateText("message.Error")
-          }
-        />
-      )}
-    </>
+    <Result
+      status={isInstalled ? "success" : "error"}
+      title={
+        isInstalled
+          ? TranslateText("wizard.install.success.title")
+          : TranslateText("wizard.install.error.title")
+      }
+      subTitle={
+        isInstalled
+          ? TranslateText("wizard.install.success.content")
+          : TranslateText("message.Error")
+      }
+    />
   );
 };
 
