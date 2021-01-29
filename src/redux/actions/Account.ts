@@ -4,6 +4,7 @@ import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { CHANGE_LOCALE } from "../constants/Theme";
 import { IUsers } from "../../api/types.response";
+import { IAccount } from "../reducers/Account";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -34,7 +35,9 @@ export const getProfileInfo = (): ThunkResult<void> => {
   };
 };
 
-export const setProfileInfo = (accountInfo: IUsers): ThunkResult<void> => {
+export const setProfileInfo = (accountInfo: {
+  User: IAccount;
+}): ThunkResult<void> => {
   return async (dispatch) => {
     return new AppService().UpdateUser(accountInfo).then((data) => {
       if (data && data.ErrorCode === 0) dispatch(getProfileInfo());

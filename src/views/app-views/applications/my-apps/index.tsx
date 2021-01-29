@@ -1,5 +1,5 @@
-import { Modal, Avatar, Card, Col, Empty, Row, Tag, Button } from "antd";
 import React, { useEffect, useState } from "react";
+import { Modal, Avatar, Card, Col, Empty, Row, Tag, Button } from "antd";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
@@ -75,11 +75,10 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
 const MyAppList = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
+  const loading = useSelector((state: IState) => state["auth"]!.loading);
   const { confirm } = Modal;
-  const [loading, setLoading] = useState<boolean>(true);
   const getMarketAppList = async () => {
     return instance.GetMarketAppList().then((data) => {
-      setLoading(false);
       if (data && data.ErrorCode === 0) {
         const activeApps = data.MarketAppList.filter(
           (marketApp: IMarketAppList) => marketApp.Status !== 0
@@ -97,19 +96,9 @@ const MyAppList = () => {
   const deactivateApp = (AppID: number, AppName: string) => {
     confirm({
       title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
-      onOk: () => {
-        return new Promise((resolve) => {
-          setTimeout(
-            () =>
-              resolve(
-                new AppService()
-                  .DeactivateApp(AppID)
-                  .then(async (data: any) => {
-                    if (data && data.ErrorCode === 0) await getMarketAppList();
-                  })
-              ),
-            1000
-          );
+      onOk: async () => {
+        return await instance.DeactivateApp(AppID).then(async (data) => {
+          if (data && data.ErrorCode === 0) await getMarketAppList();
         });
       },
       onCancel: () => {},

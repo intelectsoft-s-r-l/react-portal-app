@@ -105,14 +105,6 @@ const Devices = ({ AppType }: { AppType: number }) => {
             ),
           },
           {
-            title: "Sale Point Address",
-            dataIndex: "SalePointAddress",
-          },
-          {
-            title: "Workplace",
-            dataIndex: "Workplace",
-          },
-          {
             dataIndex: "actions",
             render: (_, elm) => (
               <div className="text-right">

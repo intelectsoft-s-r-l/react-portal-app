@@ -8,7 +8,6 @@ import NavSearch from "./NavSearch";
 import {
   toggleCollapsedNav,
   onMobileNavToggle,
-  onHeaderNavColorChange,
 } from "../../redux/actions/Theme";
 import {
   NAV_TYPE_TOP,
@@ -22,7 +21,6 @@ import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
 import { AppService } from "../../api";
-import { SUBDIR_PATH } from "../../configs/AppConfig";
 
 const { Header } = Layout;
 

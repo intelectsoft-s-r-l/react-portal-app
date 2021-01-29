@@ -1,5 +1,15 @@
 import React, { Component, Dispatch, SetStateAction } from "react";
-import { Form, Avatar, Button, Input, Row, Col, message, Upload } from "antd";
+import {
+  Form,
+  Avatar,
+  Button,
+  Input,
+  Row,
+  Col,
+  message,
+  Upload,
+  Empty,
+} from "antd";
 import MaskedInput from "antd-mask-input";
 import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
@@ -15,11 +25,13 @@ import { UploadChangeParam } from "antd/lib/upload";
 import TranslateText from "../../../../utils/translate";
 import { FormInstance } from "antd/lib/form";
 import Loading from "../../../../components/shared-components/Loading";
-class CompanyForm extends Component<{
+import { IAuth } from "../../../../redux/reducers/Auth";
+import { IState } from "../../../../redux/reducers";
+
+interface ICompanyForm extends IAuth {
   onChangeMask: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}> {
+}
+class CompanyForm extends Component<ICompanyForm> {
   state = {} as ICompanyData;
   private formRef = React.createRef() as React.RefObject<
     FormInstance<ICompanyData>
@@ -29,7 +41,6 @@ class CompanyForm extends Component<{
   private getCompanyInfo = async () => {
     return this.instance.GetCompanyInfo().then((data) => {
       if (data && data.ErrorCode === 0) {
-        this.props.setLoading(false);
         this.setState(data.Company);
         if (this.formRef["current"])
           this.formRef["current"].setFieldsValue(data.Company);
@@ -63,9 +74,7 @@ class CompanyForm extends Component<{
         content: TranslateText(UPDATING),
         key: "updatable",
       });
-      setTimeout(async () => {
-        this.updateCompany(values);
-      }, 1000);
+      this.updateCompany(values);
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -95,6 +104,9 @@ class CompanyForm extends Component<{
 
     if (this.props.loading) {
       return <Loading cover="content" />;
+    }
+    if (Object.keys(this.state).length === 0) {
+      return <Empty />;
     }
 
     return (
@@ -385,5 +397,8 @@ class CompanyForm extends Component<{
 const mapDispatchToProps = {
   updateSettings,
 };
-
-export default connect(null, mapDispatchToProps)(CompanyForm);
+const mapStateToProps = ({ auth }: IState) => {
+  const { loading } = auth as IAuth;
+  return loading;
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyForm);

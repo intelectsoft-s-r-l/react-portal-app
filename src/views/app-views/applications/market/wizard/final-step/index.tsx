@@ -1,23 +1,20 @@
 import React, { useContext, useLayoutEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppService } from "../../../../../../api";
 import Loading from "../../../../../../components/shared-components/Loading";
-import { hideLoading, showLoading } from "../../../../../../redux/actions/Auth";
-import { IState } from "../../../../../../redux/reducers";
+import { showLoading } from "../../../../../../redux/actions/Auth";
 import { MarketContext } from "../../MarketContext";
 import FinalWizard from "./AppInstalled";
 
 const FinalStep = () => {
-  const { selectedApp, getMarketApps } = useContext(MarketContext);
-  const loading = useSelector((state: IState) => state["auth"]!.loading);
+  const { selectedApp, loading } = useContext(MarketContext);
   const [isInstalled, setIsInstalled] = useState<boolean>(true);
   const dispatch = useDispatch();
   useLayoutEffect(() => {
     dispatch(showLoading());
-    setTimeout(() => {
-      return new AppService().ActivateApp(selectedApp.ID).then((data: any) => {
+    setTimeout(async () => {
+      return await new AppService().ActivateApp(selectedApp.ID).then((data) => {
         if (data && data.ErrorCode === 0) {
-          dispatch(hideLoading());
           setIsInstalled(true);
         } else {
           setIsInstalled(false);

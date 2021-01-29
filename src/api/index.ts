@@ -7,7 +7,12 @@ import axios, {
 import { message } from "antd";
 import { API_APP_URL, API_AUTH_URL, API_SMS_URL } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
-import { authenticated, hideLoading, signOut } from "../redux/actions/Auth";
+import {
+  authenticated,
+  hideLoading,
+  showLoading,
+  signOut,
+} from "../redux/actions/Auth";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import {
@@ -33,6 +38,7 @@ import {
   IGetCompanyInfoResponse,
   IGetManagedTokenResponse,
   IGetMarketAppListResponse,
+  IGetMarketAppListShortResponse,
   IGetNewsResponse,
   IGetProfileInfoResponse,
   INewsList,
@@ -46,14 +52,12 @@ import {
   ISMSInfoResponse,
   IUsers,
 } from "./types.response";
+import { IAccount } from "../redux/reducers/Account";
 const publicIp = require("react-public-ip");
 
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
 }
-
-// Resolve loaders inside axios interceptors,
-// so I wouldn't have to call the loaders in every component
 
 export default class HttpClient {
   public readonly instance: AxiosInstance;
@@ -85,6 +89,7 @@ export default class HttpClient {
   };
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
+    store.dispatch(showLoading());
     if (config.method === "get" && config.baseURL !== API_SMS_URL) {
       config.params = {
         ...config.params,
@@ -105,6 +110,7 @@ export default class HttpClient {
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
+    store.dispatch(hideLoading());
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
         if (data && data.ErrorCode === 0) {
@@ -156,6 +162,7 @@ export default class HttpClient {
     return response.data;
   };
   private _handleError = async (error: AxiosResponse) => {
+    store.dispatch(hideLoading());
     if (error && error.request && error.request.status !== 200) {
       message.error({
         content: error.toString(),
@@ -163,7 +170,6 @@ export default class HttpClient {
         duration: 10,
       });
     }
-    store.dispatch(hideLoading());
   };
 }
 
@@ -215,11 +221,13 @@ export class AppService extends HttpClient {
   }
   public GetProfileInfo = async () =>
     this.instance.get<IGetProfileInfoResponse>("/GetProfileInfo");
-  public UpdateUser = async (data: IUsers) =>
+  public UpdateUser = async (data: { User: IAccount }) =>
     this.instance.post<ApiResponse>("/UpdateUser", data);
 
   public GetMarketAppList = async () =>
     this.instance.get<IGetMarketAppListResponse>("/GetMarketAppList");
+  public GetMarketAppListShort = async () =>
+    this.instance.get<IGetMarketAppListShortResponse>("GetAppList");
 
   public DeactivateApp = async (AppID: number) =>
     this.instance.post<ApiResponse>("/DeactivateApp", {

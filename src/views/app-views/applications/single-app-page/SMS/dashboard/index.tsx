@@ -12,6 +12,8 @@ import StatisticWidget from "../../../../../../components/shared-components/Stat
 import Loading from "../../../../../../components/shared-components/Loading";
 import { ISMSList } from "../../../../../../api/types.response";
 import { ColumnsType } from "antd/es/table/interface";
+import { useSelector } from "react-redux";
+import { IState } from "../../../../../../redux/reducers";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -86,18 +88,16 @@ const SmsDashboard = (props: ISmsDashboard) => {
     moment().clone().endOf("month"),
   ]);
 
-  const [tableLoading, setTableLoading] = useState<boolean>(true);
   const [smsInfo, setSmsInfo] = useState<{ title: string; value: number }[]>(
     []
   );
+  const loading = useSelector((state: IState) => state.auth?.loading);
   const [smsList, setSmsList] = useState<ISMSList[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
   const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
   const onChange = async (value: any) => {
     setDate([value[0], value[1]]);
-    setTableLoading(true);
     getSmsList(value[0].format("DD-MM-YYYY"), value[1].format("DD-MM-YYYY"));
   };
   const getSmsList = async (
@@ -109,7 +109,6 @@ const SmsDashboard = (props: ISmsDashboard) => {
       .Info_GetDetailByPeriod(props.APIKey, firstDate, secondDate)
       .then((data) => {
         if (data && data.ErrorCode === 0) {
-          setTableLoading(false);
           setSmsList(data.SMSList);
         }
       });
@@ -117,7 +116,6 @@ const SmsDashboard = (props: ISmsDashboard) => {
   const getSmsInfo = async () => {
     return instance.Info_GetTotal(props.APIKey).then((data) => {
       if (data && data.ErrorCode === 0) {
-        setLoading(false);
         setStatusData([
           data.SentThisMonth,
           data.FailedDelivery,
@@ -159,10 +157,6 @@ const SmsDashboard = (props: ISmsDashboard) => {
     return arr;
   };
 
-  if (loading) {
-    return <Loading cover="content" />;
-  }
-
   return (
     <>
       <h2 className="mb-4">Dashboard</h2>
@@ -193,7 +187,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
                   columns={tableColumns}
                   dataSource={smsList}
                   rowKey="SentDate"
-                  loading={tableLoading}
+                  loading={loading}
                   onRow={(record) => {
                     return {
                       onMouseOver: (event) => {
