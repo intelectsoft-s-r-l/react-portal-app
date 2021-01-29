@@ -16,7 +16,6 @@ const AppStoreNav = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [apps, setApps] = useState<IMarketAppListShort[]>([]);
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
-  const Token = useSelector((state: IState) => state.auth?.token);
   const instance = new AppService();
   useEffect(() => {
     if (menuIsOpen) {
@@ -31,9 +30,11 @@ const AppStoreNav = () => {
   const menu = (
     <Menu
       style={{
-        maxWidth: "330px",
-        minWidth: loading ? "330px" : "auto",
+        maxWidth: "350px",
+        minWidth: loading ? "350px" : "auto",
+        maxHeight: "500px",
         minHeight: loading ? "300px" : "auto",
+        overflow: "auto",
       }}
     >
       {loading ? (
@@ -65,7 +66,10 @@ const AppStoreNav = () => {
     >
       <Menu mode={"horizontal"}>
         <Menu.Item>
-          <Tooltip title={<IntlMessage id="header.applications" />}>
+          <Tooltip
+            title={<IntlMessage id="header.applications" />}
+            placement="bottom"
+          >
             <AppstoreOutlined className={"nav-icon"} />
           </Tooltip>
         </Menu.Item>
