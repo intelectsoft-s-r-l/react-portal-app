@@ -3,12 +3,18 @@ import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import { AppService } from "../../../../../api";
 
+interface ICreateLicenseModal {
+  AppType: number;
+  visible: boolean;
+  close: () => void;
+  getAppLicenses: (AppType: number) => void;
+}
 const CreateLicenseModal = ({
   AppType,
   visible,
   close,
   getAppLicenses,
-}: any) => {
+}: ICreateLicenseModal) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
@@ -21,15 +27,10 @@ const CreateLicenseModal = ({
       });
   };
   const onOk = () => {
-    form
-      .validateFields()
-      .then(async (values) => {
-        await onFinish(values);
-        close();
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
+    form.validateFields().then(async (values) => {
+      await onFinish(values);
+      close();
+    });
   };
   return (
     <Modal
