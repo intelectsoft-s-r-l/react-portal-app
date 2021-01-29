@@ -24,7 +24,7 @@ const CampaignDetails = ({ history, match }: ICampaignDetails) => {
   useEffect(() => {
     getCampaign();
     return () => instance._source.cancel();
-  }, [match]);
+  }, []);
   if (loading) {
     return <Loading cover="content" />;
   }
