@@ -56,9 +56,7 @@ const EditNews = ({ visible, close, news, getNews }: any) => {
         .then(async (data: any) => {
           setLoading(false);
           close();
-          if (data) {
-            if (data.ErrorCode === 0) await getNews(AppType);
-          }
+          if (data && data.ErrorCode === 0) await getNews(AppType);
         });
     }, 1000);
   };

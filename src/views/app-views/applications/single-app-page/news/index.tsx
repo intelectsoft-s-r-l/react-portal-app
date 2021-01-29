@@ -162,7 +162,14 @@ const ArticleItem = ({
 const News = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [news, setNews] = useState<INewsList[]>([]);
+  const [selectedNew, setSelectedNew] = useState<INewsList | undefined>(
+    undefined
+  );
   const getNews = async (AppType: number) => {
+    setLoading(true);
     return await instance.GetAppNews(AppType).then((data) => {
       if (data && data.ErrorCode === 0) {
         setLoading(false);
@@ -172,16 +179,8 @@ const News = ({ AppType }: { AppType: number }) => {
   };
   useEffect(() => {
     getNews(AppType);
-    return () => {
-      instance._source.cancel();
-    };
+    return () => instance._source.cancel();
   }, []);
-  const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
-  const [edit, setEdit] = useState<boolean>(false);
-  const [news, setNews] = useState<INewsList[]>([]);
-  const [selectedNew, setSelectedNew] = useState<INewsList | undefined>(
-    undefined
-  );
   if (loading) {
     return <Loading cover="content" />;
   }

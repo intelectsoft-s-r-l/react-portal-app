@@ -130,7 +130,8 @@ function getSource(instance: any, source: any) {
 const Market = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
-  const loading = useSelector((state: IState) => state.auth!.loading);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [wizLoading, setWizLoading] = useState(false);
   const [terms, setTerms] = useState<Partial<ILocale>>({});
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const { confirm } = Modal;
@@ -141,6 +142,7 @@ const Market = () => {
   const [appInstalled, setAppInstalled] = useState<boolean>(false);
   const getMarketApps = async () => {
     return instance.GetMarketAppList().then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
         const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
         setApps(evaluatedArr);
@@ -200,7 +202,8 @@ const Market = () => {
           termsAccepted,
           setTermsAccepted,
           getMarketApps,
-          loading,
+          wizLoading,
+          setWizLoading,
         }}
       >
         <InstallWizard />

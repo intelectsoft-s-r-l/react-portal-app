@@ -7,13 +7,10 @@ import DonutChartWidget from "../../../../../../components/shared-components/Don
 import Flex from "../../../../../../components/shared-components/Flex";
 import { COLORS } from "../../../../../../constants/ChartConstant";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
-import moment, { MomentInput } from "moment";
+import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
-import Loading from "../../../../../../components/shared-components/Loading";
 import { ISMSList } from "../../../../../../api/types.response";
 import { ColumnsType } from "antd/es/table/interface";
-import { useSelector } from "react-redux";
-import { IState } from "../../../../../../redux/reducers";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -91,7 +88,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
   const [smsInfo, setSmsInfo] = useState<{ title: string; value: number }[]>(
     []
   );
-  const loading = useSelector((state: IState) => state.auth?.loading);
+  const [loading, setLoading] = useState(true);
   const [smsList, setSmsList] = useState<ISMSList[]>([]);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
@@ -108,6 +105,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
     return await instance
       .Info_GetDetailByPeriod(props.APIKey, firstDate, secondDate)
       .then((data) => {
+        setLoading(false);
         if (data && data.ErrorCode === 0) {
           setSmsList(data.SMSList);
         }

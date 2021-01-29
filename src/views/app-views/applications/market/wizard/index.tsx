@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Modal } from "antd";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
@@ -28,8 +28,9 @@ const InstallWizard = () => {
     setTermsAccepted,
     selectedApp,
     getMarketApps,
-    loading,
+    wizLoading,
   } = useContext(MarketContext);
+
   return (
     <Modal
       title={WithStringTranslate("wizard.title")}
@@ -43,7 +44,7 @@ const InstallWizard = () => {
             handleCancel();
             termsAccepted && (await getMarketApps());
           }}
-          disabled={loading}
+          disabled={wizLoading}
         >
           {termsAccepted
             ? WithStringTranslate("wizard.ok")
@@ -56,7 +57,7 @@ const InstallWizard = () => {
             setCurrent(current + 1);
             !termsAccepted && setTermsAccepted(true);
           }}
-          disabled={!isAccepted || loading}
+          disabled={!isAccepted || wizLoading}
         >
           {termsAccepted ? (
             <Link to={`${APP_PREFIX_PATH}/id/${selectedApp.AppType}`}>

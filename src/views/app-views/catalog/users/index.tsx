@@ -45,6 +45,7 @@ interface IUserListStoreProps {
 }
 
 interface UserListStateProps {
+  loading: boolean;
   users: IUsers[];
   usersToSearch: any;
   selectedRows: any;
@@ -59,6 +60,7 @@ interface UserListStateProps {
 
 export class UserList extends Component<IUserListStoreProps> {
   state: UserListStateProps = {
+    loading: true,
     users: [],
     usersToSearch: [],
     selectedRows: [],
@@ -74,6 +76,7 @@ export class UserList extends Component<IUserListStoreProps> {
   private instance = new AppService();
   getUsersInfo = async () => {
     return this.instance.GetUserList().then((data) => {
+      this.setState({ loading: false });
       if (data && data.ErrorCode === 0) {
         // Don't show current user in the list
         const filteredUsers = data.Users.filter(
@@ -377,7 +380,7 @@ export class UserList extends Component<IUserListStoreProps> {
           </div>
         </Flex>
         <Table
-          loading={this.props.loading}
+          loading={this.state.loading}
           columns={tableColumns}
           dataSource={users}
           rowKey="ID"

@@ -73,11 +73,13 @@ const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
 };
 const News = () => {
   const [news, setNews] = useState<INewsList[]>([]);
-  const loading = useSelector((state: IState) => state.auth!.loading);
+  const [appLoading, setAppLoading] = useState(true);
+  const [newsLoading, setNewsLoading] = useState(true);
   const [apps, setApps] = useState<IMarketAppListShort[]>();
   const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
     return await instance.GetPortalNews(AppType).then((data) => {
+      setNewsLoading(false);
       if (data && data.ErrorCode === 0) {
         setNews(data.NewsList);
       }
@@ -85,10 +87,12 @@ const News = () => {
   };
   const getApps = async () => {
     return await instance.GetMarketAppListShort().then((data) => {
+      setAppLoading(false);
       if (data && data.ErrorCode === 0) setApps(data.AppList);
     });
   };
   const onSelect = (AppType: number) => {
+    setNewsLoading(true);
     if (AppType !== 0) {
       getPortalNews(AppType);
     } else {
@@ -109,7 +113,13 @@ const News = () => {
         <h2>
           <IntlMessage id="news.title" />
         </h2>
-        <Select defaultValue={0} style={{ width: "150px" }} onChange={onSelect}>
+        <Select
+          defaultValue={0}
+          style={{ width: "150px" }}
+          onChange={onSelect}
+          loading={appLoading}
+          disabled={appLoading}
+        >
           <Select.Option value={0}>
             <b>General</b>
           </Select.Option>
@@ -121,7 +131,7 @@ const News = () => {
             ))}
         </Select>
       </Flex>
-      {loading ? (
+      {newsLoading ? (
         <Loading cover="content" />
       ) : (
         <List style={{ maxWidth: 1000, margin: "0 auto" }}>

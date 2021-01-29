@@ -7,13 +7,13 @@ import { MarketContext } from "../../MarketContext";
 import FinalWizard from "./AppInstalled";
 
 const FinalStep = () => {
-  const { selectedApp, loading } = useContext(MarketContext);
+  const { selectedApp, wizLoading, setWizLoading } = useContext(MarketContext);
   const [isInstalled, setIsInstalled] = useState<boolean>(true);
-  const dispatch = useDispatch();
   useLayoutEffect(() => {
-    dispatch(showLoading());
+    setWizLoading(true);
     setTimeout(async () => {
       return await new AppService().ActivateApp(selectedApp.ID).then((data) => {
+        setWizLoading(false);
         if (data && data.ErrorCode === 0) {
           setIsInstalled(true);
         } else {
@@ -23,7 +23,7 @@ const FinalStep = () => {
     }, 2500);
   }, []);
   return (
-    <>{loading ? <Loading /> : <FinalWizard isInstalled={isInstalled} />}</>
+    <>{wizLoading ? <Loading /> : <FinalWizard isInstalled={isInstalled} />}</>
   );
 };
 

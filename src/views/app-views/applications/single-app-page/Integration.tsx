@@ -1,5 +1,15 @@
 import * as React from "react";
-import { Col, Row, Modal, Button, Input, message, Form, Card } from "antd";
+import {
+  Col,
+  Row,
+  Modal,
+  Button,
+  Input,
+  message,
+  Form,
+  Card,
+  Empty,
+} from "antd";
 import { useState, useEffect } from "react";
 import { IMarketAppList } from "../../../../api/types.response";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
@@ -22,7 +32,7 @@ const Integration = ({
 }) => {
   const instance = new AppService();
   const { confirm } = Modal;
-  const [appData, setApp] = useState<any>();
+  const [appData, setApp] = useState<Partial<IMarketAppList>>();
   const [form] = Form.useForm();
   const [activationCode, setActivationCode] = useState<number>(0);
   const [apiKey, setApiKey] = useState<string>("");
@@ -63,7 +73,7 @@ const Integration = ({
       title: "Are you sure you want generate a new activation code?",
       onOk: async () =>
         await instance
-          .GenerateLicenseActivationCode(appData.ID ?? 0)
+          .GenerateLicenseActivationCode(appData!.ID ?? 0)
           .then((data) => {
             if (data && data.ErrorCode === 0) {
               setActivationCode(data.ActivationCode);
@@ -103,7 +113,7 @@ const Integration = ({
       key: "updatable",
       duration: 1,
     });
-    return instance.UpdateApp({ AppID: appData.ID, ...data }).then((data) => {
+    return instance.UpdateApp({ AppID: appData!.ID, ...data }).then((data) => {
       if (data && data.ErrorCode === 0) {
         message.success({
           content: TranslateText(DONE),
@@ -126,7 +136,7 @@ const Integration = ({
     confirm({
       title: "Are you sure you want to generate new Public and Private Keys?",
       onOk: async () =>
-        await instance.GenerateRsaKey(appData.ID ?? 0).then((data) => {
+        await instance.GenerateRsaKey(appData!.ID ?? 0).then((data) => {
           if (data && data.ErrorCode === 0) {
             message.success(TranslateText(DONE));
             setPublicKey(data.EncryptionPublicKey);
@@ -158,13 +168,13 @@ const Integration = ({
     return <Loading cover="content" />;
   }
   if (!appData) {
-    return null;
+    return <Empty />;
   }
   return (
     <Row gutter={ROW_GUTTER} justify="space-between">
       <Col
         xl={12}
-        className={appData.ModuleSettings!.APIKey ? "mb-4" : "mb-4 d-none"}
+        className={appData!.ModuleSettings!.APIKey ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -248,7 +258,7 @@ const Integration = ({
       </Col>
       <Col
         xl={12}
-        className={appData.AppType === 100 ? "mb-4" : "mb-4 d-none"}
+        className={appData!.AppType === 100 ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
         <div className="container-fluid">
@@ -283,11 +293,11 @@ const Integration = ({
       </Col>
       <Col
         xl={24}
-        className={appData.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
+        className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
       >
-        {appData.ModuleSettings!.Backoffice ||
-        appData.ModuleSettings!.ActivationCode ||
-        appData.ModuleSettings!.APIKey ? (
+        {appData!.ModuleSettings!.Backoffice ||
+        appData!.ModuleSettings!.ActivationCode ||
+        appData!.ModuleSettings!.APIKey ? (
           <hr />
         ) : null}
         <div className="container-fluid">

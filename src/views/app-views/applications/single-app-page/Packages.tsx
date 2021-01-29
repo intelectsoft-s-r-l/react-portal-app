@@ -60,9 +60,10 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
   // API instance
   const instance = new AppService();
   const [packages, setPackages] = useState<IPackages[]>([]);
-  const loading = useSelector((state: IState) => state.auth?.loading);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     instance.GetMarketAppList().then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
         const currentPackages = data.MarketAppList.find(
           (app) => app.AppType == currentApp!.AppType
@@ -73,6 +74,7 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
   }, []);
 
   if (loading) return <Loading />;
+  if (!packages) return <Empty />;
   return (
     <>
       <h2 className="mb-4">
@@ -80,19 +82,14 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
       </h2>
       <div className="my-4 container-fluid">
         <Row gutter={16}>
-          {packages.length > 0 ? (
+          {packages.length > 0 &&
             packages
               .sort((a, b) => a.SortIndex - b.SortIndex)
               .map((elm) => (
                 <Col xs={24} sm={24} lg={8} xl={8} xxl={6} key={elm["ID"]}>
                   <CardItem packages={elm} />
                 </Col>
-              ))
-          ) : (
-            <Flex className="w-100" justifyContent="center">
-              <Empty />
-            </Flex>
-          )}
+              ))}
         </Row>
       </div>
     </>

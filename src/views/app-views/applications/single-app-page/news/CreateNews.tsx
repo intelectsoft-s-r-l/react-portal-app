@@ -42,7 +42,7 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
   };
   const onFinish = () => {
     setLoading(true);
-    setTimeout(async () => {
+    setTimeout(() => {
       return new AppService()
         .UpdateNews({
           CompanyID,
@@ -52,12 +52,10 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
           Content: content,
           Header: header,
         })
-        .then(async (data: any) => {
+        .then(async (data) => {
           setLoading(false);
           close();
-          if (data) {
-            if (data.ErrorCode === 0) await getNews(AppType);
-          }
+          if (data.ErrorCode === 0) await getNews(AppType);
         });
     }, 1000);
   };

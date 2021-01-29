@@ -12,26 +12,24 @@ const CreateLicenseModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
+    setIsLoading(true);
     return new AppService()
       .RequestLicense(AppType, values.Quantity)
       .then((data) => {
+        setIsLoading(false);
         if (data && data.ErrorCode === 0) getAppLicenses(AppType);
       });
   };
   const onOk = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      form
-        .validateFields()
-        .then((values) => {
-          close();
-          onFinish(values);
-        })
-        .catch((info) => {
-          console.log("Validate Failed:", info);
-        });
-    }, 1000);
+    form
+      .validateFields()
+      .then(async (values) => {
+        await onFinish(values);
+        close();
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+      });
   };
   return (
     <Modal

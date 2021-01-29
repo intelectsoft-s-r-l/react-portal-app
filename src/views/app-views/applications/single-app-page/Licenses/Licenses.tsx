@@ -14,14 +14,14 @@ import CreateLicenseModal from "./CreateLicenseModal";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { ILicenses } from "../../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
-import { useSelector } from "react-redux";
-import { IState } from "../../../../../redux/reducers";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
-  const loading = useSelector((state: IState) => state.auth?.loading);
+  const [loading, setLoading] = useState(true);
   const getAppLicenses = async (AppType: number) => {
+    setLoading(true);
     return instance.GetAppLicenses(AppType).then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
         // const evaluatedArray = sortData(data.LicensesList);
         setLicenses(data.LicenseList);

@@ -23,12 +23,11 @@ const SmsCampaign = ({ match }: RouteComponentProps) => {
   const [selectedCampaign, setSelectedCampaign] = useState<
     Partial<ICampaignList>
   >({});
-  const [tableLoading, setTableLoading] = useState<boolean>(false);
+  const [tableLoading, setTableLoading] = useState<boolean>(true);
   const getCampaignList = async () => {
-    setTableLoading(true);
     return await instance.SMS_GetCampaign().then((data) => {
+      setTableLoading(false);
       if (data && data.ErrorCode === 0) {
-        setTableLoading(false);
         setCampaignInfo(data.CampaignList);
         return Promise;
       }

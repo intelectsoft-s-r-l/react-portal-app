@@ -45,8 +45,8 @@ const Devices = ({ AppType }: { AppType: number }) => {
   const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false);
   const getDevices = async (AppType: number) => {
     return instance.GetAppLicenses(AppType).then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
-        setLoading(false);
         setDevices(
           data.LicenseList.filter((elm: ILicenses) => elm.Status !== 0)
         );

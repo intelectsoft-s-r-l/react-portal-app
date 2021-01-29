@@ -50,10 +50,10 @@ const LoginForm = ({
   getProfileInfo,
 }: any) => {
   const history = useHistory();
-  const onLogin = ({ email, password }: { [key: string]: string }) => {
+  const onLogin = async ({ email, password }: { [key: string]: string }) => {
     const onLoginSettingsObject = {
       Email: email,
-      Password: Utils.encryptInput(password, API_PUBLIC_KEY),
+      Password: await Utils.encryptInput(password, API_PUBLIC_KEY),
     };
     showLoading();
     setTimeout(() => {

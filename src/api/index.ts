@@ -89,7 +89,6 @@ export default class HttpClient {
   };
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
-    store.dispatch(showLoading());
     if (config.method === "get" && config.baseURL !== API_SMS_URL) {
       config.params = {
         ...config.params,
@@ -110,7 +109,6 @@ export default class HttpClient {
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
-    store.dispatch(hideLoading());
     if (response.data.ErrorCode === 118) {
       return this._RefreshToken().then(async (data) => {
         if (data && data.ErrorCode === 0) {

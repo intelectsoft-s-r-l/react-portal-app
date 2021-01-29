@@ -32,7 +32,10 @@ interface ICompanyForm extends IAuth {
   onChangeMask: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 class CompanyForm extends Component<ICompanyForm> {
-  state = {} as ICompanyData;
+  state = {
+    loading: true,
+    Company: {},
+  } as any;
   private formRef = React.createRef() as React.RefObject<
     FormInstance<ICompanyData>
   >;
@@ -40,8 +43,9 @@ class CompanyForm extends Component<ICompanyForm> {
 
   private getCompanyInfo = async () => {
     return this.instance.GetCompanyInfo().then((data) => {
+      this.setState({ loading: false });
       if (data && data.ErrorCode === 0) {
-        this.setState(data.Company);
+        this.setState({ Company: data.Company });
         if (this.formRef["current"])
           this.formRef["current"].setFieldsValue(data.Company);
       }
@@ -49,7 +53,7 @@ class CompanyForm extends Component<ICompanyForm> {
   };
 
   private updateCompany = async (values: ICompanyData) => {
-    const updatedInfo = { Company: { ...this.state, ...values } };
+    const updatedInfo = { Company: { ...this.state.Company, ...values } };
     return this.instance.UpdateCompany(updatedInfo).then(async (data) => {
       if (data && data.ErrorCode === 0) {
         await this.getCompanyInfo();
@@ -82,6 +86,7 @@ class CompanyForm extends Component<ICompanyForm> {
     };
 
     const onUploadAavater = (info: UploadChangeParam) => {
+      this.setState({ avatarLoading: true });
       if (info.file.status === "uploading") {
         message.loading({
           content: TranslateText(UPLOADING),
@@ -92,17 +97,21 @@ class CompanyForm extends Component<ICompanyForm> {
       if (info.file.status === "done") {
         Utils.getBase64(info.file.originFileObj, async (imageUrl: string) => {
           const newImage = { Logo: imageUrl };
-          this.updateCompany(newImage);
+          this.updateCompany(newImage).then(() =>
+            this.setState({ avatarLoading: false })
+          );
         });
       }
     };
 
     const onRemoveAvater = async () => {
       const deletedImage = { Logo: "" };
-      this.updateCompany(deletedImage).then(() => this.setState(deletedImage));
+      this.updateCompany(deletedImage).then(() =>
+        this.setState({ Company: deletedImage })
+      );
     };
 
-    if (this.props.loading) {
+    if (this.state.loading) {
       return <Loading cover="content" />;
     }
     if (Object.keys(this.state).length === 0) {
@@ -116,7 +125,11 @@ class CompanyForm extends Component<ICompanyForm> {
           mobileFlex={false}
           className="text-center text-md-left"
         >
-          <Avatar size={90} src={this.state.Logo} icon={<UserOutlined />} />
+          <Avatar
+            size={90}
+            src={this.state.Company.Logo}
+            icon={<UserOutlined />}
+          />
           <div className="ml-md-3 mt-md-0 mt-3">
             <Upload
               customRequest={Utils.dummyRequest}
@@ -141,7 +154,7 @@ class CompanyForm extends Component<ICompanyForm> {
             ref={this.formRef}
             name="basicInformation"
             layout="vertical"
-            initialValues={this.state}
+            initialValues={this.state.Company}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
@@ -397,8 +410,4 @@ class CompanyForm extends Component<ICompanyForm> {
 const mapDispatchToProps = {
   updateSettings,
 };
-const mapStateToProps = ({ auth }: IState) => {
-  const { loading } = auth as IAuth;
-  return loading;
-};
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyForm);
+export default connect(null, mapDispatchToProps)(CompanyForm);
