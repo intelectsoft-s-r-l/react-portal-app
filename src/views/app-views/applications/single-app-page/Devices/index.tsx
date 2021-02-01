@@ -109,7 +109,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
             dataIndex: "actions",
             render: (_, elm) => (
               <div className="text-right">
-                <Tooltip title={TranslateText("app.devices.viewcenses")}>
+                <Tooltip title={TranslateText("app.devices.view")}>
                   <Button
                     type="primary"
                     className="mr-2"
