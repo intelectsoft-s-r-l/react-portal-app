@@ -274,6 +274,7 @@ export interface ISMSList {
 }
 export interface ISMSInfoGetDetailByPeriodResponse extends ApiResponse {
   SMSList: ISMSList[];
+  TotalSMS: number;
 }
 
 export interface ISMSInfoResponse extends ApiResponse {

@@ -1,6 +1,15 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, DatePicker, Row, Table, Tag } from "antd";
+import {
+  Badge,
+  Card,
+  Col,
+  DatePicker,
+  Row,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import { SmsService } from "../../../../../../api";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
@@ -90,6 +99,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
   );
   const [loading, setLoading] = useState(true);
   const [smsList, setSmsList] = useState<ISMSList[]>([]);
+  const [totalSms, setTotalSms] = useState<number>(0);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
   const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
@@ -108,6 +118,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
         setLoading(false);
         if (data && data.ErrorCode === 0) {
           setSmsList(data.SMSList);
+          setTotalSms(data.TotalSMS);
         }
       });
   };
@@ -171,7 +182,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
           <Row gutter={ROW_GUTTER}>
             <Col span={24}>
               <Card
-                title="SMS Transactions List"
+                title={`SMS Transactions List - ${totalSms}`}
                 extra={
                   <DatePicker.RangePicker
                     format={"DD-MM-YYYY"}
