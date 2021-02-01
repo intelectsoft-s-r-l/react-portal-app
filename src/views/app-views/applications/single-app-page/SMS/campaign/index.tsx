@@ -10,6 +10,7 @@ import Loading from "../../../../../../components/shared-components/Loading";
 import SmsTable from "./SmsCampaignTable";
 import EditCampaign from "./EditCampaign";
 import { RouteComponentProps } from "react-router-dom";
+import TranslateText from "../../../../../../utils/translate";
 
 const SmsCampaign = ({ match }: RouteComponentProps) => {
   const instance = new AppService();
@@ -57,10 +58,10 @@ const SmsCampaign = ({ match }: RouteComponentProps) => {
         data={selectedCampaign}
       />
       <Flex justifyContent="between" alignItems="center" className="py-4">
-        <h2>Campaign</h2>
+        <h2>{TranslateText("app.Campaign")}</h2>
         <Button type="primary" onClick={() => setIsNewCampaignVisible(true)}>
           <PlusOutlined />
-          <span>New</span>
+          <span>{TranslateText("SMS.NewCampaign")}</span>
         </Button>
       </Flex>
       <Table

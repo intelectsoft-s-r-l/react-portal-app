@@ -20,6 +20,7 @@ import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
 import { ISMSList } from "../../../../../../api/types.response";
 import { ColumnsType } from "antd/es/table/interface";
+import TranslateText from "../../../../../../utils/translate";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -42,47 +43,49 @@ enum EnSmsState {
 
 const tableColumns: ColumnsType<ISMSList> = [
   {
-    title: "Phone",
+    title: TranslateText("SMS.Phone"),
     dataIndex: "Phone",
     render: (Phone) => <span>{Phone}</span>,
   },
   {
-    title: "Sent date",
+    title: TranslateText("SMS.SentDate"),
     dataIndex: "SentDate",
     render: (SentDate) => (
       <span>{moment.unix(SentDate.slice(6, 16)).format("DD-MM-YYYY")}</span>
     ),
   },
   {
-    title: "Message type",
+    title: TranslateText("SMS.MessageType"),
     dataIndex: "MessageType",
     render: (MessageType) => (
       <Tag
         className="text-capitalize"
         color={MessageType === EnSmsType.INFO ? "orange" : "cyan"}
       >
-        {MessageType === EnSmsType.INFO ? "Informational" : "Advertisement"}
+        {MessageType === EnSmsType.INFO
+          ? TranslateText("SMS.Informational")
+          : TranslateText("SMS.Ad")}
       </Tag>
     ),
   },
   {
-    title: "State",
+    title: TranslateText("SMS.State"),
     dataIndex: "State",
     render: (State) => (
       <Tag className="text-capitalize" color={"gray"}>
         {State === EnSmsState.DeliveryToBulkSMS
-          ? "Bulk delivery"
+          ? TranslateText("SMS.State.Bulk")
           : State === EnSmsState.FailedDelivery
-          ? "Failed delivery"
+          ? TranslateText("SMS.State.Failed")
           : State === EnSmsState.RejectedSmsc
-          ? "Rejected"
+          ? TranslateText("SMS.State.Rejected")
           : State === EnSmsState.AcceptedSmsc
-          ? "Accepted"
+          ? TranslateText("SMS.State.Accepted")
           : State === EnSmsState.MessageBuffered
-          ? "Buffered"
+          ? TranslateText("SMS.State.Buffered")
           : State === EnSmsState.Pending
-          ? "Pending"
-          : "Success"}
+          ? TranslateText("SMS.State.Pending")
+          : TranslateText("SMS.State.Success")}
       </Tag>
     ),
   },
@@ -102,7 +105,12 @@ const SmsDashboard = (props: ISmsDashboard) => {
   const [totalSms, setTotalSms] = useState<number>(0);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
-  const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
+  const statusLabels = [
+    TranslateText("SMS.Sent"),
+    TranslateText("SMS.Failed"),
+    TranslateText("SMS.Rejected"),
+    TranslateText("SMS.Waiting"),
+  ];
   const onChange = async (value: any) => {
     setDate([value[0], value[1]]);
     getSmsList(value[0].format("DD-MM-YYYY"), value[1].format("DD-MM-YYYY"));
@@ -132,9 +140,9 @@ const SmsDashboard = (props: ISmsDashboard) => {
           data.WaitingForSend,
         ]);
         setSmsInfo([
-          { title: "Today", value: data.SentToday },
-          { title: "Week", value: data.SentThisWeek },
-          { title: "Month", value: data.SentThisMonth },
+          { title: TranslateText("SMS.Today"), value: data.SentToday },
+          { title: TranslateText("SMS.Week"), value: data.SentThisWeek },
+          { title: TranslateText("SMS.Month"), value: data.SentThisMonth },
         ]);
       }
     });
@@ -168,8 +176,8 @@ const SmsDashboard = (props: ISmsDashboard) => {
 
   return (
     <>
-      <h2 className="mb-4">Dashboard</h2>
-      <h4 className="mb-4">Latest SMS Transactions</h4>
+      <h2 className="mb-4">{TranslateText("app.Dashboard")}</h2>
+      <h4 className="mb-4">{TranslateText("SMS.Latest")}</h4>
       <Row className="my-4" gutter={ROW_GUTTER}>
         <Col xs={24} sm={24} md={24} lg={24} xxl={16}>
           <Row gutter={ROW_GUTTER}>
@@ -182,7 +190,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
           <Row gutter={ROW_GUTTER}>
             <Col span={24}>
               <Card
-                title={`SMS Transactions List - ${totalSms}`}
+                title={`${TranslateText("SMS.List")} - ${totalSms}`}
                 extra={
                   <DatePicker.RangePicker
                     format={"DD-MM-YYYY"}
@@ -216,7 +224,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
           <DonutChartWidget
             series={statusData}
             labels={statusLabels}
-            title="SMS Status"
+            title={TranslateText("SMS.SMSStatus")}
             customOptions={{ colors: statusColor }}
             extra={
               <Row justify="center">

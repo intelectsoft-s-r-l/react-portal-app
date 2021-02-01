@@ -82,14 +82,18 @@ const Options = ({
             : "d-none"
         }
       >
-        <span>Dashboard</span>
+        <span>
+          <IntlMessage id="app.Dashboard" />
+        </span>
         <Link to={"dashboard"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/campaign`}
         className={AppType === EnApp.SMS ? "" : "d-none"}
       >
-        <span>Campaign</span>
+        <span>
+          <IntlMessage id="app.Campaign" />
+        </span>
         <Link to={"campaign"} />
       </Menu.Item>
       <Menu.Item
@@ -126,7 +130,9 @@ const Options = ({
         <Link to={"devices"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/integration`}>
-        <span>Integration</span>
+        <span>
+          <IntlMessage id="app.Integration" />
+        </span>
         <Link to={"integration"} />
       </Menu.Item>
     </Menu>

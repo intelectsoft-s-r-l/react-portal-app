@@ -9,6 +9,7 @@ import { AppService } from "../../../../api";
 import { RouteComponentProps } from "react-router-dom";
 import { IState } from "../../../../redux/reducers";
 import { useSelector } from "react-redux";
+import TranslateText from "../../../../utils/translate";
 
 const ItemHeader = ({ packages }: { packages: IPackages }) => {
   return (
@@ -25,7 +26,9 @@ const ItemHeader = ({ packages }: { packages: IPackages }) => {
             <ClockCircleOutlined />
           )}
           <span className="ml-2 font-weight-semibold">
-            {packages.Status === 1 ? "Active" : "Not Active"}
+            {packages.Status === 1
+              ? TranslateText("app.Packages.Active")
+              : TranslateText("app.Packages.NotActive")}
           </span>
         </Tag>
       </Flex>
@@ -35,12 +38,13 @@ const ItemHeader = ({ packages }: { packages: IPackages }) => {
 
 const ItemFooter = ({ packages }: { packages: IPackages }) => (
   <div>
-    <h5>Pricing</h5>
+    <h5>{TranslateText("app.Packages.Pricing")}</h5>
     <Flex justifyContent="center">
       <Card className="mt-3">
         <div>
-          From {packages.MinValue} to {packages.MaxValue} for {packages.Price}{" "}
-          MDL
+          {TranslateText("app.Packages.From")} {packages.MinValue}{" "}
+          {TranslateText("app.Packages.To")} {packages.MaxValue}{" "}
+          {TranslateText("app.Packages.For")} {packages.Price} MDL
         </div>
       </Card>
     </Flex>
@@ -48,7 +52,7 @@ const ItemFooter = ({ packages }: { packages: IPackages }) => (
 );
 const CardItem = ({ packages }: { packages: IPackages }) => {
   return (
-    <Card>
+    <Card style={{ height: "220px", width: "350px" }}>
       <ItemHeader packages={packages} />
       <div className="mt-2">
         <ItemFooter packages={packages} />
@@ -86,7 +90,15 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
             packages
               .sort((a, b) => a.SortIndex - b.SortIndex)
               .map((elm) => (
-                <Col xs={24} sm={24} lg={8} xl={8} xxl={6} key={elm["ID"]}>
+                <Col
+                  xs={24}
+                  sm={24}
+                  lg={8}
+                  xl={8}
+                  xxl={6}
+                  key={elm["ID"]}
+                  className="m-3"
+                >
                   <CardItem packages={elm} />
                 </Col>
               ))}
