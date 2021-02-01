@@ -5,7 +5,12 @@ import axios, {
   CancelTokenSource,
 } from "axios";
 import { message } from "antd";
-import { API_APP_URL, API_AUTH_URL, API_SMS_URL } from "../configs/AppConfig";
+import {
+  API_APP_URL,
+  API_AUTH_URL,
+  API_DISCOUNT_URL,
+  API_SMS_URL,
+} from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import {
   authenticated,
@@ -30,6 +35,7 @@ import {
   ApiResponse,
   IAuthorizeUserResponse,
   ICampaignList,
+  IDiscountGetInfoResponse,
   IGenerateApiKeyResponse,
   IGenerateLicenseActivationCodeResponse,
   IGenerateRsaKeyResponse,
@@ -89,18 +95,33 @@ export default class HttpClient {
   };
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
-    if (config.method === "get" && config.baseURL !== API_SMS_URL) {
+    if (
+      config.method === "get" &&
+      config.baseURL !== API_SMS_URL &&
+      config.baseURL !== API_DISCOUNT_URL
+    ) {
       config.params = {
         ...config.params,
         Token: this._token,
       };
     }
-    if (config.method === "post" && config.baseURL !== API_SMS_URL) {
+    if (
+      config.method === "post" &&
+      config.baseURL !== API_SMS_URL &&
+      config.baseURL !== API_DISCOUNT_URL
+    ) {
       config.data = {
         ...config.data,
         Token: this._token,
       };
     }
+    if (config.baseURL === API_DISCOUNT_URL) {
+      config.auth = {
+        username: "1",
+        password: "1",
+      };
+    }
+
     config.cancelToken = this._source.token;
     return {
       ...config,
@@ -174,7 +195,7 @@ export default class HttpClient {
 // Auth Api
 export class AuthService extends HttpClient {
   public constructor() {
-    super(`${API_AUTH_URL}`);
+    super(API_AUTH_URL);
   }
 
   public Login = async (data: IAuthorizeUserRequest) =>
@@ -215,7 +236,7 @@ export class AuthService extends HttpClient {
 // Client Api
 export class AppService extends HttpClient {
   public constructor() {
-    super(`${API_APP_URL}`);
+    super(API_APP_URL);
   }
   public GetProfileInfo = async () =>
     this.instance.get<IGetProfileInfoResponse>("/GetProfileInfo");
@@ -356,7 +377,7 @@ export class AppService extends HttpClient {
 // SMS Api
 export class SmsService extends HttpClient {
   public constructor() {
-    super(`${API_SMS_URL}`);
+    super(API_SMS_URL);
   }
 
   public CheckApiKey = async (APIKey: number) =>
@@ -412,5 +433,19 @@ export class SmsService extends HttpClient {
   public SendSMSByPhoneList = async (data: ISMSSendSMSRequest) =>
     this.instance.post<ApiResponse>("/SendSMSByPhoneList", {
       ...data,
+    });
+}
+
+export class DiscountService extends HttpClient {
+  public constructor() {
+    super(API_DISCOUNT_URL);
+  }
+  public GetInfo = async (APIKey: string, DateStart: string, DateEnd: string) =>
+    this.instance.get<IDiscountGetInfoResponse>("/GetInfo", {
+      params: {
+        APIKey,
+        DateStart,
+        DateEnd,
+      },
     });
 }

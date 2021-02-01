@@ -2,6 +2,7 @@ import { Row, Modal, Form, Col, Input } from "antd";
 import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import { AppService } from "../../../../../api";
+import TranslateText from "../../../../../utils/translate";
 
 interface ICreateLicenseModal {
   AppType: number;
@@ -38,13 +39,13 @@ const CreateLicenseModal = ({
       onCancel={close}
       visible={visible}
       confirmLoading={isLoading}
-      title="Add license"
+      title={TranslateText("app.licenses.add")}
     >
       <Form layout="vertical" form={form}>
         <Row gutter={ROW_GUTTER}>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
-              label={"Quantity"}
+              label={TranslateText("app.licenses.quantity")}
               name="Quantity"
               rules={[
                 {

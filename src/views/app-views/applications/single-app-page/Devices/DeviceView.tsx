@@ -6,6 +6,7 @@ import Flex from "../../../../../components/shared-components/Flex";
 import { Doughnut } from "react-chartjs-2";
 import { COLOR_2, COLOR_4 } from "../../../../../constants/ChartConstant";
 import "./devices.scss";
+import TranslateText from "../../../../../utils/translate";
 
 interface IDeviceView {
   visible: boolean;
@@ -14,231 +15,112 @@ interface IDeviceView {
   isTable: boolean;
 }
 const DeviceView = ({ visible, data, close, isTable }: IDeviceView) => {
-  const healthCheck = (
-    batteryHealth: IDiagnosticInformation["Battery"]["Health"]
-  ) => {
-    switch (batteryHealth) {
-      case Health._COLD:
-        return "cold";
-      case Health._DEAD:
-        return "dead";
-      case Health._GOOD:
-        return "good";
-      case Health._OVERHEAT:
-        return "overheat";
-      case Health._OVERVOLTAGE:
-        return "overvoltage";
-      case Health._UNKNOWN:
-        return "unknown";
-      case Health._UNSPECIFIED_FAILURE:
-        return "having an unspecified failure";
-      default:
-        return "unknown";
-    }
-  };
-  if (isTable) {
-    return (
-      <Drawer
-        width={500}
-        placement="right"
-        onClose={close}
-        closable={true}
-        visible={visible}
-      >
-        <h3 className="text-left mt-3">Device Information</h3>
-        <Divider dashed />
-        <div className="">
-          <table className="diagnostic-table">
-            <thead>
-              <tr>
-                <th>Battery</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Level</td>
-                <td>{data.Battery ? data.Battery.Level + " %" : ""}</td>
-              </tr>
-              <tr>
-                <td>Voltage</td>
-                <td>{data.Battery ? data.Battery.Voltage : ""}</td>
-              </tr>
-              <tr>
-                <td>Plugged</td>
-                <td>
-                  {data.Battery
-                    ? data.Battery.Plugged === Plugged._AC
-                      ? "AC"
-                      : data.Battery.Plugged === Plugged._USB
-                      ? "USB"
-                      : data.Battery.Plugged === Plugged._WIRELESS
-                      ? "Wireless"
-                      : "Not connected"
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td>Health</td>
-                <td>
-                  {data.Battery
-                    ? data.Battery.Health === Health._COLD
-                      ? "Cold"
-                      : data.Battery.Health === Health._DEAD
-                      ? "Dead"
-                      : data.Battery.Health === Health._GOOD
-                      ? "Good"
-                      : data.Battery.Health === Health._OVERHEAT
-                      ? "Overheat"
-                      : data.Battery.Health === Health._OVERVOLTAGE
-                      ? "Overvoltage"
-                      : data.Battery.Health === Health._UNKNOWN
-                      ? "Unknown"
-                      : "Unscpecified failure"
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td>Status</td>
-                <td>
-                  {data.Battery
-                    ? data.Battery.Status === Status._CHARGING
-                      ? "Charging"
-                      : data.Battery.Status === Status._DISCHARGING
-                      ? "Discharging"
-                      : data.Battery.Status === Status._FULL
-                      ? "Full"
-                      : "Not charging"
-                    : ""}
-                </td>
-              </tr>
-              <tr>
-                <td>Temperature</td>
-                <td>{data.Battery ? data.Battery.Temperature : ""}</td>
-              </tr>
-            </tbody>
-            <thead>
-              <tr>
-                <th>Memory</th>
-                <th>Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Installed</td>
-                <td>{data.Memory ? data.Memory.Installed : ""}</td>
-              </tr>
-              <tr>
-                <td>Used</td>
-                <td>{data.Memory ? data.Memory.Used : ""}</td>
-              </tr>
-              <tr>
-                <td>Free</td>
-                <td>{data.Memory ? data.Memory.Free : ""}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </Drawer>
-    );
-  }
   return (
     <Drawer
       width={500}
-      placement={"right"}
+      placement="right"
       onClose={close}
       closable={true}
       visible={visible}
     >
-      <h3 className="text-left mt-3">Diagnostic Information</h3>
+      <h3 className="text-left mt-3">
+        {TranslateText("app.devices.deviceInformation")}
+      </h3>
       <Divider dashed />
       <div className="">
-        <h4 className="mb-2">Battery</h4>
-        {data.Battery ? (
-          <Flex alignItems="center" justifyContent="between">
-            <div className="mr-3 mt-2">
-              {data.Battery.Plugged === Plugged._AC ? (
-                <img
-                  src={`${process.env.PUBLIC_URL}/img/diagnostic/charging.svg`}
-                  alt="Charging"
-                  width={30}
-                />
-              ) : data.Battery.Plugged === Plugged._USB ? (
-                <img
-                  src={`${process.env.PUBLIC_URL}/img/diagnostic/connect.svg`}
-                  alt="USB"
-                  width={30}
-                />
-              ) : (
-                <img
-                  src={`${process.env.PUBLIC_URL}/img/diagnostic/wireless-charging.svg`}
-                  alt="Wireless"
-                  width={30}
-                />
-              )}
-            </div>
-            <Progress
-              percent={data.Battery.Level}
-              status={
-                data.Battery.Status === Status._CHARGING ? "active" : "normal"
-              }
-            />
-          </Flex>
-        ) : (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        )}
-      </div>
-      <div className="mt-5">
-        <h4 className="mb-2">Health</h4>
-        {data.Battery ? (
-          <span>Your device is {healthCheck(data.Battery.Health)}</span>
-        ) : (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        )}
-      </div>
-      <div className="mt-5">
-        <h4 className="mb-2">Memory</h4>
-        {data.Memory ? (
-          <div style={{ position: "relative" }}>
-            <div
-              style={{
-                width: "100%",
-                position: "absolute",
-                top: "50%",
-                left: 0,
-                marginTop: "-8px",
-                lineHeight: "19px",
-                textAlign: "center",
-                zIndex: 9999,
-              }}
-            >
-              Installed
-              <span style={{ display: "block" }}>{data.Memory.Installed}</span>
-            </div>
-            <Doughnut
-              width={250}
-              data={{
-                labels: ["Free", "Used"],
-                datasets: [
-                  {
-                    data: [
-                      parseFloat(data.Memory.Free.replace(/^D\+/g, "")),
-                      parseFloat(data.Memory.Used.replace(/^D\+/g, "")),
-                    ],
-                    backgroundColor: [COLOR_4, COLOR_2],
-                    pointBackgroundColor: [COLOR_4, COLOR_2],
-                  },
-                ],
-              }}
-            />
-          </div>
-        ) : (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        )}
+        <table className="diagnostic-table">
+          <thead>
+            <tr>
+              <th>{TranslateText("app.devices.battery")}</th>
+              <th>{TranslateText("app.devices.value")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{TranslateText("app.devices.level")}</td>
+              <td>{data.Battery ? data.Battery.Level + " %" : "--"}</td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.voltage")}</td>
+              <td>{data.Battery ? data.Battery.Voltage : "--"}</td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.plugged")}</td>
+              <td>
+                {data.Battery
+                  ? data.Battery.Plugged === Plugged._AC
+                    ? TranslateText("app.devices.plugged.AC")
+                    : data.Battery.Plugged === Plugged._USB
+                    ? TranslateText("app.devices.plugged.USB")
+                    : data.Battery.Plugged === Plugged._WIRELESS
+                    ? TranslateText("app.devices.plugged.wireless")
+                    : TranslateText("app.devices.plugged.notConnected")
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.health")}</td>
+              <td>
+                {data.Battery
+                  ? data.Battery.Health === Health._COLD
+                    ? TranslateText("app.devices.health.cold")
+                    : data.Battery.Health === Health._DEAD
+                    ? TranslateText("app.devices.health.dead")
+                    : data.Battery.Health === Health._GOOD
+                    ? TranslateText("app.devices.health.good")
+                    : data.Battery.Health === Health._OVERHEAT
+                    ? TranslateText("app.devices.health.overheat")
+                    : data.Battery.Health === Health._OVERVOLTAGE
+                    ? TranslateText("app.devices.health.overvoltage")
+                    : data.Battery.Health === Health._UNKNOWN
+                    ? TranslateText("app.devices.health.unknown")
+                    : TranslateText("app.devices.health.unspecified")
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.status")}</td>
+              <td>
+                {data.Battery
+                  ? data.Battery.Status === Status._CHARGING
+                    ? TranslateText("app.devices.status.charging")
+                    : data.Battery.Status === Status._DISCHARGING
+                    ? TranslateText("app.devices.status.discharging")
+                    : data.Battery.Status === Status._FULL
+                    ? TranslateText("app.devices.status.full")
+                    : TranslateText("app.devices.status.notCharging")
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.temperature")}</td>
+              <td>{data.Battery ? data.Battery.Temperature : "--"}</td>
+            </tr>
+          </tbody>
+          <thead>
+            <tr>
+              <th>{TranslateText("app.devices.memory")}</th>
+              <th>{TranslateText("app.devices.value")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{TranslateText("app.devices.installed")}</td>
+              <td>{data.Memory ? data.Memory.Installed : "--"}</td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.used")}</td>
+              <td>{data.Memory ? data.Memory.Used : "--"}</td>
+            </tr>
+            <tr>
+              <td>{TranslateText("app.devices.free")}</td>
+              <td>{data.Memory ? data.Memory.Free : "--"}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </Drawer>
   );
 };
 
 export default DeviceView;
-

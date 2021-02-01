@@ -288,3 +288,11 @@ export interface ISMSInfoResponse extends ApiResponse {
   SentToday: number;
   WaitingForSend: number;
 }
+
+export interface IDiscountGetInfo {
+  Cashback: number;
+  Validation: number;
+}
+export interface IDiscountGetInfoResponse
+  extends ApiResponse,
+    IDiscountGetInfo {}

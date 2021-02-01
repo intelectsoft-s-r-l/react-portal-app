@@ -14,6 +14,7 @@ import CreateLicenseModal from "./CreateLicenseModal";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { ILicenses } from "../../../../../api/types.response";
 import { ColumnsType } from "antd/lib/table";
+import TranslateText from "../../../../../utils/translate";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
@@ -81,11 +82,11 @@ const Licenses = ({ AppType }: { AppType: number }) => {
   };
   const tableColumns: ColumnsType<ILicenses> = [
     {
-      title: "License Code",
+      title: TranslateText("app.licenses.licenseCode"),
       dataIndex: "LicenseCode",
     },
     {
-      title: "Create Date",
+      title: TranslateText("app.licenses.createDate"),
       dataIndex: "CreateDate",
       render: (CreateDate: ILicenses["CreateDate"]) => (
         <span>
@@ -96,7 +97,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       ),
     },
     {
-      title: "Activation Date",
+      title: TranslateText("app.licenses.activationDate"),
       dataIndex: "LicenseActivationDate",
       render: (date: ILicenses["LicenseActivationDate"]) => (
         <span>
@@ -105,16 +106,18 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       ),
     },
     {
-      title: "IP",
+      title: TranslateText("app.licenses.ip"),
       dataIndex: "PrivateIP",
     },
     {
-      title: "Status",
+      title: TranslateText("app.licenses.status"),
       dataIndex: "Status",
       render: (Status: number) => (
         <div>
           <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
-            {Status === 1 ? "Activated" : "Not Activated"}
+            {Status === 1
+              ? TranslateText("app.licenses.status.activated")
+              : TranslateText("app.licenses.status.deactivated")}
           </Tag>
         </div>
       ),
@@ -124,7 +127,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       render: (_: any, elm: ILicenses) => (
         <div className="text-right">
           {elm.Status === 1 && (
-            <Tooltip title="Release">
+            <Tooltip title={TranslateText("app.licenses.release")}>
               <Button
                 icon={<ArrowUpOutlined />}
                 className="mr-2"
@@ -143,7 +146,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
               />
             </Tooltip>
           )}
-          <Tooltip title="Delete">
+          <Tooltip title={TranslateText("app.licenses.delete")}>
             <Button
               danger
               icon={<DeleteOutlined />}
@@ -183,8 +186,10 @@ const Licenses = ({ AppType }: { AppType: number }) => {
               <Tooltip
                 title={`${
                   selectedRows.length > 1
-                    ? `Delete (${selectedRows.length})`
-                    : "Delete"
+                    ? `${TranslateText("app.licenses.delete")} (${
+                        selectedRows.length
+                      })`
+                    : TranslateText("app.licenses.delete")
                 }`}
               >
                 <Button
@@ -202,7 +207,9 @@ const Licenses = ({ AppType }: { AppType: number }) => {
               onClick={() => setCreateLicenseVisible(true)}
             >
               <PlusOutlined />
-              <span>New</span>
+              <span>
+                <IntlMessage id="app.licenses.add" />
+              </span>
             </Button>
           </Flex>
         </div>

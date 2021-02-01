@@ -10,6 +10,7 @@ import {
 import Flex from "../../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import DeviceView from "./DeviceView";
+import TranslateText from "../../../../../utils/translate";
 export enum Health {
   _GOOD = 2,
   _COLD = 7,
@@ -67,11 +68,11 @@ const Devices = ({ AppType }: { AppType: number }) => {
       <Table
         columns={[
           {
-            title: "Device Name",
+            title: TranslateText("app.devices.deviceName"),
             dataIndex: "DeviceName",
           },
           {
-            title: "OS Type",
+            title: TranslateText("app.devices.osType"),
             dataIndex: "OSType",
             render: (OSType) => (
               <span>
@@ -86,15 +87,15 @@ const Devices = ({ AppType }: { AppType: number }) => {
             ),
           },
           {
-            title: "OS Version",
+            title: TranslateText("app.devices.osVersion"),
             dataIndex: "OSVersion",
           },
           {
-            title: "App Version",
+            title: TranslateText("app.devices.appVersion"),
             dataIndex: "ApplicationVersion",
           },
           {
-            title: "Last Access Date",
+            title: TranslateText("app.devices.lastAccessDate"),
             dataIndex: "LastAccessDate",
             render: (date: ILicenses["LastAccessDate"]) => (
               <span>
@@ -108,7 +109,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
             dataIndex: "actions",
             render: (_, elm) => (
               <div className="text-right">
-                <Tooltip title="View">
+                <Tooltip title={TranslateText("app.devices.viewcenses")}>
                   <Button
                     type="primary"
                     className="mr-2"

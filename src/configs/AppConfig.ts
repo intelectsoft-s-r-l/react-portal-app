@@ -10,6 +10,7 @@ export const APP_NAME = "Client Portal App";
 export const API_APP_URL = env!.API_APP_URL;
 export const API_AUTH_URL = env!.API_AUTH_URL;
 export const API_SMS_URL = env!.API_SMS_URL;
+export const API_DISCOUNT_URL = env!.API_DISCOUNT_URL;
 export const SUBDIR_PATH = env!.SUBDIR_PATH;
 export const APP_PREFIX_PATH = "/app";
 export const AUTH_PREFIX_PATH = "/auth";

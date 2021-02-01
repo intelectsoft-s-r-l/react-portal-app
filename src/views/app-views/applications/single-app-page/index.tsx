@@ -32,6 +32,7 @@ import SmsDashboard from "./SMS/dashboard";
 import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
+import DiscountDashboard from "./MyDiscount/dashboard";
 
 enum EnApp {
   Retail = 10,
@@ -77,7 +78,8 @@ const Options = ({
         className={
           AppType === EnApp.SMS ||
           AppType === EnApp.ExchangeOfInvoice ||
-          AppType === EnApp.ExchangeOfOrder
+          AppType === EnApp.ExchangeOfOrder ||
+          AppType === EnApp.MyDiscount
             ? ""
             : "d-none"
         }
@@ -199,11 +201,15 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/dashboard`}
         render={(props) => {
+          // PASS APYKEY FROM STATE NOT DIRECTLY FROM APP
           if (app.AppType === EnApp.SMS)
             return <SmsDashboard {...props} APIKey={app.ApyKey} />;
           else if (app.AppType === EnApp.ExchangeOfInvoice)
             return <InvoiceDashboard />;
-          else return <OrderDashboard />;
+          else if (app.AppType === EnApp.ExchangeOfOrder)
+            return <OrderDashboard />;
+          else if (app.AppType === EnApp.MyDiscount)
+            return <DiscountDashboard {...props} APIKey={app.ApyKey} />;
         }}
       />
       <Route
