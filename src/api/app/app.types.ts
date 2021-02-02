@@ -1,4 +1,4 @@
-import { ApiResponse } from "../types.response";
+import { ApiRequest, ApiResponse } from "../types.response";
 
 export interface IUsers {
   Company: string;
@@ -167,4 +167,9 @@ export interface ICampaignList {
 export interface IRsaKeys extends ApiResponse {
   EncryptionPublicKey: string;
   EncryptionPrivateKey: string;
+}
+
+export interface ICreateAppPackage extends ApiRequest {
+  AppPackage: IPackages;
+  MarketAppID: number;
 }

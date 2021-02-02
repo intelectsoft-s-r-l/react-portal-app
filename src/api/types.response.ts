@@ -3,6 +3,10 @@ export interface ApiResponse {
   ErrorMessage: string;
 }
 
+export interface ApiRequest {
+  Token?: string;
+}
+
 export type ApiResponseBase<
   Obj,
   Key extends string | number | symbol,
