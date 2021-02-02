@@ -1,9 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { DiscountService } from "../../../../../../api";
+import { DiscountService } from "../../../../../../api/discount";
 import TranslateText from "../../../../../../utils/translate";
 import moment from "moment";
-import { IDiscountGetInfo } from "../../../../../../api/types.response";
 import { Col, Row } from "antd";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
@@ -15,7 +14,7 @@ const DiscountDashboard = (props: any) => {
     moment().clone().startOf("month"),
     moment().clone().endOf("month"),
   ]);
-  const [info, setInfo] = useState<IDiscountGetInfo>({
+  const [info, setInfo] = useState<{ [key: string]: number }>({
     Cashback: 0,
     Validation: 0,
   });

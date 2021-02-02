@@ -1,24 +1,15 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import {
-  Badge,
-  Card,
-  Col,
-  DatePicker,
-  Row,
-  Table,
-  Tag,
-  Typography,
-} from "antd";
+import { Badge, Card, Col, DatePicker, Row, Table, Tag } from "antd";
 import { RouteComponentProps } from "react-router-dom";
-import { SmsService } from "../../../../../../api";
+import { SmsService } from "../../../../../../api/sms";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
 import Flex from "../../../../../../components/shared-components/Flex";
 import { COLORS } from "../../../../../../constants/ChartConstant";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
-import { ISMSList } from "../../../../../../api/types.response";
+import { ISmsList } from "../../../../../../api/sms/sms.types";
 import { ColumnsType } from "antd/es/table/interface";
 import TranslateText from "../../../../../../utils/translate";
 
@@ -41,7 +32,7 @@ enum EnSmsState {
   DeliveryToBulkSMS = 100,
 }
 
-const tableColumns: ColumnsType<ISMSList> = [
+const tableColumns: ColumnsType<ISmsList> = [
   {
     title: TranslateText("SMS.Phone"),
     dataIndex: "Phone",
@@ -101,7 +92,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
     []
   );
   const [loading, setLoading] = useState(true);
-  const [smsList, setSmsList] = useState<ISMSList[]>([]);
+  const [smsList, setSmsList] = useState<ISmsList[]>([]);
   const [totalSms, setTotalSms] = useState<number>(0);
   const [statusData, setStatusData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];

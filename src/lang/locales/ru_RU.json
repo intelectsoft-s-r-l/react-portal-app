@@ -178,6 +178,8 @@
   "users.status.NotActivated": "Неактивный",
   "users.status.Disabled": "Деактивированный",
 
+  "app.Invoice": "Счета-фактуры",
+  "app.Order": "Заказы",
   "app.Delete": "Удалить",
   "app.status.Installed": "Установлено",
   "app.status.NotInstalled": "Установить",

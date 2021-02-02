@@ -4,7 +4,7 @@ import IntlMessage from "../../../components/util-components/IntlMessage";
 import { connect } from "react-redux";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
-import { AuthService } from "../../../api";
+import { AuthService } from "../../../api/HttpClient";
 import { DONE } from "../../../constants/Messages";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";

@@ -6,11 +6,7 @@ import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
 import Loading from "../../../components/shared-components/Loading";
 import { IMarketAppListShort } from "../../../api/types.response";
-import { API_APP_URL } from "../../../configs/AppConfig";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { IState } from "../../../redux/reducers";
-import { AppService } from "../../../api";
+import { AppService } from "../../../api/app";
 
 const AppStoreNav = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,8 +15,6 @@ const AppStoreNav = () => {
   const instance = new AppService();
   useEffect(() => {
     if (menuIsOpen) {
-      // TODO: Replace this with a new GetMarketAppList function,
-      // that returns only Name and Logo of App
       instance.GetMarketAppListShort().then((data) => {
         setLoading(false);
         if (data && data.ErrorCode === 0) setApps(data.AppList);

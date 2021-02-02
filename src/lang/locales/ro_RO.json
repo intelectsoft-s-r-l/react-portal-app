@@ -175,6 +175,8 @@
   "users.status.NotActivated": "Inactiv",
   "users.status.Disabled": "Deactivat",
 
+  "app.Invoice": "Facturi",
+  "app.Order": "Comenzi",
   "app.Delete": "Șterge",
   "app.status.Installed": "Instalat",
   "app.status.NotInstalled": "Instalează",

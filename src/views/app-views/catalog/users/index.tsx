@@ -19,7 +19,7 @@ import { UserModalAdd } from "./UserModalAdd";
 import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";

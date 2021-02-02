@@ -12,8 +12,7 @@ import { IState } from "../../../redux/reducers";
 import { IAccount } from "../../../redux/reducers/Account";
 import { ITheme } from "../../../redux/reducers/Theme";
 import { IAuth } from "../../../redux/reducers/Auth";
-import Loading from "../../../components/shared-components/Loading";
-import { DONE, UPLOADING } from "../../../constants/Messages";
+import { UPLOADING } from "../../../constants/Messages";
 import TranslateText from "../../../utils/translate";
 
 interface IEditProfile {

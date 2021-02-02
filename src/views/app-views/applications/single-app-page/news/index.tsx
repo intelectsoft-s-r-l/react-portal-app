@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Card, List, Empty, Menu, Modal, Tag } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import Flex from "../../../../../components/shared-components/Flex";
 import CreateNews from "./CreateNews";
 import moment from "moment";

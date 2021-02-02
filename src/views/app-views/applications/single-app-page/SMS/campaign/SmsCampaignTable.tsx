@@ -12,7 +12,7 @@ import { ICampaignList } from "../../../../../../api/types.response";
 import moment from "moment";
 import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
 import { Menu, Tag, Modal } from "antd";
-import { AppService } from "../../../../../../api";
+import { AppService } from "../../../../../../api/app";
 import { Link } from "react-router-dom";
 import TranslateText from "../../../../../../utils/translate";
 

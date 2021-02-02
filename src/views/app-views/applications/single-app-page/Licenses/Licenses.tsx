@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import Utils from "../../../../../utils";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import CreateLicenseModal from "./CreateLicenseModal";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { ILicenses } from "../../../../../api/types.response";

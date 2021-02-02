@@ -1,19 +1,9 @@
 import * as React from "react";
-import {
-  Col,
-  Row,
-  Modal,
-  Button,
-  Input,
-  message,
-  Form,
-  Card,
-  Empty,
-} from "antd";
 import { useState, useEffect } from "react";
+import { Col, Row, Modal, Button, Input, message, Form, Empty } from "antd";
 import { IMarketAppList } from "../../../../api/types.response";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import { DONE, UPDATING } from "../../../../constants/Messages";
 import TranslateText from "../../../../utils/translate";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
@@ -292,7 +282,7 @@ const Integration = ({
         </Button>
       </Col>
       <Col
-        xl={24}
+        xl={12}
         className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
       >
         {appData!.ModuleSettings!.Backoffice ||

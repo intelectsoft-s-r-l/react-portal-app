@@ -3,6 +3,7 @@ const dev = {
   API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
   API_SMS_URL: "https://dev.edi.md/SMSService/json",
   API_DISCOUNT_URL: "https://dev.edi.md/ISDiscountService/json",
+  API_EDX_URL: "https://dev.edi.md/EDXService/json",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -11,6 +12,7 @@ const test = {
   API_AUTH_URL: "https://api.edi.md/ISAuthService/json",
   API_SMS_URL: "https://api.edi.md/SMSService/json",
   API_DISCOUNT_URL: "https://api.edi.md/ISDiscountService/json",
+  API_EDX_URL: "https://api.edi.md/EDXService/json",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -19,6 +21,7 @@ const prod = {
   API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
   API_SMS_URL: "https://dev.edi.md/SMSService/json",
   API_DISCOUNT_URL: "https://dev.edi.md/ISDiscountService/json",
+  API_EDX_URL: "https://dev.edi.md/EDXService/json",
   SUBDIR_PATH: "/testclientportal",
 };
 

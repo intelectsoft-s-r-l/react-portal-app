@@ -27,7 +27,6 @@ const InstallWizard = () => {
     termsAccepted,
     setTermsAccepted,
     selectedApp,
-    getMarketApps,
     wizLoading,
   } = useContext(MarketContext);
 
@@ -42,7 +41,6 @@ const InstallWizard = () => {
           key="cancel"
           onClick={async () => {
             handleCancel();
-            termsAccepted && (await getMarketApps());
           }}
           disabled={wizLoading}
         >

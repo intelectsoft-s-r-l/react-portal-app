@@ -20,7 +20,7 @@ import AppStoreNav from "../../views/app-views/applications/AppNav";
 import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
-import { AppService } from "../../api";
+import { AppService } from "../../api/app";
 
 const { Header } = Layout;
 

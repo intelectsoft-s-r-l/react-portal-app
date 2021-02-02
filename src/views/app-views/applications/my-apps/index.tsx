@@ -6,7 +6,7 @@ import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
 import { CheckCircleOutlined, ExperimentOutlined } from "@ant-design/icons";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";

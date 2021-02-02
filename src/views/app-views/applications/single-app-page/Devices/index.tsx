@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Table, Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { AppService } from "../../../../../api";
-import {
-  IDiagnosticInformation,
-  ILicenses,
-} from "../../../../../api/types.response";
+import { AppService } from "../../../../../api/app";
+import { ILicenses } from "../../../../../api/types.response";
 import Flex from "../../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import DeviceView from "./DeviceView";

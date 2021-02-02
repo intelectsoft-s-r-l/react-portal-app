@@ -1,5 +1,5 @@
 import { CLEAR_INFO, UPDATE_SETTINGS } from "../constants/Account";
-import { AppService } from "../../api";
+import { AppService } from "../../api/app";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { CHANGE_LOCALE } from "../constants/Theme";

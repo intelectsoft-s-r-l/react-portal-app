@@ -12,7 +12,7 @@ import {
   Upload,
 } from "antd";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
-import { AppService } from "../../../../../../api";
+import { AppService } from "../../../../../../api/app";
 import TranslateText from "../../../../../../utils/translate";
 import { DONE, UPLOADING } from "../../../../../../constants/Messages";
 import Utils from "../../../../../../utils";

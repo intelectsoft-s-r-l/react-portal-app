@@ -17,7 +17,7 @@ import Licenses from "./Licenses/Licenses";
 import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
@@ -27,7 +27,7 @@ import { ILocale, IMarketAppList } from "../../../../api/types.response";
 import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/campaign/CampaignDetails";
-import Invoice from "./ExchangeOfInvoice/Invoice";
+import Invoice from "./ExchangeOfInvoice/Invoice/invoice";
 import SmsDashboard from "./SMS/dashboard";
 import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
@@ -88,6 +88,24 @@ const Options = ({
           <IntlMessage id="app.Dashboard" />
         </span>
         <Link to={"dashboard"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/invoice`}
+        className={AppType === EnApp.ExchangeOfInvoice ? "" : "d-none"}
+      >
+        <span>
+          <IntlMessage id="app.Invoice" />
+        </span>
+        <Link to={"invoice"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/order`}
+        className={AppType === EnApp.ExchangeOfOrder ? "" : "d-none"}
+      >
+        <span>
+          <IntlMessage id="app.Order" />
+        </span>
+        <Link to={"order"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/campaign`}
@@ -195,9 +213,12 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       />
       <Route
         path={`${match.url}/invoice`}
-        render={(props) => <Invoice {...props} />}
+        render={(props) => <Invoice {...props} APIKey={app.ApyKey} />}
       />
-      <Route path={`${match.url}/order`} render={(props) => <Order />} />
+      <Route
+        path={`${match.url}/order`}
+        render={(props) => <Order {...props} APIKey={app.ApyKey} />}
+      />
       <Route
         path={`${match.url}/dashboard`}
         render={(props) => {

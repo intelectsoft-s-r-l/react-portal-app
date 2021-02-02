@@ -7,7 +7,7 @@ import { DONE, UPLOADING } from "../../../../../constants/Messages";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import { useSelector } from "react-redux";
 import { IState } from "../../../../../redux/reducers";
 import TranslateText from "../../../../../utils/translate";

@@ -1,7 +1,16 @@
 export interface ApiResponse {
-  ErrorCode?: number;
-  ErrorMessage?: string;
+  ErrorCode: number;
+  ErrorMessage: string;
 }
+
+export type ApiResponseBase<
+  Obj,
+  Key extends string | number | symbol,
+  Value
+> = Obj &
+  {
+    [prop in Key]: Value;
+  };
 
 /* Status handlers */
 
@@ -223,7 +232,7 @@ export interface ILicenses {
   Status: number;
   Workplace: string;
 }
-export interface IGetAppLicensesList extends ApiResponse {
+export interface IGetAppLicensesListResponse extends ApiResponse {
   LicenseList: ILicenses[];
 }
 
@@ -256,43 +265,3 @@ export interface ICampaignList {
 export interface ISMSGetCampaignResponse extends ApiResponse {
   CampaignList: ICampaignList[];
 }
-
-export interface ISMSInfoGetByPeriodResponse extends ApiResponse {
-  Created: number;
-  Delivery: number;
-  FailedOrRejected: number;
-  Pending: number;
-}
-
-export interface ISMSList {
-  Created: string;
-  Message: string;
-  MessageType: number;
-  Phone: string;
-  SentDate: string;
-  State: number;
-}
-export interface ISMSInfoGetDetailByPeriodResponse extends ApiResponse {
-  SMSList: ISMSList[];
-  TotalSMS: number;
-}
-
-export interface ISMSInfoResponse extends ApiResponse {
-  FailedDelivery: number;
-  IncomeThisMonth: number;
-  IncomeThisWeek: number;
-  IncomeToday: number;
-  Rejected: number;
-  SentThisMonth: number;
-  SentThisWeek: number;
-  SentToday: number;
-  WaitingForSend: number;
-}
-
-export interface IDiscountGetInfo {
-  Cashback: number;
-  Validation: number;
-}
-export interface IDiscountGetInfoResponse
-  extends ApiResponse,
-    IDiscountGetInfo {}

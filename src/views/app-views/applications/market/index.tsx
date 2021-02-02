@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
 import { useSelector } from "react-redux";
 import Loading from "../../../../components/shared-components/Loading";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import InstallWizard from "./wizard";
 import { MarketContext } from "./MarketContext";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
@@ -141,6 +141,7 @@ const Market = () => {
   const [selectedApp, setSelectedApp] = useState<IMarketAppList>();
   const [appInstalled, setAppInstalled] = useState<boolean>(false);
   const getMarketApps = async () => {
+    setLoading(true);
     return instance.GetMarketAppList().then((data) => {
       setLoading(false);
       if (data && data.ErrorCode === 0) {

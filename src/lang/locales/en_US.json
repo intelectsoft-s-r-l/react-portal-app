@@ -176,6 +176,8 @@
   "users.status.NotActivated": "Not Activated",
   "users.status.Disabled": "Disabled",
 
+  "app.Invoice": "Invoices",
+  "app.Order": "Order",
   "app.Delete": "Delete",
   "app.status.Installed": "Installed",
   "app.status.NotInstalled": "Install",

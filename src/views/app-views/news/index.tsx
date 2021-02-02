@@ -2,17 +2,11 @@ import * as React from "react";
 import { Card, List, Empty, Select } from "antd";
 import moment from "moment";
 import Flex from "../../../components/shared-components/Flex";
-import { AppService } from "../../../api";
+import { AppService } from "../../../api/app";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
-import {
-  IMarketAppList,
-  IMarketAppListShort,
-  INewsList,
-} from "../../../api/types.response";
-import { useSelector } from "react-redux";
-import { IState } from "../../../redux/reducers";
+import { IMarketAppListShort, INewsList } from "../../../api/types.response";
 
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (

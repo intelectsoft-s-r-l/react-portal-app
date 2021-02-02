@@ -5,7 +5,7 @@ import { ICampaignList } from "../../../../../../api/types.response";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { rules } from "./NewCampaign";
 import moment from "moment";
-import { AppService } from "../../../../../../api";
+import { AppService } from "../../../../../../api/app";
 import Utils from "../../../../../../utils";
 import TranslateText from "../../../../../../utils/translate";
 

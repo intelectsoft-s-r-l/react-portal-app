@@ -17,7 +17,7 @@ import Flex from "../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { updateSettings } from "../../../../redux/actions/Account";
 import { connect } from "react-redux";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
 import { ICompanyData } from "../../../../api/types.response";
@@ -26,7 +26,6 @@ import TranslateText from "../../../../utils/translate";
 import { FormInstance } from "antd/lib/form";
 import Loading from "../../../../components/shared-components/Loading";
 import { IAuth } from "../../../../redux/reducers/Auth";
-import { IState } from "../../../../redux/reducers";
 
 interface ICompanyForm extends IAuth {
   onChangeMask: (e: React.ChangeEvent<HTMLInputElement>) => void;

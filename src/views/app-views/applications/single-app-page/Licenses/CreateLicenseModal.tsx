@@ -1,7 +1,7 @@
 import { Row, Modal, Form, Col, Input } from "antd";
 import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import TranslateText from "../../../../../utils/translate";
 
 interface ICreateLicenseModal {
