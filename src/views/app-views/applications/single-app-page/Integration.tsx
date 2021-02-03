@@ -281,75 +281,77 @@ const Integration = ({
           <IntlMessage id="app.Refresh" />
         </Button>
       </Col>
-      <Col
-        xl={12}
-        className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
-      >
-        {appData!.ModuleSettings!.Backoffice ||
-        appData!.ModuleSettings!.ActivationCode ||
-        appData!.ModuleSettings!.APIKey ? (
-          <hr />
-        ) : null}
-        <div className="container-fluid">
-          <h2>Public Key</h2>
-        </div>
-        <Flex alignItems="center">
-          <Input
-            name="PublicKey"
-            value={PublicKey}
-            onChange={(e) => setPublicKey(e.target.value)}
-            suffix={
-              <CardToolbar
-                code={PublicKey}
-                expand={() => false}
-                isExpand="false"
-              />
-            }
-          />
-          <Button
-            type="ghost"
-            style={{ borderColor: "#1890ff" }}
-            className="ml-3 px-4"
-            onClick={() =>
-              updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
-            }
-          >
-            <IntlMessage id="app.Refresh" />
-          </Button>
-        </Flex>
-      </Col>
-      <Col
-        xl={24}
-        className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
-      >
-        <div className="container-fluid">
-          <h2>Private Key</h2>
-        </div>
-        <Flex alignItems="center">
-          <Input
-            name="PrivateKey"
-            value={PrivateKey}
-            onChange={(e) => setPrivateKey(e.target.value)}
-          />
-          <Button
-            type="ghost"
-            style={{ borderColor: "#1890ff" }}
-            className="ml-3 px-4"
-            onClick={() =>
-              updateRsaKey(appData!.ID ?? 0, PrivateKey, key.PRIVATE)
-            }
-          >
-            <IntlMessage id="app.Refresh" />
-          </Button>
-        </Flex>
-        <Button
-          type="primary"
-          className="mt-4 px-5"
-          onClick={() => generateRsaKey()}
+      <Row gutter={ROW_GUTTER}>
+        <Col
+          xl={24}
+          className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
         >
-          <IntlMessage id="app.Generate" />
-        </Button>
-      </Col>
+          {appData!.ModuleSettings!.Backoffice ||
+          appData!.ModuleSettings!.ActivationCode ||
+          appData!.ModuleSettings!.APIKey ? (
+            <hr />
+          ) : null}
+          <div className="container-fluid">
+            <h2>Public Key</h2>
+          </div>
+          <Flex alignItems="center">
+            <Input
+              name="PublicKey"
+              value={PublicKey}
+              onChange={(e) => setPublicKey(e.target.value)}
+              suffix={
+                <CardToolbar
+                  code={PublicKey}
+                  expand={() => false}
+                  isExpand="false"
+                />
+              }
+            />
+            <Button
+              type="ghost"
+              style={{ borderColor: "#1890ff" }}
+              className="ml-3 px-4"
+              onClick={() =>
+                updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
+              }
+            >
+              <IntlMessage id="app.Refresh" />
+            </Button>
+          </Flex>
+        </Col>
+        <Col
+          xl={24}
+          className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
+        >
+          <div className="container-fluid">
+            <h2>Private Key</h2>
+          </div>
+          <Flex alignItems="center">
+            <Input
+              name="PrivateKey"
+              value={PrivateKey}
+              onChange={(e) => setPrivateKey(e.target.value)}
+            />
+            <Button
+              type="ghost"
+              style={{ borderColor: "#1890ff" }}
+              className="ml-3 px-4"
+              onClick={() =>
+                updateRsaKey(appData!.ID ?? 0, PrivateKey, key.PRIVATE)
+              }
+            >
+              <IntlMessage id="app.Refresh" />
+            </Button>
+          </Flex>
+          <Button
+            type="primary"
+            className="mt-4 px-5"
+            onClick={() => generateRsaKey()}
+          >
+            <IntlMessage id="app.Generate" />
+          </Button>
+        </Col>
+      </Row>
     </Row>
   );
 };
