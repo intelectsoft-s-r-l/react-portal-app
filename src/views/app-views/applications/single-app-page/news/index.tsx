@@ -1,5 +1,15 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Button, Card, List, Empty, Menu, Modal, Tag, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  List,
+  Empty,
+  Menu,
+  Modal,
+  Tag,
+  Tooltip,
+  Popover,
+} from "antd";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -53,15 +63,15 @@ const ArticleItem = ({
         >
           {newsData.Status === newsEnum.DISABLED ? (
             <Tooltip title="Disabled">
-              <CloseCircleOutlined />
+              <span>Disabled</span>
             </Tooltip>
           ) : newsData.Status === newsEnum.ACTIVE ? (
             <Tooltip title="Active">
-              <CheckCircleOutlined />
+              <span>Active</span>
             </Tooltip>
           ) : (
             <Tooltip title="Not published">
-              <InfoCircleOutlined />
+              <span>Draft</span>
             </Tooltip>
           )}
         </Tag>

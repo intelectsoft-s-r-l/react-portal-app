@@ -284,13 +284,10 @@ const Integration = ({
       <Row gutter={ROW_GUTTER}>
         <Col
           xl={24}
+          xs={24}
+          md={24}
           className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
         >
-          {appData!.ModuleSettings!.Backoffice ||
-          appData!.ModuleSettings!.ActivationCode ||
-          appData!.ModuleSettings!.APIKey ? (
-            <hr />
-          ) : null}
           <div className="container-fluid">
             <h2>Public Key</h2>
           </div>
@@ -321,6 +318,8 @@ const Integration = ({
         </Col>
         <Col
           xl={24}
+          xs={24}
+          md={24}
           className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
         >
           <div className="container-fluid">

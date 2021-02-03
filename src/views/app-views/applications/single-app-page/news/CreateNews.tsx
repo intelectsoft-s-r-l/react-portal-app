@@ -55,7 +55,12 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
         .then(async (data) => {
           setLoading(false);
           close();
-          if (data.ErrorCode === 0) await getNews(AppType);
+          if (data.ErrorCode === 0) {
+            await getNews(AppType);
+            message
+              .success(TranslateText("news.create.message"), 2)
+              .then(() => message.info("You can publish your article!"));
+          }
         });
     }, 1000);
   };
