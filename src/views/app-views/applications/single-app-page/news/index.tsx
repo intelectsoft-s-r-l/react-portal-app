@@ -1,6 +1,10 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Button, Card, List, Empty, Menu, Modal, Tag } from "antd";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { Button, Card, List, Empty, Menu, Modal, Tag, Tooltip } from "antd";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { AppService } from "../../../../../api/app";
 import Flex from "../../../../../components/shared-components/Flex";
@@ -24,6 +28,7 @@ interface IArticleItem {
 enum newsEnum {
   ACTIVE = 1,
   DISABLED = 2,
+  INACTIVE = 0,
 }
 const ArticleItem = ({
   newsData,
@@ -37,11 +42,27 @@ const ArticleItem = ({
     <Card
       style={{ padding: "20px" }}
       title={
-        <Tag color={newsData.Status === newsEnum.DISABLED ? "red" : "cyan"}>
+        <Tag
+          color={
+            newsData.Status === newsEnum.DISABLED
+              ? "red"
+              : newsData.Status === newsEnum.ACTIVE
+              ? "cyan"
+              : "orange"
+          }
+        >
           {newsData.Status === newsEnum.DISABLED ? (
-            <CloseCircleOutlined />
+            <Tooltip title="Disabled">
+              <CloseCircleOutlined />
+            </Tooltip>
+          ) : newsData.Status === newsEnum.ACTIVE ? (
+            <Tooltip title="Active">
+              <CheckCircleOutlined />
+            </Tooltip>
           ) : (
-            <CheckCircleOutlined />
+            <Tooltip title="Not published">
+              <InfoCircleOutlined />
+            </Tooltip>
           )}
         </Tag>
       }
@@ -75,7 +96,7 @@ const ArticleItem = ({
                     </span>
                   </Flex>
                 </Menu.Item>
-              ) : (
+              ) : newsData.Status === newsEnum.ACTIVE ? (
                 <Menu.Item
                   onClick={async () => {
                     Modal.confirm({
@@ -98,6 +119,32 @@ const ArticleItem = ({
                     <CloseCircleOutlined />
                     <span className="ml-2">
                       <IntlMessage id={"users.Disable"} />
+                    </span>
+                  </Flex>
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  onClick={async () => {
+                    Modal.confirm({
+                      title: "Are you sure you want to publish this article?",
+                      onOk: async () => {
+                        return await new AppService()
+                          .UpdateNews({
+                            ...newsData,
+                            Status: newsEnum.ACTIVE,
+                          })
+                          .then((data) => {
+                            if (data && data.ErrorCode === 0)
+                              refreshNews(AppType);
+                          });
+                      },
+                    });
+                  }}
+                >
+                  <Flex alignItems="center">
+                    <CheckCircleOutlined />
+                    <span className="ml-2">
+                      <IntlMessage id={"users.Publish"} />
                     </span>
                   </Flex>
                 </Menu.Item>
