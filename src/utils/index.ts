@@ -5,22 +5,11 @@ import moment from "moment";
 import { ILocale } from "../api/app/app.types";
 
 class Utils {
-  /**
-   * Get first character from first & last sentences of a username
-   * @param {String} name - Username
-   * @return {String} 2 characters string
-   */
   static getNameInitial(name: string) {
     let initials = name.match(/\b\w/g) || [];
     return ((initials.shift() || "") + (initials.pop() || "")).toUpperCase();
   }
 
-  /**
-   * Get current path related object from Navigation Tree
-   * @param {Array} navTree - Navigation Tree from directory 'configs/NavigationConfig'
-   * @param {String} path - Location path you looking for e.g '/app/dashboards/analytic'
-   * @return {Object} object that contained the path string
-   */
   static getRouteInfo(navTree: any, path: any): any {
     if (navTree.path === path) {
       return navTree;
@@ -37,11 +26,6 @@ class Utils {
     return route;
   }
 
-  /**
-   * Get accessible color contrast
-   * @param {String} hex - Hex color code e.g '#3e82f7'
-   * @return {String} 'dark' or 'light'
-   */
   static getColorContrast(hex: any) {
     const threshold = 130;
     const hRed = hexToR(hex);
@@ -67,12 +51,6 @@ class Utils {
     }
   }
 
-  /**
-   * Darken or lighten a hex color
-   * @param {String} color - Hex color code e.g '#3e82f7'
-   * @param {Number} percent - Percentage -100 to 100, positive for lighten, negative for darken
-   * @return {String} Darken or lighten color
-   */
   static shadeColor(color: any, percent: any) {
     let R = parseInt(color.substring(1, 3), 16);
     let G = parseInt(color.substring(3, 5), 16);
@@ -92,13 +70,6 @@ class Utils {
     return `#${RR}${GG}${BB}`;
   }
 
-  /**
-   * Returns either a positive or negative
-   * @param {Number} number - number value
-   * @param {any} positive - value that return when positive
-   * @param {any} negative - value that return when negative
-   * @return {any} positive or negative value based on param
-   */
   static getSignNum(number: number, positive: any, negative: any) {
     if (number > 0) {
       return positive;
@@ -109,13 +80,6 @@ class Utils {
     return null;
   }
 
-  /**
-   * Returns either ascending or descending value
-   * @param {Object} a - antd Table sorter param a
-   * @param {Object} b - antd Table sorter param b
-   * @param {String} key - object key for compare
-   * @return {any} a value minus b value
-   */
   static antdTableSorter(a: any, b: any, key: any) {
     if (typeof a[key] === "number" && typeof b[key] === "number") {
       return a[key] - b[key];
@@ -129,13 +93,6 @@ class Utils {
     return;
   }
 
-  /**
-   * Filter array of object
-   * @param {Array} list - array of objects that need to filter
-   * @param {String} key - object key target
-   * @param {any} value  - value that excluded from filter
-   * @return {Array} a value minus b value
-   */
   static filterArray(list: any, key: any, value: any) {
     let data = list;
     if (list) {
@@ -143,14 +100,6 @@ class Utils {
     }
     return data;
   }
-
-  /**
-   * Remove object from array by value
-   * @param {Array} list - array of objects
-   * @param {String} key - object key target
-   * @param {any} value  - target value
-   * @return {Array} Array that removed target object
-   */
   static deleteArrayRow(list: any, key: any, value: any) {
     let data = list;
     if (list) {
@@ -159,12 +108,6 @@ class Utils {
     return data;
   }
 
-  /**
-   * Wild card search on all property of the object
-   * @param {Number | String} input - any value to search
-   * @param {Array} list - array for search
-   * @return {Array} array of object contained keyword
-   */
   static wildCardSearch(list: any, input: any) {
     const searchText = (item: any) => {
       for (let key in item) {
@@ -185,11 +128,6 @@ class Utils {
     return list;
   }
 
-  /**
-   * Get Breakpoint
-   * @param {Object} screens - Grid.useBreakpoint() from antd
-   * @return {Array} array of breakpoint size
-   */
   static getBreakPoint(screens: any) {
     let breakpoints: any[] = [];
     for (const key in screens) {
@@ -209,11 +147,6 @@ class Utils {
     return jsEncrypt.encrypt(input);
   }
 
-  /**
-   * Add an item to a localStorage() object
-   * @param {String} img  The img that was uploaded
-   * @param {Function} callback Callback function to render img
-   */
   static getBase64(img: any, callback: any) {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
@@ -279,16 +212,10 @@ class Utils {
     const newDate = new Date(date);
     return newDate.getMilliseconds();
   }
-
   static parseToTicks(date: number): number {
     return date * 10000 + 621355968000000000;
   }
 
-  /**
-   * Decode localization object
-   * @param {Base64} - encoded object
-   * @return {Object} - en: string; ro: string; ru: string;
-   */
   static decodeBase64Locale(data: ILocale | string) {
     try {
       const str = data.toString();
