@@ -1,3 +1,3 @@
-import { ApiResponse, ApiResponseBase } from "../types";
-export type DiscountGetInfo = ApiResponseBase<ApiResponse, "Cashback", number> &
-  ApiResponseBase<ApiResponse, "Validation", number>;
+import { ApiResponse, ApiDecorator } from "../types";
+export type DiscountGetInfo = ApiDecorator<ApiResponse, "Cashback", number> &
+  ApiDecorator<ApiResponse, "Validation", number>;

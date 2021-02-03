@@ -2,7 +2,7 @@ import HttpClient from "../HttpClient";
 import { API_APP_URL } from "../../configs/AppConfig";
 import { IAccount } from "../../redux/reducers/Account";
 import { IUpdateAppRequest, IUpdateCompanyRequest } from "./app.types";
-import { ApiResponse, ApiResponseBase } from "../types";
+import { ApiResponse, ApiDecorator } from "../types";
 import {
   ICampaignList,
   ICompanyData,
@@ -21,7 +21,7 @@ export class AppService extends HttpClient {
     super(API_APP_URL);
   }
   public GetProfileInfo = async () =>
-    this.instance.get<ApiResponseBase<ApiResponse, "User", IUsers>>(
+    this.instance.get<ApiDecorator<ApiResponse, "User", IUsers>>(
       "/GetProfileInfo"
     );
   public UpdateUser = async (data: { User: IAccount }) =>
@@ -29,11 +29,11 @@ export class AppService extends HttpClient {
 
   public GetMarketAppList = async () =>
     this.instance.get<
-      ApiResponseBase<ApiResponse, "MarketAppList", IMarketAppList[]>
+      ApiDecorator<ApiResponse, "MarketAppList", IMarketAppList[]>
     >("/GetMarketAppList");
   public GetMarketAppListShort = async () =>
     this.instance.get<
-      ApiResponseBase<ApiResponse, "AppList", IShortMarketAppList[]>
+      ApiDecorator<ApiResponse, "AppList", IShortMarketAppList[]>
     >("GetAppList");
 
   public DeactivateApp = async (AppID: number) =>
@@ -47,7 +47,7 @@ export class AppService extends HttpClient {
     });
 
   public GetAppLicenses = async (AppType: number) =>
-    this.instance.get<ApiResponseBase<ApiResponse, "LicenseList", ILicenses[]>>(
+    this.instance.get<ApiDecorator<ApiResponse, "LicenseList", ILicenses[]>>(
       "/GetAppLicensesList",
       {
         params: {
@@ -72,7 +72,7 @@ export class AppService extends HttpClient {
     });
 
   public GenerateApiKey = async (AppID: number) =>
-    this.instance.post<ApiResponseBase<ApiResponse, "ApiKey", string>>(
+    this.instance.post<ApiDecorator<ApiResponse, "ApiKey", string>>(
       "/GenerateApiKey",
       {
         AppID,
@@ -96,7 +96,7 @@ export class AppService extends HttpClient {
     });
 
   public GenerateLicenseActivationCode = async (AppID: number) =>
-    this.instance.post<ApiResponseBase<ApiResponse, "ActivationCode", number>>(
+    this.instance.post<ApiDecorator<ApiResponse, "ActivationCode", number>>(
       "/GenerateLicenseActivationCode",
       {
         AppID,
@@ -104,12 +104,12 @@ export class AppService extends HttpClient {
     );
 
   public GetUserList = async () =>
-    this.instance.get<ApiResponseBase<ApiResponse, "Users", IUsers[]>>(
+    this.instance.get<ApiDecorator<ApiResponse, "Users", IUsers[]>>(
       "/GetUsersInfo"
     );
 
   public GetCompanyInfo = async () =>
-    this.instance.get<ApiResponseBase<ApiResponse, "Company", ICompanyData>>(
+    this.instance.get<ApiDecorator<ApiResponse, "Company", ICompanyData>>(
       "/GetCompanyInfo"
     );
 
@@ -128,7 +128,7 @@ export class AppService extends HttpClient {
     });
 
   public GetAppNews = async (AppType: number) =>
-    this.instance.get<ApiResponseBase<ApiResponse, "NewsList", INewsList[]>>(
+    this.instance.get<ApiDecorator<ApiResponse, "NewsList", INewsList[]>>(
       "/GetAppNews",
       {
         params: {
@@ -148,7 +148,7 @@ export class AppService extends HttpClient {
     });
 
   public GetPortalNews = async (ProductType: number) =>
-    this.instance.get<ApiResponseBase<ApiResponse, "NewsList", INewsList[]>>(
+    this.instance.get<ApiDecorator<ApiResponse, "NewsList", INewsList[]>>(
       "/GetPortalNews",
       {
         params: {
@@ -159,7 +159,7 @@ export class AppService extends HttpClient {
 
   public SMS_GetCampaign = async () =>
     this.instance.get<
-      ApiResponseBase<ApiResponse, "CampaignList", ICampaignList[]>
+      ApiDecorator<ApiResponse, "CampaignList", ICampaignList[]>
     >("/SMS/SMSGetCampaign");
 
   public SMS_DeleteCampaign = async (ID: number) =>

@@ -1,5 +1,3 @@
-import { ICompanyData } from "./app/app.types";
-
 export interface ApiResponse {
   ErrorCode: number;
   ErrorMessage: string;
@@ -9,7 +7,7 @@ export interface ApiRequest {
   Token?: string;
 }
 
-export type ApiResponseBase<
+export type ApiDecorator<
   Obj,
   Key extends string | number | symbol,
   Value
@@ -18,6 +16,7 @@ export type ApiResponseBase<
     [prop in Key]: Value;
   };
 
+// Auth
 export interface IRegisterUserRequest extends ApiRequest {
   CompanyID: number;
   Email: string;

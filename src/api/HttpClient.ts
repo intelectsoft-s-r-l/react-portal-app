@@ -21,7 +21,7 @@ import {
 } from "../redux/actions/Auth";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
-import { ApiResponse, ApiResponseBase } from "./types";
+import { ApiResponse, ApiDecorator } from "./types";
 import { IRegisterCompanyRequest, IRegisterUserRequest } from "./types";
 const publicIp = require("react-public-ip");
 
@@ -44,7 +44,7 @@ class HttpClient {
     this._initializeRequestInterceptor();
   }
   private _RefreshToken = async () =>
-    this.instance.get<ApiResponseBase<ApiResponse, "Token", string>>(
+    this.instance.get<ApiDecorator<ApiResponse, "Token", string>>(
       `${API_AUTH_URL}/RefreshToken`
     );
 
@@ -167,7 +167,7 @@ export class AuthService extends HttpClient {
   }
 
   public Login = async (Email: string, Password: string) =>
-    this.instance.post<ApiResponseBase<ApiResponse, "Token", string>>(
+    this.instance.post<ApiDecorator<ApiResponse, "Token", string>>(
       "/AuthorizeUser",
       {
         Email,
@@ -192,7 +192,7 @@ export class AuthService extends HttpClient {
     this.instance.post<ApiResponse>("/RegisterUser", data);
 
   public GetManagedToken = async (CompanyID: number) =>
-    this.instance.get<ApiResponseBase<ApiResponse, "Token", string>>(
+    this.instance.get<ApiDecorator<ApiResponse, "Token", string>>(
       "/GetManagedToken",
       {
         params: { CompanyID },

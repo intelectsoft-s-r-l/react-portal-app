@@ -45,8 +45,8 @@ enum EnApp {
   KitchetAssistant = 32,
   Qiwi = 100,
   SMS = 50,
-  ExchangeOfInvoice = 40,
-  ExchangeOfOrder = 41,
+  ExchangeOfInvoice = 41,
+  ExchangeOfOrder = 40,
   MobilePetrolExpertCash = 131,
 }
 interface IOptions extends RouteComponentProps {
@@ -67,23 +67,7 @@ const Options = ({
       defaultSelectedKeys={[`${match.url}/:appId/`]}
       selectedKeys={[location.pathname]}
     >
-      <Menu.Item key={`${match.url}/description`}>
-        <span>
-          <IntlMessage id="app.Description" />
-        </span>
-        <Link to={"description"} />
-      </Menu.Item>
-      <Menu.Item
-        key={`${match.url}/dashboard`}
-        className={
-          AppType === EnApp.SMS ||
-          AppType === EnApp.ExchangeOfInvoice ||
-          AppType === EnApp.ExchangeOfOrder ||
-          AppType === EnApp.MyDiscount
-            ? ""
-            : "d-none"
-        }
-      >
+      <Menu.Item key={`${match.url}/dashboard`}>
         <span>
           <IntlMessage id="app.Dashboard" />
         </span>
@@ -125,12 +109,6 @@ const Options = ({
         </span>
         <Link to={"news"} />
       </Menu.Item>
-      <Menu.Item key={`${match.url}/packages`}>
-        <span>
-          <IntlMessage id="app.Packages" />
-        </span>
-        <Link to={"packages"} />
-      </Menu.Item>
       <Menu.Item
         key={`${match.url}/licenses`}
         className={moduleSettings.License ? "" : "d-none"}
@@ -155,6 +133,18 @@ const Options = ({
         </span>
         <Link to={"integration"} />
       </Menu.Item>
+      <Menu.Item key={`${match.url}/packages`}>
+        <span>
+          <IntlMessage id="app.Packages" />
+        </span>
+        <Link to={"packages"} />
+      </Menu.Item>
+      <Menu.Item key={`${match.url}/description`}>
+        <span>
+          <IntlMessage id="app.Description" />
+        </span>
+        <Link to={"description"} />
+      </Menu.Item>
     </Menu>
   );
 };
@@ -168,7 +158,7 @@ interface IAppRoute {
 const AppRoute = ({ match, app }: IAppRoute) => {
   return (
     <Switch>
-      <Redirect exact from={`${match.url}`} to={`${match.url}/description`} />
+      <Redirect exact from={`${match.url}`} to={`${match.url}/dashboard`} />
       <Route
         path={`${match.url}/description`}
         exact
