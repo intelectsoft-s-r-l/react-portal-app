@@ -30,7 +30,11 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
@@ -48,7 +52,11 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
         </Tag>
       </Flex>
       <div>
-        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <h3 className="app-link mb-0 cursor-pointer ">{data.Name}</h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>

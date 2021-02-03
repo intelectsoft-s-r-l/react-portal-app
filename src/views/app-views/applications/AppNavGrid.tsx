@@ -3,7 +3,7 @@ import { Menu } from "antd";
 import { Avatar } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
-import { NavLink, RouteComponentProps, withRouter } from "react-router-dom";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { IShortMarketAppList } from "../../../api/app/app.types";
 import { MenuItemProps } from "antd/lib/menu/MenuItem";
 import "./applications.scss";
@@ -17,7 +17,11 @@ const AppNavGrid = (props: IAppNavGrid) => {
     <>
       {props.apps.map((app) => (
         <Menu.Item key={app.AppType} {...props} className="app-list__item">
-          <NavLink to={`${APP_PREFIX_PATH}/id/${app.AppType}`}>
+          <Link
+            to={`${APP_PREFIX_PATH}/id/${app.AppType}/${app.Name.split(
+              " "
+            ).join("-")}`}
+          >
             <div className="text-center">
               <Avatar
                 src={app.Photo}
@@ -28,7 +32,7 @@ const AppNavGrid = (props: IAppNavGrid) => {
               />
             </div>
             <p className="text-center">{app.Name}</p>
-          </NavLink>
+          </Link>
         </Menu.Item>
       ))}
     </>

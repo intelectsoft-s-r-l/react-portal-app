@@ -45,20 +45,20 @@ const GridItem = ({
   }, []);
   return (
     <Card style={{ maxHeight: 368 }}>
-      {" "}
       <Flex className="mb-3 " justifyContent="between">
-        {" "}
-        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
-          {" "}
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <div className="cursor-pointer app-avatar">
-            {" "}
             <Avatar
               src={data.Photo}
               icon={<ExperimentOutlined />}
               shape="square"
               size={60}
-            />{" "}
-          </div>{" "}
+            />
+          </div>
         </Link>
         {data.Status === 0 ? (
           <Tag
@@ -69,43 +69,43 @@ const GridItem = ({
               setSelectedApp(data);
             }}
           >
-            <VerticalAlignBottomOutlined />{" "}
+            <VerticalAlignBottomOutlined />
             <span
               className="ml-2
   font-weight-semibold"
             >
-              {" "}
-              <IntlMessage id={"app.status.NotInstalled"} />{" "}
+              <IntlMessage id={"app.status.NotInstalled"} />
             </span>
           </Tag>
         ) : (
           <Tag className="text-capitalize" color="cyan">
-            <CheckCircleOutlined />{" "}
+            <CheckCircleOutlined />
             <span className="ml-2 font-weight-semibold">
-              <IntlMessage id={"app.status.Installed"} />{" "}
-            </span>{" "}
+              <IntlMessage id={"app.status.Installed"} />
+            </span>
           </Tag>
-        )}{" "}
-      </Flex>{" "}
+        )}
+      </Flex>
       <div>
-        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
-          {" "}
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <h3
             className="app-link
 mb-0 cursor-pointer"
           >
             {data.Name}
-          </h3>{" "}
-        </Link>{" "}
-        <p className="text-muted">By IntelectSoft</p>{" "}
+          </h3>
+        </Link>
+        <p className="text-muted">By IntelectSoft</p>
         <div style={{ minHeight: "70px" }}>
-          {" "}
-          {shortDesc ? shortDesc[locale] : null}{" "}
-        </div>{" "}
-      </div>{" "}
+          {shortDesc ? shortDesc[locale] : null}
+        </div>
+      </div>
       <Flex justifyContent="between" alignItems="center">
-        {" "}
-        <div className="text-muted">Free</div>{" "}
+        <div className="text-muted">Free</div>
         <Button
           onClick={() => deactivateApp(data.ID, data.Name)}
           danger
@@ -114,9 +114,9 @@ mb-0 cursor-pointer"
             visibility: data.Status === 1 ? "visible" : "hidden",
           }}
         >
-          <IntlMessage id={"app.Delete"} />{" "}
-        </Button>{" "}
-      </Flex>{" "}
+          <IntlMessage id={"app.Delete"} />
+        </Button>
+      </Flex>
     </Card>
   );
 };
