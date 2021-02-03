@@ -2,6 +2,7 @@ import { message } from "antd";
 // @ts-ignore
 import { JSEncrypt } from "jsencrypt";
 import moment from "moment";
+import { ILocale } from "../api/app/app.types";
 
 class Utils {
   /**
@@ -260,18 +261,12 @@ class Utils {
     return isJpgOrPng && isLt2M;
   }
 
-  static dummyRequest({ file, onSuccess }: any) {
+  static dummyRequest({ onSuccess }: any) {
     setTimeout(() => {
       onSuccess("ok");
     });
   }
 
-  /**
-   * Add an item to a localStorage() object
-   * @param {Array} array - the array of objects that has to be sorted
-   * @param {String | Number} key - any value to search
-   * @return {Array} - a new sorted array
-   */
   static sortData(array: any, key: any) {
     return array.slice().sort((a: any, b: any) => a[key] - b[key]);
   }
@@ -287,6 +282,20 @@ class Utils {
 
   static parseToTicks(date: number): number {
     return date * 10000 + 621355968000000000;
+  }
+
+  /**
+   * Decode localization object
+   * @param {Base64} - encoded object
+   * @return {Object} - en: string; ro: string; ru: string;
+   */
+  static decodeBase64Locale(data: ILocale | string) {
+    try {
+      const str = data.toString();
+      return JSON.parse(window.atob(str));
+    } catch {
+      return { en: "", ro: "", ru: "" };
+    }
   }
 }
 

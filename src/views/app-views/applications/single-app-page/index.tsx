@@ -33,6 +33,7 @@ import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
 import DiscountDashboard from "./MyDiscount/dashboard";
+import Utils from "../../../../utils";
 
 enum EnApp {
   Retail = 10,
@@ -237,18 +238,6 @@ const AppRoute = ({ match, app }: IAppRoute) => {
 
 const AboutItem = ({ appData }: any) => {
   const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
-
-  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
-  const [longDesc, setLongDesc] = useState<Partial<ILocale>>({});
-  useEffect(() => {
-    try {
-      setShortDesc(JSON.parse(window.atob(ShortDescription)));
-      setLongDesc(JSON.parse(window.atob(LongDescription)));
-    } catch {
-      setShortDesc({ en: "", ru: "", ro: "" });
-      setLongDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   return (
     <Card className="mb-5">
@@ -266,12 +255,15 @@ const AboutItem = ({ appData }: any) => {
             <h2 className="mr-3">{Name} </h2>
           </Flex>
           <div>
-            <span className="text-muted ">{shortDesc[locale] ?? ""}</span>
+            <span className="text-muted ">
+              {Utils.decodeBase64Locale(ShortDescription)[locale] ?? ""}
+            </span>
             {Status === 0 && (
               <p
                 className="mt-4"
                 dangerouslySetInnerHTML={{
-                  __html: longDesc[locale] ?? "",
+                  __html:
+                    Utils.decodeBase64Locale(LongDescription)[locale] ?? "",
                 }}
               ></p>
             )}

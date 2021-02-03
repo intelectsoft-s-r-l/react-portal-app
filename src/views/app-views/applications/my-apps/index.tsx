@@ -18,15 +18,15 @@ interface IGridItem {
   data: IMarketAppList;
 }
 const GridItem = ({ deactivateApp, data }: IGridItem) => {
-  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
-  useEffect(() => {
-    try {
-      setShortDesc(JSON.parse(window.atob(data.ShortDescription.toString())));
-    } catch {
-      setShortDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
+  //const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
+  //useEffect(() => {
+  //try {
+  //setShortDesc(JSON.parse(window.atob(data.ShortDescription.toString())));
+  //} catch {
+  //setShortDesc({ en: "", ru: "", ro: "" });
+  //}
+  //}, []);
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
@@ -61,7 +61,7 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
         </Link>
         <p className="text-muted">By IntelectSoft</p>
         <div style={{ minHeight: "70px" }}>
-          {shortDesc ? shortDesc[locale] : null}
+          {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}
         </div>
       </div>
       <Flex justifyContent="between" alignItems="center">

@@ -32,17 +32,7 @@ const GridItem = ({
   setSelectedApp,
   data,
 }: IGridItem<IMarketAppList>) => {
-  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
-  useEffect(() => {
-    if (data.ShortDescription) {
-      try {
-        setShortDesc(JSON.parse(window.atob(data.ShortDescription.toString())));
-      } catch {
-        setShortDesc({ en: "", ru: "", ro: "" });
-      }
-    }
-  }, []);
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
@@ -101,7 +91,7 @@ mb-0 cursor-pointer"
         </Link>
         <p className="text-muted">By IntelectSoft</p>
         <div style={{ minHeight: "70px" }}>
-          {shortDesc ? shortDesc[locale] : null}
+          {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}
         </div>
       </div>
       <Flex justifyContent="between" alignItems="center">
