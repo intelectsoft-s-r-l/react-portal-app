@@ -285,7 +285,7 @@
   "SMS.NoContacts": "Nu dețineți o listă de contacte",
   "SMS.AttachFile": "Atașează un fișier",
   "SMS.SendSMS": "Trimite SMS",
-  "SMS.Imeediately": "Imediat",
+  "SMS.Immediately": "Imediat",
   "SMS.DelaySMSSend": "Planifică trimiterea",
   "SMS.Receivers.Validate": "Numerele de telefoane trebuie să fie separate de virgulă!",
   "SMS.EditCampaign": "Editează campania",
