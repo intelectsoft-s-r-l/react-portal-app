@@ -293,7 +293,8 @@
   "SMS.campaign.deactivate.msg": "Sunteți sigur(ă) că doriți să deactivați această campanie?",
 
   "news.title": "Noutăți",
-  "news.create.messsage": "Articolul a fost creat cu succes",
+  "news.create.message": "Articolul a fost creat cu succes!",
+  "news.create.message2": "Puteți plasa articolul!",
 
   "wizard.title": "Instalează aplicația",
   "wizard.terms": "Sunt de acord cu termenii și condițiile",

@@ -295,6 +295,7 @@
 
   "news.title": "News",
   "news.create.messsage": "You have successfully created a new article!",
+  "news.create.message2": "You can publish your article!",
 
   "wizard.title": "Install application",
   "wizard.terms": "I have read and agree to the Terms and Conditions",
