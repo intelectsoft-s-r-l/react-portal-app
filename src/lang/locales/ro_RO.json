@@ -164,6 +164,7 @@
   "users.Edit": "Editează",
   "users.Disable": "Deactivează",
   "users.Activate": "Activează",
+  "users.Publish": "Plasează",
   "users.SendCode": "Trimite cod activare",
   "users.Disable.Title": "Sunteți sigur că doriți să deactivați acest utilizator?",
   "users.Invite": "Invită utilizator",
@@ -292,6 +293,7 @@
   "SMS.campaign.deactivate.msg": "Sunteți sigur(ă) că doriți să deactivați această campanie?",
 
   "news.title": "Noutăți",
+  "news.create.messsage": "Articolul a fost creat cu succes",
 
   "wizard.title": "Instalează aplicația",
   "wizard.terms": "Sunt de acord cu termenii și condițiile",

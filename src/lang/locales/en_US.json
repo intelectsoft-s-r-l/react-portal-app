@@ -165,6 +165,7 @@
   "users.Edit": "Edit",
   "users.Disable": "Disable",
   "users.Activate": "Activate",
+  "users.Publish": "Publish",
   "users.SendCode": "Send activation code",
   "users.Disable.Title": "Are you sure you want to disable this user?",
   "users.Invite": "Invite user",
@@ -293,6 +294,7 @@
   "SMS.campaign.deactivate.msg": "Are you sure you want to deactivate this campaign?",
 
   "news.title": "News",
+  "news.create.messsage": "You have successfully created a new article!",
 
   "wizard.title": "Install application",
   "wizard.terms": "I have read and agree to the Terms and Conditions",

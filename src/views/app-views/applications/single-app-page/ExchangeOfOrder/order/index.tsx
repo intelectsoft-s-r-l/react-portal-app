@@ -48,7 +48,7 @@ const Order = (props: IOrder) => {
       <Row gutter={ROW_GUTTER}>
         <Col span={24}>
           <Card
-            title={"Invoice list"}
+            title={"Order list"}
             extra={
               <DatePicker.RangePicker
                 format={"DD-MM-YYYY"}
