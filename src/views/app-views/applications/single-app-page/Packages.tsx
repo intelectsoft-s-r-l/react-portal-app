@@ -3,7 +3,7 @@ import { Card, Col, Empty, Row, Tag } from "antd";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { IMarketAppList, IPackages } from "../../../../api/types.response";
+import { IMarketAppList, IPackages } from "../../../../api/app/app.types";
 import Loading from "../../../../components/shared-components/Loading";
 import { AppService } from "../../../../api/app";
 import TranslateText from "../../../../utils/translate";
@@ -49,7 +49,7 @@ const ItemFooter = ({ packages }: { packages: IPackages }) => (
 );
 const CardItem = ({ packages }: { packages: IPackages }) => {
   return (
-    <Card style={{ height: "220px", width: "350px" }}>
+    <Card style={{ height: "220px", maxWidth: "350px" }}>
       <ItemHeader packages={packages} />
       <div className="mt-2">
         <ItemFooter packages={packages} />

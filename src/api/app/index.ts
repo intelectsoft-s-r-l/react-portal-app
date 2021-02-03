@@ -1,18 +1,15 @@
 import HttpClient from "../HttpClient";
 import { API_APP_URL } from "../../configs/AppConfig";
 import { IAccount } from "../../redux/reducers/Account";
-import {
-  ISMSReviewerUpdateRequest,
-  IUpdateAppRequest,
-  IUpdateCompanyRequest,
-} from "../types.request";
-import { ApiResponse, ApiResponseBase } from "../types.response";
+import { IUpdateAppRequest, IUpdateCompanyRequest } from "./app.types";
+import { ApiResponse, ApiResponseBase } from "../types";
 import {
   ICampaignList,
   ICompanyData,
   ILicenses,
   IMarketAppList,
   INewsList,
+  ISMSReviewerUpdateRequest,
   IRsaKeys,
   IShortMarketAppList,
   IUsers,

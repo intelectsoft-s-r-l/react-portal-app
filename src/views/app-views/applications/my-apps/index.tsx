@@ -11,7 +11,7 @@ import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import TranslateText from "../../../../utils/translate";
-import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import { ILocale, IMarketAppList } from "../../../../api/app/app.types";
 
 interface IGridItem {
   deactivateApp: (ID: number, Name: string) => void;

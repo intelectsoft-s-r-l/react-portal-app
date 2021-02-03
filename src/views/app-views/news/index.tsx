@@ -6,7 +6,7 @@ import { AppService } from "../../../api/app";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
-import { IMarketAppListShort, INewsList } from "../../../api/types.response";
+import { IShortMarketAppList, INewsList } from "../../../api/app/app.types";
 
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
@@ -69,7 +69,7 @@ const News = () => {
   const [news, setNews] = useState<INewsList[]>([]);
   const [appLoading, setAppLoading] = useState(true);
   const [newsLoading, setNewsLoading] = useState(true);
-  const [apps, setApps] = useState<IMarketAppListShort[]>();
+  const [apps, setApps] = useState<IShortMarketAppList[]>();
   const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
     return await instance.GetPortalNews(AppType).then((data) => {

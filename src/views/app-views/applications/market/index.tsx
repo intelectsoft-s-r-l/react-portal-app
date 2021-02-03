@@ -17,7 +17,7 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import Utils from "../../../../utils";
 import TranslateText from "../../../../utils/translate";
 import { IState } from "../../../../redux/reducers";
-import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import { ILocale, IMarketAppList } from "../../../../api/app/app.types";
 import "../applications.scss";
 
 interface IGridItem<T> {

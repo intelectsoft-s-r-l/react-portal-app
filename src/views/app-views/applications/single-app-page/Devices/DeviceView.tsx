@@ -1,12 +1,9 @@
 import * as React from "react";
-import { Drawer, Divider, Progress, Empty } from "antd";
-import { IDiagnosticInformation } from "../../../../../api/types.response";
+import { Drawer, Divider } from "antd";
+import { IDiagnosticInformation } from "../../../../../api/app/app.types";
 import { Health, Plugged, Status } from ".";
-import Flex from "../../../../../components/shared-components/Flex";
-import { Doughnut } from "react-chartjs-2";
-import { COLOR_2, COLOR_4 } from "../../../../../constants/ChartConstant";
-import "./devices.scss";
 import TranslateText from "../../../../../utils/translate";
+import "./devices.scss";
 
 interface IDeviceView {
   visible: boolean;

@@ -51,13 +51,9 @@ const LoginForm = ({
 }: any) => {
   const history = useHistory();
   const onLogin = async ({ email, password }: { [key: string]: string }) => {
-    const onLoginSettingsObject = {
-      Email: email,
-      Password: await Utils.encryptInput(password, API_PUBLIC_KEY),
-    };
     showLoading();
-    setTimeout(() => {
-      authorizeUser(onLoginSettingsObject);
+    setTimeout(async () => {
+      authorizeUser(email, await Utils.encryptInput(password, API_PUBLIC_KEY));
     }, 1000);
   };
   const onGoogleLogin = () => {

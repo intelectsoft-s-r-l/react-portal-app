@@ -1,7 +1,6 @@
 import HttpClient from "../HttpClient";
 import { API_SMS_URL } from "../../configs/AppConfig";
-import { ISMSSendSMSRequest } from "../types.request";
-import { ApiResponse } from "../types.response";
+import { ApiResponse } from "../types";
 import { ISmsInfo, ISmsInfoPeriod, ISmsDetailPeriod } from "./sms.types";
 
 export class SmsService extends HttpClient {
@@ -49,15 +48,5 @@ export class SmsService extends HttpClient {
       params: {
         APIKey,
       },
-    });
-
-  public SendSMS = async (data: ISMSSendSMSRequest) =>
-    this.instance.post<ApiResponse>("/SendSMS", {
-      ...data,
-    });
-
-  public SendSMSByPhoneList = async (data: ISMSSendSMSRequest) =>
-    this.instance.post<ApiResponse>("/SendSMSByPhoneList", {
-      ...data,
     });
 }

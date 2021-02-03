@@ -22,10 +22,10 @@ export class ChangePassword extends React.Component {
   private onFinish = async ({ currentPassword, newPassword }: onFinish) => {
     this.setState({ loading: true });
     return await new AuthService()
-      .ChangePassword({
-        NewPassword: Utils.encryptInput(newPassword, API_PUBLIC_KEY),
-        OldPassword: Utils.encryptInput(currentPassword, API_PUBLIC_KEY),
-      })
+      .ChangePassword(
+        Utils.encryptInput(newPassword, API_PUBLIC_KEY),
+        Utils.encryptInput(currentPassword, API_PUBLIC_KEY)
+      )
       .then((data) => {
         this.setState({ loading: false });
         if (data && data.ErrorCode === 0) {

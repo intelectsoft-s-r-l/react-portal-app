@@ -3,7 +3,7 @@ import { AppService } from "../../api/app";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { CHANGE_LOCALE } from "../constants/Theme";
-import { IUsers } from "../../api/types.response";
+import { IUsers } from "../../api/app/app.types";
 import { IAccount } from "../reducers/Account";
 import TranslateText from "../../utils/translate";
 import { DONE } from "../../constants/Messages";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Col, DatePicker, Form, Input, Modal, Row, Upload } from "antd";
-import { ICampaignList } from "../../../../../../api/types.response";
+import { ICampaignList } from "../../../../../../api/app/app.types";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { rules } from "./NewCampaign";
 import moment from "moment";

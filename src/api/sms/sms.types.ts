@@ -1,4 +1,4 @@
-import { ApiResponse } from "../types.response";
+import { ApiResponse, ApiRequest } from "../types";
 
 export interface ISmsInfo extends ApiResponse {
   FailedDelivery: number;

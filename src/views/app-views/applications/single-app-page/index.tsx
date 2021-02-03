@@ -23,7 +23,7 @@ import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
-import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import { ILocale, IMarketAppList } from "../../../../api/app/app.types";
 import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/campaign/CampaignDetails";

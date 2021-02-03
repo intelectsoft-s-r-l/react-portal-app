@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Col, Row, Modal, Button, Input, message, Form, Empty } from "antd";
-import { IMarketAppList } from "../../../../api/types.response";
+import { IMarketAppList } from "../../../../api/app/app.types";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
 import { AppService } from "../../../../api/app";
 import { DONE, UPDATING } from "../../../../constants/Messages";

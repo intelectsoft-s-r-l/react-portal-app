@@ -4,12 +4,12 @@ import { Avatar } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import { NavLink, RouteComponentProps, withRouter } from "react-router-dom";
-import { IMarketAppListShort } from "../../../api/types.response";
+import { IShortMarketAppList } from "../../../api/app/app.types";
 import { MenuItemProps } from "antd/lib/menu/MenuItem";
 import "./applications.scss";
 
 interface IAppNavGrid extends MenuItemProps, RouteComponentProps {
-  apps: IMarketAppListShort[];
+  apps: IShortMarketAppList[];
 }
 
 const AppNavGrid = (props: IAppNavGrid) => {

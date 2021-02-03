@@ -1,6 +1,6 @@
 import HttpClient from "../HttpClient";
 import { API_EDX_URL } from "../../configs/AppConfig";
-import { ApiResponse, ApiResponseBase } from "../types.response";
+import { ApiResponse, ApiResponseBase } from "../types";
 import { InvoiceList, IOrderList } from "./edx.types";
 
 export class EdxService extends HttpClient {

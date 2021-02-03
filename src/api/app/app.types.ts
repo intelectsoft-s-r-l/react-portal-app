@@ -1,4 +1,4 @@
-import { ApiRequest, ApiResponse } from "../types.response";
+import { ApiRequest, ApiResponse } from "../types";
 
 export interface IUsers {
   Company: string;
@@ -172,4 +172,51 @@ export interface IRsaKeys extends ApiResponse {
 export interface ICreateAppPackage extends ApiRequest {
   AppPackage: IPackages;
   MarketAppID: number;
+}
+export interface ISMSReviewerUpdateRequest extends ApiRequest {
+  ID: number;
+  ReviewerComments: string;
+  Status?: number;
+}
+export interface IAppPackageRequest {
+  ID: number;
+  MaxValue: number;
+  MinValue: number;
+  Name: string;
+  Price: number;
+  SortIndex: number;
+  Status: number;
+  ValidFrom: string;
+  ValidTo: string;
+}
+export interface ICreateMarketAppPackageRequest extends ApiRequest {
+  AppPackage: IAppPackageRequest;
+  MarketAppID: number;
+}
+
+export interface IRegisterClientCompanyRequest extends ApiRequest {
+  Company: ICompanyData;
+  info?: string;
+}
+
+export interface IUpdateCompanyRequest extends ApiRequest {
+  Company: ICompanyData;
+  info?: string;
+}
+
+export interface IUpdateNewsRequest extends ApiRequest {
+  NewsData: {
+    Content: string;
+    CreateDate?: string;
+    Header: string;
+    ID: number;
+    Photo: string;
+    ProductType: number;
+    Status?: number;
+  };
+}
+export interface IUpdateAppRequest extends ApiRequest {
+  AppID: number;
+  BackOfficeURI: string;
+  ExternalSecurityPolicy?: any;
 }

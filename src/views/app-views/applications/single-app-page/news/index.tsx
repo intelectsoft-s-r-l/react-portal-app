@@ -9,7 +9,7 @@ import moment from "moment";
 import EditNews from "./EditNews";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import Loading from "../../../../../components/shared-components/Loading";
-import { INewsList } from "../../../../../api/types.response";
+import { INewsList } from "../../../../../api/app/app.types";
 import EllipsisDropdown from "../../../../../components/shared-components/EllipsisDropdown";
 import "../../../news/news.scss";
 

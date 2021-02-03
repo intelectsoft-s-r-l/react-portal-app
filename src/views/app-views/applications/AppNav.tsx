@@ -5,12 +5,12 @@ import { Menu, Dropdown, Empty, Tooltip } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
 import Loading from "../../../components/shared-components/Loading";
-import { IMarketAppListShort } from "../../../api/types.response";
+import { IShortMarketAppList } from "../../../api/app/app.types";
 import { AppService } from "../../../api/app";
 
 const AppStoreNav = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [apps, setApps] = useState<IMarketAppListShort[]>([]);
+  const [apps, setApps] = useState<IShortMarketAppList[]>([]);
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
   const instance = new AppService();
   useEffect(() => {

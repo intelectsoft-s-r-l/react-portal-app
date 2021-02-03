@@ -15,7 +15,6 @@ import { IState } from "../reducers";
 import TranslateText from "../../utils/translate";
 import axios from "axios";
 import { API_AUTH_URL, SUBDIR_PATH } from "../../configs/AppConfig";
-import { IAuthorizeUserRequest } from "../../api/types.request";
 import { onHeaderNavColorChange } from "./Theme";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
@@ -83,11 +82,12 @@ const handleAccountActivation = (Token: string) => {
 };
 
 export const authorizeUser = (
-  userData: IAuthorizeUserRequest
+  email: string,
+  password: string
 ): ThunkResult<void> => {
   return async (dispatch) => {
     return new AuthService()
-      .Login(userData)
+      .Login(email, password)
       .then((data) => {
         if (data) {
           const { ErrorCode, ErrorMessage, Token } = data;

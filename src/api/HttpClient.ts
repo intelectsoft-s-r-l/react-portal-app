@@ -21,19 +21,8 @@ import {
 } from "../redux/actions/Auth";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
-import {
-  ApiResponse,
-  IAuthorizeUserResponse,
-  IGetManagedTokenResponse,
-  IRefreshTokenResponse,
-} from "./types.response";
-import {
-  IActivateUserRequest,
-  IAuthorizeUserRequest,
-  IChangePasswordRequest,
-  IRegisterCompanyRequest,
-  IRegisterUserRequest,
-} from "./types.request";
+import { ApiResponse, ApiResponseBase } from "./types";
+import { IRegisterCompanyRequest, IRegisterUserRequest } from "./types";
 const publicIp = require("react-public-ip");
 
 declare module "axios" {
@@ -55,7 +44,9 @@ class HttpClient {
     this._initializeRequestInterceptor();
   }
   private _RefreshToken = async () =>
-    this.instance.get<IRefreshTokenResponse>(`${API_AUTH_URL}/RefreshToken`);
+    this.instance.get<ApiResponseBase<ApiResponse, "Token", string>>(
+      `${API_AUTH_URL}/RefreshToken`
+    );
 
   private _initializeResponseInterceptor = () => {
     this.instance.interceptors.response.use(
@@ -175,14 +166,18 @@ export class AuthService extends HttpClient {
     super(API_AUTH_URL);
   }
 
-  public Login = async (data: IAuthorizeUserRequest) =>
-    this.instance.post<IAuthorizeUserResponse>("/AuthorizeUser", {
-      ...data,
-      info: (await publicIp.v4()) || ("" as string),
-    });
+  public Login = async (Email: string, Password: string) =>
+    this.instance.post<ApiResponseBase<ApiResponse, "Token", string>>(
+      "/AuthorizeUser",
+      {
+        Email,
+        Password,
+        info: (await publicIp.v4()) || ("" as string),
+      }
+    );
 
   public RegisterCompany = async (data: IRegisterCompanyRequest) =>
-    this.instance.post<IAuthorizeUserResponse>("/RegisterCompany", data);
+    this.instance.post<ApiResponse>("/RegisterCompany", data);
 
   public SendActivationCode = async () =>
     this.instance.get<ApiResponse>("/SendActivationCode");
@@ -197,15 +192,21 @@ export class AuthService extends HttpClient {
     this.instance.post<ApiResponse>("/RegisterUser", data);
 
   public GetManagedToken = async (CompanyID: number) =>
-    this.instance.get<IGetManagedTokenResponse>("/GetManagedToken", {
-      params: { CompanyID },
+    this.instance.get<ApiResponseBase<ApiResponse, "Token", string>>(
+      "/GetManagedToken",
+      {
+        params: { CompanyID },
+      }
+    );
+
+  public ChangePassword = async (NewPassword: string, OldPassword: string) =>
+    this.instance.post<ApiResponse>("/ChangePassword", {
+      NewPassword,
+      OldPassword,
     });
 
-  public ChangePassword = async (data: IChangePasswordRequest) =>
-    this.instance.post<ApiResponse>("/ChangePassword", data);
-
-  public ActivateUser = async (params: IActivateUserRequest) =>
+  public ActivateUser = async (Token: string) =>
     this.instance.get<ApiResponse>("/ActivateUser", {
-      params,
+      params: { Token },
     });
 }
