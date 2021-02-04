@@ -5,25 +5,43 @@ import NumberFormat from "react-number-format";
 import {
   InvoiceLines as InvoiceLinesType,
   InvoiceList,
-} from "../../../../../../../api/edx/edx.types";
+} from "../../../../../../api/edx/edx.types";
 import { RouteComponentProps, useLocation } from "react-router-dom";
-import Utils from "../../../../../../../utils";
+import Utils from "../../../../../../utils";
 import "./invoice.scss";
-const InvoiceData = require("./data.invoice.json");
-
+import { EdxService } from "../../../../../../api/edx";
+import { EnInvoiceType } from ".";
+interface InvoiceLines extends RouteComponentProps {
+  APIKey: string;
+}
 const { Column } = Table;
-const InvoiceLines = (props: RouteComponentProps) => {
+const InvoiceLines = (props: InvoiceLines) => {
   const [linesData, setLinesData] = useState<InvoiceLinesType[]>([]);
   const [invoiceInfo, setInvoiceInfo] = useState<Partial<InvoiceList>>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const instance = new EdxService();
   let query = new URLSearchParams(useLocation().search);
   useEffect(() => {
-    const [lines] = InvoiceData.InvoiceList.filter((inv: any) => {
-      if (+inv.Number === +query.get("number")!) {
-        setInvoiceInfo(inv);
-        return inv;
+    setLoading(true);
+    const instanceType: "GetInvoice" | "GetSentInvoice" =
+      query.get("type") === EnInvoiceType._IN ? "GetInvoice" : "GetSentInvoice";
+    instance[instanceType](
+      props.APIKey,
+      query.get("dstart"),
+      query.get("dend")
+    ).then((data) => {
+      setLoading(false);
+      if (data && data.ErrorCode === 0) {
+        const [lines] = data.InvoiceList.filter((inv) => {
+          if (+inv.Number === +query.get("number")!) {
+            setInvoiceInfo(inv);
+            return inv;
+          }
+        }).map((order) => order.Lines);
+        setLinesData(lines);
       }
-    }).map((inv: any) => inv.Lines);
-    setLinesData(lines);
+    });
+    return () => instance._source.cancel();
   }, []);
   const total = (name: any) => {
     let total = 0;
@@ -72,6 +90,7 @@ const InvoiceLines = (props: RouteComponentProps) => {
         </div>
         <div className="mt-4">
           <Table
+            loading={loading}
             dataSource={linesData}
             className="mb-5"
             rowKey="Code"

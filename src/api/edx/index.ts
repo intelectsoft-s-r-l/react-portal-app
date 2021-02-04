@@ -20,10 +20,25 @@ export class EdxService extends HttpClient {
         params: { APIKey, DStart, DEnd },
       }
     );
+  public GetSentInvoice = async (APIKey: string, DStart: any, DEnd: any) =>
+    this.instance.get<ApiDecorator<ApiResponse, "InvoiceList", InvoiceList[]>>(
+      "/GetUploadInvoice",
+      {
+        params: { APIKey, DStart, DEnd },
+      }
+    );
 
   public GetOrder = async (APIKey: string, DStart: any, DEnd: any) =>
     this.instance.get<ApiDecorator<ApiResponse, "OrderList", IOrderList[]>>(
       "/GetInOrders",
+      {
+        params: { APIKey, DStart, DEnd },
+      }
+    );
+
+  public GetSentOrder = async (APIKey: string, DStart: any, DEnd: any) =>
+    this.instance.get<ApiDecorator<ApiResponse, "OrderList", IOrderList[]>>(
+      "/GetUploadOrder",
       {
         params: { APIKey, DStart, DEnd },
       }

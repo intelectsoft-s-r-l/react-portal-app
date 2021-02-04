@@ -255,6 +255,7 @@ class Utils {
   }
 
   static printElementAlt(elem: any) {
+    document.querySelector(elem).style = "padding: 100";
     var printContents = document.querySelector(elem).innerHTML;
     var originalContents = document.body.innerHTML;
 
@@ -262,7 +263,7 @@ class Utils {
 
     window.print();
 
-    document.body.innerHTML = originalContents;
+    window.location.reload();
   }
 }
 

@@ -27,14 +27,15 @@ import { ILocale, IMarketAppList } from "../../../../api/app/app.types";
 import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/campaign/CampaignDetails";
-import Invoice from "./ExchangeOfInvoice/Invoice/invoice";
+import Invoice from "./ExchangeOfInvoice/invoice";
 import SmsDashboard from "./SMS/dashboard";
-import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
+import InvoiceDashboard from "./ExchangeOfInvoice/dashboard";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
 import DiscountDashboard from "./MyDiscount/dashboard";
 import Utils from "../../../../utils";
-import InvoiceLines from "./ExchangeOfInvoice/Invoice/invoice/InvoiceLines";
+import InvoiceLines from "./ExchangeOfInvoice/invoice/InvoiceLines";
+import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 
 enum EnApp {
   Retail = 10,
@@ -207,7 +208,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         path={`${match.url}/invoice`}
         render={(props) => {
           if (props.location.search) {
-            return <InvoiceLines {...props} />;
+            return <InvoiceLines {...props} APIKey={app.ApyKey} />;
           }
           return <Invoice {...props} APIKey={app.ApyKey} />;
         }}
@@ -215,7 +216,12 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         exact
         path={`${match.url}/order`}
-        render={(props) => <Order {...props} APIKey={app.ApyKey} />}
+        render={(props) => {
+          if (props.location.search) {
+            return <OrderLines {...props} APIKey={app.ApyKey} />;
+          }
+          return <Order {...props} APIKey={app.ApyKey} />;
+        }}
       />
       <Route
         path={`${match.url}/dashboard`}

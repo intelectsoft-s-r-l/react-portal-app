@@ -2,12 +2,16 @@ import * as React from "react";
 import { ColumnsType } from "antd/lib/table";
 import { EyeOutlined } from "@ant-design/icons";
 import { Tooltip, Button } from "antd";
-import { InvoiceList } from "../../../../../../../api/edx/edx.types";
-import TranslateText from "../../../../../../../utils/translate";
+import { InvoiceList } from "../../../../../../api/edx/edx.types";
+import TranslateText from "../../../../../../utils/translate";
 import moment from "moment";
 import { Link, RouteComponentProps } from "react-router-dom";
 
-export const invoiceTable = (props: RouteComponentProps) => {
+export const invoiceTable = (
+  props: RouteComponentProps,
+  date: any,
+  invoiceType: string
+) => {
   const tableColumns: ColumnsType<InvoiceList> = [
     {
       title: "Number",
@@ -43,15 +47,17 @@ export const invoiceTable = (props: RouteComponentProps) => {
       dataIndex: "FromCompany_Name",
     },
     {
-      title: "Invoice ID",
-      dataIndex: "InvoiceExternalID",
-    },
-    {
       dataIndex: "actions",
       render: (_, elm) => (
         <div className="text-right">
           <Tooltip title={TranslateText("app.devices.view")}>
-            <Link to={`${props.match.url}?number=${elm.Number}`}>
+            <Link
+              to={`${props.match.url}?number=${
+                elm.Number
+              }&dstart=${date[0].format("DD-MM-YYYY")}&dend=${date[1].format(
+                "DD-MM-YYYY"
+              )}&type=${invoiceType}}`}
+            >
               <Button
                 type="primary"
                 className="mr-2"
