@@ -92,6 +92,10 @@ const Devices = ({ AppType }: { AppType: number }) => {
             dataIndex: "ApplicationVersion",
           },
           {
+            title: "IP",
+            dataIndex: "PrivateIP",
+          },
+          {
             title: TranslateText("app.devices.lastAccessDate"),
             dataIndex: "LastAccessDate",
             render: (date: ILicenses["LastAccessDate"]) => (

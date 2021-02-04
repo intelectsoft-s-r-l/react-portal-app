@@ -1,7 +1,10 @@
 import * as React from "react";
 import { ColumnsType } from "antd/lib/table";
-import moment from "moment";
+import { EyeOutlined } from "@ant-design/icons";
+import { Tooltip, Button } from "antd";
 import { InvoiceList } from "../../../../../../../api/edx/edx.types";
+import TranslateText from "../../../../../../../utils/translate";
+import moment from "moment";
 
 export const invoiceTable = () => {
   const tableColumns: ColumnsType<InvoiceList> = [
@@ -41,6 +44,22 @@ export const invoiceTable = () => {
     {
       title: "Number",
       dataIndex: "Number",
+    },
+    {
+      dataIndex: "actions",
+      render: (_, elm) => (
+        <div className="text-right">
+          <Tooltip title={TranslateText("app.devices.view")}>
+            <Button
+              type="primary"
+              className="mr-2"
+              icon={<EyeOutlined />}
+              size="small"
+              onClick={async () => {}}
+            />
+          </Tooltip>
+        </div>
+      ),
     },
   ];
 
