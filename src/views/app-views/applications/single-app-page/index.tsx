@@ -34,6 +34,7 @@ import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
 import DiscountDashboard from "./MyDiscount/dashboard";
 import Utils from "../../../../utils";
+import InvoiceLines from "./ExchangeOfInvoice/Invoice/invoice/InvoiceLines";
 
 enum EnApp {
   Retail = 10,
@@ -204,9 +205,15 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       />
       <Route
         path={`${match.url}/invoice`}
-        render={(props) => <Invoice {...props} APIKey={app.ApyKey} />}
+        render={(props) => {
+          if (props.location.search) {
+            return <InvoiceLines {...props} />;
+          }
+          return <Invoice {...props} APIKey={app.ApyKey} />;
+        }}
       />
       <Route
+        exact
         path={`${match.url}/order`}
         render={(props) => <Order {...props} APIKey={app.ApyKey} />}
       />

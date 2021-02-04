@@ -5,9 +5,14 @@ import { Tooltip, Button } from "antd";
 import { InvoiceList } from "../../../../../../../api/edx/edx.types";
 import TranslateText from "../../../../../../../utils/translate";
 import moment from "moment";
+import { Link, RouteComponentProps } from "react-router-dom";
 
-export const invoiceTable = () => {
+export const invoiceTable = (props: RouteComponentProps) => {
   const tableColumns: ColumnsType<InvoiceList> = [
+    {
+      title: "Number",
+      dataIndex: "Number",
+    },
     {
       title: "Create date",
       dataIndex: "CreateDate",
@@ -42,21 +47,18 @@ export const invoiceTable = () => {
       dataIndex: "InvoiceExternalID",
     },
     {
-      title: "Number",
-      dataIndex: "Number",
-    },
-    {
       dataIndex: "actions",
       render: (_, elm) => (
         <div className="text-right">
           <Tooltip title={TranslateText("app.devices.view")}>
-            <Button
-              type="primary"
-              className="mr-2"
-              icon={<EyeOutlined />}
-              size="small"
-              onClick={async () => {}}
-            />
+            <Link to={`${props.match.url}?number=${elm.Number}`}>
+              <Button
+                type="primary"
+                className="mr-2"
+                icon={<EyeOutlined />}
+                size="small"
+              />
+            </Link>
           </Tooltip>
         </div>
       ),

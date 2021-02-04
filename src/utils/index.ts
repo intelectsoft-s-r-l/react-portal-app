@@ -208,6 +208,14 @@ class Utils {
     return moment(date).format("[/Date(]xZZ[)/]");
   }
 
+  static fromDotNetDate(date: any) {
+    try {
+      return moment(new Date(parseInt(date.substr(6)))).format("DD-MM-YYYY");
+    } catch {
+      return "Unknown date";
+    }
+  }
+
   static toMilliSeconds(date: string) {
     const newDate = new Date(date);
     return newDate.getMilliseconds();
@@ -223,6 +231,38 @@ class Utils {
     } catch {
       return { en: "", ro: "", ru: "" };
     }
+  }
+
+  static printElement(elem: any) {
+    var mywindow = window.open("", "PRINT", "height=600,width=800");
+
+    mywindow!.document.write(
+      "<html><head><title>" + document.title + "</title>"
+    );
+    mywindow!.document.write("</head><body >");
+    mywindow!.document.write("<h1>" + document.title + "</h1>");
+    mywindow!.document.write(
+      (document.querySelector(".print-button")!.innerHTML = "")
+    );
+    mywindow!.document.write(document.querySelector(elem).innerHTML);
+    mywindow!.document.write("</body></html>");
+
+    mywindow!.document.close(); // necessary for IE >= 10
+    mywindow!.focus(); // necessary for IE >= 10*/
+
+    mywindow!.print();
+    mywindow!.close();
+  }
+
+  static printElementAlt(elem: any) {
+    var printContents = document.querySelector(elem).innerHTML;
+    var originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+
+    window.print();
+
+    document.body.innerHTML = originalContents;
   }
 }
 

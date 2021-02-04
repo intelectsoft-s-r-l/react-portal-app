@@ -1,13 +1,20 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Card, Col, DatePicker, Row, Table } from "antd";
-import { RouteComponentProps } from "react-router-dom";
+import {
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter,
+} from "react-router-dom";
 import { EdxService } from "../../../../../../../api/edx";
 import TranslateText from "../../../../../../../utils/translate";
 import { invoiceTable } from "./InvoiceTable";
 import moment from "moment";
 import { ROW_GUTTER } from "../../../../../../../constants/ThemeConstant";
 import { InvoiceList } from "../../../../../../../api/edx/edx.types";
+import InvoiceLines from "./InvoiceLines";
+const InvoiceData = require("./data.invoice.json");
 interface Invoice extends RouteComponentProps {
   APIKey: string;
 }
@@ -58,10 +65,11 @@ const Invoice = (props: Invoice) => {
             }
           >
             <Table
-              columns={invoiceTable()}
+              columns={invoiceTable(props)}
               className="no-border-last"
-              dataSource={invoice}
+              dataSource={InvoiceData.InvoiceList}
               loading={loading}
+              rowKey={"Number"}
             />
           </Card>
         </Col>
@@ -69,4 +77,4 @@ const Invoice = (props: Invoice) => {
     </>
   );
 };
-export default Invoice;
+export default withRouter(Invoice);
