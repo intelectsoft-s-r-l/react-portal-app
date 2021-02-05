@@ -17,7 +17,6 @@ import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
 import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
-const publicIp = require("react-public-ip");
 
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
