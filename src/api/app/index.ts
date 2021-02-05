@@ -1,4 +1,4 @@
-import HttpClient from "../HttpClient";
+import HttpService from "../HttpService";
 import { API_APP_URL } from "../../configs/AppConfig";
 import { IAccount } from "../../redux/reducers/Account";
 import { IUpdateAppRequest, IUpdateCompanyRequest } from "./app.types";
@@ -16,7 +16,7 @@ import {
 } from "./app.types";
 const publicIp = require("react-public-ip");
 
-export class AppService extends HttpClient {
+export class AppService extends HttpService {
   public constructor() {
     super(API_APP_URL);
   }

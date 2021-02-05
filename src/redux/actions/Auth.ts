@@ -9,7 +9,7 @@ import {
 import { message, Modal } from "antd";
 import { getProfileInfo } from "./Account";
 import { ACTIVATE_ACCOUNT, EMAIL_CONFIRM_MSG } from "../../constants/Messages";
-import { AuthService } from "../../api/HttpClient";
+import { AuthService } from "../../api/auth";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import TranslateText from "../../utils/translate";

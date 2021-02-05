@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Avatar, Card, Col, Empty, Row, Tag, Button } from "antd";
+import {
+  Modal,
+  Avatar,
+  Card,
+  Col,
+  Empty,
+  Row,
+  Tag,
+  Button,
+  Skeleton,
+} from "antd";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
@@ -113,15 +123,19 @@ const MyAppList = () => {
       onCancel: () => {},
     });
   };
-
-  if (loading) {
-    return <Loading cover="content" />;
+  if (loading) return <Loading />;
+  if (!apps) {
+    return (
+      <Flex justifyContent="center" className="w-100">
+        <Empty />
+      </Flex>
+    );
   }
 
   return (
     <div className={`my-4 container-fluid`}>
       <Row gutter={16}>
-        {apps.length > 0 ? (
+        {apps.length > 0 &&
           apps.map((elm) => (
             <Col xs={24} sm={24} lg={12} xl={8} xxl={6} key={elm["AppType"]}>
               <GridItem
@@ -130,12 +144,7 @@ const MyAppList = () => {
                 key={elm["AppType"]}
               />
             </Col>
-          ))
-        ) : (
-          <Flex justifyContent="center" className="w-100">
-            <Empty />
-          </Flex>
-        )}
+          ))}
       </Row>
     </div>
   );

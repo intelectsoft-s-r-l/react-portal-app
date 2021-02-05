@@ -13,23 +13,17 @@ import {
   API_SMS_URL,
 } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
-import {
-  authenticated,
-  hideLoading,
-  showLoading,
-  signOut,
-} from "../redux/actions/Auth";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
-import { IRegisterCompanyRequest, IRegisterUserRequest } from "./types";
+import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
 const publicIp = require("react-public-ip");
 
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
 }
 
-class HttpClient {
+class HttpService {
   public readonly instance: AxiosInstance;
   private _token: string;
   public _source: CancelTokenSource;
@@ -91,9 +85,7 @@ class HttpClient {
     }
 
     config.cancelToken = this._source.token;
-    return {
-      ...config,
-    };
+    return config;
   };
 
   private _handleResponse = (response: AxiosResponse) => {
@@ -102,7 +94,7 @@ class HttpClient {
       return this._RefreshToken().then(async (data) => {
         if (data && data.ErrorCode === 0) {
           const { Token } = data;
-          store.dispatch(authenticated(Token));
+          store.dispatch({ type: AUTHENTICATED, token: Token });
           if (response.config.method === "get") {
             response.config.params = {
               ...response.config.params,
@@ -130,7 +122,7 @@ class HttpClient {
               duration: 1.5,
             })
             .then(() => {
-              store.dispatch(signOut());
+              store.dispatch({ type: SIGNOUT });
             });
         }
       });
@@ -149,7 +141,7 @@ class HttpClient {
     return response.data;
   };
   private _handleError = async (error: AxiosResponse) => {
-    store.dispatch(hideLoading());
+    store.dispatch({ type: HIDE_LOADING });
     if (error && error.request && error.request.status !== 200) {
       message.error({
         content: error.toString(),
@@ -159,54 +151,4 @@ class HttpClient {
     }
   };
 }
-export default HttpClient;
-
-export class AuthService extends HttpClient {
-  public constructor() {
-    super(API_AUTH_URL);
-  }
-
-  public Login = async (Email: string, Password: string) =>
-    this.instance.post<ApiDecorator<ApiResponse, "Token", string>>(
-      "/AuthorizeUser",
-      {
-        Email,
-        Password,
-        info: (await publicIp.v4()) || ("" as string),
-      }
-    );
-
-  public RegisterCompany = async (data: IRegisterCompanyRequest) =>
-    this.instance.post<ApiResponse>("/RegisterCompany", data);
-
-  public SendActivationCode = async () =>
-    this.instance.get<ApiResponse>("/SendActivationCode");
-
-  public ResetPassword = async (Email: string) =>
-    this.instance.post<ApiResponse>("/ResetPassword", {
-      Email,
-      info: (await publicIp.v4()) || ("" as string),
-    });
-
-  public RegisterUser = async (data: IRegisterUserRequest) =>
-    this.instance.post<ApiResponse>("/RegisterUser", data);
-
-  public GetManagedToken = async (CompanyID: number) =>
-    this.instance.get<ApiDecorator<ApiResponse, "Token", string>>(
-      "/GetManagedToken",
-      {
-        params: { CompanyID },
-      }
-    );
-
-  public ChangePassword = async (NewPassword: string, OldPassword: string) =>
-    this.instance.post<ApiResponse>("/ChangePassword", {
-      NewPassword,
-      OldPassword,
-    });
-
-  public ActivateUser = async (Token: string) =>
-    this.instance.get<ApiResponse>("/ActivateUser", {
-      params: { Token },
-    });
-}
+export default HttpService;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Row, Col, Input, Modal, Form } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
-import { AuthService } from "../../../../api/HttpClient";
+import { AuthService } from "../../../../api/auth";
 import { useSelector } from "react-redux";
 import { IState } from "../../../../redux/reducers";
 

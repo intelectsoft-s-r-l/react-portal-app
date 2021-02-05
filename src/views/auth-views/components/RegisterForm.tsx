@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import { AuthService } from "../../../api/HttpClient";
+import { AuthService } from "../../../api/auth";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
 import { ITheme } from "../../../redux/reducers/Theme";

@@ -1,9 +1,9 @@
-import HttpClient from "../HttpClient";
+import HttpService from "../HttpService";
 import { API_EDX_URL } from "../../configs/AppConfig";
 import { ApiResponse, ApiDecorator } from "../types";
 import { InvoiceList, IOrderList } from "./edx.types";
 
-export class EdxService extends HttpClient {
+export class EdxService extends HttpService {
   public constructor() {
     super(API_EDX_URL);
   }

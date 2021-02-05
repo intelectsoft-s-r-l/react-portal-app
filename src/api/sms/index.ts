@@ -1,9 +1,9 @@
-import HttpClient from "../HttpClient";
+import HttpService from "../HttpService";
 import { API_SMS_URL } from "../../configs/AppConfig";
 import { ApiResponse } from "../types";
 import { ISmsInfo, ISmsInfoPeriod, ISmsDetailPeriod } from "./sms.types";
 
-export class SmsService extends HttpClient {
+export class SmsService extends HttpService {
   public constructor() {
     super(API_SMS_URL);
   }
