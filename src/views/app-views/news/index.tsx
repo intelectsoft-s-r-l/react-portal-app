@@ -29,16 +29,6 @@ const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
           </Flex>
           <div style={{ position: "absolute", bottom: 15 }}>
             <Flex alignItems="center">
-              <span>{newsData.CompanyName}</span>
-              <span
-                style={{
-                  fontSize: 20,
-                  color: "black",
-                  margin: "0 5px 0",
-                }}
-              >
-                &nbsp;&bull;&nbsp;
-              </span>
               <span style={{ color: "black" }}>
                 {newsData.CreateDate &&
                   moment
