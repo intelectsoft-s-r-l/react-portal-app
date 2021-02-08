@@ -146,7 +146,11 @@ export interface IDiagnosticInformation {
     Used: string;
   };
   CPU: {};
-  WiFi: {};
+  WiFi?: {
+    Connected?: boolean;
+    SSID?: string;
+  };
+  Date?: string;
 }
 
 export interface ICampaignList {

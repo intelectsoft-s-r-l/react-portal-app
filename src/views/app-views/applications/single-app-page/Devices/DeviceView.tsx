@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Drawer, Divider } from "antd";
+import { Drawer, Divider, Typography } from "antd";
 import { IDiagnosticInformation } from "../../../../../api/app/app.types";
 import { Health, Plugged, Status } from ".";
 import TranslateText from "../../../../../utils/translate";
@@ -22,6 +22,9 @@ const DeviceView = ({ visible, data, close }: IDeviceView) => {
       <h3 className="text-left mt-3">
         {TranslateText("app.devices.deviceInformation")}
       </h3>
+      <div className="mt-2">
+        Last update: <span className="ml-2">{data.Date ?? "Unknown"}</span>
+      </div>
       <Divider dashed />
       <div className="">
         <table className="diagnostic-table">
@@ -111,6 +114,30 @@ const DeviceView = ({ visible, data, close }: IDeviceView) => {
             <tr>
               <td>{TranslateText("app.devices.free")}</td>
               <td>{data.Memory ? data.Memory.Free : "--"}</td>
+            </tr>
+          </tbody>
+          <thead>
+            <tr>
+              <th>{TranslateText("app.devices.wifi")}</th>
+              <th>{TranslateText("app.devices.value")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{TranslateText("app.devices.connected")}</td>
+              <td>
+                {data.WiFi
+                  ? data.WiFi.Connected
+                    ? TranslateText("app.devices.connected.true")
+                    : TranslateText("app.devices.connected.false")
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>SSID</td>
+              <td>
+                {data.WiFi ? (data.WiFi.SSID ? data.WiFi.SSID : "--") : "--"}
+              </td>
             </tr>
           </tbody>
         </table>

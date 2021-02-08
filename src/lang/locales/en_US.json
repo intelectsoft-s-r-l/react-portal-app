@@ -213,6 +213,10 @@
   "app.licenses.add": "Add license",
   "app.licenses.quantity": "Quantity",
 
+  "app.devices.wifi": "Wi-Fi",
+  "app.devices.connected": "Connected",
+  "app.devices.connected.true": "Yes",
+  "app.devices.connected.false": "No",
   "app.devices.deviceName": "Device name",
   "app.devices.osType": "OS",
   "app.devices.osVersion": "OS version",
