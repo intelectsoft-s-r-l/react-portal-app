@@ -134,7 +134,6 @@ const Devices = ({ AppType }: { AppType: number }) => {
         data={selectedDevice ?? []}
         visible={deviceViewVisible}
         close={() => setDeviceViewVisible(false)}
-        isTable={true}
       />
     </>
   );

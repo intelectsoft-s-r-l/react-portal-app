@@ -9,9 +9,8 @@ interface IDeviceView {
   visible: boolean;
   data: Partial<IDiagnosticInformation>;
   close: () => void;
-  isTable: boolean;
 }
-const DeviceView = ({ visible, data, close, isTable }: IDeviceView) => {
+const DeviceView = ({ visible, data, close }: IDeviceView) => {
   return (
     <Drawer
       width={500}
