@@ -286,7 +286,7 @@
   "SMS.NoContacts": "You have no contacts just yet",
   "SMS.AttachFile": "Attach file",
   "SMS.SendSMS": "Send SMS",
-  "SMS.Imeediately": "Immediately",
+  "SMS.Immediately": "Immediately",
   "SMS.DelaySMSSend": "Delay SMS send",
   "SMS.Receivers.Validate": "Phone numbers should be separated by commas!",
   "SMS.EditCampaign": "Edit campaign",
