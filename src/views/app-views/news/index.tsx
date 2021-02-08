@@ -1,13 +1,14 @@
 import * as React from "react";
 import { Card, List, Empty, Select } from "antd";
-import moment from "moment";
 import Flex from "../../../components/shared-components/Flex";
 import { AppService } from "../../../api/app";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
 import { IShortMarketAppList, INewsList } from "../../../api/app/app.types";
+import moment from "moment";
 
+const { Option } = Select;
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
     <Card style={{ padding: 30 }}>
@@ -114,14 +115,15 @@ const News = () => {
           loading={appLoading}
           disabled={appLoading}
         >
-          <Select.Option value={0}>
+          <Option value={0}>
             <b>General</b>
-          </Select.Option>
+          </Option>
+
           {apps &&
             apps.map((app) => (
-              <Select.Option value={app.AppType} key={app.AppType}>
+              <Option value={app.AppType} key={app.AppType}>
                 {app.Name}
-              </Select.Option>
+              </Option>
             ))}
         </Select>
       </Flex>

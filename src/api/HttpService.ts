@@ -76,6 +76,7 @@ class HttpService {
         Token: this._token,
       };
     }
+
     if (config.baseURL === API_DISCOUNT_URL || config.baseURL === API_EDX_URL) {
       config.auth = {
         username: "1",
