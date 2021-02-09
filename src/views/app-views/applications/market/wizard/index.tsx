@@ -58,7 +58,11 @@ const InstallWizard = () => {
           disabled={!isAccepted || wizLoading}
         >
           {termsAccepted ? (
-            <Link to={`${APP_PREFIX_PATH}/id/${selectedApp.AppType}`}>
+            <Link
+              to={`${APP_PREFIX_PATH}/id/${
+                selectedApp.AppType
+              }/${selectedApp.Name.split(" ").join("-")}`}
+            >
               <IntlMessage id="wizard.go" />
             </Link>
           ) : (

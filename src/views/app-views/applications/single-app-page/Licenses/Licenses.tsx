@@ -114,10 +114,15 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       dataIndex: "Status",
       render: (Status: number) => (
         <div>
-          <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
+          <Tag
+            className="mr-0"
+            color={Status === 1 ? "cyan" : Status === 0 ? "orange" : "volcano"}
+          >
             {Status === 1
               ? TranslateText("app.licenses.status.activated")
-              : TranslateText("app.licenses.status.deactivated")}
+              : Status === 0
+              ? TranslateText("app.licenses.status.deactivated")
+              : TranslateText("users.status.Disabled")}
           </Tag>
         </div>
       ),
