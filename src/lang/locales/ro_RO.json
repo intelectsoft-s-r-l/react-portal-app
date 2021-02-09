@@ -212,8 +212,8 @@
   "app.licenses.add": "Adaugă licenză",
   "app.licenses.quantity": "Cantitate",
 
-  "app.devices.wifi": "Wi-Fi",
-  "app.devices.connected": "Conectat",
+  "app.devices.network": "Rețea",
+  "app.devices.connected": "Conectat (Wi-Fi)",
   "app.devices.connected.true": "Da",
   "app.devices.connected.false": "Nu",
   "app.devices.deviceName": "Denumirea dispozitivului",

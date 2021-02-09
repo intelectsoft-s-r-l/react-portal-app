@@ -118,7 +118,7 @@ const DeviceView = ({ visible, data, close }: IDeviceView) => {
           </tbody>
           <thead>
             <tr>
-              <th>{TranslateText("app.devices.wifi")}</th>
+              <th>{TranslateText("app.devices.network")}</th>
               <th>{TranslateText("app.devices.value")}</th>
             </tr>
           </thead>
@@ -126,8 +126,8 @@ const DeviceView = ({ visible, data, close }: IDeviceView) => {
             <tr>
               <td>{TranslateText("app.devices.connected")}</td>
               <td>
-                {data.WiFi
-                  ? data.WiFi.Connected
+                {data.Network
+                  ? data.Network.Connected
                     ? TranslateText("app.devices.connected.true")
                     : TranslateText("app.devices.connected.false")
                   : "--"}
@@ -136,7 +136,31 @@ const DeviceView = ({ visible, data, close }: IDeviceView) => {
             <tr>
               <td>SSID</td>
               <td>
-                {data.WiFi ? (data.WiFi.SSID ? data.WiFi.SSID : "--") : "--"}
+                {data.Network
+                  ? data.Network.SSID
+                    ? data.Network.SSID
+                    : "--"
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>IP</td>
+              <td>
+                {data.Network
+                  ? data.Network.IP
+                    ? data.Network.IP
+                    : "--"
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>MAC</td>
+              <td>
+                {data.Network
+                  ? data.Network.MAC
+                    ? data.Network.MAC
+                    : "--"
+                  : "--"}
               </td>
             </tr>
           </tbody>

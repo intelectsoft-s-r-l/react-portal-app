@@ -215,8 +215,8 @@
   "app.licenses.add": "Добавить лицензию",
   "app.licenses.quantity": "Количество",
 
-  "app.devices.wifi": "Wi-Fi",
-  "app.devices.connected": "Подключен",
+  "app.devices.network": "Сеть",
+  "app.devices.connected": "Подключен (Wi-Fi)",
   "app.devices.connected.true": "Да",
   "app.devices.connected.false": "Нет",
   "app.devices.deviceName": "Название устройства",

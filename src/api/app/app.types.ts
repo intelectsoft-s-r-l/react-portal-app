@@ -146,9 +146,11 @@ export interface IDiagnosticInformation {
     Used: string;
   };
   CPU: {};
-  WiFi?: {
+  Network?: {
     Connected?: boolean;
     SSID?: string;
+    IP?: string;
+    MAC: string;
   };
   Date?: string;
 }
