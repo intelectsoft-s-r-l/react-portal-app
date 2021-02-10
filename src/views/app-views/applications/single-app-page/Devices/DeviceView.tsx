@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Drawer, Divider, Typography } from "antd";
-import { IDiagnosticInformation } from "../../../../../api/app/app.types";
+import {
+  IDiagnosticInformation,
+  ILicenses,
+} from "../../../../../api/app/app.types";
 import { Health, Plugged, Status } from ".";
 import TranslateText from "../../../../../utils/translate";
 import "./devices.scss";
@@ -9,8 +12,9 @@ interface IDeviceView {
   visible: boolean;
   data: Partial<IDiagnosticInformation>;
   close: () => void;
+  licenseData: Partial<ILicenses>;
 }
-const DeviceView = ({ visible, data, close }: IDeviceView) => {
+const DeviceView = ({ visible, data, close, licenseData }: IDeviceView) => {
   return (
     <Drawer
       width={500}
@@ -162,6 +166,23 @@ const DeviceView = ({ visible, data, close }: IDeviceView) => {
                     : "--"
                   : "--"}
               </td>
+            </tr>
+          </tbody>
+        </table>
+        <h3 className="text-left mt-3">Other Information</h3>
+        <table className="diagnostic-table">
+          <tbody>
+            <tr>
+              <td>Workplace</td>
+              <td>{licenseData.Workplace ?? "--"}</td>
+            </tr>
+            <tr>
+              <td>Sale address</td>
+              <td>{licenseData.SalePointAddress ?? "--"}</td>
+            </tr>
+            <tr>
+              <td>Serial number</td>
+              <td>{licenseData.SerialNumber ?? "--"}</td>
             </tr>
           </tbody>
         </table>

@@ -40,6 +40,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [devices, setDevices] = useState<any>();
   const [selectedDevice, setSelectedDevice] = useState<any>();
+  const [selectedLicense, setSelectedLicense] = useState<any>();
   const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false);
   const getDevices = async (AppType: number) => {
     return instance.GetAppLicenses(AppType).then((data) => {
@@ -119,6 +120,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
                     onClick={async () => {
                       setDeviceViewVisible(true);
                       setSelectedDevice(JSON.parse(elm.DiagnosticInformation));
+                      setSelectedLicense(elm);
                     }}
                   />
                 </Tooltip>
@@ -132,6 +134,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
       />
       <DeviceView
         data={selectedDevice ?? []}
+        licenseData={selectedLicense ?? []}
         visible={deviceViewVisible}
         close={() => setDeviceViewVisible(false)}
       />
