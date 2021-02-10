@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Table, Tag, Button, Modal, Menu, Input } from "antd";
+import { Card, Table, Tag, Button, Modal, Menu, Input, Select } from "antd";
 import {
   EyeOutlined,
   ArrowRightOutlined,
@@ -30,6 +30,7 @@ import TranslateText from "../../../../utils/translate";
 import { IUsers } from "../../../../api/app/app.types";
 import { ColumnsType } from "antd/lib/table";
 import "./add_user.scss";
+import Pagination from "antd/es/pagination";
 export enum status {
   inactive = 0,
   active = 1,
@@ -48,6 +49,7 @@ interface UserListStateProps {
   loading: boolean;
   users: IUsers[];
   usersToSearch: any;
+  pageSize: number;
   selectedRows: any;
   selectedKeys: any;
   userProfileVisible: boolean;
@@ -61,6 +63,7 @@ interface UserListStateProps {
 export class UserList extends Component<IUserListStoreProps> {
   state: UserListStateProps = {
     loading: true,
+    pageSize: 10,
     users: [],
     usersToSearch: [],
     selectedRows: [],
@@ -74,7 +77,7 @@ export class UserList extends Component<IUserListStoreProps> {
   };
 
   private instance = new AppService();
-  getUsersInfo = async () => {
+  getUsersInfo = async (params = {}) => {
     return this.instance.GetUserList().then((data) => {
       this.setState({ loading: false });
       if (data && data.ErrorCode === 0) {
@@ -89,9 +92,19 @@ export class UserList extends Component<IUserListStoreProps> {
         this.setState({
           users: evaluatedArray,
           usersToSearch: evaluatedArray,
+          pagination: {
+            // @ts-ignore
+            ...params.pagination,
+            total: data.Users.length,
+          },
         });
       }
     });
+  };
+  handlePageSize = () => {};
+
+  handleTableChange = (pagination: any, filters: any, sorter: any) => {
+    this.getUsersInfo({ sortField: sorter.field, pagination, ...filters });
   };
 
   componentDidMount() {
@@ -384,6 +397,14 @@ export class UserList extends Component<IUserListStoreProps> {
           columns={tableColumns}
           dataSource={users}
           rowKey="ID"
+          pagination={{
+            showSizeChanger: true,
+            total: this.state.users.length,
+            pageSize: this.state.pageSize,
+            onShowSizeChange: (current, size) => {
+              this.setState({ pageSize: size });
+            },
+          }}
           rowSelection={{
             onChange: (key, rows) => {
               this.setState({ selectedKeys: key });
