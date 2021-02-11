@@ -8,8 +8,16 @@ import { IAccount } from "../reducers/Account";
 import TranslateText from "../../utils/translate";
 import { DONE } from "../../constants/Messages";
 import { message } from "antd";
+import { SIGNOUT } from "../constants/Auth";
+import { EnErrorCode } from "../../api/HttpService";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
+
+enum EnLang {
+  RO = 0,
+  RU = 1,
+  EN = 1,
+}
 
 export const updateSettings = (payload: IUsers) => ({
   type: UPDATE_SETTINGS,
@@ -23,15 +31,18 @@ export const clearSettings = () => ({
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
     return new AppService().GetProfileInfo().then((data) => {
-      if (data && data.ErrorCode === 0) {
+      if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
         dispatch({ type: UPDATE_SETTINGS, payload: User });
-        if (User.UiLanguage === 0) {
-          dispatch({ type: CHANGE_LOCALE, locale: "ro" });
-        } else if (User.UiLanguage === 1) {
-          dispatch({ type: CHANGE_LOCALE, locale: "ru" });
-        } else {
-          dispatch({ type: CHANGE_LOCALE, locale: "en" });
+        switch (User.UiLanguage) {
+          case EnLang.RO:
+            dispatch({ type: CHANGE_LOCALE, locale: "ro" });
+            break;
+          case EnLang.RU:
+            dispatch({ type: CHANGE_LOCALE, locale: "ru" });
+            break;
+          default:
+            dispatch({ type: CHANGE_LOCALE, locale: "en" });
         }
       }
     });

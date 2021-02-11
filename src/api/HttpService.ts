@@ -10,6 +10,7 @@ import {
   API_AUTH_URL,
   API_DISCOUNT_URL,
   API_EDX_URL,
+  API_MAIL_URL,
   API_SMS_URL,
 } from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
@@ -17,6 +18,18 @@ import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
 import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
+
+export enum EnErrorCode {
+  INTERNAL_ERROR = -1,
+  NO_ERROR = 0,
+  EXPIRED_TOKEN = 118,
+  INCORECT_AUTH_DATA = 102,
+}
+export enum EnReqStatus {
+  OK = 200,
+  BAD_REQUEST = 400,
+  NOT_FOUND = 404,
+}
 
 declare module "axios" {
   interface AxiosResponse<T> extends Promise<T> {}
@@ -58,7 +71,8 @@ class HttpService {
       config.method === "get" &&
       config.baseURL !== API_SMS_URL &&
       config.baseURL !== API_DISCOUNT_URL &&
-      config.baseURL !== API_EDX_URL
+      config.baseURL !== API_EDX_URL &&
+      config.baseURL !== API_MAIL_URL
     ) {
       config.params = {
         ...config.params,
@@ -69,7 +83,8 @@ class HttpService {
       config.method === "post" &&
       config.baseURL !== API_SMS_URL &&
       config.baseURL !== API_DISCOUNT_URL &&
-      config.baseURL !== API_EDX_URL
+      config.baseURL !== API_EDX_URL &&
+      config.baseURL !== API_MAIL_URL
     ) {
       config.data = {
         ...config.data,
@@ -77,7 +92,11 @@ class HttpService {
       };
     }
 
-    if (config.baseURL === API_DISCOUNT_URL || config.baseURL === API_EDX_URL) {
+    if (
+      config.baseURL === API_DISCOUNT_URL ||
+      config.baseURL === API_EDX_URL ||
+      config.baseURL === API_MAIL_URL
+    ) {
       config.auth = {
         username: "1",
         password: "1",
@@ -91,9 +110,9 @@ class HttpService {
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
     if (response.data.ErrorCode === 118) {
-      return this._RefreshToken().then(async (data) => {
-        if (data && data.ErrorCode === 0) {
-          const { Token } = data;
+      return this._RefreshToken().then(async (tokenData) => {
+        if (tokenData && tokenData.ErrorCode === 0) {
+          const { Token } = tokenData;
           store.dispatch({ type: AUTHENTICATED, token: Token });
           if (response.config.method === "get") {
             response.config.params = {
@@ -127,13 +146,12 @@ class HttpService {
         }
       });
     } else if (
-      response.data.ErrorCode !== 0 &&
-      response.data.ErrorCode !== 108 &&
-      response.data.ErrorCode !== -1 &&
-      response.data.ErrorCode !== 102
+      response.data.ErrorCode !== EnErrorCode.NO_ERROR &&
+      response.data.ErrorCode !== EnErrorCode.EXPIRED_TOKEN &&
+      response.data.ErrorCode !== EnErrorCode.INCORECT_AUTH_DATA
     ) {
       message.error({
-        content: response.data.ErrorMessage,
+        content: `Error: ${response.data.ErrorMessage}`,
         key: "updatable",
         duration: 2.5,
       });
@@ -142,7 +160,7 @@ class HttpService {
   };
   private _handleError = async (error: AxiosResponse) => {
     store.dispatch({ type: HIDE_LOADING });
-    if (error && error.request && error.request.status !== 200) {
+    if (error && error.request && error.request.status !== EnReqStatus.OK) {
       message.error({
         content: error.toString(),
         key: "updatable",

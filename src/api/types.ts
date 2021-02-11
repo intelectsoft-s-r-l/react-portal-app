@@ -15,21 +15,3 @@ export type ApiDecorator<
   {
     [prop in Key]: Value;
   };
-
-// Auth
-export interface IRegisterUserRequest extends ApiRequest {
-  CompanyID: number;
-  Email: string;
-  FirstName: string;
-  LastName: string;
-  UiLanguage?: number;
-}
-
-export interface IRegisterCompanyRequest {
-  IDNO: number;
-  JuridicalName: string;
-  UiLanguage: number;
-  UsrEmail: string;
-  UsrPassword: string;
-  VATCode?: string;
-}
