@@ -94,7 +94,7 @@ const HeaderNav = (props: any) => {
             </Menu>
           </div>
           <div className="nav-left">
-            {!isNavTop && CompanyID === 1 ? (
+            {!isNavTop && CompanyID === 1 && Company !== "INTELECTSOFT SRL" ? (
               <div
                 className={`text-${
                   headerNavColor === "#ffffff" ? "dark" : "white"

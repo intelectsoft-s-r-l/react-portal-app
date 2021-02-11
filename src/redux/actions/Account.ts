@@ -37,6 +37,8 @@ export const getProfileInfo = (): ThunkResult<void> => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
         let Company: string = "";
+        // Call GetCompanyInfo only if the user is an Admin,
+        // in order to show who are you managing at the moment
         if (User.CompanyID === EnCompany.INTELECTSOFT) {
           Company =
             (await new AppService()
