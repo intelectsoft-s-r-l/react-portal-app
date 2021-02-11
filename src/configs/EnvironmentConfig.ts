@@ -4,6 +4,7 @@ const dev = {
   API_SMS_URL: "https://dev.edi.md/SMSService/json",
   API_DISCOUNT_URL: "https://dev.edi.md/ISDiscountService/json",
   API_EDX_URL: "https://dev.edi.md/EDXService/json",
+  API_MAIL_URL: "https://dev.edi.md/ISMailService/json",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -13,6 +14,7 @@ const test = {
   API_SMS_URL: "https://api.edi.md/SMSService/json",
   API_DISCOUNT_URL: "https://api.edi.md/ISDiscountService/json",
   API_EDX_URL: "https://api.edi.md/EDXService/json",
+  API_MAIL_URL: "https://api.edi.md/ISMailService/json",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -22,6 +24,7 @@ const prod = {
   API_SMS_URL: "https://dev.edi.md/SMSService/json",
   API_DISCOUNT_URL: "https://dev.edi.md/ISDiscountService/json",
   API_EDX_URL: "https://dev.edi.md/EDXService/json",
+  API_MAIL_URL: "https://dev.edi.md/ISMailService/json",
   SUBDIR_PATH: "/testclientportal",
 };
 
