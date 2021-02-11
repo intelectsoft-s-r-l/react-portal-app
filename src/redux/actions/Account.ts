@@ -18,6 +18,9 @@ enum EnLang {
   RU = 1,
   EN = 1,
 }
+enum EnCompany {
+  INTELECTSOFT = 1,
+}
 
 export const updateSettings = (payload: IUsers) => ({
   type: UPDATE_SETTINGS,
@@ -30,11 +33,17 @@ export const clearSettings = () => ({
 
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AppService().GetProfileInfo().then((data) => {
+    return new AppService().GetProfileInfo().then(async (data) => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
-        debugger;
-        dispatch({ type: UPDATE_SETTINGS, payload: User });
+        let Company: string = "";
+        if (User.CompanyID === EnCompany.INTELECTSOFT) {
+          Company =
+            (await new AppService()
+              .GetCompanyInfo()
+              .then((data) => data.Company.CommercialName)) ?? "";
+        }
+        dispatch({ type: UPDATE_SETTINGS, payload: { ...User, Company } });
         switch (User.UiLanguage) {
           case EnLang.RO:
             dispatch({ type: CHANGE_LOCALE, locale: "ro" });

@@ -35,13 +35,13 @@ const HeaderNav = (props: any) => {
     isMobile,
     history,
     CompanyID,
+    Company,
   } = props;
   const [searchActive, setSearchActive] = useState(false);
 
   const onSearchClose = () => {
     setSearchActive(false);
   };
-  const Company = useSelector((state: IState) => state.account?.Company);
   const onToggle = () => {
     if (!isMobile) {
       toggleCollapsedNav(!navCollapsed);
@@ -119,8 +119,15 @@ const HeaderNav = (props: any) => {
 
 const mapStateToProps = ({ theme, account }: IState) => {
   const { navCollapsed, navType, headerNavColor, mobileNav } = theme as ITheme;
-  const { CompanyID } = account as IAccount;
-  return { navCollapsed, navType, headerNavColor, mobileNav, CompanyID };
+  const { CompanyID, Company } = account as IAccount;
+  return {
+    navCollapsed,
+    navType,
+    headerNavColor,
+    mobileNav,
+    CompanyID,
+    Company,
+  };
 };
 
 export default connect(mapStateToProps, {
