@@ -16,7 +16,6 @@ export enum EnOrderType {
   _OUT = "sent",
 }
 const Order = (props: IOrder) => {
-  const { APIKey } = props;
   const edxInstance = new EdxService();
   const [date, setDate] = useState<any>([moment(), moment()]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +34,7 @@ const Order = (props: IOrder) => {
     let instanceType: "GetOrder" | "GetSentOrder" =
       ordType === EnOrderType._IN ? "GetOrder" : "GetSentOrder";
     return await edxInstance[instanceType](
-      APIKey,
+      props.APIKey,
       firstDate.format("DD-MM-YYYY"),
       secondDate.format("DD-MM-YYYY")
     ).then((data) => {

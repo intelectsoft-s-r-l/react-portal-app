@@ -16,4 +16,5 @@ export const templatesTable = () => {
       dataIndex: "State",
     },
   ];
+  return tableColumns;
 };

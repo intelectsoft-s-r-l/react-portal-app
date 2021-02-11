@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Card, Empty, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
@@ -235,7 +235,6 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       <Route
         path={`${match.url}/dashboard`}
         render={(props) => {
-          // PASS APYKEY FROM STATE NOT DIRECTLY FROM APP
           if (app.AppType === EnApp.SMS)
             return <SmsDashboard {...props} APIKey={app.ApyKey} />;
           else if (app.AppType === EnApp.ExchangeOfInvoice)
@@ -250,7 +249,7 @@ const AppRoute = ({ match, app }: IAppRoute) => {
         exact
         path={`${match.url}/templates`}
         render={(props) => {
-          return <Templates APIKey={app.ApyKey} />;
+          return <Templates APIKey={app.ApyKey} {...props} />;
         }}
       />
       <Route
@@ -321,6 +320,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
         setApp(currentApp);
       }
     });
+    return () => instance._source.cancel();
   }, [appID]);
 
   if (loading) return <Loading />;

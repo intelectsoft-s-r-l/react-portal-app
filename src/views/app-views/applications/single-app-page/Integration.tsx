@@ -28,8 +28,8 @@ const Integration = ({
   const [appData, setApp] = useState<Partial<IMarketAppList>>();
   const [form] = Form.useForm();
   const [activationCode, setActivationCode] = useState<number>(0);
-  const [apiKey, setApiKey] = useState<string>("");
   const [PublicKey, setPublicKey] = useState<string>("");
+  const [apiKey, setApiKey] = useState<string>("");
   const [PrivateKey, setPrivateKey] = useState<string>("");
   const [backOfficeURI, setBackOfficeURI] = useState<string>("");
   const [ExternalSecurityPolicy, setExternalSecurityPolicy] = useState<any>("");
@@ -42,8 +42,8 @@ const Integration = ({
           (app) => app.AppType === currentApp!.AppType
         );
         setApp(app);
-        setActivationCode(app!.LicenseActivationCode ?? 0);
         setApiKey(app!.ApyKey ?? "");
+        setActivationCode(app!.LicenseActivationCode ?? 0);
         setBackOfficeURI(app!.BackOfficeURI ?? "");
         setPublicKey(app!.EncryptionPublicKey ?? "");
         setPrivateKey(app!.EncryptionPrivateKey ?? "");
@@ -82,7 +82,7 @@ const Integration = ({
       onOk: async () =>
         await instance.GenerateApiKey(appData!.ID ?? 0).then((data) => {
           if (data && data.ErrorCode === 0) {
-            setApiKey(data.ApiKey);
+            window.location.reload();
           }
         }),
     });
@@ -93,7 +93,7 @@ const Integration = ({
       onOk: async () =>
         await instance.DeleteApiKey(appData!.ID ?? 0).then((data) => {
           if (data && data.ErrorCode === 0) {
-            setApiKey("00000000-0000-0000-0000-000000000000");
+            window.location.reload();
           }
         }),
       onCancel: () => {},

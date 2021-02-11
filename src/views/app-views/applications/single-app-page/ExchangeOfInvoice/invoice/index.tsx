@@ -16,7 +16,6 @@ export enum EnInvoiceType {
   _OUT = "sent",
 }
 const Invoice = (props: Invoice) => {
-  const { APIKey } = props;
   const edxInstance = new EdxService();
   const [date, setDate] = useState<any>([moment(), moment()]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +35,7 @@ const Invoice = (props: Invoice) => {
     let instanceType: "GetInvoice" | "GetSentInvoice" =
       invType === EnInvoiceType._IN ? "GetInvoice" : "GetSentInvoice";
     return await instance[instanceType](
-      APIKey,
+      props.APIKey,
       firstDate.format("DD-MM-YYYY"),
       secondDate.format("DD-MM-YYYY")
     ).then((data) => {
