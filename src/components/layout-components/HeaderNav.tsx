@@ -21,6 +21,7 @@ import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
 import { AppService } from "../../api/app";
+import { EnCompany } from "../../redux/actions/Account";
 
 const { Header } = Layout;
 
@@ -94,7 +95,9 @@ const HeaderNav = (props: any) => {
             </Menu>
           </div>
           <div className="nav-left">
-            {!isNavTop && CompanyID === 1 && Company !== "INTELECTSOFT SRL" ? (
+            {!isNavTop &&
+            CompanyID === EnCompany.INTELECTSOFT &&
+            Company !== "INTELECTSOFT SRL" ? (
               <div
                 className={`text-${
                   headerNavColor === "#ffffff" ? "dark" : "white"

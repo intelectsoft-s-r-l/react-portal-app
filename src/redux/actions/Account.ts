@@ -18,7 +18,7 @@ enum EnLang {
   RU = 1,
   EN = 1,
 }
-enum EnCompany {
+export enum EnCompany {
   INTELECTSOFT = 1,
 }
 
@@ -36,16 +36,16 @@ export const getProfileInfo = (): ThunkResult<void> => {
     return new AppService().GetProfileInfo().then(async (data) => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
-        let Company: string = "";
-        // Call GetCompanyInfo only if the user is an Admin,
-        // in order to show who are you managing at the moment
-        if (User.CompanyID === EnCompany.INTELECTSOFT) {
-          Company =
-            (await new AppService()
-              .GetCompanyInfo()
-              .then((data) => data.Company.CommercialName)) ?? "";
-        }
-        dispatch({ type: UPDATE_SETTINGS, payload: { ...User, Company } });
+        //let Company: string = "";
+        //// Call GetCompanyInfo only if the user is an Admin,
+        //// in order to show who are you managing at the moment
+        //if (User.CompanyID === EnCompany.INTELECTSOFT) {
+        //Company =
+        //(await new AppService()
+        //.GetCompanyInfo()
+        //.then((data) => data.Company.CommercialName)) ?? "";
+        //}
+        dispatch({ type: UPDATE_SETTINGS, payload: User });
         switch (User.UiLanguage) {
           case EnLang.RO:
             dispatch({ type: CHANGE_LOCALE, locale: "ro" });

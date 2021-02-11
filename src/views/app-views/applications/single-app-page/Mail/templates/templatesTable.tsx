@@ -15,6 +15,10 @@ export const templatesTable = () => {
       title: "State",
       dataIndex: "State",
     },
+    {
+      title: "Subject",
+      dataIndex: "Subject",
+    },
   ];
   return tableColumns;
 };
