@@ -33,6 +33,7 @@ export const getProfileInfo = (): ThunkResult<void> => {
     return new AppService().GetProfileInfo().then((data) => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
+        debugger;
         dispatch({ type: UPDATE_SETTINGS, payload: User });
         switch (User.UiLanguage) {
           case EnLang.RO:
