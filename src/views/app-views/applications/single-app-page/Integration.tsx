@@ -10,6 +10,9 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
+import { EnApp } from ".";
+import ApiContainer from "../../../../components/util-components/ApiContainer";
+import IntegrationFormElement from "../../../../components/shared-components/IntegrationFormElement";
 
 enum key {
   PRIVATE = 1,
@@ -167,22 +170,14 @@ const Integration = ({
         className={appData!.ModuleSettings!.APIKey ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
-        <div className="container-fluid">
-          <h2>API Key</h2>
-        </div>
-        <Input
-          disabled
+        <IntegrationFormElement
+          name="APIKey"
           value={apiKey}
-          suffix={
-            <CardToolbar code={apiKey} expand={() => false} isExpand="false" />
-          }
+          title="API Key"
+          onClickFunc={() => generateApiKey()}
+          onDelete={() => deleteApiKey()}
+          isDisabled
         />
-        <Button type="ghost" className="mt-3" onClick={() => generateApiKey()}>
-          <IntlMessage id="app.Generate" />
-        </Button>
-        <Button danger className="mt-3 ml-3" onClick={() => deleteApiKey()}>
-          <IntlMessage id="app.Delete" />
-        </Button>
       </Col>
       <Col
         xl={12}
@@ -191,95 +186,47 @@ const Integration = ({
         }
         style={{ maxWidth: 500 }}
       >
-        <div className="container-fluid">
-          <h2>Activation Code</h2>
-        </div>
-        <Input
-          disabled
+        <IntegrationFormElement
+          name="ActivationCode"
           value={activationCode}
-          suffix={
-            <CardToolbar
-              code={activationCode}
-              expand={() => false}
-              isExpand="false"
-            />
-          }
+          title="Activation Code"
+          onClickFunc={generateActivationCode}
+          isDisabled={true}
         />
-        <Button
-          type="ghost"
-          className="mt-3"
-          onClick={() => generateActivationCode()}
-        >
-          <IntlMessage id="app.Refresh" />
-        </Button>
       </Col>
       <Col
         xl={12}
         className={appData!.ModuleSettings!.Backoffice ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
-        <div className="container-fluid">
-          <h2>Back Office URI</h2>
-        </div>
-        <Input
+        <IntegrationFormElement
+          title="Back Office URI"
+          name="backOfficeURI"
           value={backOfficeURI}
-          name="BackOfficeURI"
           onChange={(e) => setBackOfficeURI(e.currentTarget.value)}
-          suffix={
-            <CardToolbar
-              code={backOfficeURI}
-              expand={() => false}
-              isExpand="false"
-            />
+          onClickFunc={() =>
+            updateCredentials({ BackOfficeURI: backOfficeURI })
           }
         />
-        <Button
-          type="ghost"
-          htmlType="submit"
-          className="mt-3"
-          onClick={() =>
-            updateCredentials({
-              BackOfficeURI: backOfficeURI,
-            })
-          }
-        >
-          <IntlMessage id="app.Refresh" />
-        </Button>
       </Col>
       <Col
         xl={12}
-        className={appData!.AppType === 100 ? "mb-4" : "mb-4 d-none"}
+        className={appData!.AppType === EnApp.Qiwi ? "mb-4" : "mb-4 d-none"}
         style={{ maxWidth: 500 }}
       >
-        <div className="container-fluid">
-          <h2>Customer ID</h2>
-        </div>
-        <Input
+        <IntegrationFormElement
+          title="Customer ID"
           name="CustomerID"
-          onChange={onExternalSecurityChange}
           value={ExternalSecurityPolicy.CustomerID}
-          suffix={
-            <CardToolbar
-              code={ExternalSecurityPolicy.CustomerID}
-              expand={() => false}
-              isExpand="false"
-            />
-          }
-        />
-        <Button
-          type="ghost"
-          htmlType="submit"
-          onClick={() =>
+          onChange={onExternalSecurityChange}
+          onClickFunc={() =>
             updateCredentials({
               ExternalSecurityPolicy: Buffer.from(
                 JSON.stringify(ExternalSecurityPolicy)
               ).toString("base64"),
             })
           }
-          className="mt-3"
-        >
-          <IntlMessage id="app.Refresh" />
-        </Button>
+        />
       </Col>
       <Row gutter={ROW_GUTTER}>
         <Col
@@ -288,33 +235,16 @@ const Integration = ({
           md={24}
           className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
         >
-          <div className="container-fluid">
-            <h2>Public Key</h2>
-          </div>
-          <Flex alignItems="center">
-            <Input
-              name="PublicKey"
-              value={PublicKey}
-              onChange={(e) => setPublicKey(e.target.value)}
-              suffix={
-                <CardToolbar
-                  code={PublicKey}
-                  expand={() => false}
-                  isExpand="false"
-                />
-              }
-            />
-            <Button
-              type="ghost"
-              style={{ borderColor: "#1890ff" }}
-              className="ml-3 px-4"
-              onClick={() =>
-                updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
-              }
-            >
-              <IntlMessage id="app.Refresh" />
-            </Button>
-          </Flex>
+          <IntegrationFormElement
+            title="Public Key"
+            name="PublicKey"
+            value={PublicKey}
+            isFlex
+            onChange={(event) => setPublicKey(event.target.value)}
+            onClickFunc={() =>
+              updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
+            }
+          />
         </Col>
         <Col
           xl={24}
@@ -322,26 +252,17 @@ const Integration = ({
           md={24}
           className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
         >
-          <div className="container-fluid">
-            <h2>Private Key</h2>
-          </div>
-          <Flex alignItems="center">
-            <Input
-              name="PrivateKey"
-              value={PrivateKey}
-              onChange={(e) => setPrivateKey(e.target.value)}
-            />
-            <Button
-              type="ghost"
-              style={{ borderColor: "#1890ff" }}
-              className="ml-3 px-4"
-              onClick={() =>
-                updateRsaKey(appData!.ID ?? 0, PrivateKey, key.PRIVATE)
-              }
-            >
-              <IntlMessage id="app.Refresh" />
-            </Button>
-          </Flex>
+          <IntegrationFormElement
+            title="Private Key"
+            hasToolbar={false}
+            name="PrivateKey"
+            value={PrivateKey}
+            onChange={(event) => setPrivateKey(event.target.value)}
+            isFlex
+            onClickFunc={() =>
+              updateRsaKey(appData.ID ?? 0, PrivateKey, key.PRIVATE)
+            }
+          />
           <Button
             type="primary"
             className="mt-4 px-5"
