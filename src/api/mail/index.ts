@@ -17,7 +17,7 @@ export class MailService extends HttpService {
 
   public GetTemplates = async (APIKey: string) =>
     this.instance.get<ApiDecorator<ApiResponse, "Templates", ITemplate[]>>(
-      "/GetTemlates",
+      "/GetTemplates",
       {
         params: { APIKey },
       }

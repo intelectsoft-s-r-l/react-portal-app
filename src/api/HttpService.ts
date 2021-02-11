@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   CancelTokenSource,
 } from "axios";
-import { message } from "antd";
+import { message, notification } from "antd";
 import {
   API_APP_URL,
   API_AUTH_URL,
@@ -22,6 +22,7 @@ import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
 export enum EnErrorCode {
   INTERNAL_ERROR = -1,
   NO_ERROR = 0,
+  APIKEY_NOT_EXIST = 10,
   EXPIRED_TOKEN = 118,
   INCORECT_AUTH_DATA = 102,
 }
@@ -109,7 +110,7 @@ class HttpService {
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
-    if (response.data.ErrorCode === 118) {
+    if (response.data.ErrorCode === EnErrorCode.EXPIRED_TOKEN) {
       return this._RefreshToken().then(async (tokenData) => {
         if (tokenData && tokenData.ErrorCode === 0) {
           const { Token } = tokenData;
@@ -148,7 +149,8 @@ class HttpService {
     } else if (
       response.data.ErrorCode !== EnErrorCode.NO_ERROR &&
       response.data.ErrorCode !== EnErrorCode.EXPIRED_TOKEN &&
-      response.data.ErrorCode !== EnErrorCode.INCORECT_AUTH_DATA
+      response.data.ErrorCode !== EnErrorCode.INCORECT_AUTH_DATA &&
+      response.data.ErrorCode !== EnErrorCode.APIKEY_NOT_EXIST
     ) {
       message.error({
         content: `Error: ${response.data.ErrorMessage}`,
@@ -156,6 +158,14 @@ class HttpService {
         duration: 2.5,
       });
     }
+    if (response.data.ErrorCode === EnErrorCode.APIKEY_NOT_EXIST) {
+      notification.warning({
+        message: `Warning: ${response.data.ErrorMessage}!`,
+        description: "Generate a new APIKey in Integration tab!",
+        duration: 2.5,
+      });
+    }
+
     return response.data;
   };
   private _handleError = async (error: AxiosResponse) => {

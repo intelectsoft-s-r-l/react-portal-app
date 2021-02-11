@@ -61,7 +61,7 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
             <IntlMessage id="app.Refresh" />
           </Button>
           {onDelete && (
-            <Button danger onClick={onDelete} className="mt-3 ml-3">
+            <Button danger onClick={onDelete} className="ml-3">
               <IntlMessage id="app.Delete" />
             </Button>
           )}
