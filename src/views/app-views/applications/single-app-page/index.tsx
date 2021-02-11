@@ -36,8 +36,9 @@ import DiscountDashboard from "./MyDiscount/dashboard";
 import Utils from "../../../../utils";
 import InvoiceLines from "./ExchangeOfInvoice/invoice/InvoiceLines";
 import OrderLines from "./ExchangeOfOrder/order/OrderLines";
+import Templates from "./Mail/templates";
 
-enum EnApp {
+export enum EnApp {
   Retail = 10,
   CashSalesExpertMobile = 11,
   Agent = 20,
@@ -51,6 +52,7 @@ enum EnApp {
   ExchangeOfInvoice = 41,
   ExchangeOfOrder = 40,
   MobilePetrolExpertCash = 131,
+  MailService = 140,
 }
 interface IOptions extends RouteComponentProps {
   AppType: number;
@@ -75,6 +77,13 @@ const Options = ({
           <IntlMessage id="app.Dashboard" />
         </span>
         <Link to={"dashboard"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/templates`}
+        className={AppType === EnApp.MailService ? "" : "d-none"}
+      >
+        <span>Templates</span>
+        <Link to={"templates"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/invoice`}
@@ -235,6 +244,13 @@ const AppRoute = ({ match, app }: IAppRoute) => {
             return <OrderDashboard />;
           else if (app.AppType === EnApp.MyDiscount)
             return <DiscountDashboard {...props} APIKey={app.ApyKey} />;
+        }}
+      />
+      <Route
+        exact
+        path={`${match.url}/templates`}
+        render={(props) => {
+          return <Templates APIKey={app.ApyKey} />;
         }}
       />
       <Route
