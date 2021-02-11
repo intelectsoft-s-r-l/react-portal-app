@@ -1,5 +1,7 @@
 {
-  "short_name": "Client Portal",
+  "short_name": "ClientPortal",
+  "permissions": ["serial", "fullscreen"],
+  "manifest_version": 2,
   "name": "IS Client Portal App",
   "icons": [
     {

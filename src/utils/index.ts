@@ -100,22 +100,23 @@ class Utils {
     }
     return data;
   }
-  static deleteArrayRow(list: any, key: any, value: any) {
+  static deleteArrayRow<T>(list: T[], key: keyof T, value: any) {
     let data = list;
     if (list) {
-      data = list.filter((item: any) => item[key] !== value);
+      data = list.filter((item) => item[key] !== value);
     }
     return data;
   }
 
-  static wildCardSearch(list: any, input: any) {
-    const searchText = (item: any) => {
+  static wildCardSearch<T>(list: T[], input: string) {
+    list = list.filter((item) => {
       for (let key in item) {
         if (item[key] == null) {
           continue;
         }
         if (
           item[key]
+            //@ts-ignore
             .toString()
             .toUpperCase()
             .indexOf(input.toString().toUpperCase()) !== -1
@@ -123,8 +124,7 @@ class Utils {
           return true;
         }
       }
-    };
-    list = list.filter((value: any) => searchText(value));
+    });
     return list;
   }
 

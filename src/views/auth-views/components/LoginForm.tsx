@@ -34,26 +34,18 @@ const LoginForm = ({
   showMessage,
   message,
   hideLoading,
-  authenticated,
-  showAuthMessage,
   token,
   redirect,
-  allowRedirect,
-  avatar,
-  name,
-  userName,
-  email,
-  dateOfBirth,
-  phoneNumber,
-  updateSettings,
   authorizeUser,
-  getProfileInfo,
 }: any) => {
   const history = useHistory();
   const onLogin = async ({ email, password }: { [key: string]: string }) => {
     showLoading();
     setTimeout(async () => {
-      authorizeUser(email, await Utils.encryptInput(password, API_PUBLIC_KEY));
+      await authorizeUser(
+        email,
+        await Utils.encryptInput(password, API_PUBLIC_KEY)
+      );
     }, 1000);
   };
   const onGoogleLogin = () => {
