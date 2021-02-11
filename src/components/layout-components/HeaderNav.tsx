@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { Menu, Layout } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logo from "./Logo";
@@ -41,14 +41,7 @@ const HeaderNav = (props: any) => {
   const onSearchClose = () => {
     setSearchActive(false);
   };
-  const [currentCompany, setCurrentCompany] = useState("");
-
-  useEffect(() => {
-    new AppService().GetCompanyInfo().then((data) => {
-      if (data && data.ErrorCode === 0)
-        setCurrentCompany(data.Company.CommercialName ?? "");
-    });
-  }, []);
+  const Company = useSelector((state: IState) => state.account?.Company);
   const onToggle = () => {
     if (!isMobile) {
       toggleCollapsedNav(!navCollapsed);
@@ -108,7 +101,7 @@ const HeaderNav = (props: any) => {
                 } px-5`}
                 style={{ fontSize: "20px" }}
               >
-                {`ATENTIE! Administrati: ${currentCompany}`}
+                {`ATENTIE! Administrati: ${Company}`}
               </div>
             ) : null}
           </div>
