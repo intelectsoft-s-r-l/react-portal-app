@@ -75,7 +75,15 @@ const Packages = ({ currentApp }: { currentApp: Partial<IMarketAppList> }) => {
   }, []);
 
   if (loading) return <Loading />;
-  if (!packages) return <Empty />;
+  if (packages.length === 0)
+    return (
+      <>
+        <h2 className="mb-4">
+          <IntlMessage id="app.Packages" />
+        </h2>
+        <Empty />
+      </>
+    );
   return (
     <>
       <h2 className="mb-4">

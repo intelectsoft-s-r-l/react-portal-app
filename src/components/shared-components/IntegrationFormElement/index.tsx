@@ -1,5 +1,6 @@
 import { Button, Input } from "antd";
 import { ButtonType } from "antd/es/button";
+import { LiteralUnion } from "antd/es/_util/type";
 import React from "react";
 import CardToolbar from "../../util-components/DemoCard/CardToolbar";
 import IntlMessage from "../../util-components/IntlMessage";
@@ -16,6 +17,31 @@ interface IntegrationFormElement {
   title: React.ReactNode | string;
   isFlex?: boolean;
   onDelete?: () => void;
+  inputType?: LiteralUnion<
+    | "button"
+    | "checkbox"
+    | "color"
+    | "date"
+    | "datetime-local"
+    | "email"
+    | "file"
+    | "hidden"
+    | "image"
+    | "month"
+    | "number"
+    | "password"
+    | "radio"
+    | "range"
+    | "reset"
+    | "search"
+    | "submit"
+    | "tel"
+    | "text"
+    | "time"
+    | "url"
+    | "week",
+    string
+  >;
 }
 const IntegrationFormElement = (props: IntegrationFormElement) => {
   const {
@@ -29,6 +55,7 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
     title,
     isFlex = false,
     onDelete,
+    inputType = "text",
   } = props;
   return (
     <>
@@ -40,6 +67,7 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
           <Input
             disabled={isDisabled}
             name={name}
+            type={inputType}
             onChange={onChange}
             value={value}
             suffix={
@@ -71,6 +99,7 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
           <Input
             disabled={isDisabled}
             name={name}
+            type={inputType}
             onChange={onChange}
             value={value}
             suffix={

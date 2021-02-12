@@ -35,7 +35,7 @@ interface IArticleItem {
   refreshNews: (AppType: number) => void;
   AppType: number;
 }
-enum newsEnum {
+enum EnNews {
   ACTIVE = 1,
   DISABLED = 2,
   INACTIVE = 0,
@@ -54,18 +54,18 @@ const ArticleItem = ({
       title={
         <Tag
           color={
-            newsData.Status === newsEnum.DISABLED
+            newsData.Status === EnNews.DISABLED
               ? "red"
-              : newsData.Status === newsEnum.ACTIVE
+              : newsData.Status === EnNews.ACTIVE
               ? "cyan"
               : "orange"
           }
         >
-          {newsData.Status === newsEnum.DISABLED ? (
+          {newsData.Status === EnNews.DISABLED ? (
             <Tooltip title="Disabled">
               <span>Disabled</span>
             </Tooltip>
-          ) : newsData.Status === newsEnum.ACTIVE ? (
+          ) : newsData.Status === EnNews.ACTIVE ? (
             <Tooltip title="Active">
               <span>Active</span>
             </Tooltip>
@@ -80,7 +80,7 @@ const ArticleItem = ({
         <EllipsisDropdown
           menu={
             <Menu>
-              {newsData.Status === newsEnum.DISABLED ? (
+              {newsData.Status === EnNews.DISABLED ? (
                 <Menu.Item
                   onClick={async () => {
                     Modal.confirm({
@@ -89,7 +89,7 @@ const ArticleItem = ({
                         return await new AppService()
                           .UpdateNews({
                             ...newsData,
-                            Status: newsEnum.ACTIVE,
+                            Status: EnNews.ACTIVE,
                           })
                           .then((data) => {
                             if (data && data.ErrorCode === 0)
@@ -106,7 +106,7 @@ const ArticleItem = ({
                     </span>
                   </Flex>
                 </Menu.Item>
-              ) : newsData.Status === newsEnum.ACTIVE ? (
+              ) : newsData.Status === EnNews.ACTIVE ? (
                 <Menu.Item
                   onClick={async () => {
                     Modal.confirm({
@@ -115,7 +115,7 @@ const ArticleItem = ({
                         return await new AppService()
                           .UpdateNews({
                             ...newsData,
-                            Status: newsEnum.DISABLED,
+                            Status: EnNews.DISABLED,
                           })
                           .then((data) => {
                             if (data && data.ErrorCode === 0)
@@ -141,7 +141,7 @@ const ArticleItem = ({
                         return await new AppService()
                           .UpdateNews({
                             ...newsData,
-                            Status: newsEnum.ACTIVE,
+                            Status: EnNews.ACTIVE,
                           })
                           .then((data) => {
                             if (data && data.ErrorCode === 0)

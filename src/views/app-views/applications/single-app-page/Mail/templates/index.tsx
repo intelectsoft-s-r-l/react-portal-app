@@ -53,7 +53,8 @@ const Templates = (props: ITemplates) => {
                 image={process.env.PUBLIC_URL + "/img/list.svg"}
                 description={
                   <span>
-                    No templates just yet. <p>Let's make one!</p>
+                    No templates just yet. <br />
+                    Let's make one!
                   </span>
                 }
               >

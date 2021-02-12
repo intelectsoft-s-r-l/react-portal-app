@@ -13,6 +13,8 @@ import Loading from "../../../../components/shared-components/Loading";
 import { EnApp } from ".";
 import ApiContainer from "../../../../components/util-components/ApiContainer";
 import IntegrationFormElement from "../../../../components/shared-components/IntegrationFormElement";
+import { useSelector } from "react-redux";
+import { IState } from "../../../../redux/reducers";
 
 enum key {
   PRIVATE = 1,
@@ -51,9 +53,7 @@ const Integration = ({
           setExternalSecurityPolicy(
             JSON.parse(window.atob(app!.ExternalSecurityPolicy.toString()))
           );
-        } catch {
-          setExternalSecurityPolicy({ CustomerID: null, PublicKey: null });
-        }
+        } catch {}
       }
     });
   };
@@ -108,11 +108,7 @@ const Integration = ({
     });
     return instance.UpdateApp({ AppID: appData!.ID, ...data }).then((data) => {
       if (data && data.ErrorCode === 0) {
-        message.success({
-          content: TranslateText(DONE),
-          key: "updatable",
-          duration: 1,
-        });
+        window.location.reload();
       }
     });
   };
@@ -164,115 +160,250 @@ const Integration = ({
     return <Empty />;
   }
   return (
-    <Row gutter={ROW_GUTTER} justify="space-between">
-      <Col
-        xl={12}
-        className={appData!.ModuleSettings!.APIKey ? "mb-4" : "mb-4 d-none"}
-        style={{ maxWidth: 500 }}
-      >
-        <IntegrationFormElement
-          name="APIKey"
-          value={apiKey}
-          title="API Key"
-          onClickFunc={() => generateApiKey()}
-          onDelete={() => deleteApiKey()}
-          isDisabled
-        />
-      </Col>
-      <Col
-        xl={12}
-        className={
-          appData!.ModuleSettings!.ActivationCode ? "mb-4" : "mb-4 d-none"
-        }
-        style={{ maxWidth: 500 }}
-      >
-        <IntegrationFormElement
-          name="ActivationCode"
-          value={activationCode}
-          title="Activation Code"
-          onClickFunc={generateActivationCode}
-          isDisabled={true}
-        />
-      </Col>
-      <Col
-        xl={12}
-        className={appData!.ModuleSettings!.Backoffice ? "mb-4" : "mb-4 d-none"}
-        style={{ maxWidth: 500 }}
-      >
-        <IntegrationFormElement
-          title="Back Office URI"
-          name="backOfficeURI"
-          value={backOfficeURI}
-          onChange={(e) => setBackOfficeURI(e.currentTarget.value)}
-          onClickFunc={() =>
-            updateCredentials({ BackOfficeURI: backOfficeURI })
-          }
-        />
-      </Col>
-      <Col
-        xl={12}
-        className={appData!.AppType === EnApp.Qiwi ? "mb-4" : "mb-4 d-none"}
-        style={{ maxWidth: 500 }}
-      >
-        <IntegrationFormElement
-          title="Customer ID"
-          name="CustomerID"
-          value={ExternalSecurityPolicy.CustomerID}
-          onChange={onExternalSecurityChange}
-          onClickFunc={() =>
-            updateCredentials({
-              ExternalSecurityPolicy: Buffer.from(
-                JSON.stringify(ExternalSecurityPolicy)
-              ).toString("base64"),
-            })
-          }
-        />
-      </Col>
-      <Row gutter={ROW_GUTTER}>
+    <Form>
+      <Row gutter={ROW_GUTTER} justify="space-between">
         <Col
-          xl={24}
-          xs={24}
-          md={24}
-          className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
+          xl={12}
+          className={appData!.ModuleSettings!.APIKey ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
         >
           <IntegrationFormElement
-            title="Public Key"
-            name="PublicKey"
-            value={PublicKey}
-            isFlex
-            onChange={(event) => setPublicKey(event.target.value)}
+            name="APIKey"
+            value={apiKey}
+            title="API Key"
+            onClickFunc={() => generateApiKey()}
+            onDelete={() => deleteApiKey()}
+            isDisabled
+          />
+        </Col>
+        <Col
+          xl={12}
+          className={
+            appData!.ModuleSettings!.ActivationCode ? "mb-4" : "d-none"
+          }
+          style={{ maxWidth: 500 }}
+        >
+          <IntegrationFormElement
+            name="ActivationCode"
+            value={activationCode}
+            title="Activation Code"
+            onClickFunc={generateActivationCode}
+            isDisabled={true}
+          />
+        </Col>
+        <Col
+          xl={12}
+          className={appData!.ModuleSettings!.Backoffice ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <IntegrationFormElement
+            title="Back Office URI"
+            name="backOfficeURI"
+            value={backOfficeURI}
+            onChange={(e) => setBackOfficeURI(e.currentTarget.value)}
             onClickFunc={() =>
-              updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
+              updateCredentials({ BackOfficeURI: backOfficeURI })
             }
           />
         </Col>
         <Col
-          xl={24}
-          xs={24}
-          md={24}
-          className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "mb-4 d-none"}
+          xl={12}
+          className={appData.AppType === EnApp.MailService ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <Form.Item
+            name="Email"
+            rules={[
+              {
+                type: "email",
+                message: <IntlMessage id="auth.MessageInsertValidEmail" />,
+              },
+            ]}
+          >
+            <IntegrationFormElement
+              title="Email"
+              name="Email"
+              value={ExternalSecurityPolicy.Email}
+              onChange={onExternalSecurityChange}
+              onClickFunc={() =>
+                updateCredentials({
+                  ExternalSecurityPolicy: Buffer.from(
+                    JSON.stringify(ExternalSecurityPolicy)
+                  ).toString("base64"),
+                })
+              }
+            />
+          </Form.Item>
+        </Col>
+        <Col
+          xl={12}
+          className={appData.AppType === EnApp.MailService ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
         >
           <IntegrationFormElement
-            title="Private Key"
-            hasToolbar={false}
-            name="PrivateKey"
-            value={PrivateKey}
-            onChange={(event) => setPrivateKey(event.target.value)}
-            isFlex
+            title="Alias"
+            name="Alias"
+            value={ExternalSecurityPolicy.Alias}
+            onChange={onExternalSecurityChange}
             onClickFunc={() =>
-              updateRsaKey(appData.ID ?? 0, PrivateKey, key.PRIVATE)
+              updateCredentials({
+                ExternalSecurityPolicy: Buffer.from(
+                  JSON.stringify(ExternalSecurityPolicy)
+                ).toString("base64"),
+              })
             }
+          />
+        </Col>
+        <Col
+          xl={12}
+          className={appData.AppType === EnApp.MailService ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <div className="container-fluid">
+            <h2>Password</h2>
+          </div>
+          <Input.Password
+            title="Password"
+            name="Password"
+            value={ExternalSecurityPolicy.Password}
+            onChange={onExternalSecurityChange}
           />
           <Button
-            type="primary"
-            className="mt-4 px-5"
-            onClick={() => generateRsaKey()}
+            type={"ghost"}
+            onClick={() =>
+              updateCredentials({
+                ExternalSecurityPolicy: Buffer.from(
+                  JSON.stringify(ExternalSecurityPolicy)
+                ).toString("base64"),
+              })
+            }
+            className="mt-3"
           >
-            <IntlMessage id="app.Generate" />
+            <IntlMessage id="app.Refresh" />
           </Button>
         </Col>
+        <Col
+          xl={12}
+          className={appData.AppType === EnApp.MailService ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <IntegrationFormElement
+            title="SSL"
+            name="SSL"
+            value={ExternalSecurityPolicy.SSL}
+            onChange={onExternalSecurityChange}
+            onClickFunc={() =>
+              updateCredentials({
+                ExternalSecurityPolicy: Buffer.from(
+                  JSON.stringify(ExternalSecurityPolicy)
+                ).toString("base64"),
+              })
+            }
+          />
+        </Col>
+        <Col
+          xl={12}
+          className={appData.AppType === EnApp.MailService ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <IntegrationFormElement
+            title="SmtpServer"
+            name="SmtpServer"
+            value={ExternalSecurityPolicy.SmtpServer}
+            onChange={onExternalSecurityChange}
+            onClickFunc={() =>
+              updateCredentials({
+                ExternalSecurityPolicy: Buffer.from(
+                  JSON.stringify(ExternalSecurityPolicy)
+                ).toString("base64"),
+              })
+            }
+          />
+        </Col>
+        <Col
+          xl={12}
+          className={appData.AppType === EnApp.MailService ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <IntegrationFormElement
+            title="SmtpServerPort"
+            name="SmtpServerPort"
+            value={ExternalSecurityPolicy.SmtpServerPort}
+            onChange={onExternalSecurityChange}
+            onClickFunc={() =>
+              updateCredentials({
+                ExternalSecurityPolicy: Buffer.from(
+                  JSON.stringify(ExternalSecurityPolicy)
+                ).toString("base64"),
+              })
+            }
+          />
+        </Col>
+        <Col
+          xl={12}
+          className={appData!.AppType === EnApp.Qiwi ? "mb-4" : "d-none"}
+          style={{ maxWidth: 500 }}
+        >
+          <IntegrationFormElement
+            title="Customer ID"
+            name="CustomerID"
+            value={ExternalSecurityPolicy.CustomerID}
+            onChange={onExternalSecurityChange}
+            onClickFunc={() =>
+              updateCredentials({
+                ExternalSecurityPolicy: Buffer.from(
+                  JSON.stringify(ExternalSecurityPolicy)
+                ).toString("base64"),
+              })
+            }
+          />
+        </Col>
+        <Row gutter={ROW_GUTTER}>
+          <Col
+            xl={24}
+            xs={24}
+            md={24}
+            className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "d-none"}
+          >
+            <IntegrationFormElement
+              title="Public Key"
+              name="PublicKey"
+              value={PublicKey}
+              isFlex
+              onChange={(event) => setPublicKey(event.target.value)}
+              onClickFunc={() =>
+                updateRsaKey(appData!.ID ?? 0, PublicKey, key.PUBLIC)
+              }
+            />
+          </Col>
+          <Col
+            xl={24}
+            xs={24}
+            md={24}
+            className={appData!.ModuleSettings!.RSAKey ? "mb-4" : "d-none"}
+          >
+            <IntegrationFormElement
+              title="Private Key"
+              hasToolbar={false}
+              name="PrivateKey"
+              value={PrivateKey}
+              onChange={(event) => setPrivateKey(event.target.value)}
+              isFlex
+              onClickFunc={() =>
+                updateRsaKey(appData.ID ?? 0, PrivateKey, key.PRIVATE)
+              }
+            />
+            <Button
+              type="primary"
+              className="mt-4 px-5"
+              onClick={() => generateRsaKey()}
+            >
+              <IntlMessage id="app.Generate" />
+            </Button>
+          </Col>
+        </Row>
       </Row>
-    </Row>
+    </Form>
   );
 };
 
