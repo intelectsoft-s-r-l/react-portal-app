@@ -292,7 +292,7 @@
   "SMS.NoContacts": "У вас пока нет контактов",
   "SMS.AttachFile": "Прикрепить файл",
   "SMS.SendSMS": "Оправить СМС",
-  "SMS.Imeediately": "Немедленно",
+  "SMS.Immediately": "Немедленно",
   "SMS.DelaySMSSend": "Планировать отправку",
   "SMS.Receivers.Validate": "Номера телефонов должны быть разделены запятой!",
   "SMS.EditCampaign": "Редактировать кампанию",

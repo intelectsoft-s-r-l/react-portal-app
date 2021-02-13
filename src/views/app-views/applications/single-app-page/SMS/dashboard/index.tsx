@@ -122,8 +122,9 @@ const SmsDashboard = (props: ISmsDashboard) => {
       });
   };
   const getSmsInfo = async () => {
-    return instance.Info_GetTotal(props.APIKey).then((data) => {
+    return instance.Info_GetTotal(props.APIKey).then(async (data) => {
       if (data && data.ErrorCode === 0) {
+        await getSmsList();
         setStatusData([
           data.SentThisMonth,
           data.FailedDelivery,
@@ -140,10 +141,6 @@ const SmsDashboard = (props: ISmsDashboard) => {
   };
   useEffect(() => {
     getSmsInfo();
-    return () => instance._source.cancel();
-  }, []);
-  useEffect(() => {
-    getSmsList();
     return () => instance._source.cancel();
   }, []);
 

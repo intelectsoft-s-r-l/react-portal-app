@@ -63,9 +63,10 @@ const News = () => {
   const [apps, setApps] = useState<IShortMarketAppList[]>();
   const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
-    return await instance.GetPortalNews(AppType).then((data) => {
+    return await instance.GetPortalNews(AppType).then(async (data) => {
       setNewsLoading(false);
       if (data && data.ErrorCode === 0) {
+        await getApps();
         setNews(data.NewsList);
       }
     });
@@ -86,10 +87,6 @@ const News = () => {
   };
   useEffect(() => {
     getPortalNews();
-    return () => instance._source.cancel();
-  }, []);
-  useEffect(() => {
-    getApps();
     return () => instance._source.cancel();
   }, []);
   return (
