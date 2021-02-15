@@ -61,6 +61,9 @@ class HttpService {
       this._handleError
     );
   };
+  private setToken = (Token: string) => {
+    this._token = Token;
+  };
   private _initializeRequestInterceptor = () => {
     this.instance.interceptors.request.use(this._handleRequest, (error) =>
       Promise.reject(error)
@@ -114,24 +117,21 @@ class HttpService {
       return this._RefreshToken().then(async (tokenData) => {
         if (tokenData && tokenData.ErrorCode === 0) {
           const { Token } = tokenData;
+          this.setToken(Token);
           store.dispatch({ type: AUTHENTICATED, token: Token });
           if (response.config.method === "get") {
             response.config.params = {
               ...response.config.params,
               Token,
             };
-            return await axios
-              .request(response.config)
-              .then((response) => response.data);
+            return await this.instance.request(response.config);
           }
           if (response.config.method === "post") {
             response.config.data = {
               ...JSON.parse(response.config.data),
               Token,
             };
-            return await axios
-              .request(response.config)
-              .then((response) => response.data);
+            return await this.instance.request(response.config);
           }
         } else {
           const key = "updatable";

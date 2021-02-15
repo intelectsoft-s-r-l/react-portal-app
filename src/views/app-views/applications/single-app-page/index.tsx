@@ -51,6 +51,7 @@ export enum EnApp {
   SMS = 50,
   ExchangeOfInvoice = 41,
   ExchangeOfOrder = 40,
+  PetrolExpert = 130,
   MobilePetrolExpertCash = 131,
   MailService = 140,
 }

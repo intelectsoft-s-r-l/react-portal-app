@@ -66,8 +66,8 @@ const News = () => {
     return await instance.GetPortalNews(AppType).then(async (data) => {
       setNewsLoading(false);
       if (data && data.ErrorCode === 0) {
-        await getApps();
         setNews(data.NewsList);
+        await getApps();
       }
     });
   };
