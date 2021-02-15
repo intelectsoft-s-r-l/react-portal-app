@@ -27,7 +27,7 @@ import { IAuth } from "../../../../redux/reducers/Auth";
 import { IAccount } from "../../../../redux/reducers/Account";
 import { ITheme } from "../../../../redux/reducers/Theme";
 import TranslateText from "../../../../utils/translate";
-import { IUsers } from "../../../../api/app/app.types";
+import { IUsers } from "../../../../api/app/types";
 import { ColumnsType } from "antd/lib/table";
 import "./add_user.scss";
 import Pagination from "antd/es/pagination";

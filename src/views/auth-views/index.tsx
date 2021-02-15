@@ -45,6 +45,11 @@ export const AuthViews = ({ match }: RouteComponentProps) => {
           component={lazy(() => import(`./other/fiscal`))}
         />
 
+        <Route
+          path={`${match.url}/auth/success`}
+          component={lazy(() => import(`./authentication/success`))}
+        />
+
         {/*<Route*/}
         {/*  path={`${match.url}/error-2`}*/}
         {/*  component={lazy(() => import(`./errors/error-page-2`))}*/}

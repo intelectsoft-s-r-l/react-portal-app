@@ -1,6 +1,6 @@
 import HttpService from "../HttpService";
 import { API_DISCOUNT_URL } from "../../configs/AppConfig";
-import { DiscountGetInfo } from "./discount.types";
+import { DiscountGetInfo } from "./types";
 
 export class DiscountService extends HttpService {
   public constructor() {

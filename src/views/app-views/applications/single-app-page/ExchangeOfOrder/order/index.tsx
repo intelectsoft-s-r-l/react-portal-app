@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { EdxService } from "../../../../../../api/edx";
-import { IOrderList } from "../../../../../../api/edx/edx.types";
+import { IOrderList } from "../../../../../../api/edx/types";
 import moment from "moment";
 import TranslateText from "../../../../../../utils/translate";
 import { Card, Col, DatePicker, Row, Table, Select } from "antd";

@@ -7,7 +7,7 @@ import TranslateText from "../../../../../../utils/translate";
 import { invoiceTable } from "./InvoiceTable";
 import moment from "moment";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
-import { InvoiceList } from "../../../../../../api/edx/edx.types";
+import { InvoiceList } from "../../../../../../api/edx/types";
 interface Invoice extends RouteComponentProps {
   APIKey: string;
 }

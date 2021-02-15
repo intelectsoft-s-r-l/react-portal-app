@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Flex from "../../../../../../components/shared-components/Flex";
-import { ICampaignList } from "../../../../../../api/app/app.types";
+import { ICampaignList } from "../../../../../../api/app/types";
 import { AppService } from "../../../../../../api/app";
 import Loading from "../../../../../../components/shared-components/Loading";
 import { RouteComponentProps } from "react-router-dom";

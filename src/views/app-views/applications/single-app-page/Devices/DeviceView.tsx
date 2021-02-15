@@ -3,7 +3,7 @@ import { Drawer, Divider, Typography } from "antd";
 import {
   IDiagnosticInformation,
   ILicenses,
-} from "../../../../../api/app/app.types";
+} from "../../../../../api/app/types";
 import { Health, Plugged, Status } from ".";
 import TranslateText from "../../../../../utils/translate";
 import "./devices.scss";

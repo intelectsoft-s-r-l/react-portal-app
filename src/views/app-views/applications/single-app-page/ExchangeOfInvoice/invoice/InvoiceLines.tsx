@@ -5,7 +5,7 @@ import NumberFormat from "react-number-format";
 import {
   InvoiceLines as InvoiceLinesType,
   InvoiceList,
-} from "../../../../../../api/edx/edx.types";
+} from "../../../../../../api/edx/types";
 import { RouteComponentProps, useLocation } from "react-router-dom";
 import Utils from "../../../../../../utils";
 import "./invoice.scss";

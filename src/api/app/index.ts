@@ -1,7 +1,7 @@
 import HttpService from "../HttpService";
 import { API_APP_URL } from "../../configs/AppConfig";
 import { IAccount } from "../../redux/reducers/Account";
-import { IUpdateAppRequest, IUpdateCompanyRequest } from "./app.types";
+import { IUpdateAppRequest, IUpdateCompanyRequest } from "./types";
 import { ApiResponse, ApiDecorator } from "../types";
 import {
   ICampaignList,
@@ -13,7 +13,7 @@ import {
   IRsaKeys,
   IShortMarketAppList,
   IUsers,
-} from "./app.types";
+} from "./types";
 const publicIp = require("react-public-ip");
 
 export class AppService extends HttpService {

@@ -1,7 +1,7 @@
 import HttpService from "../HttpService";
 import { API_SMS_URL } from "../../configs/AppConfig";
 import { ApiResponse } from "../types";
-import { ISmsInfo, ISmsInfoPeriod, ISmsDetailPeriod } from "./sms.types";
+import { ISmsInfo, ISmsInfoPeriod, ISmsDetailPeriod } from "./types";
 
 export class SmsService extends HttpService {
   public constructor() {

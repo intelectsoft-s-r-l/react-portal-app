@@ -4,7 +4,7 @@ import { Avatar } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import { IShortMarketAppList } from "../../../api/app/app.types";
+import { IShortMarketAppList } from "../../../api/app/types";
 import { MenuItemProps } from "antd/lib/menu/MenuItem";
 import "./applications.scss";
 

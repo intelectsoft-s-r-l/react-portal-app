@@ -12,7 +12,7 @@ import Utils from "../../../../../utils";
 import { AppService } from "../../../../../api/app";
 import CreateLicenseModal from "./CreateLicenseModal";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
-import { ILicenses } from "../../../../../api/app/app.types";
+import { ILicenses } from "../../../../../api/app/types";
 import { ColumnsType } from "antd/lib/table";
 import TranslateText from "../../../../../utils/translate";
 

@@ -1,8 +1,11 @@
-import { Card, Divider, Result, Typography } from "antd";
+import { Button, Card, Divider, Result, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, RouteComponentProps } from "react-router-dom";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
+import { AUTH_PREFIX_PATH } from "../../../../configs/AppConfig";
+import { SIGNOUT } from "../../../../redux/constants/Auth";
 const bonJson = {
   Company: "Tirex Petrol",
   IDNO: 100360000008275,
@@ -16,7 +19,7 @@ const bonJson = {
   Liters: 18.05,
   PricePerLiter: 18.85,
   TotalPrice: 340.25,
-  TotalPriceNet: 250.0,
+  TotalPriceNet: "250.00",
   FuelType: "A95",
   Discount: 90.25,
   TVAPercent: "20.00%",
@@ -30,6 +33,8 @@ const bonJson = {
 const { Text } = Typography;
 const Fiscal = ({ match, history }: RouteComponentProps) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [hasAccess, setHasAccess] = useState<boolean>(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     if ("fiscID" in match.params) {
       setTimeout(() => {
@@ -38,6 +43,21 @@ const Fiscal = ({ match, history }: RouteComponentProps) => {
     }
   }, []);
   if (loading) return <Loading />;
+  if (!hasAccess)
+    return (
+      <Result
+        status="403"
+        title="Incorrect ID"
+        subTitle="Sorry, you are not authorized to access this page."
+        extra={
+          <Button type="primary">
+            <Link to={AUTH_PREFIX_PATH}>
+              <span>Find your way</span>
+            </Link>
+          </Button>
+        }
+      />
+    );
   return (
     <div
       className="h-100 d-flex justify-content-center align-items-center"

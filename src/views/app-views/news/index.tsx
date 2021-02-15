@@ -5,7 +5,7 @@ import { AppService } from "../../../api/app";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
-import { IShortMarketAppList, INewsList } from "../../../api/app/app.types";
+import { IShortMarketAppList, INewsList } from "../../../api/app/types";
 import moment from "moment";
 
 const { Option } = Select;

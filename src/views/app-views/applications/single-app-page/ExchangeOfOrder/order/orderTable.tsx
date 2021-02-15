@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ColumnsType } from "antd/lib/table";
-import { IOrderList } from "../../../../../../api/edx/edx.types";
+import { IOrderList } from "../../../../../../api/edx/types";
 import Tooltip from "antd/es/tooltip";
 import TranslateText from "../../../../../../utils/translate";
 import { Link, RouteComponentProps } from "react-router-dom";

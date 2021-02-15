@@ -5,7 +5,7 @@ import { Menu, Dropdown, Empty, Tooltip } from "antd";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import AppNavGrid from "./AppNavGrid";
 import Loading from "../../../components/shared-components/Loading";
-import { IShortMarketAppList } from "../../../api/app/app.types";
+import { IShortMarketAppList } from "../../../api/app/types";
 import { AppService } from "../../../api/app";
 
 const AppStoreNav = () => {

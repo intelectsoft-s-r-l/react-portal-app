@@ -2,7 +2,7 @@ import { message } from "antd";
 // @ts-ignore
 import { JSEncrypt } from "jsencrypt";
 import moment from "moment";
-import { ILocale } from "../api/app/app.types";
+import { ILocale } from "../api/app/types";
 
 class Utils {
   static getNameInitial(name: string) {

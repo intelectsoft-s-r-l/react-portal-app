@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Col, Row, Modal, Button, Input, message, Form, Empty } from "antd";
-import { IMarketAppList } from "../../../../api/app/app.types";
+import { IMarketAppList } from "../../../../api/app/types";
 import CardToolbar from "../../../../components/util-components/DemoCard/CardToolbar";
 import { AppService } from "../../../../api/app";
 import { DONE, UPDATING } from "../../../../constants/Messages";
@@ -160,7 +160,7 @@ const Integration = ({
     return <Empty />;
   }
   return (
-    <Form>
+    <Form autoComplete="false">
       <Row gutter={ROW_GUTTER} justify="space-between">
         <Col
           xl={12}

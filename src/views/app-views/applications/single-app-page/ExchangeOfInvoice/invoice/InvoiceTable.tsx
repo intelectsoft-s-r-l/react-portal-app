@@ -2,7 +2,7 @@ import * as React from "react";
 import { ColumnsType } from "antd/lib/table";
 import { EyeOutlined } from "@ant-design/icons";
 import { Tooltip, Button } from "antd";
-import { InvoiceList } from "../../../../../../api/edx/edx.types";
+import { InvoiceList } from "../../../../../../api/edx/types";
 import TranslateText from "../../../../../../utils/translate";
 import moment from "moment";
 import { Link, RouteComponentProps } from "react-router-dom";

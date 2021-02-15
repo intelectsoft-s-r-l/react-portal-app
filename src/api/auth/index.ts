@@ -1,7 +1,7 @@
 import HttpService from "../HttpService";
 import { API_AUTH_URL } from "../../configs/AppConfig";
 import { ApiDecorator, ApiResponse } from "../types";
-import { IRegisterCompanyRequest, IRegisterUserRequest } from "./auth.types";
+import { IRegisterCompanyRequest, IRegisterUserRequest } from "./types";
 const publicIp = require("react-public-ip");
 
 export class AuthService extends HttpService {

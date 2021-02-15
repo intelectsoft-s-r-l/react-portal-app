@@ -3,7 +3,7 @@ import { Card, Col, Empty, Row, Tag } from "antd";
 import Flex from "../../../../components/shared-components/Flex";
 import { CheckCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { IMarketAppList, IPackages } from "../../../../api/app/app.types";
+import { IMarketAppList, IPackages } from "../../../../api/app/types";
 import Loading from "../../../../components/shared-components/Loading";
 import { AppService } from "../../../../api/app";
 import TranslateText from "../../../../utils/translate";

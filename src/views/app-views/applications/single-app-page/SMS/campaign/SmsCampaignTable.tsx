@@ -8,7 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/lib/table";
-import { ICampaignList } from "../../../../../../api/app/app.types";
+import { ICampaignList } from "../../../../../../api/app/types";
 import moment from "moment";
 import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
 import { Menu, Tag, Modal } from "antd";

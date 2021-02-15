@@ -5,7 +5,7 @@ import NumberFormat from "react-number-format";
 import {
   IOrderLines as IOrderLinesType,
   IOrderList,
-} from "../../../../../../api/edx/edx.types";
+} from "../../../../../../api/edx/types";
 import { RouteComponentProps, useLocation } from "react-router-dom";
 import Utils from "../../../../../../utils";
 import { EdxService } from "../../../../../../api/edx";

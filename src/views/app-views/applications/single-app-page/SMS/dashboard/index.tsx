@@ -9,7 +9,7 @@ import { COLORS } from "../../../../../../constants/ChartConstant";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
-import { ISmsList } from "../../../../../../api/sms/sms.types";
+import { ISmsList } from "../../../../../../api/sms/types";
 import { ColumnsType } from "antd/es/table/interface";
 import TranslateText from "../../../../../../utils/translate";
 

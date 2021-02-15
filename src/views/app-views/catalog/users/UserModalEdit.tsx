@@ -3,7 +3,7 @@ import { Input, Row, Col, Form, Modal } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
 import { AppService } from "../../../../api/app";
-import { IUsers } from "../../../../api/app/app.types";
+import { IUsers } from "../../../../api/app/types";
 interface IUserModalEdit {
   data: IUsers;
   visible: boolean;

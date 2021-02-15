@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { AppService } from "../../../../api/app";
 import { DONE, UPDATING, UPLOADING } from "../../../../constants/Messages";
 import Utils from "../../../../utils";
-import { ICompanyData } from "../../../../api/app/app.types";
+import { ICompanyData } from "../../../../api/app/types";
 import { UploadChangeParam } from "antd/lib/upload";
 import TranslateText from "../../../../utils/translate";
 import { FormInstance } from "antd/lib/form";

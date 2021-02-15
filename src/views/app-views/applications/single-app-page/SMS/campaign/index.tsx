@@ -3,7 +3,7 @@ import { Button, Table } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { AppService } from "../../../../../../api/app";
-import { ICampaignList } from "../../../../../../api/app/app.types";
+import { ICampaignList } from "../../../../../../api/app/types";
 import Flex from "../../../../../../components/shared-components/Flex";
 import NewCampaign from "./NewCampaign";
 import SmsTable from "./SmsCampaignTable";
