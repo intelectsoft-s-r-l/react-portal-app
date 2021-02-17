@@ -1,9 +1,18 @@
-import HttpService from "../";
+import { message } from "antd";
+import { AxiosResponse } from "axios";
+import HttpService, { EnErrorCode } from "../";
 import { API_AUTH_URL } from "../../configs/AppConfig";
+import { EXPIRE_TIME } from "../../constants/Messages";
+import { AUTHENTICATED, SIGNOUT } from "../../redux/constants/Auth";
+import store from "../../redux/store";
+import TranslateText from "../../utils/translate";
 import { ApiDecorator, ApiResponse } from "../types";
 import { IRegisterCompanyRequest, IRegisterUserRequest } from "./types";
 const publicIp = require("react-public-ip");
 
+declare module "axios" {
+  interface AxiosResponse<T> extends Promise<T> {}
+}
 export class AuthService extends HttpService {
   public constructor() {
     super(API_AUTH_URL);

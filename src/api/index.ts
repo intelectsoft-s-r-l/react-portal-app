@@ -65,37 +65,14 @@ class HttpService {
     this._token = Token;
   };
   private _initializeRequestInterceptor = () => {
-    this.instance.interceptors.request.use(this._handleRequest, (error) =>
-      Promise.reject(error)
+    this.instance.interceptors.request.use(
+      this._handleRequest,
+      this._handleRequestError
     );
   };
+
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
-    if (
-      config.method === "get" &&
-      config.baseURL !== API_SMS_URL &&
-      config.baseURL !== API_DISCOUNT_URL &&
-      config.baseURL !== API_EDX_URL &&
-      config.baseURL !== API_MAIL_URL
-    ) {
-      config.params = {
-        ...config.params,
-        Token: this._token,
-      };
-    }
-    if (
-      config.method === "post" &&
-      config.baseURL !== API_SMS_URL &&
-      config.baseURL !== API_DISCOUNT_URL &&
-      config.baseURL !== API_EDX_URL &&
-      config.baseURL !== API_MAIL_URL
-    ) {
-      config.data = {
-        ...config.data,
-        Token: this._token,
-      };
-    }
-
     if (
       config.baseURL === API_DISCOUNT_URL ||
       config.baseURL === API_EDX_URL ||
@@ -106,9 +83,12 @@ class HttpService {
         password: "1",
       };
     }
-
-    config.cancelToken = this._source.token;
-    return config;
+    return {
+      ...config,
+      data: { ...config.data, Token: this._token },
+      params: { ...config.params, Token: this._token },
+      cancelToken: this._source.token,
+    };
   };
 
   private _handleResponse = (response: AxiosResponse) => {
@@ -178,5 +158,6 @@ class HttpService {
       });
     }
   };
+  private _handleRequestError = (error: any) => Promise.reject(error);
 }
 export default HttpService;
