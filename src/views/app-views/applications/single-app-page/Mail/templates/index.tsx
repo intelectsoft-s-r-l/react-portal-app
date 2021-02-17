@@ -4,7 +4,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { ITemplate } from "../../../../../../api/mail/types";
 import { MailService } from "../../../../../../api/mail";
 import { templatesTable } from "./templatesTable";
-import { EnErrorCode } from "../../../../../../api/HttpService";
+import { EnErrorCode } from "../../../../../../api/";
 import { RouteComponentProps } from "react-router-dom";
 import CreateTemplateModal from "./CreateTemplateModal";
 import Flex from "../../../../../../components/shared-components/Flex";
@@ -56,7 +56,7 @@ const Templates = (props: ITemplates) => {
           dataSource={templates}
           columns={templates.length > 0 ? templatesTable(locale) : undefined}
           locale={{
-            emptyText: (
+            emptyText: !loading && (
               <Empty
                 image={process.env.PUBLIC_URL + "/img/list.svg"}
                 description={

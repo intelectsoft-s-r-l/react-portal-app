@@ -3,7 +3,7 @@ import ReactQuill from "react-quill";
 import { Form, Input, message, Modal } from "antd";
 import TextEditor from "../../TextEditor";
 import { MailService } from "../../../../../../api/mail";
-import { EnErrorCode } from "../../../../../../api/HttpService";
+import { EnErrorCode } from "../../../../../../api/";
 
 interface ICreateTemplateModal {
   APIKey: string;
@@ -34,6 +34,7 @@ const CreateTemplateModal = ({
         setLoading(false);
         if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
           message.success("Template created!");
+          getTemplates();
         }
       });
   };
