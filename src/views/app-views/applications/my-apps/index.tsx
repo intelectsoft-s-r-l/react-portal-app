@@ -10,6 +10,7 @@ import {
   Button,
   Skeleton,
   Input,
+  message,
 } from "antd";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -27,6 +28,7 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import TranslateText from "../../../../utils/translate";
 import { ILocale, IMarketAppList } from "../../../../api/app/types";
+import { DONE } from "../../../../constants/Messages";
 
 interface IGridItem {
   deactivateApp: (ID: number, Name: string) => void;
@@ -124,7 +126,10 @@ const MyAppList = () => {
       title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
       onOk: async () => {
         return await instance.DeactivateApp(AppID).then(async (data) => {
-          if (data && data.ErrorCode === 0) await getMarketAppList();
+          if (data && data.ErrorCode === 0) {
+            await getMarketAppList();
+            message.success({ content: TranslateText(DONE), duration: 1 });
+          }
         });
       },
       onCancel: () => {},
@@ -141,18 +146,19 @@ const MyAppList = () => {
 
   return (
     <div className={`my-4 container-fluid`}>
-      <Input
-        type="search"
-        prefix={<SearchOutlined />}
-        placeholder={TranslateText("app.Search")}
-        style={{ maxWidth: 200, marginBottom: 15 }}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const value = e.currentTarget!.value!;
-          const searchArray = value ? apps : appsToSearch;
-          const data = Utils.wildCardSearch(searchArray, value);
-          setApps(data);
-        }}
-      />
+      <Col lg={4} md={8} className="mb-4">
+        <Input
+          type="search"
+          prefix={<SearchOutlined />}
+          placeholder={TranslateText("app.Search")}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.currentTarget!.value!;
+            const searchArray = value ? apps : appsToSearch;
+            const data = Utils.wildCardSearch(searchArray, value);
+            setApps(data);
+          }}
+        />
+      </Col>
       <Row gutter={16}>
         {apps.length > 0 &&
           apps.map((elm) => (
