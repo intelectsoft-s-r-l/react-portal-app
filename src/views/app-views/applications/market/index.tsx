@@ -41,13 +41,28 @@ import "../applications.scss";
 import { DONE } from "../../../../constants/Messages";
 import wizardReducer, { wizardState } from "./wizard/wizardReducer";
 
-interface IGridItem<T> {
-  deactivateApp: (AppID: number, AppName: string) => void;
-  data: T;
+interface IGridItem {
+  data: IMarketAppList;
 }
-const GridItem = ({ deactivateApp, data }: IGridItem<IMarketAppList>) => {
+const GridItem = ({ data }: IGridItem) => {
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
-  const { state, dispatch } = useContext(MarketContext);
+  const { state, dispatch, getMarketApps } = useContext(MarketContext);
+  const deactivateApp = (AppID: number, AppName: string) => {
+    Modal.confirm({
+      title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
+      onOk: async () => {
+        return await new AppService()
+          .DeactivateApp(AppID)
+          .then(async (data: any) => {
+            if (data && data.ErrorCode === 0) {
+              await getMarketApps();
+              message.success({ content: TranslateText(DONE), duration: 1 });
+            }
+          });
+      },
+      onCancel: () => {},
+    });
+  };
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
@@ -130,7 +145,6 @@ const Market = () => {
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const [appsToSearch, setAppsToSearch] = useState<IMarketAppList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { confirm } = Modal;
   const [state, dispatch] = useReducer(wizardReducer, wizardState);
   const getMarketApps = async () => {
     return instance.GetMarketAppList().then((data) => {
@@ -147,21 +161,6 @@ const Market = () => {
     getMarketApps();
     return () => instance._source.cancel();
   }, []);
-
-  const deactivateApp = (AppID: number, AppName: string) => {
-    confirm({
-      title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
-      onOk: async () => {
-        return await instance.DeactivateApp(AppID).then(async (data: any) => {
-          if (data && data.ErrorCode === 0) {
-            await getMarketApps();
-            message.success({ content: TranslateText(DONE), duration: 1 });
-          }
-        });
-      },
-      onCancel: () => {},
-    });
-  };
 
   useEffect(() => {
     // Cleanup installation state after closing the installation modal
@@ -207,11 +206,7 @@ const Market = () => {
                     xxl={6}
                     key={elm["AppType"]}
                   >
-                    <GridItem
-                      deactivateApp={deactivateApp}
-                      data={elm}
-                      key={elm["AppType"]}
-                    />
+                    <GridItem data={elm} />
                   </Col>
                 ))
               ) : (
