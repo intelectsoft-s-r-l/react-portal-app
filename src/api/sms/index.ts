@@ -1,4 +1,4 @@
-import HttpService from "../HttpService";
+import HttpService from "../";
 import { API_SMS_URL } from "../../configs/AppConfig";
 import { ApiResponse } from "../types";
 import { ISmsInfo, ISmsInfoPeriod, ISmsDetailPeriod } from "./types";

@@ -1,4 +1,4 @@
-import HttpService from "../HttpService";
+import HttpService, { EnErrorCode } from "../";
 import { API_APP_URL } from "../../configs/AppConfig";
 import { IAccount } from "../../redux/reducers/Account";
 import { IUpdateAppRequest, IUpdateCompanyRequest } from "./types";
@@ -14,6 +14,7 @@ import {
   IShortMarketAppList,
   IUsers,
 } from "./types";
+import { message } from "antd";
 const publicIp = require("react-public-ip");
 
 export class AppService extends HttpService {

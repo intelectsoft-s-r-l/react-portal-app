@@ -1,4 +1,4 @@
-import HttpService from "../HttpService";
+import HttpService from "../";
 import { API_DISCOUNT_URL } from "../../configs/AppConfig";
 import { DiscountGetInfo } from "./types";
 

@@ -1,5 +1,5 @@
+import HttpService from "../";
 import { API_MAIL_URL } from "../../configs/AppConfig";
-import HttpService from "../HttpService";
 import { ApiDecorator, ApiResponse } from "../types";
 import { IMail, ITemplate } from "./types";
 

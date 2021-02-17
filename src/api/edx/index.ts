@@ -1,4 +1,4 @@
-import HttpService from "../HttpService";
+import HttpService from "../";
 import { API_EDX_URL } from "../../configs/AppConfig";
 import { ApiResponse, ApiDecorator } from "../types";
 import { InvoiceList, IOrderList } from "./types";
