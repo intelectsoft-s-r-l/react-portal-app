@@ -1,5 +1,23 @@
-import React, { SetStateAction, Dispatch, useEffect, useState } from "react";
-import { Button, Row, Col, Tag, Avatar, Card, Modal, Empty, Input } from "antd";
+import React, {
+  SetStateAction,
+  Dispatch,
+  useEffect,
+  useState,
+  useContext,
+  useReducer,
+} from "react";
+import {
+  Button,
+  Row,
+  Col,
+  Tag,
+  Avatar,
+  Card,
+  Modal,
+  Empty,
+  Input,
+  message,
+} from "antd";
 import {
   VerticalAlignBottomOutlined,
   SearchOutlined,
@@ -18,23 +36,18 @@ import IntlMessage from "../../../../components/util-components/IntlMessage";
 import Utils from "../../../../utils";
 import TranslateText from "../../../../utils/translate";
 import { IState } from "../../../../redux/reducers";
-import { ILocale, IMarketAppList } from "../../../../api/app/types";
+import { IMarketAppList } from "../../../../api/app/types";
 import "../applications.scss";
-import Search from "antd/lib/input/Search";
+import { DONE } from "../../../../constants/Messages";
+import wizardReducer, { wizardState } from "./wizard/wizardReducer";
 
 interface IGridItem<T> {
   deactivateApp: (AppID: number, AppName: string) => void;
-  setVisibleModal: Dispatch<SetStateAction<boolean>>;
-  setSelectedApp: (data: T) => void;
   data: T;
 }
-const GridItem = ({
-  deactivateApp,
-  setVisibleModal,
-  setSelectedApp,
-  data,
-}: IGridItem<IMarketAppList>) => {
+const GridItem = ({ deactivateApp, data }: IGridItem<IMarketAppList>) => {
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
+  const { state, dispatch } = useContext(MarketContext);
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
@@ -57,8 +70,8 @@ const GridItem = ({
             className="text-capitalize cursor-pointer"
             color="default"
             onClick={() => {
-              setVisibleModal(true);
-              setSelectedApp(data);
+              dispatch({ type: "SHOW_WIZARD" });
+              dispatch({ type: "SET_APP", payload: data });
             }}
           >
             <VerticalAlignBottomOutlined />
@@ -112,34 +125,20 @@ mb-0 cursor-pointer"
     </Card>
   );
 };
-function getSource(instance: any, source: any) {
-  if (source.current == null) {
-    source.current = instance._source;
-  }
-  return source.current;
-}
-
 const Market = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
   const [appsToSearch, setAppsToSearch] = useState<IMarketAppList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [wizLoading, setWizLoading] = useState(false);
-  const [terms, setTerms] = useState<Partial<ILocale>>({});
-  const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const { confirm } = Modal;
-  const [current, setCurrent] = useState<any>(0);
-  const [isAccepted, setIsAccepted] = useState<boolean>(false);
-  const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
-  const [selectedApp, setSelectedApp] = useState<IMarketAppList>();
-  const [appInstalled, setAppInstalled] = useState<boolean>(false);
+  const [state, dispatch] = useReducer(wizardReducer, wizardState);
   const getMarketApps = async () => {
-    setLoading(true);
     return instance.GetMarketAppList().then((data) => {
-      setLoading(false);
       if (data && data.ErrorCode === 0) {
+        setLoading(false);
         const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
         setApps(evaluatedArr);
+        dispatch({ type: "HIDE_LOADING" });
         setAppsToSearch(evaluatedArr);
       }
     });
@@ -154,53 +153,28 @@ const Market = () => {
       title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
       onOk: async () => {
         return await instance.DeactivateApp(AppID).then(async (data: any) => {
-          if (data && data.ErrorCode === 0) await getMarketApps();
+          if (data && data.ErrorCode === 0) {
+            await getMarketApps();
+            message.success({ content: TranslateText(DONE), duration: 1 });
+          }
         });
       },
       onCancel: () => {},
     });
   };
 
-  const handleOk = () => {
-    setVisibleModal(false);
-  };
-  const handleCancel = () => {
-    setVisibleModal(false);
-  };
-
   useEffect(() => {
     // Cleanup installation state after closing the installation modal
-    if (!visibleModal) {
+    if (!state.visibleModal) {
       setTimeout(() => {
-        setCurrent(0);
-        setIsAccepted(false);
-        setTermsAccepted(false);
+        dispatch("");
       }, 250);
     }
-  }, [visibleModal]);
+  }, [state.visibleModal]);
 
   return (
     <>
-      <MarketContext.Provider
-        value={{
-          visibleModal,
-          appInstalled,
-          setAppInstalled,
-          handleOk,
-          handleCancel,
-          terms,
-          current,
-          setCurrent,
-          isAccepted,
-          setIsAccepted,
-          selectedApp,
-          termsAccepted,
-          setTermsAccepted,
-          getMarketApps,
-          wizLoading,
-          setWizLoading,
-        }}
-      >
+      <MarketContext.Provider value={{ state, dispatch, getMarketApps }}>
         <InstallWizard />
         {loading ? (
           <Loading cover="content" />
@@ -209,18 +183,19 @@ const Market = () => {
             className={`my-4 
                     container-fluid`}
           >
-            <Input
-              type="search"
-              prefix={<SearchOutlined />}
-              placeholder={TranslateText("app.Search")}
-              style={{ maxWidth: 200, marginBottom: 15 }}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const value = e.currentTarget!.value!;
-                const searchArray = value ? apps : appsToSearch;
-                const data = Utils.wildCardSearch(searchArray, value);
-                setApps(data);
-              }}
-            />
+            <Col lg={4} md={8} className="mb-4">
+              <Input
+                type="search"
+                prefix={<SearchOutlined />}
+                placeholder={TranslateText("app.Search")}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const value = e.currentTarget!.value!;
+                  const searchArray = value ? apps : appsToSearch;
+                  const data = Utils.wildCardSearch(searchArray, value);
+                  setApps(data);
+                }}
+              />
+            </Col>
             <Row gutter={16}>
               {apps.length > 0 && !loading ? (
                 apps.map((elm) => (
@@ -233,11 +208,9 @@ const Market = () => {
                     key={elm["AppType"]}
                   >
                     <GridItem
-                      setVisibleModal={setVisibleModal}
                       deactivateApp={deactivateApp}
                       data={elm}
                       key={elm["AppType"]}
-                      setSelectedApp={setSelectedApp}
                     />
                   </Col>
                 ))

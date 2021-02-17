@@ -6,13 +6,11 @@ import { IState } from "../../../../../redux/reducers";
 import { MarketContext } from "../MarketContext";
 
 const TermsWizard = () => {
-  const { setIsAccepted, isAccepted, selectedApp } = React.useContext(
-    MarketContext
-  );
+  const { state, dispatch } = React.useContext(MarketContext);
   const [terms, setTerms] = useState<any>();
   useEffect(() => {
     try {
-      setTerms(JSON.parse(window.atob(selectedApp.TermsOfUse)));
+      setTerms(JSON.parse(window.atob(state.selectedApp.TermsOfUse)));
     } catch {
       setTerms({ en: "", ru: "", ro: "" });
     }
@@ -27,9 +25,9 @@ const TermsWizard = () => {
         }}
       />
       <Checkbox
-        checked={isAccepted}
+        checked={state.isAccepted}
         className="mt-4"
-        onChange={() => setIsAccepted(!isAccepted)}
+        onChange={() => dispatch({ type: "SET_IS_ACCEPTED" })}
       >
         <IntlMessage id="wizard.terms" />
       </Checkbox>

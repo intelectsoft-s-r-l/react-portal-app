@@ -6,25 +6,24 @@ import TranslateText from "../../../../../../utils/translate";
 import { MarketContext } from "../../MarketContext";
 
 const FinalStep = () => {
-  const { selectedApp, wizLoading, setWizLoading, getMarketApps } = useContext(
-    MarketContext
-  );
+  const { state, dispatch, getMarketApps } = useContext(MarketContext);
   const [isInstalled, setIsInstalled] = useState<boolean>(true);
   useLayoutEffect(() => {
-    setWizLoading(true);
+    dispatch({ type: "SHOW_LOADING" });
     setTimeout(async () => {
-      return await new AppService().ActivateApp(selectedApp.ID).then((data) => {
-        setWizLoading(false);
-        if (data && data.ErrorCode === 0) {
-          setIsInstalled(true);
-          getMarketApps();
-        } else {
-          setIsInstalled(false);
-        }
-      });
+      return await new AppService()
+        .ActivateApp(state.selectedApp.ID)
+        .then((data) => {
+          if (data && data.ErrorCode === 0) {
+            setIsInstalled(true);
+            getMarketApps();
+          } else {
+            setIsInstalled(false);
+          }
+        });
     }, 2500);
   }, []);
-  if (wizLoading) return <Loading />;
+  if (state.wizLoading) return <Loading />;
   return (
     <Result
       status={isInstalled ? "success" : "error"}
