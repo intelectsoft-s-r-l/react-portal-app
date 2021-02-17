@@ -24,9 +24,9 @@ export interface IMail {
 
 export interface ITemplate {
   APIKey: string;
-  Body: string;
-  ID: number;
+  Body: any;
+  ID?: number;
   Name: string;
-  State: number;
-  Subject: string;
+  State?: number;
+  Subject: any;
 }

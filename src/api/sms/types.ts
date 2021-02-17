@@ -21,7 +21,7 @@ export interface ISmsInfoPeriod extends ApiResponse {
 export interface ISmsList {
   Created: string;
   Message: string;
-  MessageType: number;
+  MessageType: number | string;
   Phone: string;
   SentDate: string;
   State: number;
