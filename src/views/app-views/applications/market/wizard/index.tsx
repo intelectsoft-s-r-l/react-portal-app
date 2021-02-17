@@ -33,6 +33,7 @@ const InstallWizard = () => {
   return (
     <Modal
       title={WithStringTranslate("wizard.title")}
+      onCancel={handleCancel}
       visible={visibleModal}
       onOk={() => setCurrent(current + 1)}
       destroyOnClose
