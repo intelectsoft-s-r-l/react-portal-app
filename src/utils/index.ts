@@ -111,7 +111,7 @@ class Utils {
   static wildCardSearch<T>(list: T[], input: string) {
     list = list.filter((item) => {
       for (let key in item) {
-        if (item[key] == null) {
+        if (item[key] == null || key === "Photo" || key === "Logo") {
           continue;
         }
         if (
