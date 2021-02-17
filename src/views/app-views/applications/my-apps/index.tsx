@@ -9,11 +9,16 @@ import {
   Tag,
   Button,
   Skeleton,
+  Input,
 } from "antd";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
-import { CheckCircleOutlined, ExperimentOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  ExperimentOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
 import { AppService } from "../../../../api/app";
@@ -93,6 +98,7 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
 const MyAppList = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
+  const [appsToSearch, setAppsToSearch] = useState<IMarketAppList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { confirm } = Modal;
   const getMarketAppList = async () => {
@@ -103,6 +109,7 @@ const MyAppList = () => {
           (marketApp: IMarketAppList) => marketApp.Status !== 0
         );
         setApps(Utils.sortData(activeApps, "ID"));
+        setAppsToSearch(Utils.sortData(activeApps, "ID"));
       }
     });
   };
@@ -134,6 +141,18 @@ const MyAppList = () => {
 
   return (
     <div className={`my-4 container-fluid`}>
+      <Input
+        type="search"
+        prefix={<SearchOutlined />}
+        placeholder={TranslateText("app.Search")}
+        style={{ maxWidth: 200, marginBottom: 15 }}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.currentTarget!.value!;
+          const searchArray = value ? apps : appsToSearch;
+          const data = Utils.wildCardSearch(searchArray, value);
+          setApps(data);
+        }}
+      />
       <Row gutter={16}>
         {apps.length > 0 &&
           apps.map((elm) => (

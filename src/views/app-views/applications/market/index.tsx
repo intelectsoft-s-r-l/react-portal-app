@@ -1,7 +1,8 @@
 import React, { SetStateAction, Dispatch, useEffect, useState } from "react";
-import { Button, Row, Col, Tag, Avatar, Card, Modal, Empty } from "antd";
+import { Button, Row, Col, Tag, Avatar, Card, Modal, Empty, Input } from "antd";
 import {
   VerticalAlignBottomOutlined,
+  SearchOutlined,
   ExperimentOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
@@ -19,6 +20,7 @@ import TranslateText from "../../../../utils/translate";
 import { IState } from "../../../../redux/reducers";
 import { ILocale, IMarketAppList } from "../../../../api/app/types";
 import "../applications.scss";
+import Search from "antd/lib/input/Search";
 
 interface IGridItem<T> {
   deactivateApp: (AppID: number, AppName: string) => void;
@@ -120,6 +122,7 @@ function getSource(instance: any, source: any) {
 const Market = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
+  const [appsToSearch, setAppsToSearch] = useState<IMarketAppList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [wizLoading, setWizLoading] = useState(false);
   const [terms, setTerms] = useState<Partial<ILocale>>({});
@@ -137,6 +140,7 @@ const Market = () => {
       if (data && data.ErrorCode === 0) {
         const evaluatedArr = Utils.sortData(data.MarketAppList, "ID");
         setApps(evaluatedArr);
+        setAppsToSearch(evaluatedArr);
       }
     });
   };
@@ -205,6 +209,18 @@ const Market = () => {
             className={`my-4 
                     container-fluid`}
           >
+            <Input
+              type="search"
+              prefix={<SearchOutlined />}
+              placeholder={TranslateText("app.Search")}
+              style={{ maxWidth: 200, marginBottom: 15 }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const value = e.currentTarget!.value!;
+                const searchArray = value ? apps : appsToSearch;
+                const data = Utils.wildCardSearch(searchArray, value);
+                setApps(data);
+              }}
+            />
             <Row gutter={16}>
               {apps.length > 0 && !loading ? (
                 apps.map((elm) => (
