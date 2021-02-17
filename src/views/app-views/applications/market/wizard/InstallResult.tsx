@@ -1,11 +1,11 @@
-import { Result } from "antd";
 import React, { useContext, useLayoutEffect, useState } from "react";
-import { AppService } from "../../../../../../api/app";
-import Loading from "../../../../../../components/shared-components/Loading";
-import TranslateText from "../../../../../../utils/translate";
-import { MarketContext } from "../../MarketContext";
+import { Result } from "antd";
+import { AppService } from "../../../../../api/app";
+import Loading from "../../../../../components/shared-components/Loading";
+import TranslateText from "../../../../../utils/translate";
+import { MarketContext } from "../MarketContext";
 
-const FinalStep = () => {
+const InstallResult = () => {
   const { state, dispatch, getMarketApps } = useContext(MarketContext);
   const [isInstalled, setIsInstalled] = useState<boolean>(true);
   useLayoutEffect(() => {
@@ -41,4 +41,4 @@ const FinalStep = () => {
   );
 };
 
-export default FinalStep;
+export default InstallResult;

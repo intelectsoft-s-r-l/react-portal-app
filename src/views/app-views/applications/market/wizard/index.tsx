@@ -5,7 +5,7 @@ import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
 import WithStringTranslate from "../../../../../utils/translate";
 import { MarketContext } from "../MarketContext";
-import FinalStep from "./final-step";
+import InstallResult from "./InstallResult";
 import TermsModal from "./TermsWizard";
 const steps = [
   {
@@ -14,7 +14,7 @@ const steps = [
   },
   {
     title: "Loading",
-    content: <FinalStep />,
+    content: <InstallResult />,
   },
 ];
 const InstallWizard = () => {
