@@ -296,6 +296,7 @@
   "SMS.EditCampaign": "Edit campaign",
   "SMS.campaign.activate.msg": "Are you sure you want to activate this campaign?",
   "SMS.campaign.deactivate.msg": "Are you sure you want to deactivate this campaign?",
+  "SMS.message": "Message",
 
   "news.title": "News",
   "news.create.messsage": "You have successfully created a new article!",

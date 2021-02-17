@@ -295,6 +295,7 @@
   "SMS.EditCampaign": "Editează campania",
   "SMS.campaign.activate.msg": "Sunteți sigur(ă) că doriți să activați această campanie?",
   "SMS.campaign.deactivate.msg": "Sunteți sigur(ă) că doriți să deactivați această campanie?",
+  "SMS.message": "Mesaj",
 
   "news.title": "Noutăți",
   "news.create.message": "Articolul a fost creat cu succes!",
