@@ -9,7 +9,7 @@ import TranslateText from "../../utils/translate";
 import { DONE } from "../../constants/Messages";
 import { message } from "antd";
 import { SIGNOUT } from "../constants/Auth";
-import { EnErrorCode } from "../../api/HttpService";
+import { EnErrorCode } from "../../api/";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 

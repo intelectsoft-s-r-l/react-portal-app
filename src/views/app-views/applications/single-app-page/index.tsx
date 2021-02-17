@@ -37,7 +37,12 @@ import Utils from "../../../../utils";
 import InvoiceLines from "./ExchangeOfInvoice/invoice/InvoiceLines";
 import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 import Templates from "./Mail/templates";
+import Dashboard from "../../dashboard";
 
+enum EnStatusApp {
+  DISABLED = 0,
+  ACTIVE = 1,
+}
 export enum EnApp {
   Retail = 10,
   CashSalesExpertMobile = 11,
@@ -287,7 +292,7 @@ const AboutItem = ({ appData }: any) => {
             <span className="text-muted ">
               {Utils.decodeBase64Locale(ShortDescription)[locale] ?? ""}
             </span>
-            {Status === 0 && (
+            {Status === EnStatusApp.DISABLED && (
               <p
                 className="mt-4"
                 dangerouslySetInnerHTML={{
