@@ -4,70 +4,64 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import syntaxTheme from "./HLTheme";
 
 class ApiContainer extends Component<{ [key: string]: any }> {
-    state = {
-        markdown: "",
-    };
+  state = {
+    markdown: "",
+  };
 
-    componentDidMount() {
-        fetch(this.props.code)
-            .then((res) => res.text())
-            .then((md) => {
-                this.setState({
-                    markdown: md,
-                });
-            });
-    }
+  componentDidMount() {
+    fetch(this.props.code)
+      .then((res) => res.text())
+      .then((md) => {
+        this.setState({
+          markdown: md,
+        });
+      });
+  }
 
-    render() {
-        return (
-            <div className="api-container">
-                <Markdown
-                    source={this.state.markdown}
-                    renderers={{
-                        heading: (h) => (
-                            <div
-                                className={`api-title h${h.level} ${
-                                    h.children[0].props.value.includes(
-                                        "title: "
-                                    )
-                                        ? ""
-                                        : h.children[0].props.value
-                                              .split("")
-                                              .join("")
-                                              .replace(/\s/g, "-")
-                                              .toLowerCase()
-                                }`}
-                            >
-                                {h.children[0].props.value.includes("title: ")
-                                    ? h.children[0].props.value.replace(
-                                          "title: ",
-                                          ""
-                                      )
-                                    : h.children}
-                            </div>
-                        ),
-                        paragraph: (p) => (
-                            <React.Fragment>
-                                {p.children[0].props.nodeKey ===
-                                "text-2-1-0" ? (
-                                    ""
-                                ) : (
-                                    <p>{p.children}</p>
-                                )}
-                            </React.Fragment>
-                        ),
-                        code: (c) => (
-                            <div className="api-code-highligher">
-                                <SyntaxHighlighter style={syntaxTheme}>
-                                    {c.value}
-                                </SyntaxHighlighter>
-                            </div>
-                        ),
-                    }}
-                />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className="api-container">
+        <Markdown
+          source={this.state.markdown}
+          renderers={{
+            heading: (h) => (
+              <div
+                className={`api-title h${h.level} ${
+                  h.children[0].props.value.includes("title: ")
+                    ? ""
+                    : h.children[0].props.value
+                        .split("")
+                        .join("")
+                        .replace(/\s/g, "-")
+                        .toLowerCase()
+                }`}
+              >
+                {h.children[0].props.value.includes("title: ")
+                  ? h.children[0].props.value.replace("title: ", "")
+                  : h.children}
+              </div>
+            ),
+            paragraph: (p) => (
+              <React.Fragment>
+                {p.children[0].props.nodeKey === "text-2-1-0" ? (
+                  ""
+                ) : (
+                  <p>{p.children}</p>
+                )}
+              </React.Fragment>
+            ),
+            code: (c) => (
+              <div className="api-code-highligher">
+                <SyntaxHighlighter style={syntaxTheme}>
+                  {c.value}
+                </SyntaxHighlighter>
+              </div>
+            ),
+          }}
+        />
+      </div>
+    );
+  }
 }
 
 export default ApiContainer;

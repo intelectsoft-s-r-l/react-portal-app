@@ -8,12 +8,13 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/lib/table";
-import { ICampaignList } from "../../../../../../api/types.response";
+import { ICampaignList } from "../../../../../../api/app/types";
 import moment from "moment";
 import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
 import { Menu, Tag, Modal } from "antd";
-import { AppService } from "../../../../../../api";
+import { AppService } from "../../../../../../api/app";
 import { Link } from "react-router-dom";
+import TranslateText from "../../../../../../utils/translate";
 
 enum EnSmsType {
   Draft,
@@ -42,39 +43,43 @@ const SmsTable = (
   };
   const tableColumns: ColumnsType<ICampaignList> = [
     {
-      title: "Campaign name",
+      title: TranslateText("SMS.CampaignName"),
       dataIndex: "Name",
     },
     {
-      title: "Create date",
+      title: TranslateText("SMS.CreateDate"),
       dataIndex: "CreateDate",
       render: (date) => (
         <span>{moment.unix(+date.slice(6, 16)).format("DD/MM/YYYY")}</span>
       ),
     },
     {
-      title: "Scheduled date",
+      title: TranslateText("SMS.ScheduledDate"),
       dataIndex: "ScheduledDate",
       render: (date) => (
         <Tag>
           <ClockCircleOutlined />
           <span className="font-weight-semibold">
             {getDaysLeft(date) > 1
-              ? `${getDaysLeft(date)} days left`
+              ? `${getDaysLeft(date)} ${TranslateText("SMS.Scheduled.Plural")}`
               : getDaysLeft(date) === 1
-              ? `${getDaysLeft(date)} day left`
-              : "Today"}
+              ? `${getDaysLeft(date)} ${TranslateText(
+                  "SMS.Scheduled.Singular"
+                )}`
+              : `${TranslateText("SMS.Today")}`}
           </span>
         </Tag>
       ),
     },
     {
-      title: "Status",
+      title: TranslateText("SMS.Status"),
       dataIndex: "Status",
       render: (Status: number) => (
         <div>
           <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
-            {Status === 1 ? "Available" : "Not Available"}
+            {Status === 1
+              ? TranslateText("SMS.Status.Available")
+              : TranslateText("SMS.Status.NotAvailable")}
           </Tag>
         </div>
       ),
@@ -91,8 +96,7 @@ const SmsTable = (
                     key="0"
                     onClick={async () => {
                       Modal.confirm({
-                        title:
-                          "Are you sure you want to activate this campaign?",
+                        title: TranslateText("SMS.campaign.activate.msg"),
                         onOk: async () => {
                           return await new AppService()
                             .SMS_UpdateCampaign({
@@ -107,15 +111,14 @@ const SmsTable = (
                     }}
                   >
                     <CheckCircleOutlined />
-                    <span>Activate</span>
+                    <span>{TranslateText("users.Activate")}</span>
                   </Menu.Item>
                 ) : (
                   <Menu.Item
                     key="0"
                     onClick={async () => {
                       Modal.confirm({
-                        title:
-                          "Are you sure you want to deactivate this campaign?",
+                        title: TranslateText("SMS.campaign.deactivate.msg"),
                         onOk: async () => {
                           return await new AppService()
                             .SMS_UpdateCampaign({
@@ -130,18 +133,20 @@ const SmsTable = (
                     }}
                   >
                     <CloseCircleOutlined />
-                    <span>Deactiate</span>
+                    <span>{TranslateText("users.Disable")}</span>
                   </Menu.Item>
                 )}
                 <Menu.Item key="1">
                   <Link to={`campaign_details=${elm.ID}`}>
                     <EyeOutlined />
-                    <span style={{ marginLeft: 5 }}>View</span>
+                    <span style={{ marginLeft: 5 }}>
+                      {TranslateText("users.ViewDetails")}
+                    </span>
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="2" onClick={() => showEditCampaign(elm)}>
                   <EditOutlined />
-                  <span>Edit</span>
+                  <span>{TranslateText("users.Edit")}</span>
                 </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item
@@ -157,7 +162,7 @@ const SmsTable = (
                   }}
                 >
                   <DeleteOutlined />
-                  <span>Delete</span>
+                  <span>{TranslateText("app.Delete")}</span>
                 </Menu.Item>
               </Menu>
             }

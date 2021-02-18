@@ -1,12 +1,26 @@
 import { CLEAR_INFO, UPDATE_SETTINGS } from "../constants/Account";
-import { AppService } from "../../api";
+import { AppService } from "../../api/app";
 import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import { CHANGE_LOCALE } from "../constants/Theme";
-import { IUsers } from "../../api/types.response";
+import { IUsers } from "../../api/app/types";
 import { IAccount } from "../reducers/Account";
+import TranslateText from "../../utils/translate";
+import { DONE } from "../../constants/Messages";
+import { message } from "antd";
+import { SIGNOUT } from "../constants/Auth";
+import { EnErrorCode } from "../../api/";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
+
+enum EnLang {
+  RO = 0,
+  RU = 1,
+  EN = 1,
+}
+export enum EnCompany {
+  INTELECTSOFT = 1,
+}
 
 export const updateSettings = (payload: IUsers) => ({
   type: UPDATE_SETTINGS,
@@ -19,16 +33,28 @@ export const clearSettings = () => ({
 
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AppService().GetProfileInfo().then((data) => {
-      if (data && data.ErrorCode === 0) {
+    return new AppService().GetProfileInfo().then(async (data) => {
+      if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
+        //let Company: string = "";
+        //// Call GetCompanyInfo only if the user is an Admin,
+        //// in order to show who are you managing at the moment
+        //if (User.CompanyID === EnCompany.INTELECTSOFT) {
+        //Company =
+        //(await new AppService()
+        //.GetCompanyInfo()
+        //.then((data) => data.Company.CommercialName)) ?? "";
+        //}
         dispatch({ type: UPDATE_SETTINGS, payload: User });
-        if (User.UiLanguage === 0) {
-          dispatch({ type: CHANGE_LOCALE, locale: "ro" });
-        } else if (User.UiLanguage === 1) {
-          dispatch({ type: CHANGE_LOCALE, locale: "ru" });
-        } else {
-          dispatch({ type: CHANGE_LOCALE, locale: "en" });
+        switch (User.UiLanguage) {
+          case EnLang.RO:
+            dispatch({ type: CHANGE_LOCALE, locale: "ro" });
+            break;
+          case EnLang.RU:
+            dispatch({ type: CHANGE_LOCALE, locale: "ru" });
+            break;
+          default:
+            dispatch({ type: CHANGE_LOCALE, locale: "en" });
         }
       }
     });
@@ -37,10 +63,17 @@ export const getProfileInfo = (): ThunkResult<void> => {
 
 export const setProfileInfo = (accountInfo: {
   User: IAccount;
-}): ThunkResult<void> => {
+}): ThunkResult<any> => {
   return async (dispatch) => {
     return new AppService().UpdateUser(accountInfo).then((data) => {
-      if (data && data.ErrorCode === 0) dispatch(getProfileInfo());
+      if (data && data.ErrorCode === 0) {
+        dispatch(getProfileInfo());
+        message.success({
+          content: TranslateText(DONE),
+          key: "updatable",
+          duration: 1,
+        });
+      }
     });
   };
 };

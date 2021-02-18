@@ -1,11 +1,8 @@
-import React, { useEffect, useLayoutEffect } from "react";
-import TranslateText from "./translate";
+import React, { useLayoutEffect } from "react";
 import "./in_development.scss";
 import IntlMessage from "../components/util-components/IntlMessage";
 import $ from "jquery";
 import { useSelector } from "react-redux";
-import { fakeAPI } from "../api/index";
-import { message } from "antd";
 
 const InDevelopmentMessage = () => {
   const locale = useSelector((state) => state["auth"].locale);

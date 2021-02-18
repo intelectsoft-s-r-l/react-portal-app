@@ -1,19 +1,19 @@
 import * as React from "react";
+import { CSVDownload, CSVLink } from "react-csv";
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, DatePicker, Row, Table, Tag } from "antd";
+import { Badge, Card, Col, DatePicker, Row, Table, Tag, Button } from "antd";
 import { RouteComponentProps } from "react-router-dom";
-import { SmsService } from "../../../../../../api";
+import { SmsService } from "../../../../../../api/sms";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
 import Flex from "../../../../../../components/shared-components/Flex";
 import { COLORS } from "../../../../../../constants/ChartConstant";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
-import moment, { MomentInput } from "moment";
+import moment from "moment";
 import StatisticWidget from "../../../../../../components/shared-components/StatisticWidget";
-import Loading from "../../../../../../components/shared-components/Loading";
-import { ISMSList } from "../../../../../../api/types.response";
+import { ISmsList } from "../../../../../../api/sms/types";
 import { ColumnsType } from "antd/es/table/interface";
-import { useSelector } from "react-redux";
-import { IState } from "../../../../../../redux/reducers";
+import TranslateText from "../../../../../../utils/translate";
+import Tooltip from "antd/es/tooltip";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -34,52 +34,69 @@ enum EnSmsState {
   DeliveryToBulkSMS = 100,
 }
 
-const tableColumns: ColumnsType<ISMSList> = [
+const tableColumns: ColumnsType<ISmsList> = [
   {
-    title: "Phone",
+    title: TranslateText("SMS.Phone"),
     dataIndex: "Phone",
     render: (Phone) => <span>{Phone}</span>,
   },
   {
-    title: "Sent date",
+    title: TranslateText("SMS.SentDate"),
     dataIndex: "SentDate",
-    render: (SentDate) => (
-      <span>{moment.unix(SentDate.slice(6, 16)).format("DD-MM-YYYY")}</span>
-    ),
   },
   {
-    title: "Message type",
+    title: TranslateText("SMS.MessageType"),
     dataIndex: "MessageType",
     render: (MessageType) => (
-      <Tag
-        className="text-capitalize"
-        color={MessageType === EnSmsType.INFO ? "orange" : "cyan"}
-      >
-        {MessageType === EnSmsType.INFO ? "Informational" : "Advertisement"}
-      </Tag>
+      <Tag className="text-capitalize">{MessageType}</Tag>
     ),
   },
   {
-    title: "State",
-    dataIndex: "State",
-    render: (State) => (
-      <Tag className="text-capitalize" color={"gray"}>
-        {State === EnSmsState.DeliveryToBulkSMS
-          ? "Bulk delivery"
-          : State === EnSmsState.FailedDelivery
-          ? "Failed delivery"
-          : State === EnSmsState.RejectedSmsc
-          ? "Rejected"
-          : State === EnSmsState.AcceptedSmsc
-          ? "Accepted"
-          : State === EnSmsState.MessageBuffered
-          ? "Buffered"
-          : State === EnSmsState.Pending
-          ? "Pending"
-          : "Success"}
-      </Tag>
+    title: TranslateText("SMS.message"),
+    dataIndex: "Message",
+    render: (Message: string) => (
+      <Tooltip title={Message.length > 25 && Message}>
+        <div style={{ width: 200, cursor: "pointer" }}>
+          <p
+            style={{
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {Message}
+          </p>
+        </div>
+      </Tooltip>
     ),
   },
+  {
+    title: TranslateText("app.licenses.quantity"),
+    dataIndex: "Quantity",
+  },
+  //{
+  //title: TranslateText("SMS.State"),
+  //dataIndex: "State",
+  //render: (State) => (
+  //<Tag className="text-capitalize" color={"gray"}>
+  //{State === EnSmsState.DeliveryToBulkSMS
+  //? TranslateText("SMS.State.Bulk")
+  //: State === EnSmsState.FailedDelivery
+  //? TranslateText("SMS.State.Failed")
+  //: State === EnSmsState.RejectedSmsc
+  //? TranslateText("SMS.State.Rejected")
+  //: State === EnSmsState.AcceptedSmsc
+  //? TranslateText("SMS.State.Accepted")
+  //: State === EnSmsState.MessageBuffered
+  //? TranslateText("SMS.State.Buffered")
+  //: State === EnSmsState.Pending
+  //? TranslateText("SMS.State.Pending")
+  //: TranslateText("SMS.State.Success")}
+  //</Tag>
+  //),
+  //},
 ];
 const SmsDashboard = (props: ISmsDashboard) => {
   const instance = new SmsService();
@@ -91,14 +108,24 @@ const SmsDashboard = (props: ISmsDashboard) => {
   const [smsInfo, setSmsInfo] = useState<{ title: string; value: number }[]>(
     []
   );
-  const loading = useSelector((state: IState) => state.auth?.loading);
-  const [smsList, setSmsList] = useState<ISMSList[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [smsList, setSmsList] = useState<any>([]);
+  const [totalSms, setTotalSms] = useState<number>(0);
   const [statusData, setStatusData] = useState<any>([]);
+  const [csvData, setCsvData] = useState<any>([]);
   const statusColor = [COLORS[1], COLORS[2], COLORS[3], COLORS[6]];
-  const statusLabels = ["Sent", "Failed", "Rejected", "Waiting for send"];
+  const statusLabels = [
+    TranslateText("SMS.Sent"),
+    TranslateText("SMS.Failed"),
+    TranslateText("SMS.Rejected"),
+    TranslateText("SMS.Waiting"),
+  ];
   const onChange = async (value: any) => {
     setDate([value[0], value[1]]);
-    getSmsList(value[0].format("DD-MM-YYYY"), value[1].format("DD-MM-YYYY"));
+    await getSmsList(
+      value[0].format("DD-MM-YYYY"),
+      value[1].format("DD-MM-YYYY")
+    );
   };
   const getSmsList = async (
     // give default values
@@ -108,14 +135,34 @@ const SmsDashboard = (props: ISmsDashboard) => {
     return await instance
       .Info_GetDetailByPeriod(props.APIKey, firstDate, secondDate)
       .then((data) => {
+        setLoading(false);
         if (data && data.ErrorCode === 0) {
           setSmsList(data.SMSList);
+          setCsvData(
+            data.SMSList.map((elem) => {
+              elem.SentDate = moment
+                .unix(+elem.SentDate.slice(6, 16))
+                .format("DD-MM-YYYY");
+              elem.Created = moment
+                .unix(+elem.Created.slice(6, 16))
+                .format("DD-MM-YYYY");
+              elem.MessageType =
+                elem.MessageType === EnSmsType.INFO
+                  ? TranslateText("SMS.Informational")
+                  : TranslateText("SMS.Ad");
+              // @ts-ignore
+              delete elem["State"];
+              return elem;
+            })
+          );
+          setTotalSms(data.TotalSMS);
         }
       });
   };
   const getSmsInfo = async () => {
-    return instance.Info_GetTotal(props.APIKey).then((data) => {
+    return instance.Info_GetTotal(props.APIKey).then(async (data) => {
       if (data && data.ErrorCode === 0) {
+        await getSmsList();
         setStatusData([
           data.SentThisMonth,
           data.FailedDelivery,
@@ -123,19 +170,15 @@ const SmsDashboard = (props: ISmsDashboard) => {
           data.WaitingForSend,
         ]);
         setSmsInfo([
-          { title: "Today", value: data.SentToday },
-          { title: "Week", value: data.SentThisWeek },
-          { title: "Month", value: data.SentThisMonth },
+          { title: TranslateText("SMS.Today"), value: data.SentToday },
+          { title: TranslateText("SMS.Week"), value: data.SentThisWeek },
+          { title: TranslateText("SMS.Month"), value: data.SentThisMonth },
         ]);
       }
     });
   };
   useEffect(() => {
     getSmsInfo();
-    return () => instance._source.cancel();
-  }, []);
-  useEffect(() => {
-    getSmsList();
     return () => instance._source.cancel();
   }, []);
 
@@ -159,8 +202,8 @@ const SmsDashboard = (props: ISmsDashboard) => {
 
   return (
     <>
-      <h2 className="mb-4">Dashboard</h2>
-      <h4 className="mb-4">Latest SMS Transactions</h4>
+      <h2 className="mb-4">{TranslateText("app.Dashboard")}</h2>
+      <h4 className="mb-4">{TranslateText("SMS.Latest")}</h4>
       <Row className="my-4" gutter={ROW_GUTTER}>
         <Col xs={24} sm={24} md={24} lg={24} xxl={16}>
           <Row gutter={ROW_GUTTER}>
@@ -173,31 +216,40 @@ const SmsDashboard = (props: ISmsDashboard) => {
           <Row gutter={ROW_GUTTER}>
             <Col span={24}>
               <Card
-                title="SMS Transactions List"
+                title={`${TranslateText("SMS.List")} - ${totalSms}`}
                 extra={
-                  <DatePicker.RangePicker
-                    format={"DD-MM-YYYY"}
-                    defaultValue={date}
-                    onChange={onChange}
-                  />
+                  <>
+                    <DatePicker.RangePicker
+                      format={"DD-MM-YYYY"}
+                      defaultValue={date}
+                      onChange={onChange}
+                    />
+                    <Tooltip title="CSV format">
+                      <Button type="primary" className="ml-3">
+                        <CSVLink filename="sms-service.csv" data={csvData}>
+                          Download
+                        </CSVLink>
+                      </Button>
+                    </Tooltip>
+                  </>
                 }
               >
                 <Table
                   className="no-border-last"
                   columns={tableColumns}
                   dataSource={smsList}
-                  rowKey="SentDate"
+                  rowKey="Message"
                   loading={loading}
-                  onRow={(record) => {
-                    return {
-                      onMouseOver: (event) => {
-                        event.currentTarget.setAttribute(
-                          "title",
-                          "Message: " + record.Message
-                        );
-                      },
-                    };
-                  }}
+                  //onRow={(record) => {
+                  //return {
+                  //onMouseOver: (event) => {
+                  //event.currentTarget.setAttribute(
+                  //"title",
+                  //"Message: " + record.Message
+                  //);
+                  //},
+                  //};
+                  //}}
                 />
               </Card>
             </Col>
@@ -207,7 +259,7 @@ const SmsDashboard = (props: ISmsDashboard) => {
           <DonutChartWidget
             series={statusData}
             labels={statusLabels}
-            title="SMS Status"
+            title={TranslateText("SMS.SMSStatus")}
             customOptions={{ colors: statusColor }}
             extra={
               <Row justify="center">

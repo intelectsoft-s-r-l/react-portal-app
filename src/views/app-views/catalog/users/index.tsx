@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Table, Tag, Button, Modal, Menu, Input } from "antd";
+import { Card, Table, Tag, Button, Modal, Menu, Input, Select } from "antd";
 import {
   EyeOutlined,
   ArrowRightOutlined,
@@ -19,7 +19,7 @@ import { UserModalAdd } from "./UserModalAdd";
 import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
@@ -27,9 +27,10 @@ import { IAuth } from "../../../../redux/reducers/Auth";
 import { IAccount } from "../../../../redux/reducers/Account";
 import { ITheme } from "../../../../redux/reducers/Theme";
 import TranslateText from "../../../../utils/translate";
-import { IUsers } from "../../../../api/types.response";
+import { IUsers } from "../../../../api/app/types";
 import { ColumnsType } from "antd/lib/table";
 import "./add_user.scss";
+import Pagination from "antd/es/pagination";
 export enum status {
   inactive = 0,
   active = 1,
@@ -45,8 +46,10 @@ interface IUserListStoreProps {
 }
 
 interface UserListStateProps {
+  loading: boolean;
   users: IUsers[];
   usersToSearch: any;
+  pageSize: number;
   selectedRows: any;
   selectedKeys: any;
   userProfileVisible: boolean;
@@ -59,6 +62,8 @@ interface UserListStateProps {
 
 export class UserList extends Component<IUserListStoreProps> {
   state: UserListStateProps = {
+    loading: true,
+    pageSize: 10,
     users: [],
     usersToSearch: [],
     selectedRows: [],
@@ -72,8 +77,9 @@ export class UserList extends Component<IUserListStoreProps> {
   };
 
   private instance = new AppService();
-  getUsersInfo = async () => {
+  getUsersInfo = async (params = {}) => {
     return this.instance.GetUserList().then((data) => {
+      this.setState({ loading: false });
       if (data && data.ErrorCode === 0) {
         // Don't show current user in the list
         const filteredUsers = data.Users.filter(
@@ -86,9 +92,19 @@ export class UserList extends Component<IUserListStoreProps> {
         this.setState({
           users: evaluatedArray,
           usersToSearch: evaluatedArray,
+          pagination: {
+            // @ts-ignore
+            ...params.pagination,
+            total: data.Users.length,
+          },
         });
       }
     });
+  };
+  handlePageSize = () => {};
+
+  handleTableChange = (pagination: any, filters: any, sorter: any) => {
+    this.getUsersInfo({ sortField: sorter.field, pagination, ...filters });
   };
 
   componentDidMount() {
@@ -377,10 +393,18 @@ export class UserList extends Component<IUserListStoreProps> {
           </div>
         </Flex>
         <Table
-          loading={this.props.loading}
+          loading={this.state.loading}
           columns={tableColumns}
           dataSource={users}
           rowKey="ID"
+          pagination={{
+            showSizeChanger: true,
+            total: this.state.users.length,
+            pageSize: this.state.pageSize,
+            onShowSizeChange: (current, size) => {
+              this.setState({ pageSize: size });
+            },
+          }}
           rowSelection={{
             onChange: (key, rows) => {
               this.setState({ selectedKeys: key });

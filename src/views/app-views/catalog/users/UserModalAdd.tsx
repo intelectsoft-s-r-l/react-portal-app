@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, Input, Modal, Form } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
-import { AuthService } from "../../../../api";
+import { AuthService } from "../../../../api/auth";
 import { useSelector } from "react-redux";
 import { IState } from "../../../../redux/reducers";
 
@@ -18,14 +18,16 @@ export const UserModalAdd = ({
   getUsersInfo,
 }: IUserModalAdd) => {
   const [form] = Form.useForm();
-  const loading = useSelector((state: IState) => state.auth?.loading);
+  const [loading, setLoading] = useState(false);
   const CompanyID = useSelector((state: IState) => state.account?.CompanyID);
   const UiLanguage = useSelector((state: IState) => state.account?.UiLanguage);
 
   const onFinish = async (values: any) => {
+    setLoading(true);
     return await new AuthService()
-      .RegisterUser({ ...values, CompanyID, UiLanguage: 0 })
+      .RegisterUser({ ...values, CompanyID, UiLanguage })
       .then((data) => {
+        setLoading(false);
         if (data && data.ErrorCode === 0) {
           getUsersInfo();
         }

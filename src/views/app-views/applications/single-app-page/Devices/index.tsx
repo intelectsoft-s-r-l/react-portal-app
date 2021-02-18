@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Button, Table, Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { AppService } from "../../../../../api";
-import {
-  IDiagnosticInformation,
-  ILicenses,
-} from "../../../../../api/types.response";
+import { AppService } from "../../../../../api/app";
+import { ILicenses } from "../../../../../api/app/types";
 import Flex from "../../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import DeviceView from "./DeviceView";
+import TranslateText from "../../../../../utils/translate";
 export enum Health {
   _GOOD = 2,
   _COLD = 7,
@@ -42,11 +40,12 @@ const Devices = ({ AppType }: { AppType: number }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [devices, setDevices] = useState<any>();
   const [selectedDevice, setSelectedDevice] = useState<any>();
+  const [selectedLicense, setSelectedLicense] = useState<any>();
   const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false);
   const getDevices = async (AppType: number) => {
     return instance.GetAppLicenses(AppType).then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
-        setLoading(false);
         setDevices(
           data.LicenseList.filter((elm: ILicenses) => elm.Status !== 0)
         );
@@ -67,11 +66,11 @@ const Devices = ({ AppType }: { AppType: number }) => {
       <Table
         columns={[
           {
-            title: "Device Name",
+            title: TranslateText("app.devices.deviceName"),
             dataIndex: "DeviceName",
           },
           {
-            title: "OS Type",
+            title: TranslateText("app.devices.osType"),
             dataIndex: "OSType",
             render: (OSType) => (
               <span>
@@ -86,15 +85,19 @@ const Devices = ({ AppType }: { AppType: number }) => {
             ),
           },
           {
-            title: "OS Version",
+            title: TranslateText("app.devices.osVersion"),
             dataIndex: "OSVersion",
           },
           {
-            title: "App Version",
+            title: TranslateText("app.devices.appVersion"),
             dataIndex: "ApplicationVersion",
           },
           {
-            title: "Last Access Date",
+            title: "IP",
+            dataIndex: "PrivateIP",
+          },
+          {
+            title: TranslateText("app.devices.lastAccessDate"),
             dataIndex: "LastAccessDate",
             render: (date: ILicenses["LastAccessDate"]) => (
               <span>
@@ -108,7 +111,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
             dataIndex: "actions",
             render: (_, elm) => (
               <div className="text-right">
-                <Tooltip title="View">
+                <Tooltip title={TranslateText("app.devices.view")}>
                   <Button
                     type="primary"
                     className="mr-2"
@@ -117,6 +120,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
                     onClick={async () => {
                       setDeviceViewVisible(true);
                       setSelectedDevice(JSON.parse(elm.DiagnosticInformation));
+                      setSelectedLicense(elm);
                     }}
                   />
                 </Tooltip>
@@ -130,9 +134,9 @@ const Devices = ({ AppType }: { AppType: number }) => {
       />
       <DeviceView
         data={selectedDevice ?? []}
+        licenseData={selectedLicense ?? []}
         visible={deviceViewVisible}
         close={() => setDeviceViewVisible(false)}
-        isTable={true}
       />
     </>
   );

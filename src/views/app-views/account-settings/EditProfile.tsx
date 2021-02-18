@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Avatar, Button, Input, Row, Col, Upload } from "antd";
+import { Form, Avatar, Button, Input, Row, Col, Upload, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { ROW_GUTTER } from "../../../constants/ThemeConstant";
 import Flex from "../../../components/shared-components/Flex";
@@ -12,6 +12,8 @@ import { IState } from "../../../redux/reducers";
 import { IAccount } from "../../../redux/reducers/Account";
 import { ITheme } from "../../../redux/reducers/Theme";
 import { IAuth } from "../../../redux/reducers/Auth";
+import { UPLOADING } from "../../../constants/Messages";
+import TranslateText from "../../../utils/translate";
 
 interface IEditProfile {
   setProfileInfo: (accountInfo: { User: IAccount }) => void;
@@ -39,13 +41,13 @@ class EditProfile extends Component<IEditProfile> {
       PhoneNumber,
       Photo,
       setProfileInfo,
-      loading,
     } = this.props;
 
     const onChangeMask = (e: any) => {
       this.setState({ [e.target.name]: e.target.value });
     };
     const onFinish = (values: any) => {
+      message.loading({ content: TranslateText(UPLOADING), key: "updatable" });
       setProfileInfo({
         User: {
           ...account,
@@ -59,6 +61,12 @@ class EditProfile extends Component<IEditProfile> {
     };
 
     const onUploadAavater = (info: any) => {
+      if (info.file.status === "uploading") {
+        message.loading({
+          content: TranslateText(UPLOADING),
+          key: "updatable",
+        });
+      }
       if (info.file.status === "done") {
         Utils.getBase64(info.file.originFileObj, (imageUrl: string) => {
           setProfileInfo({

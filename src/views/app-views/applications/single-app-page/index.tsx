@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Card, Empty, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
@@ -17,23 +17,33 @@ import Licenses from "./Licenses/Licenses";
 import Packages from "./Packages";
 import Devices from "./Devices";
 import InnerAppLayout from "../../../../layouts/inner-app-layout";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { APP_NAME } from "../../../../configs/AppConfig";
-import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import { ILocale, IMarketAppList } from "../../../../api/app/types";
 import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
 import CampaignDetails from "./SMS/campaign/CampaignDetails";
-import Invoice from "./ExchangeOfInvoice/Invoice";
+import Invoice from "./ExchangeOfInvoice/invoice";
 import SmsDashboard from "./SMS/dashboard";
-import InvoiceDashboard from "./ExchangeOfInvoice/Invoice/dashboard";
+import InvoiceDashboard from "./ExchangeOfInvoice/dashboard";
 import OrderDashboard from "./ExchangeOfOrder/dashboard";
 import Order from "./ExchangeOfOrder/order";
+import DiscountDashboard from "./MyDiscount/dashboard";
+import Utils from "../../../../utils";
+import InvoiceLines from "./ExchangeOfInvoice/invoice/InvoiceLines";
+import OrderLines from "./ExchangeOfOrder/order/OrderLines";
+import Templates from "./Mail/templates";
+import Dashboard from "../../dashboard";
 
-enum EnApp {
+enum EnStatusApp {
+  DISABLED = 0,
+  ACTIVE = 1,
+}
+export enum EnApp {
   Retail = 10,
   CashSalesExpertMobile = 11,
   Agent = 20,
@@ -44,9 +54,11 @@ enum EnApp {
   KitchetAssistant = 32,
   Qiwi = 100,
   SMS = 50,
-  ExchangeOfInvoice = 40,
-  ExchangeOfOrder = 41,
+  ExchangeOfInvoice = 41,
+  ExchangeOfOrder = 40,
+  PetrolExpert = 130,
   MobilePetrolExpertCash = 131,
+  MailService = 140,
 }
 interface IOptions extends RouteComponentProps {
   AppType: number;
@@ -66,30 +78,44 @@ const Options = ({
       defaultSelectedKeys={[`${match.url}/:appId/`]}
       selectedKeys={[location.pathname]}
     >
-      <Menu.Item key={`${match.url}/description`}>
+      <Menu.Item key={`${match.url}/dashboard`}>
         <span>
-          <IntlMessage id="app.Description" />
+          <IntlMessage id="app.Dashboard" />
         </span>
-        <Link to={"description"} />
+        <Link to={"dashboard"} />
       </Menu.Item>
       <Menu.Item
-        key={`${match.url}/dashboard`}
-        className={
-          AppType === EnApp.SMS ||
-          AppType === EnApp.ExchangeOfInvoice ||
-          AppType === EnApp.ExchangeOfOrder
-            ? ""
-            : "d-none"
-        }
+        key={`${match.url}/templates`}
+        className={AppType === EnApp.MailService ? "" : "d-none"}
       >
-        <span>Dashboard</span>
-        <Link to={"dashboard"} />
+        <span>Templates</span>
+        <Link to={"templates"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/invoice`}
+        className={AppType === EnApp.ExchangeOfInvoice ? "" : "d-none"}
+      >
+        <span>
+          <IntlMessage id="app.Invoice" />
+        </span>
+        <Link to={"invoice"} />
+      </Menu.Item>
+      <Menu.Item
+        key={`${match.url}/order`}
+        className={AppType === EnApp.ExchangeOfOrder ? "" : "d-none"}
+      >
+        <span>
+          <IntlMessage id="app.Order" />
+        </span>
+        <Link to={"order"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/campaign`}
         className={AppType === EnApp.SMS ? "" : "d-none"}
       >
-        <span>Campaign</span>
+        <span>
+          <IntlMessage id="app.Campaign" />
+        </span>
         <Link to={"campaign"} />
       </Menu.Item>
       <Menu.Item
@@ -100,12 +126,6 @@ const Options = ({
           <IntlMessage id="app.News" />
         </span>
         <Link to={"news"} />
-      </Menu.Item>
-      <Menu.Item key={`${match.url}/packages`}>
-        <span>
-          <IntlMessage id="app.Packages" />
-        </span>
-        <Link to={"packages"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/licenses`}
@@ -126,8 +146,22 @@ const Options = ({
         <Link to={"devices"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/integration`}>
-        <span>Integration</span>
+        <span>
+          <IntlMessage id="app.Integration" />
+        </span>
         <Link to={"integration"} />
+      </Menu.Item>
+      <Menu.Item key={`${match.url}/packages`}>
+        <span>
+          <IntlMessage id="app.Packages" />
+        </span>
+        <Link to={"packages"} />
+      </Menu.Item>
+      <Menu.Item key={`${match.url}/description`}>
+        <span>
+          <IntlMessage id="app.Description" />
+        </span>
+        <Link to={"description"} />
       </Menu.Item>
     </Menu>
   );
@@ -142,7 +176,7 @@ interface IAppRoute {
 const AppRoute = ({ match, app }: IAppRoute) => {
   return (
     <Switch>
-      <Redirect exact from={`${match.url}`} to={`${match.url}/description`} />
+      <Redirect exact from={`${match.url}`} to={`${match.url}/dashboard`} />
       <Route
         path={`${match.url}/description`}
         exact
@@ -187,9 +221,23 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       />
       <Route
         path={`${match.url}/invoice`}
-        render={(props) => <Invoice {...props} />}
+        render={(props) => {
+          if (props.location.search) {
+            return <InvoiceLines {...props} APIKey={app.ApyKey} />;
+          }
+          return <Invoice {...props} APIKey={app.ApyKey} />;
+        }}
       />
-      <Route path={`${match.url}/order`} render={(props) => <Order />} />
+      <Route
+        exact
+        path={`${match.url}/order`}
+        render={(props) => {
+          if (props.location.search) {
+            return <OrderLines {...props} APIKey={app.ApyKey} />;
+          }
+          return <Order {...props} APIKey={app.ApyKey} />;
+        }}
+      />
       <Route
         path={`${match.url}/dashboard`}
         render={(props) => {
@@ -197,7 +245,17 @@ const AppRoute = ({ match, app }: IAppRoute) => {
             return <SmsDashboard {...props} APIKey={app.ApyKey} />;
           else if (app.AppType === EnApp.ExchangeOfInvoice)
             return <InvoiceDashboard />;
-          else return <OrderDashboard />;
+          else if (app.AppType === EnApp.ExchangeOfOrder)
+            return <OrderDashboard />;
+          else if (app.AppType === EnApp.MyDiscount)
+            return <DiscountDashboard {...props} APIKey={app.ApyKey} />;
+        }}
+      />
+      <Route
+        exact
+        path={`${match.url}/templates`}
+        render={(props) => {
+          return <Templates APIKey={app.ApyKey} {...props} />;
         }}
       />
       <Route
@@ -214,18 +272,6 @@ const AppRoute = ({ match, app }: IAppRoute) => {
 
 const AboutItem = ({ appData }: any) => {
   const { Photo, Status, Name, ShortDescription, LongDescription } = appData;
-
-  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
-  const [longDesc, setLongDesc] = useState<Partial<ILocale>>({});
-  useEffect(() => {
-    try {
-      setShortDesc(JSON.parse(window.atob(ShortDescription)));
-      setLongDesc(JSON.parse(window.atob(LongDescription)));
-    } catch {
-      setShortDesc({ en: "", ru: "", ro: "" });
-      setLongDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
   return (
     <Card className="mb-5">
@@ -243,12 +289,15 @@ const AboutItem = ({ appData }: any) => {
             <h2 className="mr-3">{Name} </h2>
           </Flex>
           <div>
-            <span className="text-muted ">{shortDesc[locale] ?? ""}</span>
-            {Status === 0 && (
+            <span className="text-muted ">
+              {Utils.decodeBase64Locale(ShortDescription)[locale] ?? ""}
+            </span>
+            {Status === EnStatusApp.DISABLED && (
               <p
                 className="mt-4"
                 dangerouslySetInnerHTML={{
-                  __html: longDesc[locale] ?? "",
+                  __html:
+                    Utils.decodeBase64Locale(LongDescription)[locale] ?? "",
                 }}
               ></p>
             )}
@@ -274,9 +323,11 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
           (app) => app.AppType === +appID
         );
         document.title = `${currentApp!.Name} | ${APP_NAME}`;
+        // TODO: replace this with a useReducer function
         setApp(currentApp);
       }
     });
+    return () => instance._source.cancel();
   }, [appID]);
 
   if (loading) return <Loading />;

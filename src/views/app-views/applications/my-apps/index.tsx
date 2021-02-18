@@ -1,36 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Avatar, Card, Col, Empty, Row, Tag, Button } from "antd";
+import {
+  Modal,
+  Avatar,
+  Card,
+  Col,
+  Empty,
+  Row,
+  Tag,
+  Button,
+  Skeleton,
+  Input,
+  message,
+} from "antd";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
-import { CheckCircleOutlined, ExperimentOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  ExperimentOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
-import { AppService } from "../../../../api";
+import { AppService } from "../../../../api/app";
 import Utils from "../../../../utils";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import TranslateText from "../../../../utils/translate";
-import { ILocale, IMarketAppList } from "../../../../api/types.response";
+import { ILocale, IMarketAppList } from "../../../../api/app/types";
+import { DONE } from "../../../../constants/Messages";
 
 interface IGridItem {
   deactivateApp: (ID: number, Name: string) => void;
   data: IMarketAppList;
 }
 const GridItem = ({ deactivateApp, data }: IGridItem) => {
-  const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
   const locale = useSelector((state: IState) => state["theme"]!.locale) ?? "en";
-  useEffect(() => {
-    try {
-      setShortDesc(JSON.parse(window.atob(data.ShortDescription.toString())));
-    } catch {
-      setShortDesc({ en: "", ru: "", ro: "" });
-    }
-  }, []);
+  //const [shortDesc, setShortDesc] = useState<Partial<ILocale>>({});
+  //useEffect(() => {
+  //try {
+  //setShortDesc(JSON.parse(window.atob(data.ShortDescription.toString())));
+  //} catch {
+  //setShortDesc({ en: "", ru: "", ro: "" });
+  //}
+  //}, []);
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
@@ -48,12 +69,16 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
         </Tag>
       </Flex>
       <div>
-        <Link to={`${APP_PREFIX_PATH}/id/${data.AppType}`}>
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <h3 className="app-link mb-0 cursor-pointer ">{data.Name}</h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
         <div style={{ minHeight: "70px" }}>
-          {shortDesc ? shortDesc[locale] : null}
+          {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}
         </div>
       </div>
       <Flex justifyContent="between" alignItems="center">
@@ -75,15 +100,18 @@ const GridItem = ({ deactivateApp, data }: IGridItem) => {
 const MyAppList = () => {
   const instance = new AppService();
   const [apps, setApps] = useState<IMarketAppList[]>([]);
-  const loading = useSelector((state: IState) => state["auth"]!.loading);
+  const [appsToSearch, setAppsToSearch] = useState<IMarketAppList[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { confirm } = Modal;
   const getMarketAppList = async () => {
     return instance.GetMarketAppList().then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
         const activeApps = data.MarketAppList.filter(
           (marketApp: IMarketAppList) => marketApp.Status !== 0
         );
         setApps(Utils.sortData(activeApps, "ID"));
+        setAppsToSearch(Utils.sortData(activeApps, "ID"));
       }
     });
   };
@@ -98,21 +126,41 @@ const MyAppList = () => {
       title: `${TranslateText("app.uninstall.title")} ${AppName}?`,
       onOk: async () => {
         return await instance.DeactivateApp(AppID).then(async (data) => {
-          if (data && data.ErrorCode === 0) await getMarketAppList();
+          if (data && data.ErrorCode === 0) {
+            await getMarketAppList();
+            message.success({ content: TranslateText(DONE), duration: 1 });
+          }
         });
       },
       onCancel: () => {},
     });
   };
-
-  if (loading) {
-    return <Loading cover="content" />;
+  if (loading) return <Loading />;
+  if (!apps) {
+    return (
+      <Flex justifyContent="center" className="w-100">
+        <Empty />
+      </Flex>
+    );
   }
 
   return (
     <div className={`my-4 container-fluid`}>
+      <Col lg={4} md={8} className="mb-4">
+        <Input
+          type="search"
+          prefix={<SearchOutlined />}
+          placeholder={TranslateText("app.Search")}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.currentTarget!.value!;
+            const searchArray = value ? apps : appsToSearch;
+            const data = Utils.wildCardSearch(searchArray, value);
+            setApps(data);
+          }}
+        />
+      </Col>
       <Row gutter={16}>
-        {apps.length > 0 ? (
+        {apps.length > 0 &&
           apps.map((elm) => (
             <Col xs={24} sm={24} lg={12} xl={8} xxl={6} key={elm["AppType"]}>
               <GridItem
@@ -121,12 +169,7 @@ const MyAppList = () => {
                 key={elm["AppType"]}
               />
             </Col>
-          ))
-        ) : (
-          <Flex justifyContent="center" className="w-100">
-            <Empty />
-          </Flex>
-        )}
+          ))}
       </Row>
     </div>
   );

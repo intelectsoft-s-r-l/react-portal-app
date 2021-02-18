@@ -26,7 +26,7 @@ export const AppViews = () => {
           component={lazy(() => import(`./applications/market`))}
         />
         <Route
-          path={`${APP_PREFIX_PATH}/id/:appID`}
+          path={`${APP_PREFIX_PATH}/id/:appID/:appName`}
           component={lazy(() => import(`./applications/single-app-page`))}
         />
         <Route

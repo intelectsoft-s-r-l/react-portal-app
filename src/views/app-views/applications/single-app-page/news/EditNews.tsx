@@ -6,7 +6,7 @@ import { DONE, UPLOADING } from "../../../../../constants/Messages";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import TranslateText from "../../../../../utils/translate";
 const EditNews = ({ visible, close, news, getNews }: any) => {
   const [form] = Form.useForm();
@@ -56,9 +56,7 @@ const EditNews = ({ visible, close, news, getNews }: any) => {
         .then(async (data: any) => {
           setLoading(false);
           close();
-          if (data) {
-            if (data.ErrorCode === 0) await getNews(AppType);
-          }
+          if (data && data.ErrorCode === 0) await getNews(AppType);
         });
     }, 1000);
   };

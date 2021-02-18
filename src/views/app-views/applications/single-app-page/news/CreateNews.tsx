@@ -7,7 +7,7 @@ import { DONE, UPLOADING } from "../../../../../constants/Messages";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
 import Utils from "../../../../../utils";
 import TextEditor from "../TextEditor";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import { useSelector } from "react-redux";
 import { IState } from "../../../../../redux/reducers";
 import TranslateText from "../../../../../utils/translate";
@@ -42,7 +42,7 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
   };
   const onFinish = () => {
     setLoading(true);
-    setTimeout(async () => {
+    setTimeout(() => {
       return new AppService()
         .UpdateNews({
           CompanyID,
@@ -52,11 +52,14 @@ const CreateNews = ({ getNews, AppType, visible, close }: any) => {
           Content: content,
           Header: header,
         })
-        .then(async (data: any) => {
+        .then(async (data) => {
           setLoading(false);
           close();
-          if (data) {
-            if (data.ErrorCode === 0) await getNews(AppType);
+          if (data.ErrorCode === 0) {
+            await getNews(AppType);
+            message
+              .success(TranslateText("news.create.message"), 2)
+              .then(() => message.info("You can publish your article!"));
           }
         });
     }, 1000);

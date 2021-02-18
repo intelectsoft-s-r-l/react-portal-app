@@ -74,7 +74,7 @@ export const Views = (props: IViews) => {
   );
 };
 
-const mapStateToProps = ({ theme, auth }: IState): ITheme & IAuth => {
+const mapStateToProps = ({ theme, auth }: IState) => {
   const { locale } = theme as ITheme;
   const { token } = auth as IAuth;
   return { locale, token };

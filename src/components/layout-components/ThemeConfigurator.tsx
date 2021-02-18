@@ -220,28 +220,6 @@ const ThemeConfigurator = ({
           selector={<NavLanguage configDisplay triggerType={"click"} />}
         />
       </div>
-      {/* Copy to clipboard Theme Config */}
-      {/*<div>*/}
-      {/*  <CopyToClipboard*/}
-      {/*    text={genCopySettingJson({*/}
-      {/*      navType,*/}
-      {/*      sideNavTheme,*/}
-      {/*      navCollapsed,*/}
-      {/*      topNavColor,*/}
-      {/*      headerNavColor,*/}
-      {/*      locale,*/}
-      {/*    })}*/}
-      {/*    onCopy={() =>*/}
-      {/*      message.success(*/}
-      {/*        "Copy Success, please paste it to src/configs/AppConfig.js THEME_CONFIG variable."*/}
-      {/*      )*/}
-      {/*    }*/}
-      {/*  >*/}
-      {/*    <Button icon={<CopyOutlined />} block>*/}
-      {/*      <span>Copy Setting</span>*/}
-      {/*    </Button>*/}
-      {/*  </CopyToClipboard>*/}
-      {/*</div>*/}
     </>
   );
 };

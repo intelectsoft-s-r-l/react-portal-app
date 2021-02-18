@@ -4,7 +4,7 @@ import { MailOutlined } from "@ant-design/icons";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
-import { AuthService } from "../../../../api";
+import { AuthService } from "../../../../api/auth";
 import { NEW_PASSWORD } from "../../../../constants/Messages";
 import TranslateText from "../../../../utils/translate";
 

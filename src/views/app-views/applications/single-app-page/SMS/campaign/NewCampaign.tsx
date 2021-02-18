@@ -12,7 +12,7 @@ import {
   Upload,
 } from "antd";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
-import { AppService } from "../../../../../../api";
+import { AppService } from "../../../../../../api/app";
 import TranslateText from "../../../../../../utils/translate";
 import { DONE, UPLOADING } from "../../../../../../constants/Messages";
 import Utils from "../../../../../../utils";
@@ -131,7 +131,7 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
   };
   return (
     <Modal
-      title={"New campaign"}
+      title={TranslateText("SMS.NewCampaign")}
       visible={visible}
       onOk={() => {
         form.validateFields().then((values) => {
@@ -144,13 +144,17 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
       <Form form={form} name="newCampaign" layout="vertical">
         <Row gutter={ROW_GUTTER}>
           <Col xs={24} sm={24} md={24}>
-            <Form.Item label={"Campaign name"} name="Name" rules={rules.Name}>
+            <Form.Item
+              label={TranslateText("SMS.CampaignName")}
+              name="Name"
+              rules={rules.Name}
+            >
               <Input />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
-              label={"Description"}
+              label={TranslateText("SMS.Description")}
               name="Description"
               rules={rules.Description}
             >
@@ -158,19 +162,23 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
-            <Form.Item label={"Message"} name="Message" rules={rules.Message}>
+            <Form.Item
+              label={TranslateText("SMS.Message")}
+              name="Message"
+              rules={rules.Message}
+            >
               <Input.TextArea />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
-              label={"Receivers"}
+              label={TranslateText("SMS.Receivers")}
               name="PhoneList"
               rules={rules.PhoneList}
               extra={
                 <>
                   <small>
-                    You have no contacts just yet.{" "}
+                    {TranslateText("SMS.NoContacts")}.{" "}
                     <Upload
                       onChange={onChange}
                       multiple={true}
@@ -178,7 +186,7 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
                       showUploadList={false}
                     >
                       <small>
-                        <a>Attach file</a>
+                        <a>{TranslateText("SMS.AttachFile")}</a>
                       </small>
                     </Upload>
                   </small>
@@ -186,22 +194,22 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
               }
             >
               <Input.TextArea
-                placeholder="Insert phone numbers, each phone number should be followed by comma."
+                placeholder={TranslateText("SMS.Receivers.Validate")}
                 onChange={(e) => setPhoneNumbers([e.target.value])}
               />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
-            <Form.Item label={"Send SMS"}>
+            <Form.Item label={TranslateText("SMS.SendSMS")}>
               <Radio.Group
                 value={radioVal}
                 onChange={(e) => setRadioVal(e.target.value)}
               >
                 <Radio style={radioStyle} value={send.NOW}>
-                  Immediately
+                  {TranslateText("SMS.Immediately")}
                 </Radio>
                 <Radio style={radioStyle} value={send.DELAY}>
-                  Delay SMS send
+                  {TranslateText("SMS.DelaySMSSend")}
                 </Radio>
               </Radio.Group>
               <div>

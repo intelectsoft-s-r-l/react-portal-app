@@ -4,26 +4,32 @@ import IntlMessage from "../../../components/util-components/IntlMessage";
 import { connect } from "react-redux";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
-import { AuthService } from "../../../api";
+import { AuthService } from "../../../api/auth";
 import { DONE } from "../../../constants/Messages";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
 import { ITheme } from "../../../redux/reducers/Theme";
 import TranslateText from "../../../utils/translate";
+import { FormInstance } from "antd/lib/form";
 
 type onFinish = {
   currentPassword: string;
   newPassword: string;
 };
 export class ChangePassword extends React.Component {
+  state = { loading: false };
+  private formRef = React.createRef<FormInstance>();
   private onFinish = async ({ currentPassword, newPassword }: onFinish) => {
+    this.setState({ loading: true });
     return await new AuthService()
-      .ChangePassword({
-        NewPassword: Utils.encryptInput(newPassword, API_PUBLIC_KEY),
-        OldPassword: Utils.encryptInput(currentPassword, API_PUBLIC_KEY),
-      })
+      .ChangePassword(
+        Utils.encryptInput(newPassword, API_PUBLIC_KEY),
+        Utils.encryptInput(currentPassword, API_PUBLIC_KEY)
+      )
       .then((data) => {
+        this.setState({ loading: false });
         if (data && data.ErrorCode === 0) {
+          this.formRef.current!.resetFields();
           message.success({
             content: TranslateText(DONE),
             key: "updatable",
@@ -43,6 +49,7 @@ export class ChangePassword extends React.Component {
               name="changePasswordForm"
               layout="vertical"
               onFinish={this.onFinish}
+              ref={this.formRef}
             >
               <Form.Item
                 label={
@@ -100,7 +107,12 @@ export class ChangePassword extends React.Component {
               >
                 <Input.Password />
               </Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={this.state.loading}
+              >
+                {" "}
                 <IntlMessage id={"account.ChangePassword.ChangePassword"} />
               </Button>
             </Form>

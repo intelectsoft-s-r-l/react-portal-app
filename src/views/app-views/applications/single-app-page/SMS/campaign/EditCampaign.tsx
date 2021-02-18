@@ -1,12 +1,13 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Col, DatePicker, Form, Input, Modal, Row, Upload } from "antd";
-import { ICampaignList } from "../../../../../../api/types.response";
+import { ICampaignList } from "../../../../../../api/app/types";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { rules } from "./NewCampaign";
 import moment from "moment";
-import { AppService } from "../../../../../../api";
+import { AppService } from "../../../../../../api/app";
 import Utils from "../../../../../../utils";
+import TranslateText from "../../../../../../utils/translate";
 
 interface IEditCampaign {
   visible: boolean;
@@ -86,7 +87,7 @@ const EditCampaign = ({
   };
   return (
     <Modal
-      title="Edit campaign"
+      title={TranslateText("SMS.EditCampaign")}
       visible={visible}
       destroyOnClose
       onCancel={close}
@@ -106,13 +107,17 @@ const EditCampaign = ({
       >
         <Row gutter={ROW_GUTTER}>
           <Col xs={24} sm={24} md={24}>
-            <Form.Item label={"Campaign name"} name="Name" rules={rules.Name}>
+            <Form.Item
+              label={TranslateText("SMS.CampaignName")}
+              name="Name"
+              rules={rules.Name}
+            >
               <Input />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
-              label={"Description"}
+              label={TranslateText("SMS.Description")}
               name="Description"
               rules={rules.Description}
             >
@@ -120,21 +125,22 @@ const EditCampaign = ({
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
-            <Form.Item label={"Message"} name="Message" rules={rules.Message}>
+            <Form.Item
+              label={TranslateText("SMS.Message")}
+              name="Message"
+              rules={rules.Message}
+            >
               <Input.TextArea />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
-              label={"Receivers"}
+              label={TranslateText("SMS.Receivers")}
               name="PhoneList"
               rules={rules.PhoneList}
               extra={
                 <>
                   <small>
-                    {phoneNumbers.length > 0
-                      ? ""
-                      : "You have no contacts just yet. "}
                     <Upload
                       onChange={onChange}
                       multiple={true}
@@ -142,7 +148,7 @@ const EditCampaign = ({
                       showUploadList={false}
                     >
                       <small>
-                        <a>Attach file</a>
+                        <a>{TranslateText("SMS.AttachFile")}</a>
                       </small>
                     </Upload>
                   </small>
@@ -150,7 +156,7 @@ const EditCampaign = ({
               }
             >
               <Input.TextArea
-                placeholder="Insert phone numbers, each phone number should be followed by comma."
+                placeholder={TranslateText("SMS.Receivers.Validate")}
                 onChange={(e) => setPhoneNumbers([e.target.value])}
               />
             </Form.Item>
@@ -158,7 +164,7 @@ const EditCampaign = ({
           <Col xs={24} sm={24} md={24}>
             <Form.Item
               name={"ScheduledDate"}
-              label={"Scheduled date"}
+              label={TranslateText("SMS.ScheduledDate")}
               rules={rules.ScheduledDate}
             >
               <DatePicker format={"DD/MM/YYYY"} />

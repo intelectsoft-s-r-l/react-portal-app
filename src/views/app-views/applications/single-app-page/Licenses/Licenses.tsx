@@ -9,19 +9,20 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import Utils from "../../../../../utils";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import CreateLicenseModal from "./CreateLicenseModal";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
-import { ILicenses } from "../../../../../api/types.response";
+import { ILicenses } from "../../../../../api/app/types";
 import { ColumnsType } from "antd/lib/table";
-import { useSelector } from "react-redux";
-import { IState } from "../../../../../redux/reducers";
+import TranslateText from "../../../../../utils/translate";
 
 const Licenses = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
-  const loading = useSelector((state: IState) => state.auth?.loading);
+  const [loading, setLoading] = useState(true);
   const getAppLicenses = async (AppType: number) => {
+    setLoading(true);
     return instance.GetAppLicenses(AppType).then((data) => {
+      setLoading(false);
       if (data && data.ErrorCode === 0) {
         // const evaluatedArray = sortData(data.LicensesList);
         setLicenses(data.LicenseList);
@@ -81,11 +82,11 @@ const Licenses = ({ AppType }: { AppType: number }) => {
   };
   const tableColumns: ColumnsType<ILicenses> = [
     {
-      title: "License Code",
+      title: TranslateText("app.licenses.licenseCode"),
       dataIndex: "LicenseCode",
     },
     {
-      title: "Create Date",
+      title: TranslateText("app.licenses.createDate"),
       dataIndex: "CreateDate",
       render: (CreateDate: ILicenses["CreateDate"]) => (
         <span>
@@ -96,7 +97,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       ),
     },
     {
-      title: "Activation Date",
+      title: TranslateText("app.licenses.activationDate"),
       dataIndex: "LicenseActivationDate",
       render: (date: ILicenses["LicenseActivationDate"]) => (
         <span>
@@ -105,16 +106,23 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       ),
     },
     {
-      title: "IP",
+      title: TranslateText("app.licenses.ip"),
       dataIndex: "PrivateIP",
     },
     {
-      title: "Status",
+      title: TranslateText("app.licenses.status"),
       dataIndex: "Status",
       render: (Status: number) => (
         <div>
-          <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
-            {Status === 1 ? "Activated" : "Not Activated"}
+          <Tag
+            className="mr-0"
+            color={Status === 1 ? "cyan" : Status === 0 ? "orange" : "volcano"}
+          >
+            {Status === 1
+              ? TranslateText("app.licenses.status.activated")
+              : Status === 0
+              ? TranslateText("app.licenses.status.deactivated")
+              : TranslateText("users.status.Disabled")}
           </Tag>
         </div>
       ),
@@ -124,7 +132,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       render: (_: any, elm: ILicenses) => (
         <div className="text-right">
           {elm.Status === 1 && (
-            <Tooltip title="Release">
+            <Tooltip title={TranslateText("app.licenses.release")}>
               <Button
                 icon={<ArrowUpOutlined />}
                 className="mr-2"
@@ -143,7 +151,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
               />
             </Tooltip>
           )}
-          <Tooltip title="Delete">
+          <Tooltip title={TranslateText("app.licenses.delete")}>
             <Button
               danger
               icon={<DeleteOutlined />}
@@ -183,8 +191,10 @@ const Licenses = ({ AppType }: { AppType: number }) => {
               <Tooltip
                 title={`${
                   selectedRows.length > 1
-                    ? `Delete (${selectedRows.length})`
-                    : "Delete"
+                    ? `${TranslateText("app.licenses.delete")} (${
+                        selectedRows.length
+                      })`
+                    : TranslateText("app.licenses.delete")
                 }`}
               >
                 <Button
@@ -202,7 +212,9 @@ const Licenses = ({ AppType }: { AppType: number }) => {
               onClick={() => setCreateLicenseVisible(true)}
             >
               <PlusOutlined />
-              <span>New</span>
+              <span>
+                <IntlMessage id="app.licenses.add" />
+              </span>
             </Button>
           </Flex>
         </div>

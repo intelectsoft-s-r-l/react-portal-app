@@ -1,0 +1,13 @@
+@media print {
+  .invoice-card {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    font-size: 8px;
+  }
+}

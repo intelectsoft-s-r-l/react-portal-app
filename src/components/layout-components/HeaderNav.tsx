@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { Menu, Layout } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import Logo from "./Logo";
@@ -20,7 +20,8 @@ import AppStoreNav from "../../views/app-views/applications/AppNav";
 import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
-import { AppService } from "../../api";
+import { AppService } from "../../api/app";
+import { EnCompany } from "../../redux/actions/Account";
 
 const { Header } = Layout;
 
@@ -35,20 +36,13 @@ const HeaderNav = (props: any) => {
     isMobile,
     history,
     CompanyID,
+    Company,
   } = props;
   const [searchActive, setSearchActive] = useState(false);
 
   const onSearchClose = () => {
     setSearchActive(false);
   };
-  const [currentCompany, setCurrentCompany] = useState("");
-
-  useEffect(() => {
-    new AppService().GetCompanyInfo().then((data) => {
-      if (data && data.ErrorCode === 0)
-        setCurrentCompany(data.Company.CommercialName ?? "");
-    });
-  }, []);
   const onToggle = () => {
     if (!isMobile) {
       toggleCollapsedNav(!navCollapsed);
@@ -101,14 +95,16 @@ const HeaderNav = (props: any) => {
             </Menu>
           </div>
           <div className="nav-left">
-            {!isNavTop && CompanyID === 1 ? (
+            {!isNavTop &&
+            CompanyID === EnCompany.INTELECTSOFT &&
+            Company !== "INTELECTSOFT SRL" ? (
               <div
                 className={`text-${
                   headerNavColor === "#ffffff" ? "dark" : "white"
                 } px-5`}
                 style={{ fontSize: "20px" }}
               >
-                {`ATENTIE! Administrati: ${currentCompany}`}
+                {`ATENTIE! Administrati: ${Company}`}
               </div>
             ) : null}
           </div>
@@ -126,8 +122,15 @@ const HeaderNav = (props: any) => {
 
 const mapStateToProps = ({ theme, account }: IState) => {
   const { navCollapsed, navType, headerNavColor, mobileNav } = theme as ITheme;
-  const { CompanyID } = account as IAccount;
-  return { navCollapsed, navType, headerNavColor, mobileNav, CompanyID };
+  const { CompanyID, Company } = account as IAccount;
+  return {
+    navCollapsed,
+    navType,
+    headerNavColor,
+    mobileNav,
+    CompanyID,
+    Company,
+  };
 };
 
 export default connect(mapStateToProps, {

@@ -1,37 +1,37 @@
 import { Row, Modal, Form, Col, Input } from "antd";
 import React, { useState } from "react";
 import { ROW_GUTTER } from "../../../../../constants/ThemeConstant";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
+import TranslateText from "../../../../../utils/translate";
 
+interface ICreateLicenseModal {
+  AppType: number;
+  visible: boolean;
+  close: () => void;
+  getAppLicenses: (AppType: number) => void;
+}
 const CreateLicenseModal = ({
   AppType,
   visible,
   close,
   getAppLicenses,
-}: any) => {
+}: ICreateLicenseModal) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
   const onFinish = async (values: any) => {
+    setIsLoading(true);
     return new AppService()
       .RequestLicense(AppType, values.Quantity)
       .then((data) => {
+        setIsLoading(false);
         if (data && data.ErrorCode === 0) getAppLicenses(AppType);
       });
   };
   const onOk = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      form
-        .validateFields()
-        .then((values) => {
-          close();
-          onFinish(values);
-        })
-        .catch((info) => {
-          console.log("Validate Failed:", info);
-        });
-    }, 1000);
+    form.validateFields().then(async (values) => {
+      await onFinish(values);
+      close();
+    });
   };
   return (
     <Modal
@@ -39,13 +39,13 @@ const CreateLicenseModal = ({
       onCancel={close}
       visible={visible}
       confirmLoading={isLoading}
-      title="Add license"
+      title={TranslateText("app.licenses.add")}
     >
       <Form layout="vertical" form={form}>
         <Row gutter={ROW_GUTTER}>
           <Col xs={24} sm={24} md={24}>
             <Form.Item
-              label={"Quantity"}
+              label={TranslateText("app.licenses.quantity")}
               name="Quantity"
               rules={[
                 {

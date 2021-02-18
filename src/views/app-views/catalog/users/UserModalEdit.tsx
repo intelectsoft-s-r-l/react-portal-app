@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Input, Row, Col, Form, Modal, message } from "antd";
+import { Input, Row, Col, Form, Modal } from "antd";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { ROW_GUTTER } from "../../../../constants/ThemeConstant";
-import { AppService } from "../../../../api";
-import { DONE, UPDATING } from "../../../../constants/Messages";
-import TranslateText from "../../../../utils/translate";
-import { IUsers } from "../../../../api/types.response";
+import { AppService } from "../../../../api/app";
+import { IUsers } from "../../../../api/app/types";
 interface IUserModalEdit {
   data: IUsers;
   visible: boolean;
@@ -33,13 +31,12 @@ export const UserModalEdit = ({
       // @ts-ignore
       .UpdateUser({ User: { ...data, ...values } })
       .then((data) => {
+        setLoading(false);
         if (data && data.ErrorCode === 0) {
-          setLoading(false);
           getUsersInfo();
         }
       });
   };
-  const onFinishFailed = () => {};
 
   return (
     <Modal

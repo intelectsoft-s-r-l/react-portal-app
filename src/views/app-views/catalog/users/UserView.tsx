@@ -6,7 +6,7 @@ import {
   UserOutlined,
   ApartmentOutlined,
 } from "@ant-design/icons";
-import { IUsers } from "../../../../api/types.response";
+import { IUsers } from "../../../../api/app/types";
 
 interface UserViewProps {
   data: IUsers;

@@ -2,6 +2,7 @@ import { CLEAR_INFO, UPDATE_SETTINGS } from "../constants/Account";
 import { REMOVE_AVATAR } from "../constants/Account";
 
 export interface IAccount {
+  Company?: string;
   CompanyID?: number;
   Email?: string;
   FirstName?: string;
@@ -13,6 +14,7 @@ export interface IAccount {
   UiLanguage?: number;
 }
 const initialState = {
+  Company: "",
   CompanyID: null,
   Email: "",
   FirstName: null,

@@ -1,15 +1,29 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Button, Card, List, Empty, Menu, Modal, Tag } from "antd";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  List,
+  Empty,
+  Menu,
+  Modal,
+  Tag,
+  Tooltip,
+  Popover,
+} from "antd";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { PlusCircleOutlined, EditOutlined } from "@ant-design/icons";
-import { AppService } from "../../../../../api";
+import { AppService } from "../../../../../api/app";
 import Flex from "../../../../../components/shared-components/Flex";
 import CreateNews from "./CreateNews";
 import moment from "moment";
 import EditNews from "./EditNews";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import Loading from "../../../../../components/shared-components/Loading";
-import { INewsList } from "../../../../../api/types.response";
+import { INewsList } from "../../../../../api/app/types";
 import EllipsisDropdown from "../../../../../components/shared-components/EllipsisDropdown";
 import "../../../news/news.scss";
 
@@ -21,9 +35,10 @@ interface IArticleItem {
   refreshNews: (AppType: number) => void;
   AppType: number;
 }
-enum newsEnum {
+enum EnNews {
   ACTIVE = 1,
   DISABLED = 2,
+  INACTIVE = 0,
 }
 const ArticleItem = ({
   newsData,
@@ -37,11 +52,27 @@ const ArticleItem = ({
     <Card
       style={{ padding: "20px" }}
       title={
-        <Tag color={newsData.Status === newsEnum.DISABLED ? "red" : "cyan"}>
-          {newsData.Status === newsEnum.DISABLED ? (
-            <CloseCircleOutlined />
+        <Tag
+          color={
+            newsData.Status === EnNews.DISABLED
+              ? "red"
+              : newsData.Status === EnNews.ACTIVE
+              ? "cyan"
+              : "orange"
+          }
+        >
+          {newsData.Status === EnNews.DISABLED ? (
+            <Tooltip title="Disabled">
+              <span>Disabled</span>
+            </Tooltip>
+          ) : newsData.Status === EnNews.ACTIVE ? (
+            <Tooltip title="Active">
+              <span>Active</span>
+            </Tooltip>
           ) : (
-            <CheckCircleOutlined />
+            <Tooltip title="Not published">
+              <span>Draft</span>
+            </Tooltip>
           )}
         </Tag>
       }
@@ -49,7 +80,7 @@ const ArticleItem = ({
         <EllipsisDropdown
           menu={
             <Menu>
-              {newsData.Status === newsEnum.DISABLED ? (
+              {newsData.Status === EnNews.DISABLED ? (
                 <Menu.Item
                   onClick={async () => {
                     Modal.confirm({
@@ -58,7 +89,7 @@ const ArticleItem = ({
                         return await new AppService()
                           .UpdateNews({
                             ...newsData,
-                            Status: newsEnum.ACTIVE,
+                            Status: EnNews.ACTIVE,
                           })
                           .then((data) => {
                             if (data && data.ErrorCode === 0)
@@ -75,7 +106,7 @@ const ArticleItem = ({
                     </span>
                   </Flex>
                 </Menu.Item>
-              ) : (
+              ) : newsData.Status === EnNews.ACTIVE ? (
                 <Menu.Item
                   onClick={async () => {
                     Modal.confirm({
@@ -84,7 +115,7 @@ const ArticleItem = ({
                         return await new AppService()
                           .UpdateNews({
                             ...newsData,
-                            Status: newsEnum.DISABLED,
+                            Status: EnNews.DISABLED,
                           })
                           .then((data) => {
                             if (data && data.ErrorCode === 0)
@@ -98,6 +129,32 @@ const ArticleItem = ({
                     <CloseCircleOutlined />
                     <span className="ml-2">
                       <IntlMessage id={"users.Disable"} />
+                    </span>
+                  </Flex>
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  onClick={async () => {
+                    Modal.confirm({
+                      title: "Are you sure you want to publish this article?",
+                      onOk: async () => {
+                        return await new AppService()
+                          .UpdateNews({
+                            ...newsData,
+                            Status: EnNews.ACTIVE,
+                          })
+                          .then((data) => {
+                            if (data && data.ErrorCode === 0)
+                              refreshNews(AppType);
+                          });
+                      },
+                    });
+                  }}
+                >
+                  <Flex alignItems="center">
+                    <CheckCircleOutlined />
+                    <span className="ml-2">
+                      <IntlMessage id={"users.Publish"} />
                     </span>
                   </Flex>
                 </Menu.Item>
@@ -162,7 +219,14 @@ const ArticleItem = ({
 const News = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
+  const [news, setNews] = useState<INewsList[]>([]);
+  const [selectedNew, setSelectedNew] = useState<INewsList | undefined>(
+    undefined
+  );
   const getNews = async (AppType: number) => {
+    setLoading(true);
     return await instance.GetAppNews(AppType).then((data) => {
       if (data && data.ErrorCode === 0) {
         setLoading(false);
@@ -172,16 +236,8 @@ const News = ({ AppType }: { AppType: number }) => {
   };
   useEffect(() => {
     getNews(AppType);
-    return () => {
-      instance._source.cancel();
-    };
+    return () => instance._source.cancel();
   }, []);
-  const [isCreateVisible, setCreateVisible] = useState<boolean>(false);
-  const [edit, setEdit] = useState<boolean>(false);
-  const [news, setNews] = useState<INewsList[]>([]);
-  const [selectedNew, setSelectedNew] = useState<INewsList | undefined>(
-    undefined
-  );
   if (loading) {
     return <Loading cover="content" />;
   }

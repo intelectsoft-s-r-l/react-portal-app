@@ -5,7 +5,7 @@ import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
 import WithStringTranslate from "../../../../../utils/translate";
 import { MarketContext } from "../MarketContext";
-import FinalStep from "./final-step";
+import InstallResult from "./InstallResult";
 import TermsModal from "./TermsWizard";
 const steps = [
   {
@@ -14,38 +14,26 @@ const steps = [
   },
   {
     title: "Loading",
-    content: <FinalStep />,
+    content: <InstallResult />,
   },
 ];
 const InstallWizard = () => {
-  const {
-    current,
-    visibleModal,
-    handleCancel,
-    setCurrent,
-    isAccepted,
-    termsAccepted,
-    setTermsAccepted,
-    selectedApp,
-    getMarketApps,
-    loading,
-  } = useContext(MarketContext);
+  const { state, dispatch } = useContext(MarketContext);
+
   return (
     <Modal
       title={WithStringTranslate("wizard.title")}
-      visible={visibleModal}
-      onOk={() => setCurrent(current + 1)}
+      onCancel={() => dispatch({ type: "HIDE_LOADING" })}
+      visible={state.visibleModal}
+      onOk={() => dispatch({ type: "INCREMENT" })}
       destroyOnClose
       footer={[
         <Button
           key="cancel"
-          onClick={async () => {
-            handleCancel();
-            termsAccepted && (await getMarketApps());
-          }}
-          disabled={loading}
+          onClick={() => dispatch({ type: "HIDE_WIZARD" })}
+          disabled={state.wizLoading}
         >
-          {termsAccepted
+          {state.termsAccepted
             ? WithStringTranslate("wizard.ok")
             : WithStringTranslate("wizard.cancel")}
         </Button>,
@@ -53,13 +41,17 @@ const InstallWizard = () => {
           key="next"
           type="primary"
           onClick={async () => {
-            setCurrent(current + 1);
-            !termsAccepted && setTermsAccepted(true);
+            dispatch({ type: "INCREMENT" });
+            !state.termsAccepted && dispatch({ type: "SET_TERMS_ACCEPTED" });
           }}
-          disabled={!isAccepted || loading}
+          disabled={!state.isAccepted || state.wizLoading}
         >
-          {termsAccepted ? (
-            <Link to={`${APP_PREFIX_PATH}/id/${selectedApp.AppType}`}>
+          {state.termsAccepted ? (
+            <Link
+              to={`${APP_PREFIX_PATH}/id/${
+                state.selectedApp.AppType
+              }/${state.selectedApp.Name.split(" ").join("-")}`}
+            >
               <IntlMessage id="wizard.go" />
             </Link>
           ) : (
@@ -68,7 +60,7 @@ const InstallWizard = () => {
         </Button>,
       ]}
     >
-      <div>{steps[current]["content"]}</div>
+      <div>{steps[state.current]["content"]}</div>
     </Modal>
   );
 };

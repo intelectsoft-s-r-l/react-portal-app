@@ -1,19 +1,14 @@
 import * as React from "react";
 import { Card, List, Empty, Select } from "antd";
-import moment from "moment";
 import Flex from "../../../components/shared-components/Flex";
-import { AppService } from "../../../api";
+import { AppService } from "../../../api/app";
 import { useEffect, useState } from "react";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import Loading from "../../../components/shared-components/Loading";
-import {
-  IMarketAppList,
-  IMarketAppListShort,
-  INewsList,
-} from "../../../api/types.response";
-import { useSelector } from "react-redux";
-import { IState } from "../../../redux/reducers";
+import { IShortMarketAppList, INewsList } from "../../../api/app/types";
+import moment from "moment";
 
+const { Option } = Select;
 const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
   return (
     <Card style={{ padding: 30 }}>
@@ -34,16 +29,6 @@ const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
           </Flex>
           <div style={{ position: "absolute", bottom: 15 }}>
             <Flex alignItems="center">
-              <span>{newsData.CompanyName}</span>
-              <span
-                style={{
-                  fontSize: 20,
-                  color: "black",
-                  margin: "0 5px 0",
-                }}
-              >
-                &nbsp;&bull;&nbsp;
-              </span>
               <span style={{ color: "black" }}>
                 {newsData.CreateDate &&
                   moment
@@ -73,22 +58,27 @@ const ArticleItem = ({ newsData }: { newsData: INewsList }) => {
 };
 const News = () => {
   const [news, setNews] = useState<INewsList[]>([]);
-  const loading = useSelector((state: IState) => state.auth!.loading);
-  const [apps, setApps] = useState<IMarketAppListShort[]>();
+  const [appLoading, setAppLoading] = useState(true);
+  const [newsLoading, setNewsLoading] = useState(true);
+  const [apps, setApps] = useState<IShortMarketAppList[]>();
   const instance = new AppService();
   const getPortalNews = async (AppType = 0) => {
-    return await instance.GetPortalNews(AppType).then((data) => {
+    return await instance.GetPortalNews(AppType).then(async (data) => {
+      setNewsLoading(false);
       if (data && data.ErrorCode === 0) {
         setNews(data.NewsList);
+        await getApps();
       }
     });
   };
   const getApps = async () => {
     return await instance.GetMarketAppListShort().then((data) => {
+      setAppLoading(false);
       if (data && data.ErrorCode === 0) setApps(data.AppList);
     });
   };
   const onSelect = (AppType: number) => {
+    setNewsLoading(true);
     if (AppType !== 0) {
       getPortalNews(AppType);
     } else {
@@ -99,29 +89,32 @@ const News = () => {
     getPortalNews();
     return () => instance._source.cancel();
   }, []);
-  useEffect(() => {
-    getApps();
-    return () => instance._source.cancel();
-  }, []);
   return (
     <>
       <Flex justifyContent="between" className="mb-4">
         <h2>
           <IntlMessage id="news.title" />
         </h2>
-        <Select defaultValue={0} style={{ width: "150px" }} onChange={onSelect}>
-          <Select.Option value={0}>
+        <Select
+          defaultValue={0}
+          style={{ width: "150px" }}
+          onChange={onSelect}
+          loading={appLoading}
+          disabled={appLoading}
+        >
+          <Option value={0}>
             <b>General</b>
-          </Select.Option>
+          </Option>
+
           {apps &&
             apps.map((app) => (
-              <Select.Option value={app.AppType} key={app.AppType}>
+              <Option value={app.AppType} key={app.AppType}>
                 {app.Name}
-              </Select.Option>
+              </Option>
             ))}
         </Select>
       </Flex>
-      {loading ? (
+      {newsLoading ? (
         <Loading cover="content" />
       ) : (
         <List style={{ maxWidth: 1000, margin: "0 auto" }}>
