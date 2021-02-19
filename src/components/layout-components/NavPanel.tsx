@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { SettingOutlined } from "@ant-design/icons";
+import { SlidersOutlined } from "@ant-design/icons";
 import { Drawer, Menu } from "antd";
 import { connect } from "react-redux";
 import ThemeConfigurator from "./ThemeConfigurator";
@@ -32,7 +32,7 @@ class NavPanel extends Component {
               title={<IntlMessage id={"sidenav.settings"} />}
               placement="bottom"
             >
-              <SettingOutlined className="nav-icon mr-0" />
+              <SlidersOutlined className="nav-icon mr-0" />
             </Tooltip>
           </Menu.Item>
         </Menu>
