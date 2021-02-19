@@ -6,9 +6,10 @@ export type UseFetch<T> = {
   data?: T;
 };
 
-const useFetch = (httpService: any) => {
+const useFetch = (instance: any, httpService: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(undefined);
+  const [optionalData, setOptionalData] = useState<any>(undefined);
   const request = () => {
     return httpService
       .then((data: any) => {
@@ -22,7 +23,8 @@ const useFetch = (httpService: any) => {
   useEffect(() => {
     setLoading(true);
     request();
+    return () => instance._source.cancel();
   }, []);
-  return { loading, data, request, setData };
+  return { loading, data, optionalData, request, setData };
 };
 export default useFetch;

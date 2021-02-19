@@ -38,9 +38,13 @@ const Market = () => {
     }
   }, [state.visibleModal]);
 
-  //const { loading, data, request, setData } = useFetch(
-  //new AppService().GetMarketAppList()
-  //);
+  //const {
+  //loading,
+  //data: apps,
+  //request: getMarketApps,
+  //setData: setApps,
+  //optionalData: appsToSearch,
+  //} = useFetch(instance, instance.GetMarketAppList());
   //const [app, setApp ] = useState()
   //useEffect(() => {
   //setApp(Utils.sortData(data.MarketAppList, "ID"))
