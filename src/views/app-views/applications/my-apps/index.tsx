@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Empty } from "antd";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
@@ -16,14 +16,17 @@ const MyAppList = () => {
     return instance.GetMarketAppList().then((data) => {
       setLoading(false);
       if (data && data.ErrorCode === 0) {
-        const activeApps = data.MarketAppList.filter(
-          (marketApp: IMarketAppList) => marketApp.Status === EnStatusApp.ACTIVE
-        );
-        setApps(Utils.sortData(activeApps, "ID"));
-        setAppsToSearch(Utils.sortData(activeApps, "ID"));
+        setApps(data.MarketAppList);
+        setAppsToSearch(data.MarketAppList);
       }
     });
   };
+  const sortedApps = useMemo(() => {
+    const activeApps = apps.filter(
+      (marketApp: IMarketAppList) => marketApp.Status === EnStatusApp.ACTIVE
+    );
+    return Utils.sortData(activeApps, "ID");
+  }, [apps]);
 
   useEffect(() => {
     getMarketAppList();
@@ -43,7 +46,7 @@ const MyAppList = () => {
     <>
       <Applications
         loading={loading}
-        data={apps}
+        data={sortedApps}
         getMarketApps={getMarketAppList}
         setData={setApps}
         dataToSearch={appsToSearch}
