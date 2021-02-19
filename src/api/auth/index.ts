@@ -31,8 +31,10 @@ export class AuthService extends HttpService {
   public RegisterCompany = async (data: IRegisterCompanyRequest) =>
     this.instance.post<ApiResponse>("/RegisterCompany", data);
 
-  public SendActivationCode = async () =>
-    this.instance.get<ApiResponse>("/SendActivationCode");
+  public SendActivationCode = async (UserID: string) =>
+    this.instance.get<ApiResponse>("/SendActivationCode", {
+      params: { UserID },
+    });
 
   public ResetPassword = async (Email: string) =>
     this.instance.post<ApiResponse>("/ResetPassword", {
