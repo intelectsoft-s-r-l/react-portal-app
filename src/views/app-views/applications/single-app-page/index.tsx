@@ -39,7 +39,7 @@ import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 import Templates from "./Mail/templates";
 import Dashboard from "../../dashboard";
 
-enum EnStatusApp {
+export enum EnStatusApp {
   DISABLED = 0,
   ACTIVE = 1,
 }
