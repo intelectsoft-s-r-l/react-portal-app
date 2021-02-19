@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 import Avatar from "antd/lib/avatar/avatar";
 import IntlMessage from "../../../components/util-components/IntlMessage";
-import { MarketContext } from "./market/MarketContext";
+import { WizardContext } from "./market/wizard/WizardContext";
 import { EnStatusApp } from "./single-app-page";
 import Button from "antd/es/button";
 import Utils from "../../../utils";
@@ -23,7 +23,7 @@ interface IAppCard {
   deactivateApp: (AppID: number, AppName: string) => void;
 }
 const AppCard = ({ data, deactivateApp }: IAppCard) => {
-  const { dispatch } = useContext(MarketContext);
+  const { dispatch } = useContext(WizardContext);
   const locale = useSelector((state: IState) => state.theme?.locale) ?? "en";
   return (
     <Card style={{ maxHeight: 368 }}>

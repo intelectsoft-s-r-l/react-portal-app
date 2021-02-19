@@ -4,7 +4,7 @@ import { Button, Modal } from "antd";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
 import WithStringTranslate from "../../../../../utils/translate";
-import { MarketContext } from "../MarketContext";
+import { WizardContext } from "./WizardContext";
 import InstallResult from "./InstallResult";
 import TermsModal from "./TermsWizard";
 const steps = [
@@ -18,7 +18,7 @@ const steps = [
   },
 ];
 const InstallWizard = () => {
-  const { state, dispatch } = useContext(MarketContext);
+  const { state, dispatch } = useContext(WizardContext);
 
   return (
     <Modal

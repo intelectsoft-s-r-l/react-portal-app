@@ -4,7 +4,7 @@ import { Col, Input, message, Modal, Row } from "antd";
 import { AppService } from "../../../api/app";
 import Loading from "../../../components/shared-components/Loading";
 import useFetch from "../../../utils/hooks/useFetch";
-import { MarketContext } from "./market/MarketContext";
+import { WizardContext } from "./market/wizard/WizardContext";
 import InstallWizard from "./market/wizard";
 import wizardReducer, { wizardState } from "./market/wizard/wizardReducer";
 import TranslateText from "../../../utils/translate";
@@ -48,7 +48,7 @@ const Applications = ({
   };
   if (loading) return <Loading />;
   return (
-    <MarketContext.Provider value={{ state, dispatch, getMarketApps }}>
+    <WizardContext.Provider value={{ state, dispatch, getMarketApps }}>
       <InstallWizard />
       {loading ? (
         <Loading />
@@ -92,7 +92,7 @@ const Applications = ({
           </Row>
         </div>
       )}
-    </MarketContext.Provider>
+    </WizardContext.Provider>
   );
 };
 

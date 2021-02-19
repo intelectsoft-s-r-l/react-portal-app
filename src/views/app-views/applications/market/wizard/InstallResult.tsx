@@ -3,10 +3,10 @@ import { Result } from "antd";
 import { AppService } from "../../../../../api/app";
 import Loading from "../../../../../components/shared-components/Loading";
 import TranslateText from "../../../../../utils/translate";
-import { MarketContext } from "../MarketContext";
+import { WizardContext } from "./WizardContext";
 
 const InstallResult = () => {
-  const { state, dispatch, getMarketApps } = useContext(MarketContext);
+  const { state, dispatch, getMarketApps } = useContext(WizardContext);
   const [isInstalled, setIsInstalled] = useState<boolean>(true);
   useLayoutEffect(() => {
     dispatch({ type: "SHOW_LOADING" });
