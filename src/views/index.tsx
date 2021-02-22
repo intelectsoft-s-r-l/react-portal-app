@@ -22,36 +22,10 @@ import {
 import { IState } from "../redux/reducers";
 import { ITheme } from "../redux/reducers/Theme";
 import { IAuth } from "../redux/reducers/Auth";
-
-function RouteInterceptor({ children, isAuthenticated, ...rest }: any) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        isAuthenticated ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: AUTH_PREFIX_PATH + "/login",
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
-  );
-}
-interface IDispatch {
-  signOut: any;
-}
-interface IViews extends ITheme, IAuth, RouteComponentProps, IDispatch {}
+interface IViews extends ITheme, IAuth, RouteComponentProps {}
 export const Views = (props: IViews) => {
-  const { locale, location, token, signOut } = props;
+  const { locale, location, token } = props;
   const currentAppLocale = locale ? AppLocale[locale] : "en";
-  useEffect(() => {
-    localStorage.getItem(`${SUBDIR_PATH}`) || signOut();
-  }, [localStorage.getItem(`${SUBDIR_PATH}`)]);
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
@@ -65,9 +39,9 @@ export const Views = (props: IViews) => {
           <Route path={AUTH_PREFIX_PATH}>
             <AuthLayout />
           </Route>
-          <RouteInterceptor path={APP_PREFIX_PATH} isAuthenticated={token}>
+          <Route path={APP_PREFIX_PATH}>
             <AppLayout location={location} />
-          </RouteInterceptor>
+          </Route>
         </Switch>
       </ConfigProvider>
     </IntlProvider>
@@ -80,8 +54,4 @@ const mapStateToProps = ({ theme, auth }: IState) => {
   return { locale, token };
 };
 
-const mapDispatchToProps = {
-  signOut,
-};
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Views));
+export default withRouter(connect(mapStateToProps, null)(Views));
