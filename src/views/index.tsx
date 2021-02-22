@@ -24,8 +24,12 @@ import { ITheme } from "../redux/reducers/Theme";
 import { IAuth } from "../redux/reducers/Auth";
 interface IViews extends ITheme, IAuth, RouteComponentProps {}
 export const Views = (props: IViews) => {
-  const { locale, location, token } = props;
+  const { locale, location, token, history } = props;
   const currentAppLocale = locale ? AppLocale[locale] : "en";
+  useEffect(() => {
+    if (!token) history.push(AUTH_PREFIX_PATH);
+  }, [token]);
+
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
