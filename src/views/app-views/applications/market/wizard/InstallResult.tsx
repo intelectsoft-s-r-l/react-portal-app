@@ -15,6 +15,7 @@ const InstallResult = () => {
         .ActivateApp(state.selectedApp.ID)
         .then((data) => {
           if (data && data.ErrorCode === 0) {
+            dispatch({ type: "HIDE_LOADING" });
             setIsInstalled(true);
             getMarketApps();
           } else {

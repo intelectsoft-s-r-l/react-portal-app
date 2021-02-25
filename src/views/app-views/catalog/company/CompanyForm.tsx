@@ -233,20 +233,8 @@ class CompanyForm extends Component<ICompanyForm> {
                     <Form.Item
                       label={<IntlMessage id={"account.company.IDNO"} />}
                       name="IDNO"
-                      rules={[
-                        {
-                          required: true,
-                          message: (
-                            <IntlMessage id={"auth.MessageInsertIDNO"} />
-                          ),
-                        },
-                        {
-                          pattern: /^(\d{13})?$/,
-                          message: <IntlMessage id={"auth.IDNOValidation"} />,
-                        },
-                      ]}
                     >
-                      <Input />
+                      <Input disabled />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={12}>
