@@ -39,7 +39,6 @@ import TranslateText from "../../../../utils/translate";
 import { IUsers } from "../../../../api/app/types";
 import { ColumnsType } from "antd/lib/table";
 import "./add_user.scss";
-import Pagination from "antd/es/pagination";
 import { AuthService } from "../../../../api/auth";
 import { EnErrorCode } from "../../../../api";
 import { EMAIL_CONFIRM_MSG } from "../../../../constants/Messages";

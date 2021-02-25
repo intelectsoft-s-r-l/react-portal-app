@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import Flex from "../../../components/shared-components/Flex";
-import InDevelopmentMessage from "../../../utils/inDevelopmentMessage";
+import React from "react";
+import { Empty } from "antd";
 
 const Dashboard = () => {
-  return <InDevelopmentMessage />;
+  return <Empty />;
 };
 
 export default Dashboard;
