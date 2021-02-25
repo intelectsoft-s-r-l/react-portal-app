@@ -23,7 +23,6 @@ const InstallWizard = () => {
   return (
     <Modal
       title={WithStringTranslate("wizard.title")}
-      onCancel={() => dispatch({ type: "HIDE_LOADING" })}
       visible={state.visibleModal}
       onOk={() => dispatch({ type: "INCREMENT" })}
       destroyOnClose

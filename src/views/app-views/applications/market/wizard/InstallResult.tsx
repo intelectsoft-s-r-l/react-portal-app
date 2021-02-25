@@ -13,11 +13,11 @@ const InstallResult = () => {
     setTimeout(async () => {
       return await new AppService()
         .ActivateApp(state.selectedApp.ID)
-        .then((data) => {
+        .then(async (data) => {
           if (data && data.ErrorCode === 0) {
             dispatch({ type: "HIDE_LOADING" });
             setIsInstalled(true);
-            getMarketApps();
+            await getMarketApps();
           } else {
             setIsInstalled(false);
           }
