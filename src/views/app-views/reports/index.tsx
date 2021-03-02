@@ -1,8 +1,8 @@
+import Empty from "antd/es/empty";
 import React from "react";
-import InDevelopmentMessage from "../../../utils/inDevelopmentMessage";
 
 const Reports = () => {
-    return <InDevelopmentMessage />;
+  return <Empty />;
 };
 
 export default Reports;

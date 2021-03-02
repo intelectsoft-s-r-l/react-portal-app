@@ -1,5 +1,15 @@
 import React, { Component } from "react";
-import { Card, Table, Tag, Button, Modal, Menu, Input, Select } from "antd";
+import {
+  Card,
+  Table,
+  Tag,
+  Button,
+  Modal,
+  Menu,
+  Input,
+  Select,
+  message,
+} from "antd";
 import {
   EyeOutlined,
   ArrowRightOutlined,
@@ -20,7 +30,6 @@ import Utils from "../../../../utils";
 import Flex from "../../../../components/shared-components/Flex";
 import EllipsisDropdown from "../../../../components/shared-components/EllipsisDropdown";
 import { AppService } from "../../../../api/app";
-import { sendActivationCode } from "../../../../redux/actions/Auth";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
 import { IAuth } from "../../../../redux/reducers/Auth";
@@ -30,7 +39,9 @@ import TranslateText from "../../../../utils/translate";
 import { IUsers } from "../../../../api/app/types";
 import { ColumnsType } from "antd/lib/table";
 import "./add_user.scss";
-import Pagination from "antd/es/pagination";
+import { AuthService } from "../../../../api/auth";
+import { EnErrorCode } from "../../../../api";
+import { EMAIL_CONFIRM_MSG } from "../../../../constants/Messages";
 export enum status {
   inactive = 0,
   active = 1,
@@ -41,7 +52,6 @@ interface IUserListStoreProps {
   locale?: string;
   CompanyID?: number;
   ID?: number;
-  sendActivationCode: (ID: number) => void;
   loading: boolean;
 }
 
@@ -77,6 +87,7 @@ export class UserList extends Component<IUserListStoreProps> {
   };
 
   private instance = new AppService();
+  private authInstance = new AuthService();
   getUsersInfo = async (params = {}) => {
     return this.instance.GetUserList().then((data) => {
       this.setState({ loading: false });
@@ -101,7 +112,17 @@ export class UserList extends Component<IUserListStoreProps> {
       }
     });
   };
-  handlePageSize = () => {};
+  sendActivationCode = async (UserID: string) => {
+    return this.authInstance.SendActivationCode(UserID).then((data) => {
+      if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
+        message.success({
+          content: TranslateText(EMAIL_CONFIRM_MSG),
+          key: "updatable",
+          duration: 2,
+        });
+      }
+    });
+  };
 
   handleTableChange = (pagination: any, filters: any, sorter: any) => {
     this.getUsersInfo({ sortField: sorter.field, pagination, ...filters });
@@ -181,7 +202,7 @@ export class UserList extends Component<IUserListStoreProps> {
             Modal.confirm({
               title: `Are you sure you want to send an email to ${row.FirstName} ?`,
               onOk: () => {
-                this.props.sendActivationCode(row.ID);
+                this.sendActivationCode(row.ID);
               },
               onCancel: () => {},
             })
@@ -447,4 +468,4 @@ const mapStateToProps = ({ auth, theme, account }: IState) => {
   return { token, locale, CompanyID, ID };
 };
 
-export default connect(mapStateToProps, { sendActivationCode })(UserList);
+export default connect(mapStateToProps, null)(UserList);

@@ -44,24 +44,11 @@ export const hideLoading = () => ({
   type: HIDE_LOADING,
 });
 
-export const sendActivationCode = (): ThunkResult<void> => async (dispatch) => {
-  return new AuthService().SendActivationCode().then((data) => {
-    if (data && data.ErrorCode === 0)
-      message.success({
-        content: TranslateText(EMAIL_CONFIRM_MSG),
-        key: "updatable",
-        duration: 2,
-      });
-    else dispatch(showAuthMessage(data.ErrorMessage ?? ""));
-  });
-};
-
 const handleAccountActivation = (Token: string) => {
   Modal.confirm({
     content: TranslateText(ACTIVATE_ACCOUNT),
     onOk: async () => {
-      // I'm calling axios here and not the thunk,
-      // because I don't know how to pass the token inside the thunk
+      // No idea why I'm calling axios here and not an isntance of axios (:
       return await axios
         .get(`${API_AUTH_URL}/SendActivationCode`, {
           params: {

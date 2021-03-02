@@ -1,4 +1,4 @@
-import { Button, Input } from "antd";
+import { Button, Input, Select } from "antd";
 import { ButtonType } from "antd/es/button";
 import { LiteralUnion } from "antd/es/_util/type";
 import React from "react";
@@ -17,6 +17,8 @@ interface IntegrationFormElement {
   title: React.ReactNode | string;
   isFlex?: boolean;
   onDelete?: () => void;
+  addonBefore?: any;
+  addonAfter?: any;
   inputType?: LiteralUnion<
     | "button"
     | "checkbox"
@@ -56,6 +58,8 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
     isFlex = false,
     onDelete,
     inputType = "text",
+    addonBefore = "",
+    addonAfter = "",
   } = props;
   return (
     <>
@@ -65,6 +69,8 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
       {isFlex ? (
         <Flex alignItems="center" justifyContent="center">
           <Input
+            addonBefore={addonBefore}
+            addonAfter={addonAfter}
             disabled={isDisabled}
             name={name}
             autoComplete="false"
@@ -98,6 +104,8 @@ const IntegrationFormElement = (props: IntegrationFormElement) => {
       ) : (
         <>
           <Input
+            addonBefore={addonBefore}
+            addonAfter={addonAfter}
             disabled={isDisabled}
             name={name}
             autoComplete="false"

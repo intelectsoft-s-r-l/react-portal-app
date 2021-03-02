@@ -1,6 +1,6 @@
 import React, { SetStateAction } from "react";
 import { useEffect, useState } from "react";
-import { Card, Empty, Menu } from "antd";
+import { Button, Card, Empty, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
@@ -39,7 +39,7 @@ import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 import Templates from "./Mail/templates";
 import Dashboard from "../../dashboard";
 
-enum EnStatusApp {
+export enum EnStatusApp {
   DISABLED = 0,
   ACTIVE = 1,
 }

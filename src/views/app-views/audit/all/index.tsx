@@ -1,8 +1,8 @@
+import { Empty } from "antd";
 import React from "react";
-import InDevelopmentMessage from "../../../../utils/inDevelopmentMessage";
 
 const AuditAll = () => {
-    return <InDevelopmentMessage />;
+  return <Empty />;
 };
 
 export default AuditAll;
