@@ -73,16 +73,6 @@ class HttpService {
 
   private _handleRequest = (config: AxiosRequestConfig) => {
     console.log(config);
-    if (
-      config.baseURL === API_DISCOUNT_URL ||
-      config.baseURL === API_EDX_URL ||
-      config.baseURL === API_MAIL_URL
-    ) {
-      config.auth = {
-        username: "1",
-        password: "1",
-      };
-    }
     return {
       ...config,
       data: { ...config.data, Token: this._token },

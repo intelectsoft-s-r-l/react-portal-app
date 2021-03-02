@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import HttpService from "../";
 import { API_EDX_URL } from "../../configs/AppConfig";
 import { ApiResponse, ApiDecorator } from "../types";
@@ -6,7 +7,17 @@ import { InvoiceList, IOrderList } from "./types";
 export class EdxService extends HttpService {
   public constructor() {
     super(API_EDX_URL);
+    this.interceptRequest();
   }
+
+  private interceptRequest = () => {
+    this.instance.interceptors.request.use((config: AxiosRequestConfig) => {
+      return {
+        ...config,
+        auth: { username: "1", password: "1" },
+      };
+    });
+  };
 
   public CheckApiKey = async (APIKey: string) =>
     this.instance.get<ApiResponse>("/CheckApiKey", {
