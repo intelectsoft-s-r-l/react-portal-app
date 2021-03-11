@@ -60,7 +60,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
     <>
       <Flex justifyContent="between" alignItems="center" className="py-4">
         <h2>
-          <IntlMessage id="app.Devices" />
+          <IntlMessage id="app.Devices" /> - {devices && devices.length}
         </h2>
       </Flex>
       <Table
