@@ -49,6 +49,10 @@ export const AuthViews = ({ match }: RouteComponentProps) => {
           path={`${match.url}/auth/success`}
           component={lazy(() => import(`./authentication/success`))}
         />
+        <Route
+          path={`${match.url}/auth/error`}
+          component={lazy(() => import(`./authentication/success`))}
+        />
 
         {/*<Route*/}
         {/*  path={`${match.url}/error-2`}*/}

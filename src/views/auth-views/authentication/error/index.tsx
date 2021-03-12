@@ -1,39 +1,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Modal } from "antd";
+import { Button, Result } from "antd";
 import { APP_NAME } from "../../../../configs/AppConfig";
 import Flex from "../../../../components/shared-components/Flex";
-import IntlMessage from "../../../../components/util-components/IntlMessage";
 
 const Error = () => {
   return (
     <div className="h-100 bg-white">
-      <div className="container-fluid d-flex flex-column justify-content-between h-100 px-md-4 pb-md-4 pt-md-1">
-        <div>
+      <div className="container-fluid d-flex flex-column justify-content-between h-100 px-md-4">
+        <div className="mt-2">
           <img
             className="img-fluid"
             src={process.env.PUBLIC_URL + "/img/is-logo-pic.png"}
             alt=""
           />
         </div>
-        <div className="container">
-          <div className="text-center mb-5">
-            <img
-              className="img-fluid"
-              src={process.env.PUBLIC_URL + "/img/others/img-21.png"}
-              alt=""
-            />
-            <h1 className="font-weight-bold mb-4">
-              <IntlMessage id={"auth.validate.Error"} />
-            </h1>
+        <Result
+          status="404"
+          title="Incorrect token"
+          subTitle="Sorry, the token you have submitted is no longer available!"
+          extra={
             <Link to="/app">
-              <Button type="primary">
-                <IntlMessage id={"auth.GoBack"} />
-              </Button>
+              <Button type="primary">Find your way</Button>
             </Link>
-          </div>
-        </div>
-        <Flex mobileFlex={true} justifyContent="between">
+          }
+        />
+        <Flex mobileFlex={true} justifyContent="between" className="mb-2">
           <span>
             Copyright &copy; {`${new Date().getFullYear()}`}{" "}
             <span className="font-weight-semibold">{`${APP_NAME}`}</span>
@@ -44,7 +36,7 @@ const Error = () => {
               href="/#"
               onClick={(e) => e.preventDefault()}
             >
-              <IntlMessage id={"auth.Terms&Conditions"} />
+              Terms & Conditions
             </a>
             <span className="mx-2 text-muted"> | </span>
             <a
@@ -52,7 +44,7 @@ const Error = () => {
               href="/#"
               onClick={(e) => e.preventDefault()}
             >
-              <IntlMessage id={"auth.Privacy&Policy"} />
+              Privacy & Policy
             </a>
           </div>
         </Flex>
