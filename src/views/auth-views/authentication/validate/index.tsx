@@ -1,8 +1,8 @@
 import React, { useState, useLayoutEffect } from "react";
 import axios from "axios";
 import ErrorOne from "../../errors/error-page-1/index";
-import Error from "../error";
-import Success from "../success";
+import ValidateError from "../error";
+import ValidateSuccess from "../success";
 import { API_AUTH_URL } from "../../../../configs/AppConfig";
 import { RouteComponentProps } from "react-router-dom";
 import Loading from "../../../../components/shared-components/Loading";
@@ -29,7 +29,7 @@ const Validate = ({ history, match }: RouteComponentProps) => {
   }, [history]);
 
   if (loading) return <Loading />;
-  return <>{isValidated ? <Success /> : <Error />}</>;
+  return <>{isValidated ? <ValidateSuccess /> : <ValidateError />}</>;
 };
 
 export default Validate;

@@ -2,6 +2,7 @@ import { Button, Card, Divider, Result, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, RouteComponentProps } from "react-router-dom";
+import ErrorHandlePage from "../../../../components/shared-components/ErrorHandlePage";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
 import { AUTH_PREFIX_PATH } from "../../../../configs/AppConfig";
@@ -45,18 +46,20 @@ const Fiscal = ({ match, history }: RouteComponentProps) => {
   if (loading) return <Loading />;
   if (!hasAccess)
     return (
-      <Result
-        status="403"
-        title="Incorrect ID"
-        subTitle="Sorry, you are not authorized to access this page."
-        extra={
-          <Button type="primary">
-            <Link to={AUTH_PREFIX_PATH}>
-              <span>Find your way</span>
-            </Link>
-          </Button>
-        }
-      />
+      <ErrorHandlePage>
+        <Result
+          status="403"
+          title="Incorrect ID"
+          subTitle="Sorry, you are not authorized to access this page."
+          extra={
+            <Button type="primary">
+              <Link to={AUTH_PREFIX_PATH}>
+                <span>Find your way</span>
+              </Link>
+            </Button>
+          }
+        />
+      </ErrorHandlePage>
     );
   return (
     <div
