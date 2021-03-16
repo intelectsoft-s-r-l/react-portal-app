@@ -227,7 +227,7 @@ class Utils {
   static decodeBase64Locale(data: ILocale | string) {
     try {
       const str = data.toString();
-      return JSON.parse(window.atob(str));
+      return JSON.parse(decodeURIComponent(window.atob(str)));
     } catch {
       return { en: "", ro: "", ru: "" };
     }
