@@ -16,6 +16,7 @@ const Admin = ({ match, history }: RouteComponentProps) => {
   const Token = useSelector((state: IState) => state["auth"]!.token);
 
   useEffect(() => {
+    console.log(match.params);
     if ("Token" in match.params) {
       dispatch(authenticated(match.params["Token"]));
       dispatch(getProfileInfo());
@@ -24,7 +25,6 @@ const Admin = ({ match, history }: RouteComponentProps) => {
       if (Token) {
         history.push(APP_PREFIX_PATH);
       }
-      history.push(AUTH_PREFIX_PATH);
     }
   }, []);
   return <div>Loading...</div>;

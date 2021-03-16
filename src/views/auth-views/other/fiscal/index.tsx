@@ -53,7 +53,7 @@ const Fiscal = ({ match, history }: RouteComponentProps) => {
           subTitle="Sorry, you are not authorized to access this page."
           extra={
             <Button type="primary">
-              <Link to={AUTH_PREFIX_PATH}>
+              <Link to={AUTH_PREFIX_PATH + "/login"}>
                 <span>Find your way</span>
               </Link>
             </Button>

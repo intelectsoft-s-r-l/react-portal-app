@@ -23,13 +23,29 @@ import { IState } from "../redux/reducers";
 import { ITheme } from "../redux/reducers/Theme";
 import { IAuth } from "../redux/reducers/Auth";
 interface IViews extends ITheme, IAuth, RouteComponentProps {}
+
+function RouteInterceptor({ children, isAuthenticated, ...rest }: any) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        isAuthenticated ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: AUTH_PREFIX_PATH,
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 export const Views = (props: IViews) => {
   const { locale, location, token, history } = props;
   const currentAppLocale = locale ? AppLocale[locale] : "en";
-  useEffect(() => {
-    if (!token) history.push(AUTH_PREFIX_PATH);
-  }, [token]);
-
   return (
     <IntlProvider
       locale={currentAppLocale.locale}
@@ -43,9 +59,9 @@ export const Views = (props: IViews) => {
           <Route path={AUTH_PREFIX_PATH}>
             <AuthLayout />
           </Route>
-          <Route path={APP_PREFIX_PATH}>
+          <RouteInterceptor path={APP_PREFIX_PATH} isAuthenticated={token}>
             <AppLayout location={location} />
-          </Route>
+          </RouteInterceptor>
         </Switch>
       </ConfigProvider>
     </IntlProvider>
