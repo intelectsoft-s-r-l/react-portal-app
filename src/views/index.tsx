@@ -13,29 +13,28 @@ import AppLocale from "../lang";
 import { IntlProvider } from "react-intl";
 import { ConfigProvider } from "antd";
 import { signOut } from "../redux/actions/Auth";
-import {
-  APP_NAME,
-  APP_PREFIX_PATH,
-  AUTH_PREFIX_PATH,
-  SUBDIR_PATH,
-} from "../configs/AppConfig";
+import { APP_PREFIX_PATH, AUTH_PREFIX_PATH } from "../configs/AppConfig";
 import { IState } from "../redux/reducers";
 import { ITheme } from "../redux/reducers/Theme";
 import { IAuth } from "../redux/reducers/Auth";
 interface IViews extends ITheme, IAuth, RouteComponentProps {}
 
-function RouteInterceptor({ children, isAuthenticated, ...rest }: any) {
+function RouteInterceptor({
+  component: Component,
+  isAuthenticated,
+  ...rest
+}: any) {
   return (
     <Route
       {...rest}
-      render={({ location }) =>
+      render={(props) =>
         isAuthenticated ? (
-          children
+          <Component {...props} />
         ) : (
           <Redirect
             to={{
               pathname: AUTH_PREFIX_PATH,
-              state: { from: location },
+              state: { from: props.location },
             }}
           />
         )
@@ -59,9 +58,11 @@ export const Views = (props: IViews) => {
           <Route path={AUTH_PREFIX_PATH}>
             <AuthLayout />
           </Route>
-          <RouteInterceptor path={APP_PREFIX_PATH} isAuthenticated={token}>
-            <AppLayout location={location} />
-          </RouteInterceptor>
+          <RouteInterceptor
+            path={APP_PREFIX_PATH}
+            isAuthenticated={token}
+            component={AppLayout}
+          />
         </Switch>
       </ConfigProvider>
     </IntlProvider>

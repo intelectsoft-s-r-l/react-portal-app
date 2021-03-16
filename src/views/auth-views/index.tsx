@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { Switch, Route, Redirect, RouteComponentProps } from "react-router-dom";
 import Loading from "../../components/shared-components/Loading";
-import { APP_NAME } from "../../configs/AppConfig";
+import { APP_NAME, AUTH_PREFIX_PATH } from "../../configs/AppConfig";
 
 export const AuthViews = ({ match }: RouteComponentProps) => {
   useEffect(() => {
@@ -53,12 +53,11 @@ export const AuthViews = ({ match }: RouteComponentProps) => {
           path={`${match.url}/auth/error`}
           component={lazy(() => import(`./authentication/success`))}
         />
-
+        <Redirect from={AUTH_PREFIX_PATH} to={`${AUTH_PREFIX_PATH}/login`} />
         {/*<Route*/}
         {/*  path={`${match.url}/error-2`}*/}
         {/*  component={lazy(() => import(`./errors/error-page-2`))}*/}
         {/*/>*/}
-        <Redirect from={`${match.url}`} to={`${match.url}/login`} />
       </Switch>
     </Suspense>
   );
