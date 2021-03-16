@@ -9,6 +9,14 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!@antd)/"
+    ]
+  },
   "dependencies": {
     "@ant-design/compatible": "0.0.1-rc.1",
     "@babel/runtime": "^7.7.4",
@@ -54,6 +62,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-chartjs-2": "^2.9.0",
     "react-copy-to-clipboard": "^5.0.2",
+    "react-csv": "^2.0.3",
     "react-custom-scrollbars": "^4.2.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
