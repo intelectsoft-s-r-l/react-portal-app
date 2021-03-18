@@ -1,7 +1,7 @@
 {
   "name": "client-portal-app",
   "version": "1.1.0",
-  "homepage": "/testclientportal",
+  "homepage": "/clientportal",
   "private": true,
   "scripts": {
     "start": "PORT=3001 react-scripts start",

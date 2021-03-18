@@ -6,10 +6,24 @@ import Flex from "../Flex";
 
 interface IErrorHandlePage {
   children: React.ReactNode;
+  hasBg?: boolean;
+  hasFooter?: boolean;
 }
-const ErrorHandlePage = ({ children }: IErrorHandlePage) => {
+const ErrorHandlePage = ({
+  children,
+  hasBg = false,
+  hasFooter = true,
+}: IErrorHandlePage) => {
   return (
-    <div className="h-100 bg-white">
+    <div
+      className="h-100 bg-white"
+      style={{
+        backgroundImage: hasBg
+          ? `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`
+          : "",
+        backgroundSize: "cover",
+      }}
+    >
       <div className="container-fluid d-flex flex-column justify-content-between h-100 ">
         <div className="mt-3">
           <img
@@ -19,7 +33,7 @@ const ErrorHandlePage = ({ children }: IErrorHandlePage) => {
           />
         </div>
         {children}
-        <Footer />
+        {hasFooter && <Footer />}
       </div>
     </div>
   );
