@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { EnErrorCode } from "../../../../api";
 import { BillService } from "../../../../api/bill-service";
-import { IBill } from "../../../../api/bill-service/types";
+import { IBill, IBillItems } from "../../../../api/bill-service/types";
 import ErrorHandlePage from "../../../../components/shared-components/ErrorHandlePage";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
@@ -15,54 +15,13 @@ import {
 import { SIGNOUT } from "../../../../redux/constants/Auth";
 import Utils from "../../../../utils";
 import { useQuery } from "../../../../utils/hooks/useQuery";
-const bonJson = {
-  Company: "Tirex Petrol",
-  IDNO: 100360000008275,
-  Address1: "raionul Soroca, com. Varancau",
-  Address2: "nedentificata 8/2 ap.54",
-  DCPE: "Inr. Nr: DCPE-0001-00014",
-  BonNumber: "00165",
-  BonID: "01",
-  Location: "PECO Singera 1",
-  Admins: "IS Support",
-  Liters: 18.05,
-  PricePerLiter: 18.85,
-  TotalPrice: 340.25,
-  TotalPriceNet: "250.00",
-  FuelType: "A95",
-  Discount: 90.25,
-  TVAPercent: "20.00%",
-  TVA: 41.67,
-  Card: "2975/Universal 1",
-  ArticolNumber: "00001",
-  Date: "12.02.2021",
-  Time: "16:38:35",
-};
-
 const { Text } = Typography;
-interface MatchParams {
-  bill: string;
-  device: string;
+function getVatPercent(arr: IBillItems[], EnVat: "A" | "B" | "C") {
+  return arr
+    .filter((item) => item.VATCode === EnVat)
+    .map((item) => item.VATValue.toFixed(2));
 }
-let testArray = [
-  {
-    Name: "A95",
-    Quantity: 20,
-    Summ: 377,
-    BasePrice: 18.85,
-    VATCode: "A",
-    VATTotal: 20,
-  },
-  {
-    Name: "A95",
-    Quantity: 20,
-    Summ: 377,
-    BasePrice: 18.85,
-    VATCode: "B",
-    VATTotal: 30,
-  },
-];
-const Fiscal = ({ match, history }: RouteComponentProps<MatchParams>) => {
+const Fiscal = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [hasAccess, setHasAccess] = useState<boolean>(true);
   const instance = new BillService();
@@ -189,9 +148,15 @@ const Fiscal = ({ match, history }: RouteComponentProps<MatchParams>) => {
         </Flex>
         <Flex justifyContent="between" className="my-3">
           <div>
-            {vatCodeTotal.a > 0 && <div>TVA A</div>}
-            {vatCodeTotal.b > 0 && <div>TVA B</div>}
-            {vatCodeTotal.c > 0 && <div>TVA C</div>}
+            {vatCodeTotal.a > 0 && (
+              <div>TVA A={getVatPercent(billInfo.BillItems, "A") + "%"}</div>
+            )}
+            {vatCodeTotal.b > 0 && (
+              <div>TVA B={getVatPercent(billInfo.BillItems, "B") + "%"}</div>
+            )}
+            {vatCodeTotal.c > 0 && (
+              <div>TVA C={getVatPercent(billInfo.BillItems, "C") + "%"}</div>
+            )}
             <div>{billInfo.PaymantType}</div>
           </div>
           <div className="text-right">
