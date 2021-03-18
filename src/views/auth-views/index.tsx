@@ -41,7 +41,7 @@ export const AuthViews = ({ match }: RouteComponentProps) => {
         />
 
         <Route
-          path={`${match.url}/fiscal/:fiscID`}
+          path={`${match.url}/fiscal`}
           component={lazy(() => import(`./other/fiscal`))}
         />
 
@@ -51,7 +51,7 @@ export const AuthViews = ({ match }: RouteComponentProps) => {
         />
         <Route
           path={`${match.url}/auth/error`}
-          component={lazy(() => import(`./authentication/success`))}
+          component={lazy(() => import(`./authentication/error`))}
         />
         <Redirect from={AUTH_PREFIX_PATH} to={`${AUTH_PREFIX_PATH}/login`} />
         {/*<Route*/}
