@@ -265,6 +265,10 @@ class Utils {
 
     window.location.reload();
   }
+
+  static padNumber(elem: any) {
+    return ("00000" + elem).substring(elem.length);
+  }
 }
 
 export default Utils;
