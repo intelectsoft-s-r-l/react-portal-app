@@ -45,6 +45,8 @@ const Fiscal = () => {
             ...data.Bill,
           }));
           setBillCompany(data.Company);
+
+          // The above is some awful code that needs refactoring (:
           let a = data.Bill?.BillItems.filter(
             (item) => item.VATCode === "A"
           ).reduce((acc, curr) => acc + curr.VATTotal, 0);
@@ -97,19 +99,18 @@ const Fiscal = () => {
           <Text className="text-center">{billInfo.Address}</Text>
           <Text>
             Inr. Nr:{" "}
-            {billInfo.FiscalNumber.length == 0 ? "--" : billInfo.FiscalNumber}{" "}
+            {billInfo.FiscalNumber.length === 0 ? "--" : billInfo.FiscalNumber}{" "}
           </Text>
           <span>{billInfo.FreeTextHeader}</span>
         </Flex>
         <Flex justifyContent="between">
           <div>
-            <Text>{billInfo!.OperatorCode ?? 0o0}</Text>
+            <Text>{billInfo!.ShiftNumber ?? ""}</Text>
             <br />
-            <Text>#--{billInfo.Workplace}</Text>
+            <Text>#-{billInfo.Workplace}</Text>
             <br />
-            <Text>#--{billInfo.User}</Text>
+            <Text>#-{billInfo.User}</Text>
           </div>
-          <Text>{billInfo.ShiftNumber ?? ""}</Text>
         </Flex>
 
         {billInfo.BillItems &&
@@ -132,12 +133,12 @@ const Fiscal = () => {
         <Divider dashed />
         <Flex justifyContent="between">
           <div>
-            <Text className="h4">TOTAL</Text>
+            <Text className="h4 font-weight-bold">TOTAL</Text>
             <br />
             {billInfo.Discount > 0 && <Text>Reducere:</Text>}
           </div>
           <div className="text-right">
-            <Text className="h3">
+            <Text className="h3 font-weight-bold">
               {(billInfo!.Summ - billInfo!.Discount).toFixed(2)}
             </Text>
             <br />
