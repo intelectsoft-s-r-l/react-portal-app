@@ -283,6 +283,8 @@
   "SMS.Scheduled.Singular": " day left",
   "SMS.Status.Available": "Available",
   "SMS.Status.NotAvailable": "Not Available",
+  "SMS.Status.Scheduled": "Scheduled",
+  "SMS.Status.Declined": "Declined",
   "SMS.NewCampaign": "New campaign",
   "SMS.Description": "Description",
   "SMS.Message": "Message",

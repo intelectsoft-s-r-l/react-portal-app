@@ -282,6 +282,8 @@
   "SMS.Scheduled.Singular": " zi rămasă",
   "SMS.Status.Available": "Activă",
   "SMS.Status.NotAvailable": "Inactivă",
+  "SMS.Status.Scheduled": "Programată",
+  "SMS.Status.Declined": "Respinsă",
   "SMS.NewCampaign": "Campanie nouă",
   "SMS.Description": "Descriere",
   "SMS.Message": "Mesaj",

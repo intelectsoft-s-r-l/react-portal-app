@@ -18,13 +18,11 @@ import TranslateText from "../../../../../../utils/translate";
 import Utils from "../../../../../../utils";
 
 enum EnSmsType {
-  Draft,
-  Verifying,
-  Declined,
-  Scheduled,
-  Processing,
-  Done,
-  Hidden,
+  Draft = 0,
+  Verifying = 1,
+  Declined = 2,
+  Scheduled = 3,
+  Hidden = 100,
 }
 enum EnCampaignStatus {
   INACTIVE = 0,
@@ -62,10 +60,14 @@ const SmsTable = (
       dataIndex: "Status",
       render: (Status: number) => (
         <div>
-          <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
-            {Status === 1
+          <Tag className="mr-0">
+            {Status === EnSmsType.Verifying
               ? TranslateText("SMS.Status.Available")
-              : TranslateText("SMS.Status.NotAvailable")}
+              : Status === EnSmsType.Scheduled
+              ? TranslateText("SMS.Status.Scheduled")
+              : Status === EnSmsType.Draft
+              ? TranslateText("SMS.Status.NotAvailable")
+              : TranslateText("SMS.Status.Declined")}
           </Tag>
         </div>
       ),
