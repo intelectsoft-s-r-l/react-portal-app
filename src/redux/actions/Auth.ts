@@ -14,8 +14,13 @@ import { ThunkAction } from "redux-thunk";
 import { IState } from "../reducers";
 import TranslateText from "../../utils/translate";
 import axios from "axios";
-import { API_AUTH_URL, SUBDIR_PATH } from "../../configs/AppConfig";
+import {
+  API_AUTH_URL,
+  APP_PREFIX_PATH,
+  SUBDIR_PATH,
+} from "../../configs/AppConfig";
 import { onHeaderNavColorChange } from "./Theme";
+import history from "../../history";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -84,6 +89,8 @@ export const authorizeUser = (
             if (SUBDIR_PATH === "/testclientportal") {
               dispatch(onHeaderNavColorChange("#DE4436"));
             }
+
+            return data;
           } else if (ErrorCode === 102) {
             dispatch(showAuthMessage(ErrorMessage!.toString()));
           } else if (ErrorCode === 108) {
@@ -94,6 +101,9 @@ export const authorizeUser = (
           }
         }
       })
-      .then(() => dispatch(hideLoading()));
+      .then((data) => {
+        dispatch(hideLoading());
+        return data;
+      });
   };
 };

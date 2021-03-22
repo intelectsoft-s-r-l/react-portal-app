@@ -1,8 +1,12 @@
 import { message } from "antd";
+import { RcFile } from "antd/lib/upload";
 // @ts-ignore
 import { JSEncrypt } from "jsencrypt";
 import moment from "moment";
 import { ILocale } from "../api/app/types";
+import { showAuthMessage } from "../redux/actions/Auth";
+import store from "../redux/store";
+import TranslateText from "./translate";
 
 class Utils {
   static getNameInitial(name: string) {
@@ -194,6 +198,33 @@ class Utils {
     return isJpgOrPng && isLt2M;
   }
 
+  static beforeUploadNumbers(file: RcFile): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        const isCsvOrTxt = file.type === "text/csv" || file.type === "text/plain";
+        const hasLetters = (): boolean => {
+          if (isCsvOrTxt) {
+            return (/[a-z]/gi).test(event!.target!.result! as string);
+          }
+          return false;
+        }
+        if (hasLetters()) {
+          store.dispatch(showAuthMessage("The file should not contain letters!"))
+        }
+        if (!isCsvOrTxt) {
+          store.dispatch(showAuthMessage("You can only upload CSV/TXT file!"))
+        }
+        if (!hasLetters() && isCsvOrTxt) {
+          resolve(true);
+        } else {
+          reject();
+        }
+      }
+    })
+  }
+
   static dummyRequest({ onSuccess }: any) {
     setTimeout(() => {
       onSuccess("ok");
@@ -227,7 +258,7 @@ class Utils {
   static decodeBase64Locale(data: ILocale | string) {
     try {
       const str = data.toString();
-      return JSON.parse(window.atob(str));
+      return JSON.parse(decodeURIComponent(window.atob(str)));
     } catch {
       return { en: "", ro: "", ru: "" };
     }
@@ -264,6 +295,10 @@ class Utils {
     window.print();
 
     window.location.reload();
+  }
+
+  static padNumber(elem: any) {
+    return ("00000" + elem).substring(elem.length);
   }
 }
 

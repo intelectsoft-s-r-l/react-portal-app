@@ -5,6 +5,7 @@ import { ILocale } from "../../../../api/app/types";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
+import Utils from "../../../../utils";
 
 const Description = ({
   LongDescription,
@@ -16,7 +17,7 @@ const Description = ({
   const loading = useSelector((state: IState) => state.auth?.loading);
   useEffect(() => {
     try {
-      setLongDesc(JSON.parse(window.atob(LongDescription.toString())));
+      setLongDesc(Utils.decodeBase64Locale(LongDescription));
     } catch {
       setLongDesc({ en: "", ru: "", ro: "" });
     }

@@ -30,6 +30,38 @@ interface IEditProfile {
 }
 class EditProfile extends Component<IEditProfile> {
   state = {};
+  onChangeMask = (e: any) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+  onFinish = (values: any) => {
+    message.loading({ content: TranslateText(UPLOADING), key: "updatable" });
+    setProfileInfo({
+      User: {
+        ...this.props.account,
+        ...values,
+      },
+    });
+  };
+  onUploadAvatar = (info: any) => {
+    if (info.file.status === "uploading") {
+      message.loading({
+        content: TranslateText(UPLOADING),
+        key: "updatable",
+      });
+    }
+    if (info.file.status === "done") {
+      Utils.getBase64(info.file.originFileObj, (imageUrl: string) => {
+        setProfileInfo({
+          User: { ...this.props.account, Photo: imageUrl },
+        });
+      });
+    }
+  };
+  onRemoveAvatar = () => {
+    setProfileInfo({
+      User: { ...this.props.account, Photo: "" },
+    });
+  };
   render() {
     let {
       account,
@@ -43,45 +75,6 @@ class EditProfile extends Component<IEditProfile> {
       setProfileInfo,
     } = this.props;
 
-    const onChangeMask = (e: any) => {
-      this.setState({ [e.target.name]: e.target.value });
-    };
-    const onFinish = (values: any) => {
-      message.loading({ content: TranslateText(UPLOADING), key: "updatable" });
-      setProfileInfo({
-        User: {
-          ...account,
-          ...values,
-        },
-      });
-    };
-
-    const onFinishFailed = (errorInfo: any) => {
-      console.log("Failed:", errorInfo);
-    };
-
-    const onUploadAavater = (info: any) => {
-      if (info.file.status === "uploading") {
-        message.loading({
-          content: TranslateText(UPLOADING),
-          key: "updatable",
-        });
-      }
-      if (info.file.status === "done") {
-        Utils.getBase64(info.file.originFileObj, (imageUrl: string) => {
-          setProfileInfo({
-            User: { ...account, Photo: imageUrl },
-          });
-        });
-      }
-    };
-
-    const onRemoveAvater = () => {
-      setProfileInfo({
-        User: { ...account, Photo: "" },
-      });
-    };
-
     return (
       <>
         <Flex
@@ -92,7 +85,7 @@ class EditProfile extends Component<IEditProfile> {
           <Avatar size={90} src={Photo} icon={<UserOutlined />} />
           <div className="ml-md-3 mt-md-0 mt-3">
             <Upload
-              onChange={onUploadAavater}
+              onChange={this.onUploadAvatar}
               showUploadList={false}
               customRequest={Utils.dummyRequest}
               beforeUpload={(info) => Utils.beforeUpload(info)}
@@ -101,7 +94,7 @@ class EditProfile extends Component<IEditProfile> {
                 <IntlMessage id={"account.EditProfile.ChangeAvatar"} />
               </Button>
             </Upload>
-            <Button className="ml-2" onClick={onRemoveAvater}>
+            <Button className="ml-2" onClick={this.onRemoveAvatar}>
               <IntlMessage id={"account.EditProfile.Remove"} />
             </Button>
           </div>
@@ -119,8 +112,7 @@ class EditProfile extends Component<IEditProfile> {
               PhoneNumber,
               Photo,
             }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onFinish={this.onFinish}
           >
             <Row>
               <Col xs={24} sm={24} md={24} lg={16}>
@@ -181,7 +173,7 @@ class EditProfile extends Component<IEditProfile> {
                     >
                       <MaskedInput
                         mask="+(111) 111 111 11"
-                        onChange={onChangeMask}
+                        onChange={this.onChangeMask}
                       />
                     </Form.Item>
                   </Col>

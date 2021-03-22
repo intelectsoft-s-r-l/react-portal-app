@@ -183,7 +183,7 @@ const Licenses = ({ AppType }: { AppType: number }) => {
       />
       <Flex justifyContent="between" alignItems="center" className="py-4">
         <h2>
-          <IntlMessage id="app.Licenses" />
+          <IntlMessage id="app.Licenses" /> - {licenses.length}
         </h2>
         <div>
           <Flex>

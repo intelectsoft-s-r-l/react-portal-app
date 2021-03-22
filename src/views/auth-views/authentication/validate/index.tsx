@@ -1,12 +1,15 @@
 import React, { useState, useLayoutEffect } from "react";
 import axios from "axios";
 import ErrorOne from "../../errors/error-page-1/index";
-import Success from "../success/index";
+import ValidateError from "../error";
+import ValidateSuccess from "../success";
 import { API_AUTH_URL } from "../../../../configs/AppConfig";
 import { RouteComponentProps } from "react-router-dom";
+import Loading from "../../../../components/shared-components/Loading";
 
 const Validate = ({ history, match }: RouteComponentProps) => {
   const [isValidated, setIsValidated] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   useLayoutEffect(() => {
     axios
       .get(`${API_AUTH_URL}/ActivateUser`, {
@@ -15,6 +18,7 @@ const Validate = ({ history, match }: RouteComponentProps) => {
         },
       })
       .then((response) => {
+        setLoading(false);
         console.log(response.data);
         if (response.data["ErrorCode"] === 0) {
           setIsValidated(true);
@@ -24,7 +28,8 @@ const Validate = ({ history, match }: RouteComponentProps) => {
       });
   }, [history]);
 
-  return <>{isValidated ? <Success /> : <ErrorOne />}</>;
+  if (loading) return <Loading />;
+  return <>{isValidated ? <ValidateSuccess /> : <ValidateError />}</>;
 };
 
 export default Validate;

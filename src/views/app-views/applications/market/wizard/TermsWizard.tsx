@@ -4,13 +4,14 @@ import { useSelector } from "react-redux";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../../redux/reducers";
 import { WizardContext } from "./WizardContext";
+import Utils from "../../../../../utils";
 
 const TermsWizard = () => {
   const { state, dispatch } = React.useContext(WizardContext);
   const [terms, setTerms] = useState<any>();
   useEffect(() => {
     try {
-      setTerms(JSON.parse(window.atob(state.selectedApp.TermsOfUse)));
+      setTerms(Utils.decodeBase64Locale(state.selectedApp.TermsOfUse));
     } catch {
       setTerms({ en: "", ru: "", ro: "" });
     }

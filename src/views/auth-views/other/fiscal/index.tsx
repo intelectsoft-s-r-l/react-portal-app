@@ -2,127 +2,172 @@ import { Button, Card, Divider, Result, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { EnErrorCode } from "../../../../api";
+import { BillService } from "../../../../api/bill-service";
+import { IBill, IBillItems } from "../../../../api/bill-service/types";
+import ErrorHandlePage from "../../../../components/shared-components/ErrorHandlePage";
 import Flex from "../../../../components/shared-components/Flex";
 import Loading from "../../../../components/shared-components/Loading";
-import { AUTH_PREFIX_PATH } from "../../../../configs/AppConfig";
+import {
+  APP_PREFIX_PATH,
+  AUTH_PREFIX_PATH,
+} from "../../../../configs/AppConfig";
 import { SIGNOUT } from "../../../../redux/constants/Auth";
-const bonJson = {
-  Company: "Tirex Petrol",
-  IDNO: 100360000008275,
-  Address1: "raionul Soroca, com. Varancau",
-  Address2: "nedentificata 8/2 ap.54",
-  DCPE: "Inr. Nr: DCPE-0001-00014",
-  BonNumber: "00165",
-  BonID: "01",
-  Location: "PECO Singera 1",
-  Admins: "IS Support",
-  Liters: 18.05,
-  PricePerLiter: 18.85,
-  TotalPrice: 340.25,
-  TotalPriceNet: "250.00",
-  FuelType: "A95",
-  Discount: 90.25,
-  TVAPercent: "20.00%",
-  TVA: 41.67,
-  Card: "2975/Universal 1",
-  ArticolNumber: "00001",
-  Date: "12.02.2021",
-  Time: "16:38:35",
-};
-
+import Utils from "../../../../utils";
+import { useQuery } from "../../../../utils/hooks/useQuery";
 const { Text } = Typography;
-const Fiscal = ({ match, history }: RouteComponentProps) => {
+function getVatPercent(arr: IBillItems[], EnVat: "A" | "B" | "C") {
+  return arr
+    .filter((item) => item.VATCode === EnVat)
+    .map((item) => item.VATValue.toFixed(2));
+}
+const Fiscal = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [hasAccess, setHasAccess] = useState<boolean>(false);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if ("fiscID" in match.params) {
-      setTimeout(() => {
+  const [hasAccess, setHasAccess] = useState<boolean>(true);
+  const instance = new BillService();
+  const [billInfo, setBillInfo] = useState<IBill | undefined>(undefined);
+  const [billCompany, setBillCompany] = useState<string>("");
+  const [vatCodeTotal, setVatCodeTotal] = useState<any>({
+    a: 0,
+    b: 0,
+    c: 0,
+  });
+  const query = useQuery();
+  const getBillInfo = () => {
+    return instance
+      .GetBillInfo(query.get("bill")!, query.get("device")!)
+      .then((data) => {
         setLoading(false);
-      }, 1000);
-    }
+        if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
+          setHasAccess(true);
+          setBillInfo((pre) => ({
+            ...pre,
+            ...data.Bill,
+          }));
+          setBillCompany(data.Company);
+
+          // The above is some awful code that needs refactoring (:
+          let a = data.Bill?.BillItems.filter(
+            (item) => item.VATCode === "A"
+          ).reduce((acc, curr) => acc + curr.VATTotal, 0);
+
+          let b = data.Bill?.BillItems.filter(
+            (item) => item.VATCode === "B"
+          ).reduce((acc, curr) => acc + curr.VATTotal, 0);
+
+          let c = data.Bill?.BillItems.filter(
+            (item) => item.VATCode === "C"
+          ).reduce((acc, curr) => acc + curr.VATTotal, 0);
+          setVatCodeTotal({ a, b, c });
+        }
+      });
+  };
+  useEffect(() => {
+    getBillInfo();
+    return () => instance._source.cancel();
   }, []);
   if (loading) return <Loading />;
-  if (!hasAccess)
+  if (!billInfo || !hasAccess)
     return (
-      <Result
-        status="403"
-        title="Incorrect ID"
-        subTitle="Sorry, you are not authorized to access this page."
-        extra={
-          <Button type="primary">
-            <Link to={AUTH_PREFIX_PATH}>
-              <span>Find your way</span>
-            </Link>
-          </Button>
-        }
-      />
+      <ErrorHandlePage>
+        <Result
+          status="403"
+          title="Numarul de identificare fiscal incorect"
+          subTitle="Ne pare rau, nu sunteti autorizati sa accesati aceaasta pagina!"
+          extra={
+            <Button type="primary">
+              <Link to={APP_PREFIX_PATH}>
+                <span>Find your way</span>
+              </Link>
+            </Button>
+          }
+        />
+      </ErrorHandlePage>
     );
   return (
     <div
       className="h-100 d-flex justify-content-center align-items-center"
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL}/img/others/img-17.jpg)`,
+        backgroundSize: "cover",
       }}
     >
       <Card style={{ width: 350, maxWidth: "100%" }}>
         <Flex alignItems="center" flexDirection="column">
-          <Text>"{bonJson.Company}"</Text>
-          <Text>IDNO: {bonJson.IDNO}</Text>
-          <Text>{bonJson.Address1}</Text>
-          <Text>{bonJson.Address2}</Text>
-          <Text>{bonJson.DCPE}</Text>
-          <span>***</span>
+          <Text>"{billCompany}"</Text>
+          <Text>IDNO: {billInfo.IDNO}</Text>
+          <Text className="text-center">{billInfo.Address}</Text>
+          <Text>
+            Inr. Nr:{" "}
+            {billInfo.FiscalNumber.length === 0 ? "--" : billInfo.FiscalNumber}{" "}
+          </Text>
+          <span>{billInfo.FreeTextHeader}</span>
         </Flex>
         <Flex justifyContent="between">
           <div>
-            <Text>{bonJson.BonNumber}</Text>
+            <Text>{billInfo!.ShiftNumber ?? ""}</Text>
             <br />
-            <Text>#-{bonJson.Location}</Text>
+            <Text>#-{billInfo.Workplace}</Text>
             <br />
-            <Text>#-{bonJson.Admins}</Text>
-          </div>
-          <Text>{bonJson.BonID} #</Text>
-        </Flex>
-        <Flex justifyContent="between" className="mt-2">
-          <div>
-            <div>&nbsp;</div>
-            <Text>{bonJson.FuelType}</Text>
-          </div>
-          <div className="text-right">
-            <Text style={{ letterSpacing: 2 }}>
-              {bonJson.Liters} Litri x {bonJson.PricePerLiter}
-            </Text>
-            <br />
-            <Text>{bonJson.TotalPrice}</Text>
+            <Text>#-{billInfo.User}</Text>
           </div>
         </Flex>
+
+        {billInfo.BillItems &&
+          billInfo.BillItems.map((item, idx) => (
+            <Flex justifyContent="between" className="mt-3" key={idx}>
+              {/* We map over BillItems here */}
+              <div>
+                <div>&nbsp;</div>
+                <Text>{item.Name}</Text>
+              </div>
+              <div className="text-right">
+                <Text style={{ letterSpacing: 2 }}>
+                  {item.Quantity.toFixed(2)} Litri x {item.BasePrice}
+                </Text>
+                <br />
+                <Text>{item.Summ.toFixed(2)}</Text>
+              </div>
+            </Flex>
+          ))}
         <Divider dashed />
         <Flex justifyContent="between">
           <div>
-            <Text className="h4">TOTAL</Text>
+            <Text className="h4 font-weight-bold">TOTAL</Text>
             <br />
-            <Text>Reducere:</Text>
+            {billInfo.Discount > 0 && <Text>Reducere:</Text>}
           </div>
           <div className="text-right">
-            <Text className="h3">{bonJson.TotalPriceNet}</Text>
+            <Text className="h3 font-weight-bold">
+              {(billInfo!.Summ - billInfo!.Discount).toFixed(2)}
+            </Text>
             <br />
-            <Text>{bonJson.Discount}</Text>
+            {billInfo.Discount > 0 && (
+              <Text>{billInfo!.Discount.toFixed(2)}</Text>
+            )}
           </div>
         </Flex>
         <Flex justifyContent="between" className="my-3">
           <div>
-            <Text>TVA A={bonJson.TVAPercent}</Text>
-            <br />
-            <Text>Cont client</Text>
+            {vatCodeTotal.a > 0 && (
+              <div>TVA A={getVatPercent(billInfo.BillItems, "A") + "%"}</div>
+            )}
+            {vatCodeTotal.b > 0 && (
+              <div>TVA B={getVatPercent(billInfo.BillItems, "B") + "%"}</div>
+            )}
+            {vatCodeTotal.c > 0 && (
+              <div>TVA C={getVatPercent(billInfo.BillItems, "C") + "%"}</div>
+            )}
+            <div>{billInfo.PaymantType}</div>
           </div>
           <div className="text-right">
-            <Text>{bonJson.TVA}</Text>
-            <br />
-            <Text>{bonJson.TotalPriceNet}</Text>
+            {vatCodeTotal.a > 0 && <div>{vatCodeTotal.a.toFixed(2)}</div>}
+            {vatCodeTotal.b > 0 && <div>{vatCodeTotal.b.toFixed(2)}</div>}
+            {vatCodeTotal.c > 0 && <div>{vatCodeTotal.c.toFixed(2)}</div>}
+            <div>{(billInfo!.Summ - billInfo!.Discount).toFixed(2)}</div>
           </div>
         </Flex>
-        <Text>#Card: &nbsp;&nbsp;{bonJson.Card}</Text>
+        <Text>#Card: &nbsp;&nbsp;{billInfo.Client}</Text>
         <Flex justifyContent="center" className="my-3 text-center">
           <div>
             <Text style={{ textTransform: "uppercase", letterSpacing: 10 }}>
@@ -130,18 +175,21 @@ const Fiscal = ({ match, history }: RouteComponentProps) => {
             </Text>
             <br />
             <div>
-              <Text>1 ARTICOL</Text>
+              <Text>
+                {billInfo.TotalArticle}{" "}
+                {billInfo.TotalArticle > 1 ? "ARTICOLE" : "ARTICOL"}
+              </Text>
             </div>
           </div>
         </Flex>
         <Flex justifyContent="between">
           <div>
-            <Text>{bonJson.ArticolNumber}</Text>
+            <Text>{Utils.padNumber(billInfo.Number)}</Text>
           </div>
           <div className="text-right">
-            <Text>{bonJson.Date}</Text>
+            <Text>{billInfo.Date.split(" ")[0]}</Text>
             <br />
-            <Text>{bonJson.Time}</Text>
+            <Text>{billInfo.Date.split(" ")[1]}</Text>
           </div>
         </Flex>
         <Flex
@@ -150,7 +198,7 @@ const Fiscal = ({ match, history }: RouteComponentProps) => {
           className="text-center"
         >
           <Text className="text-uppercase h3">Bon fiscal!</Text>
-          <div>IntelectSoft S.R.L</div>
+          <div>{billInfo.FreeTextFooter}</div>
         </Flex>
       </Card>
     </div>

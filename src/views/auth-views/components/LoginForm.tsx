@@ -22,6 +22,8 @@ import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
+import { EnErrorCode } from "../../../api";
+import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
 
 const LoginForm = ({
   otherSignIn,
@@ -42,10 +44,13 @@ const LoginForm = ({
   const onLogin = async ({ email, password }: { [key: string]: string }) => {
     showLoading();
     setTimeout(async () => {
-      await authorizeUser(
+      const response = await authorizeUser(
         email,
         await Utils.encryptInput(password, API_PUBLIC_KEY)
       );
+      if (response.ErrorCode === EnErrorCode.NO_ERROR) {
+        history.push(APP_PREFIX_PATH);
+      }
     }, 1000);
   };
   const onGoogleLogin = () => {
@@ -57,16 +62,12 @@ const LoginForm = ({
   };
 
   useEffect(() => {
-    hideLoading();
-    if (token !== null) {
-      history.push(redirect);
-    }
     if (showMessage) {
       setTimeout(() => {
         hideAuthMessage();
       }, 3000);
     }
-  }, [token, showMessage]);
+  }, [showMessage]);
 
   const renderOtherSignIn = (
     <div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Grid, BackTop } from "antd";
 import { connect } from "react-redux";
 import SideNav from "../../components/layout-components/SideNav";
@@ -18,11 +18,19 @@ import {
 import Utils from "../../utils";
 import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
+import { IAuth } from "../../redux/reducers/Auth";
+import { AUTH_PREFIX_PATH } from "../../configs/AppConfig";
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
 
-export const AppLayout = ({ navCollapsed, navType, location }: any) => {
+export const AppLayout = ({
+  navCollapsed,
+  navType,
+  location,
+  token,
+  history,
+}: any) => {
   const currentRouteInfo = Utils.getRouteInfo(
     navigationConfig,
     location.pathname
@@ -31,7 +39,6 @@ export const AppLayout = ({ navCollapsed, navType, location }: any) => {
   const isMobile = !screens.includes("lg");
   const isNavSide = navType === NAV_TYPE_SIDE;
   const isNavTop = navType === NAV_TYPE_TOP;
-
   const getLayoutGutter = () => {
     if (isNavTop || isMobile) {
       return 0;
@@ -68,9 +75,10 @@ export const AppLayout = ({ navCollapsed, navType, location }: any) => {
   );
 };
 
-const mapStateToProps = ({ theme }: IState) => {
+const mapStateToProps = ({ theme, auth }: IState) => {
   const { navCollapsed, navType, locale } = theme as ITheme;
-  return { navCollapsed, navType, locale };
+  const { token } = auth as IAuth;
+  return { navCollapsed, navType, locale, token };
 };
 
 export default connect(mapStateToProps)(React.memo(AppLayout));
