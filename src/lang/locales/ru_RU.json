@@ -268,7 +268,7 @@
   "SMS.Failed": "Неудачные",
   "SMS.Rejected": "Отклоненные",
   "SMS.Waiting": "В ожидании",
-  "SMS.CampaignName": "Название кампании",
+  "SMS.CampaignName": "Название рассылки",
   "SMS.CreateDate": "Дата создания",
   "SMS.ScheduledDate": "Дата отправки",
   "SMS.Status": "Статус",

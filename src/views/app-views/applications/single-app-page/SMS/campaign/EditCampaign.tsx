@@ -8,6 +8,7 @@ import moment from "moment";
 import { AppService } from "../../../../../../api/app";
 import Utils from "../../../../../../utils";
 import TranslateText from "../../../../../../utils/translate";
+import { getScheduledDate } from ".";
 
 interface IEditCampaign {
   visible: boolean;
@@ -71,22 +72,12 @@ const EditCampaign = ({
       // @ts-ignore
       ...new Set(
         phoneNumbers
-          .map((elem) => elem.value)
+          .map((elem) => elem)
           .join(",")
           .split(",")
           .filter((el: string) => el !== "")
       ),
     ].join(",");
-    return await new AppService()
-      .SMS_UpdateCampaign({
-        ...values,
-        PhoneList: uniqNumbers,
-        ScheduledDate: getScheduledDate(radioVal, date),
-      })
-      .then((data) => {
-        if (data && data.ErrorCode === 0)
-          getCampaignList().then(() => message.success(TranslateText(DONE), 1));
-      });
   };
 
   const onFinish = async (values: any) => {

@@ -206,7 +206,6 @@ const AppRoute = ({ match, app }: IAppRoute) => {
       />
       <Route
         path={`${match.url}/campaign`}
-        exact
         render={(props) => <SmsCampaign {...props} />}
       />
       <Route
