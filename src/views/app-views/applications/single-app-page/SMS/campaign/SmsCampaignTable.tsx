@@ -15,6 +15,7 @@ import { Menu, Tag, Modal } from "antd";
 import { AppService } from "../../../../../../api/app";
 import { Link } from "react-router-dom";
 import TranslateText from "../../../../../../utils/translate";
+import Utils from "../../../../../../utils";
 
 enum EnSmsType {
   Draft,
@@ -49,27 +50,12 @@ const SmsTable = (
     {
       title: TranslateText("SMS.CreateDate"),
       dataIndex: "CreateDate",
-      render: (date) => (
-        <span>{moment.unix(+date.slice(6, 16)).format("DD/MM/YYYY")}</span>
-      ),
+      render: (date) => <span>{Utils.fromDotNetDate(date)}</span>,
     },
     {
       title: TranslateText("SMS.ScheduledDate"),
       dataIndex: "ScheduledDate",
-      render: (date) => (
-        <Tag>
-          <ClockCircleOutlined />
-          <span className="font-weight-semibold">
-            {getDaysLeft(date) > 1
-              ? `${getDaysLeft(date)} ${TranslateText("SMS.Scheduled.Plural")}`
-              : getDaysLeft(date) === 1
-              ? `${getDaysLeft(date)} ${TranslateText(
-                  "SMS.Scheduled.Singular"
-                )}`
-              : `${TranslateText("SMS.Today")}`}
-          </span>
-        </Tag>
-      ),
+      render: (date) => <span>{Utils.fromDotNetDate(date)}</span>,
     },
     {
       title: TranslateText("SMS.Status"),
@@ -82,6 +68,14 @@ const SmsTable = (
               : TranslateText("SMS.Status.NotAvailable")}
           </Tag>
         </div>
+      ),
+    },
+    {
+      title: "Contacts",
+      render: (_, elm) => (
+        <span>
+          {elm.PhoneList ? elm.PhoneList!.split(",").length : "Add contact"}
+        </span>
       ),
     },
     {
@@ -153,7 +147,7 @@ const SmsTable = (
                   key="3"
                   onClick={async () => {
                     return await new AppService()
-                      .SMS_DeleteCampaign(elm.ID)
+                      .SMS_DeleteCampaign(elm.ID!)
                       .then((data) => {
                         if (data && data.ErrorCode === 0) {
                           refreshList();

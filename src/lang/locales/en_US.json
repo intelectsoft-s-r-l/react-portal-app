@@ -281,8 +281,8 @@
   "SMS.State.Success": "Success",
   "SMS.Scheduled.Plural": " days left",
   "SMS.Scheduled.Singular": " day left",
-  "SMS.Status.Available": "Available",
-  "SMS.Status.NotAvailable": "Not Available",
+  "SMS.Status.Available": "Active",
+  "SMS.Status.NotAvailable": "Inactive",
   "SMS.NewCampaign": "New campaign",
   "SMS.Description": "Description",
   "SMS.Message": "Message",
@@ -297,6 +297,7 @@
   "SMS.campaign.activate.msg": "Are you sure you want to activate this campaign?",
   "SMS.campaign.deactivate.msg": "Are you sure you want to deactivate this campaign?",
   "SMS.message": "Message",
+  "SMS.default.name": "My campaign",
 
   "news.title": "News",
   "news.create.messsage": "You have successfully created a new article!",

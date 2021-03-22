@@ -155,19 +155,19 @@ export interface IDiagnosticInformation {
   Date?: string;
 }
 
-export interface ICampaignList {
-  Category: number;
-  CompanyName: string;
-  CreateDate: any;
-  Description: string;
-  ID: number;
-  Message: string;
+export interface ICampaignList extends ApiRequest {
+  Category?: number;
+  CompanyName?: string;
+  CreateDate?: any;
+  Description?: string;
+  ID?: number;
+  Message?: string;
   Name: string;
   PhoneList?: string;
-  ReviewedByUser: string;
-  ReviewerComments: string;
-  ScheduledDate: any;
-  Status: number;
+  ReviewedByUser?: string;
+  ReviewerComments?: string;
+  ScheduledDate?: any;
+  Status?: number;
 }
 
 export interface IRsaKeys extends ApiResponse {

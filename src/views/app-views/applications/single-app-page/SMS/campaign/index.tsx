@@ -1,75 +1,74 @@
 import * as React from "react";
-import { Button, Table } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import { AppService } from "../../../../../../api/app";
-import { ICampaignList } from "../../../../../../api/app/types";
-import Flex from "../../../../../../components/shared-components/Flex";
-import NewCampaign from "./NewCampaign";
-import SmsTable from "./SmsCampaignTable";
-import EditCampaign from "./EditCampaign";
-import { RouteComponentProps } from "react-router-dom";
-import TranslateText from "../../../../../../utils/translate";
+import { useEffect, useState } from "react";
+import { Route, RouteComponentProps, Switch } from "react-router-dom";
+import Utils from "../../../../../../utils";
+import CampaignList from "./CampaignList";
+import EditCampaignPage from "./EditCampaignPage";
 
-const SmsCampaign = ({ match }: RouteComponentProps) => {
-  const instance = new AppService();
-  const [campaignInfo, setCampaignInfo] = useState<ICampaignList[]>([]);
-  const [isNewCampaignVisible, setIsNewCampaignVisible] = useState<boolean>(
-    false
-  );
-  const [isEditCampaignVisible, setEditCampaignVisible] = useState<boolean>(
-    false
-  );
-  const [selectedCampaign, setSelectedCampaign] = useState<
-    Partial<ICampaignList>
-  >({});
-  const [tableLoading, setTableLoading] = useState<boolean>(true);
-  const getCampaignList = async () => {
-    return await instance.SMS_GetCampaign().then((data) => {
-      setTableLoading(false);
-      if (data && data.ErrorCode === 0) {
-        setCampaignInfo(data.CampaignList);
-        return Promise;
-      }
-    });
-  };
-
-  const showEditCampaign = (data: ICampaignList) => {
-    setEditCampaignVisible(true);
-    setSelectedCampaign(data);
-  };
-
-  useEffect(() => {
-    getCampaignList();
-    return () => instance._source.cancel();
-  }, []);
+export enum send {
+  NOW = 0,
+  DELAY = 1,
+}
+export interface IPhoneNumbers {
+  name: string;
+  value: string;
+}
+export function getScheduledDate(val: number, date: any) {
+  if (val === send.DELAY) {
+    return Utils.handleDotNetDate(date);
+  }
+  return Utils.handleDotNetDate(Date.now());
+}
+export interface IPhoneNumbers {
+  name: string;
+  value: string;
+}
+export const rules = {
+  Name: [
+    {
+      required: true,
+      message: "Please input a campaign name!",
+    },
+  ],
+  Description: [
+    {
+      required: true,
+      message: "Please input a short description!",
+    },
+  ],
+  Message: [
+    {
+      required: true,
+      message: "Please input a message!",
+    },
+  ],
+  PhoneList: [
+    {
+      required: true,
+      message: "Please input a phone list!",
+    },
+    {
+      pattern: /^\d+(,\d+)*$/,
+      message: "Numbers should be followed by comma",
+    },
+  ],
+  ScheduledDate: [
+    {
+      required: false,
+      message: "Please insert a scheduled date!",
+    },
+  ],
+};
+const SmsCampaign = (props: RouteComponentProps) => {
   return (
-    <>
-      <NewCampaign
-        visible={isNewCampaignVisible}
-        close={() => setIsNewCampaignVisible(false)}
-        getCampaignList={getCampaignList}
-      />
-      <EditCampaign
-        visible={isEditCampaignVisible}
-        close={() => setEditCampaignVisible(false)}
-        getCampaignList={getCampaignList}
-        data={selectedCampaign}
-      />
-      <Flex justifyContent="between" alignItems="center" className="py-4">
-        <h2>{TranslateText("app.Campaign")}</h2>
-        <Button type="primary" onClick={() => setIsNewCampaignVisible(true)}>
-          <PlusOutlined />
-          <span>{TranslateText("SMS.NewCampaign")}</span>
-        </Button>
-      </Flex>
-      <Table
-        loading={tableLoading}
-        columns={SmsTable(getCampaignList, showEditCampaign, match)}
-        dataSource={campaignInfo}
-        rowKey={"ID"}
-      />
-    </>
+    <Switch>
+      <Route exact path={props.match.url}>
+        <CampaignList {...props} />
+      </Route>
+      <Route exact path={`${props.match.url}/edit`}>
+        <EditCampaignPage {...props} />
+      </Route>
+    </Switch>
   );
 };
 export default SmsCampaign;

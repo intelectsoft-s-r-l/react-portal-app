@@ -299,6 +299,7 @@
   "SMS.campaign.activate.msg": "Вы уверены что хотите активировать эту рассылку?",
   "SMS.campaign.deactivate.msg": "Вы уверены что хотите деактивировать эту рассылку?",
   "SMS.message": "Сообщение",
+  "SMS.default.name": "Моя рассылка",
 
   "news.title": "Новости",
   "news.create.messsage": "Вы успешно создали новую новость!",
