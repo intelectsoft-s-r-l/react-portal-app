@@ -6,7 +6,6 @@ import { AppService } from "../../../../../../api/app";
 import Loading from "../../../../../../components/shared-components/Loading";
 import { RouteComponentProps } from "react-router-dom";
 import { Card } from "antd";
-import "./campaign.scss";
 
 interface ICampaignDetails extends RouteComponentProps<{ ID: string }> {}
 const CampaignDetails = ({ history, match }: ICampaignDetails) => {

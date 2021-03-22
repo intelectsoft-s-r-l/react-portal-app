@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IState } from "../../../../../../redux/reducers";
 import { hideAuthMessage } from "../../../../../../redux/actions/Auth";
 import { UploadFile } from "antd/es/upload/interface";
+import AttachNumbers from "./AttachNumbers";
 
 interface INewCampaign {
   visible: boolean;
@@ -82,10 +83,13 @@ function getScheduledDate(val: number, date: any) {
   }
   return Utils.handleDotNetDate(Date.now());
 }
+export interface IPhoneNumbers {
+  name: string;
+  value: string;
+}
+
 const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
   const [form] = Form.useForm();
-  const showMessage = useSelector((state: IState) => state.auth?.showMessage);
-  const storeMsg = useSelector((state: IState) => state.auth?.message);
   const dispatch = useDispatch();
   const [radioVal, setRadioVal] = useState<number>(0);
   const [date, setDate] = useState<any>();
@@ -98,52 +102,7 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
     form.resetFields();
   }, [visible, form]);
 
-  const onChange = (info: any) => {
-    if (info.file.status === "done") {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        let numArr: string = e.target.result
-          .split(/[\s\n\r;*\/]+/)
-          .filter((el: string) => el !== "")
-          .join(",");
-        setPhoneNumbers((prev) => [
-          ...prev,
-          { name: info.file.originFileObj.name, value: numArr },
-        ]);
-      };
-      reader.readAsText(info.file.originFileObj);
-    }
-  };
-  const onFinish = async (values: any) => {
-    const uniqNumbers = [
-      // @ts-ignore
-      ...new Set(
-        phoneNumbers
-          .map((elem) => elem.value)
-          .join(",")
-          .split(",")
-          .filter((el: string) => el !== "")
-      ),
-    ].join(",");
-    return await new AppService()
-      .SMS_UpdateCampaign({
-        ...values,
-        PhoneList: uniqNumbers,
-        ScheduledDate: getScheduledDate(radioVal, date),
-      })
-      .then((data) => {
-        if (data && data.ErrorCode === 0)
-          getCampaignList().then(() => message.success(TranslateText(DONE), 1));
-      });
-  };
-
-  useEffect(() => {
-    if (showMessage) {
-      setTimeout(() => {
-        dispatch(hideAuthMessage());
-      }, 2000);
-    }
-  }, [showMessage]);
+  const onFinish = (values: any) => {};
 
   return (
     <Modal
@@ -187,58 +146,12 @@ const NewCampaign = ({ visible, close, getCampaignList }: INewCampaign) => {
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={24}>
-            <Form.Item
-              label={
-                <Flex justifyContent="between" className="w-100">
-                  <div>{TranslateText("SMS.Receivers")}</div>
-                  <div style={{ fontWeight: "normal", color: "red" }}>
-                    *csv/txt
-                  </div>
-                </Flex>
-              }
-              name="PhoneList"
-              // rules={rules.phonelist}
-            >
-              <motion.div
-                initial={{ opacity: 0, marginBottom: 0 }}
-                animate={{
-                  opacity: showMessage ? 1 : 0,
-                  marginBottom: showMessage ? 20 : 0,
-                }}
-              >
-                <Alert type="error" showIcon message={storeMsg} />
-              </motion.div>
-              <small>
-                {/* {TranslateText("SMS.NoContacts")}.{" "} */}
-                <Upload
-                  // @ts-ignore
-                  beforeUpload={async (file: RcFile) => {
-                    return await Utils.beforeUploadNumbers(file).then(
-                      (canUpload) => {
-                        if (canUpload) setIsCsvOrTxt(true);
-
-                        return canUpload;
-                      }
-                    );
-                  }}
-                  onChange={onChange}
-                  multiple={true}
-                  customRequest={Utils.dummyRequest}
-                  showUploadList={{
-                    showRemoveIcon: false,
-                    showPreviewIcon: isCsvOrTxt,
-                  }}
-                >
-                  <small>
-                    <a>{TranslateText("SMS.AttachFile")}</a>
-                  </small>
-                </Upload>
-              </small>
-              {/* <Input.TextArea
-                placeholder={TranslateText("SMS.Receivers.Validate")}
-                onChange={(e) => setPhoneNumbers([e.target.value])}
-              /> */}
-            </Form.Item>
+            <AttachNumbers
+              phoneNumbers={phoneNumbers}
+              setPhoneNumbers={setPhoneNumbers}
+              isCsvOrTxt={isCsvOrTxt}
+              setIsCsvOrTxt={setIsCsvOrTxt}
+            />
           </Col>
           <Col xs={24} sm={24} md={24}>
             <Form.Item label={TranslateText("SMS.SendSMS")}>

@@ -66,6 +66,28 @@ const EditCampaign = ({
       reader.readAsText(info.file.originFileObj);
     }
   };
+  const onFinish2 = async (values: any) => {
+    const uniqNumbers = [
+      // @ts-ignore
+      ...new Set(
+        phoneNumbers
+          .map((elem) => elem.value)
+          .join(",")
+          .split(",")
+          .filter((el: string) => el !== "")
+      ),
+    ].join(",");
+    return await new AppService()
+      .SMS_UpdateCampaign({
+        ...values,
+        PhoneList: uniqNumbers,
+        ScheduledDate: getScheduledDate(radioVal, date),
+      })
+      .then((data) => {
+        if (data && data.ErrorCode === 0)
+          getCampaignList().then(() => message.success(TranslateText(DONE), 1));
+      });
+  };
 
   const onFinish = async (values: any) => {
     setLoading(true);
