@@ -155,21 +155,6 @@ export interface IDiagnosticInformation {
   Date?: string;
 }
 
-export interface ICampaignList extends ApiRequest {
-  Category?: number;
-  CompanyName?: string;
-  CreateDate?: any;
-  Description?: string;
-  ID?: number;
-  Message?: string;
-  Name: string;
-  PhoneList?: string;
-  ReviewedByUser?: string;
-  ReviewerComments?: string;
-  ScheduledDate?: any;
-  Status?: number;
-}
-
 export interface IRsaKeys extends ApiResponse {
   EncryptionPublicKey: string;
   EncryptionPrivateKey: string;
@@ -178,11 +163,6 @@ export interface IRsaKeys extends ApiResponse {
 export interface ICreateAppPackage extends ApiRequest {
   AppPackage: IPackages;
   MarketAppID: number;
-}
-export interface ISMSReviewerUpdateRequest extends ApiRequest {
-  ID: number;
-  ReviewerComments: string;
-  Status?: number;
 }
 export interface IAppPackageRequest {
   ID: number;

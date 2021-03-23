@@ -4,12 +4,10 @@ import { IAccount } from "../../redux/reducers/Account";
 import { IUpdateAppRequest, IUpdateCompanyRequest } from "./types";
 import { ApiResponse, ApiDecorator } from "../types";
 import {
-  ICampaignList,
   ICompanyData,
   ILicenses,
   IMarketAppList,
   INewsList,
-  ISMSReviewerUpdateRequest,
   IRsaKeys,
   IShortMarketAppList,
   IUsers,
@@ -25,7 +23,7 @@ export class AppService extends HttpService {
     this.instance.get<ApiDecorator<ApiResponse, "User", IUsers>>(
       "/GetProfileInfo"
     );
-  public UpdateUser = async (data: { User: IAccount }) =>
+  public UpdateUser = async (data: any) =>
     this.instance.post<ApiResponse>("/UpdateUser", data);
 
   public GetMarketAppList = async () =>
@@ -157,26 +155,4 @@ export class AppService extends HttpService {
         },
       }
     );
-
-  public SMS_GetCampaign = async () =>
-    this.instance.get<
-      ApiDecorator<ApiResponse, "CampaignList", ICampaignList[]>
-    >("/SMS/SMSGetCampaign");
-
-  public SMS_DeleteCampaign = async (ID: number) =>
-    this.instance.get<ApiResponse>("/SMS/DeleteCampaign", {
-      params: {
-        ID,
-      },
-    });
-
-  public SMS_ReviewerUpdate = async (reviewerInfo: ISMSReviewerUpdateRequest) =>
-    this.instance.post<ApiResponse>("/SMS/ReviewerUpdate", {
-      ...reviewerInfo,
-    });
-
-  public SMS_UpdateCampaign = async (campaignInfo: ICampaignList) =>
-    this.instance.post<ApiResponse>("/SMS/UpdateCampaign", {
-      ...campaignInfo,
-    });
 }

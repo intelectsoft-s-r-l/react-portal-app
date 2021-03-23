@@ -1,7 +1,13 @@
 import HttpService from "../";
 import { API_SMS_URL } from "../../configs/AppConfig";
-import { ApiResponse } from "../types";
-import { ISmsInfo, ISmsInfoPeriod, ISmsDetailPeriod } from "./types";
+import { ApiDecorator, ApiResponse } from "../types";
+import {
+  ISmsInfo,
+  ISmsInfoPeriod,
+  ISmsDetailPeriod,
+  ICampaignConfirmation,
+  ICampaignList,
+} from "./types";
 
 export class SmsService extends HttpService {
   public constructor() {
@@ -48,5 +54,27 @@ export class SmsService extends HttpService {
       params: {
         APIKey,
       },
+    });
+
+  public SMS_GetCampaign = async () =>
+    this.instance.get<
+      ApiDecorator<ApiResponse, "CampaignList", ICampaignList[]>
+    >("/Campaign/GetList");
+
+  public SMS_DeleteCampaign = async (ID: number) =>
+    this.instance.get<ApiResponse>("/Campaign/Delete", {
+      params: {
+        ID,
+      },
+    });
+
+  public SMS_ReviewerUpdate = async (reviewerInfo: ICampaignConfirmation) =>
+    this.instance.post<ApiResponse>("/Campaign/Confirmation", {
+      ...reviewerInfo,
+    });
+
+  public SMS_UpdateCampaign = async (campaignInfo: ICampaignList) =>
+    this.instance.post<ApiResponse>("/Campaign/Update", {
+      ...campaignInfo,
     });
 }

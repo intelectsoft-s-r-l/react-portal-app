@@ -1,14 +1,14 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Col, DatePicker, Form, Input, Modal, Row, Upload } from "antd";
-import { ICampaignList } from "../../../../../../api/app/types";
+import { ICampaignList } from "../../../../../../api/sms/types";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import { rules } from "./NewCampaign";
 import moment from "moment";
-import { AppService } from "../../../../../../api/app";
 import Utils from "../../../../../../utils";
 import TranslateText from "../../../../../../utils/translate";
-import { getScheduledDate } from ".";
+import { SmsService } from "../../../../../../api/sms";
+import { UploadChangeParam } from "antd/es/upload/interface";
 
 interface IEditCampaign {
   visible: boolean;
@@ -42,31 +42,20 @@ const EditCampaign = ({
     });
   }, [phoneNumbers, setPhoneNumbers]);
 
-  const onChange = (info: any) => {
+  const onChange = (info: UploadChangeParam<any>) => {
     if (info.file.status === "done") {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        if (e.target.result.match(/,/)) {
-          setPhoneNumbers((prev) => [...prev, e.target.result]);
-        } else if (e.target.result.match(/;/)) {
-          setPhoneNumbers((prev) => [
-            ...prev,
-            e.target.result.replaceAll(";", ","),
-          ]);
-        } else {
-          // If there are spaces or new lines
-          setPhoneNumbers((prev) => [
-            ...prev,
-            e.target.result
-              .split(/[\s\n]/)
-              .slice(0, -1)
-              .join(","),
-          ]);
-        }
+        let numArr: string = e.target.result
+          .split(/[\s\n\r;*\/]+/)
+          .filter((el: string) => el !== "")
+          .join(",");
+        setPhoneNumbers((prev) => [...prev, numArr]);
       };
       reader.readAsText(info.file.originFileObj);
     }
   };
+
   const onFinish2 = async (values: any) => {
     const uniqNumbers = [
       // @ts-ignore
@@ -85,7 +74,7 @@ const EditCampaign = ({
     const ScheduledDate = moment(values.ScheduledDate["_d"]).format(
       "[/Date(]xZZ[))/]"
     );
-    return new AppService()
+    return new SmsService()
       .SMS_UpdateCampaign({
         ...data,
         ...values,

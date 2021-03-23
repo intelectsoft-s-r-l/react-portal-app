@@ -8,7 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/lib/table";
-import { ICampaignList } from "../../../../../../api/app/types";
+import { ICampaignList } from "../../../../../../api/sms/types";
 import moment from "moment";
 import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
 import { Menu, Tag, Modal } from "antd";
@@ -16,6 +16,7 @@ import { AppService } from "../../../../../../api/app";
 import { Link } from "react-router-dom";
 import TranslateText from "../../../../../../utils/translate";
 import Utils from "../../../../../../utils";
+import { SmsService } from "../../../../../../api/sms";
 
 enum EnSmsType {
   Draft = 0,
@@ -40,6 +41,7 @@ const SmsTable = (
     const scheduledDate = moment(date);
     return Math.round(Math.abs((+today - +scheduledDate) / oneDay));
   };
+  const instance = new SmsService();
   const tableColumns: ColumnsType<ICampaignList> = [
     {
       title: TranslateText("SMS.CampaignName"),
@@ -94,7 +96,7 @@ const SmsTable = (
                       Modal.confirm({
                         title: TranslateText("SMS.campaign.activate.msg"),
                         onOk: async () => {
-                          return await new AppService()
+                          return await instance
                             .SMS_UpdateCampaign({
                               ...elm,
                               Status: EnCampaignStatus.ACTIVE,
@@ -116,7 +118,7 @@ const SmsTable = (
                       Modal.confirm({
                         title: TranslateText("SMS.campaign.deactivate.msg"),
                         onOk: async () => {
-                          return await new AppService()
+                          return await instance
                             .SMS_UpdateCampaign({
                               ...elm,
                               Status: EnCampaignStatus.INACTIVE,
@@ -148,7 +150,7 @@ const SmsTable = (
                 <Menu.Item
                   key="3"
                   onClick={async () => {
-                    return await new AppService()
+                    return await instance
                       .SMS_DeleteCampaign(elm.ID!)
                       .then((data) => {
                         if (data && data.ErrorCode === 0) {

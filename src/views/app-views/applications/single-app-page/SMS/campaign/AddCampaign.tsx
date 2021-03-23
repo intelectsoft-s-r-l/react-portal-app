@@ -11,6 +11,7 @@ import { EnErrorCode } from "../../../../../../api";
 import { DONE } from "../../../../../../constants/Messages";
 import { Store } from "antd/lib/form/interface";
 import { IState } from "../../../../../../redux/reducers";
+import { SmsService } from "../../../../../../api/sms";
 
 interface IAddCampaign {
   visible: boolean;
@@ -35,7 +36,7 @@ const AddCampaign = ({
 
   const onFinish = async ({ Name }: any) => {
     setLoading(true);
-    return await new AppService()
+    return await new SmsService()
       .SMS_UpdateCampaign({ Name })
       .then(async (data) => {
         setLoading(false);

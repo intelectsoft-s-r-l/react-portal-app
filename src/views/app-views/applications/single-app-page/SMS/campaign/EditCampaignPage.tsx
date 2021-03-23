@@ -3,10 +3,11 @@ import { Result, PageHeader, Button } from "antd";
 import { useEffect, useState } from "react";
 import { EnErrorCode } from "../../../../../../api";
 import { AppService } from "../../../../../../api/app";
-import { ICampaignList } from "../../../../../../api/app/types";
+import { ICampaignList } from "../../../../../../api/sms/types";
 import { useQuery } from "../../../../../../utils/hooks/useQuery";
 import Loading from "../../../../../../components/shared-components/Loading";
 import { Link } from "react-router-dom";
+import { SmsService } from "../../../../../../api/sms";
 
 const EditCampaignPage = (props: any) => {
   const query = useQuery(); // name: string, id: string
@@ -15,7 +16,7 @@ const EditCampaignPage = (props: any) => {
     undefined
   );
   const getCampaignInfo = async () => {
-    return await new AppService().SMS_GetCampaign().then((data) => {
+    return await new SmsService().SMS_GetCampaign().then((data) => {
       setLoading(false);
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         setCampaign(
