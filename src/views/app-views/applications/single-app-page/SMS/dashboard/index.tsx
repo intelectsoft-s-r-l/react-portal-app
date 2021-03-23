@@ -1,7 +1,17 @@
 import * as React from "react";
 import { CSVDownload, CSVLink } from "react-csv";
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, DatePicker, Row, Table, Tag, Button } from "antd";
+import {
+  Badge,
+  Card,
+  Col,
+  DatePicker,
+  Row,
+  Table,
+  Tag,
+  Button,
+  Tooltip,
+} from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import { SmsService } from "../../../../../../api/sms";
 import DonutChartWidget from "../../../../../../components/shared-components/DonutChartWidget";
@@ -13,7 +23,8 @@ import StatisticWidget from "../../../../../../components/shared-components/Stat
 import { ISmsList } from "../../../../../../api/sms/types";
 import { ColumnsType } from "antd/es/table/interface";
 import TranslateText from "../../../../../../utils/translate";
-import Tooltip from "antd/es/tooltip";
+// @ts-ignore
+import shortid from "shortid";
 
 interface ISmsDashboard extends RouteComponentProps {
   APIKey: string;
@@ -238,18 +249,8 @@ const SmsDashboard = (props: ISmsDashboard) => {
                   className="no-border-last"
                   columns={tableColumns}
                   dataSource={smsList}
-                  rowKey="Message"
+                  rowKey={shortid.generate()}
                   loading={loading}
-                  //onRow={(record) => {
-                  //return {
-                  //onMouseOver: (event) => {
-                  //event.currentTarget.setAttribute(
-                  //"title",
-                  //"Message: " + record.Message
-                  //);
-                  //},
-                  //};
-                  //}}
                 />
               </Card>
             </Col>
