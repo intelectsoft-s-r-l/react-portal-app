@@ -87,27 +87,6 @@ const tableColumns: ColumnsType<ISmsList> = [
     title: TranslateText("app.licenses.quantity"),
     dataIndex: "Quantity",
   },
-  //{
-  //title: TranslateText("SMS.State"),
-  //dataIndex: "State",
-  //render: (State) => (
-  //<Tag className="text-capitalize" color={"gray"}>
-  //{State === EnSmsState.DeliveryToBulkSMS
-  //? TranslateText("SMS.State.Bulk")
-  //: State === EnSmsState.FailedDelivery
-  //? TranslateText("SMS.State.Failed")
-  //: State === EnSmsState.RejectedSmsc
-  //? TranslateText("SMS.State.Rejected")
-  //: State === EnSmsState.AcceptedSmsc
-  //? TranslateText("SMS.State.Accepted")
-  //: State === EnSmsState.MessageBuffered
-  //? TranslateText("SMS.State.Buffered")
-  //: State === EnSmsState.Pending
-  //? TranslateText("SMS.State.Pending")
-  //: TranslateText("SMS.State.Success")}
-  //</Tag>
-  //),
-  //},
 ];
 const SmsDashboard = (props: ISmsDashboard) => {
   const instance = new SmsService();

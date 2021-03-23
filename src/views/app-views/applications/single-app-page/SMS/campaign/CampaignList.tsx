@@ -3,10 +3,10 @@ import { Button, Input, Table } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import Flex from "../../../../../../components/shared-components/Flex";
-import AddCampaign from "./AddCampaign";
+import AddCampaignForm from "./AddCampaign";
 import SmsTable from "./SmsCampaignTable";
-import EditCampaign from "./EditCampaign";
-import { RouteComponentProps } from "react-router-dom";
+import EditCampaignForm from "./EditCampaign";
+import { Link, RouteComponentProps } from "react-router-dom";
 import TranslateText from "../../../../../../utils/translate";
 import Utils from "../../../../../../utils";
 import { SmsService } from "../../../../../../api/sms";
@@ -61,18 +61,6 @@ const CampaignList = ({ match }: RouteComponentProps) => {
   }, []);
   return (
     <>
-      <AddCampaign
-        visible={isNewCampaignVisible}
-        close={() => setIsNewCampaignVisible(false)}
-        getCampaignList={getCampaignList}
-        amount={campaignInfo.length + 1}
-      />
-      <EditCampaign
-        visible={isEditCampaignVisible}
-        close={() => setEditCampaignVisible(false)}
-        getCampaignList={getCampaignList}
-        data={selectedCampaign}
-      />
       <h2>{TranslateText("app.Campaign")}</h2>
       <Flex
         justifyContent="between"
@@ -87,10 +75,11 @@ const CampaignList = ({ match }: RouteComponentProps) => {
             onChange={(e) => onSearch(e)}
           />
         </div>
-        <Button type="primary" onClick={() => setIsNewCampaignVisible(true)}>
-          <PlusOutlined />
-          <span>{TranslateText("SMS.NewCampaign")}</span>
-        </Button>
+        <Link to={`${match.url}/add`}>
+          <Button type="primary">
+            <PlusOutlined /> <span>{TranslateText("SMS.NewCampaign")}</span>
+          </Button>
+        </Link>
       </Flex>
       <Table
         loading={tableLoading}

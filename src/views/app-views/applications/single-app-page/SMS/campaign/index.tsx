@@ -2,6 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 import Utils from "../../../../../../utils";
+import AddCampaignPage from "./AddCampaignPage";
 import CampaignList from "./CampaignList";
 import EditCampaignPage from "./EditCampaignPage";
 
@@ -67,6 +68,9 @@ const SmsCampaign = (props: RouteComponentProps) => {
       </Route>
       <Route exact path={`${props.match.url}/edit`}>
         <EditCampaignPage {...props} />
+      </Route>
+      <Route exact path={`${props.match.url}/add`}>
+        <AddCampaignPage {...props} />
       </Route>
     </Switch>
   );
