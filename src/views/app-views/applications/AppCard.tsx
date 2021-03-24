@@ -82,9 +82,9 @@ mb-0 cursor-pointer"
           </h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
-        <div style={{ minHeight: "70px" }}>
+        {/*<div style={{ minHeight: "70px" }}>
           {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}
-        </div>
+        </div> */}
       </div>
       <Flex justifyContent="between" alignItems="center">
         <div className="text-muted">Free</div>
