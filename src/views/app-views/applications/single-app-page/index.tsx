@@ -74,9 +74,6 @@ const Options = ({
   match,
   moduleSettings,
 }: IOptions) => {
-  useEffect(() => {
-    console.log({ match, location });
-  }, [match]);
   return (
     <Menu
       mode="inline"
@@ -322,7 +319,6 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: TOGGLE_COLLAPSED_NAV, navCollapsed: true });
     instance.GetMarketAppList().then(async (data) => {
       if (data && data.ErrorCode === 0) {
         setLoading(false);
@@ -337,6 +333,11 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
     return () => instance._source.cancel();
   }, [appID]);
 
+  useEffect(() => {
+    // Temporary fix
+    dispatch({ type: TOGGLE_COLLAPSED_NAV, navCollapsed: true });
+  }, [location.pathname]);
+
   if (loading) return <Loading />;
   if (!app) {
     return <Empty />;
@@ -344,26 +345,20 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
 
   return (
     <>
-      {app!.Status === 1 ? (
-        <>
-          <AboutItem appData={app} />
-          <InnerAppLayout
-            sideContent={
-              <AppOption
-                location={location}
-                match={match}
-                AppType={app!.AppType}
-                moduleSettings={app!.ModuleSettings}
-                AppName={app!.Name}
-              />
-            }
-            mainContent={
-              <AppRoute match={match} app={app} location={location} />
-            }
-          />
-        </>
-      ) : (
-        <AboutItem appData={app} />
+      <AboutItem appData={app} />
+      {app.Status === EnStatusApp.ACTIVE && (
+        <InnerAppLayout
+          sideContent={
+            <AppOption
+              location={location}
+              match={match}
+              AppType={app!.AppType}
+              moduleSettings={app!.ModuleSettings}
+              AppName={app!.Name}
+            />
+          }
+          mainContent={<AppRoute match={match} app={app} location={location} />}
+        />
       )}
     </>
   );
