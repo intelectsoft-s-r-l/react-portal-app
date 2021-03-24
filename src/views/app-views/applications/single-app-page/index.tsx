@@ -2,7 +2,7 @@ import React, { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Button, Card, Empty, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
 import Avatar from "antd/lib/avatar/avatar";
 import {
@@ -11,6 +11,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
+  withRouter,
 } from "react-router-dom";
 import Description from "./Description";
 import Licenses from "./Licenses/Licenses";
@@ -38,6 +39,7 @@ import InvoiceLines from "./ExchangeOfInvoice/invoice/InvoiceLines";
 import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 import Templates from "./Mail/templates";
 import Dashboard from "../../dashboard";
+import { TOGGLE_COLLAPSED_NAV } from "../../../../redux/constants/Theme";
 
 export enum EnStatusApp {
   DISABLED = 0,
@@ -72,6 +74,9 @@ const Options = ({
   match,
   moduleSettings,
 }: IOptions) => {
+  useEffect(() => {
+    console.log({ match, location });
+  }, [match]);
   return (
     <Menu
       mode="inline"
@@ -82,14 +87,14 @@ const Options = ({
         <span>
           <IntlMessage id="app.Dashboard" />
         </span>
-        <Link to={"dashboard"} />
+        <Link to={match.url + "/dashboard"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/templates`}
         className={AppType === EnApp.MailService ? "" : "d-none"}
       >
         <span>Templates</span>
-        <Link to={"templates"} />
+        <Link to={match.url + "/templates"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/invoice`}
@@ -98,7 +103,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Invoice" />
         </span>
-        <Link to={"invoice"} />
+        <Link to={match.url + "/templates"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/order`}
@@ -107,7 +112,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Order" />
         </span>
-        <Link to={"order"} />
+        <Link to={match.url + "/order"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/campaign`}
@@ -116,7 +121,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Campaign" />
         </span>
-        <Link to={"campaign"} />
+        <Link to={match.url + "/campaign"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/news`}
@@ -125,7 +130,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.News" />
         </span>
-        <Link to={"news"} />
+        <Link to={match.url + "/news"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/licenses`}
@@ -134,7 +139,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Licenses" />
         </span>
-        <Link to={"licenses"} />
+        <Link to={match.url + "/licenses"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/devices`}
@@ -143,25 +148,25 @@ const Options = ({
         <span>
           <IntlMessage id="app.Devices" />
         </span>
-        <Link to={"devices"} />
+        <Link to={match.url + "/devices"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/integration`}>
         <span>
           <IntlMessage id="app.Integration" />
         </span>
-        <Link to={"integration"} />
+        <Link to={match.url + "/integration"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/packages`}>
         <span>
           <IntlMessage id="app.Packages" />
         </span>
-        <Link to={"packages"} />
+        <Link to={match.url + "/packages"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/description`}>
         <span>
           <IntlMessage id="app.Description" />
         </span>
-        <Link to={"description"} />
+        <Link to={match.url + "/description"} />
       </Menu.Item>
     </Menu>
   );
@@ -171,9 +176,10 @@ const AppOption = (props: any) => {
 };
 interface IAppRoute {
   match: RouteComponentProps["match"];
+  location: RouteComponentProps["location"];
   app: any;
 }
-const AppRoute = ({ match, app }: IAppRoute) => {
+const AppRoute = ({ match, app, location }: IAppRoute) => {
   return (
     <Switch>
       <Redirect exact from={`${match.url}`} to={`${match.url}/dashboard`} />
@@ -313,8 +319,10 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const instance = new AppService();
   const [app, setApp] = useState<Partial<IMarketAppList>>();
   const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch({ type: TOGGLE_COLLAPSED_NAV, navCollapsed: true });
     instance.GetMarketAppList().then(async (data) => {
       if (data && data.ErrorCode === 0) {
         setLoading(false);
@@ -349,7 +357,9 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
                 AppName={app!.Name}
               />
             }
-            mainContent={<AppRoute match={match} app={app} />}
+            mainContent={
+              <AppRoute match={match} app={app} location={location} />
+            }
           />
         </>
       ) : (
@@ -358,4 +368,4 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
     </>
   );
 };
-export default SingleAppPage;
+export default withRouter(SingleAppPage);
