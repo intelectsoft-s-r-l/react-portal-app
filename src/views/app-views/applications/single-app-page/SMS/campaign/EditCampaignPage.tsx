@@ -8,7 +8,6 @@ import { useQuery } from "../../../../../../utils/hooks/useQuery";
 import Loading from "../../../../../../components/shared-components/Loading";
 import { Link } from "react-router-dom";
 import { SmsService } from "../../../../../../api/sms";
-import AddCampaignForm from "./AddCampaign";
 import EditCampaignForm from "./EditCampaign";
 
 const EditCampaignPage = (props: any) => {
@@ -53,7 +52,7 @@ const EditCampaignPage = (props: any) => {
   return (
     <PageHeader
       title={`${query.get("name")}`}
-      onBack={() => props.history.goBack()}
+      onBack={() => props.history.push(props.match.url)}
     >
       <EditCampaignForm data={campaign} getCampaignList={getCampaignInfo} />
     </PageHeader>

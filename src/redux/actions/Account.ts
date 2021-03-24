@@ -63,7 +63,7 @@ export const getProfileInfo = (): ThunkResult<void> => {
 
 export const setProfileInfo = (accountInfo: {
   User: IAccount;
-}): ThunkResult<any> => {
+}): ThunkResult<void> => {
   return async (dispatch) => {
     return new AppService().UpdateUser(accountInfo).then((data) => {
       if (data && data.ErrorCode === 0) {

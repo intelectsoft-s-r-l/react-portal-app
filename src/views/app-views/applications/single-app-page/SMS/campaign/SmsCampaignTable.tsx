@@ -21,10 +21,11 @@ import { SmsService } from "../../../../../../api/sms";
 enum EnSmsType {
   Draft = 0,
   Verifying = 1,
-  Declined = 2,
+  Instant = 2,
   Scheduled = 3,
   Hidden = 100,
 }
+// de la 9:00 pana la 18:00
 enum EnCampaignStatus {
   INACTIVE = 0,
   ACTIVE = 1,
@@ -64,12 +65,12 @@ const SmsTable = (
         <div>
           <Tag className="mr-0">
             {Status === EnSmsType.Verifying
-              ? TranslateText("SMS.Status.Available")
+              ? "Verifying"
               : Status === EnSmsType.Scheduled
-              ? TranslateText("SMS.Status.Scheduled")
+              ? "Scheduled"
               : Status === EnSmsType.Draft
-              ? TranslateText("SMS.Status.NotAvailable")
-              : TranslateText("SMS.Status.Declined")}
+              ? "Waiting approval"
+              : "Declined"}
           </Tag>
         </div>
       ),
@@ -77,9 +78,7 @@ const SmsTable = (
     {
       title: "Contacts",
       render: (_, elm) => (
-        <span>
-          {elm.PhoneList ? elm.PhoneList!.split(",").length : "Add contact"}
-        </span>
+        <span>{elm.PhoneList ? elm.PhoneList!.split(",").length : 0}</span>
       ),
     },
     {
