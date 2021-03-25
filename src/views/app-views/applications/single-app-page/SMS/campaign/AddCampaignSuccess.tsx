@@ -5,9 +5,8 @@ import { Link } from "react-router-dom";
 const AddCampaignSuccess = (props: any) => {
   return (
     <Result
-      status="info"
+      status="success"
       title="Campaign was created!"
-      subTitle="Waiting for moderator approval"
       extra={[
         <Link to={`${props.match.url}/add`}>
           <Button type="primary" key="Create">
