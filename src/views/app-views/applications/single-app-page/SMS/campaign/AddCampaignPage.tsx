@@ -9,7 +9,7 @@ const AddCampaignPage = (props: any) => {
   const [phoneLength, setPhoneLength] = useState<number>(0);
   const [maxPhoneLength, setMaxPhoneLength] = useState<number>(160);
   const [currentSms, setCurrentSms] = useState<number>(1);
-  const [message, setMessage] = useState<any>("");
+  const [message, setMessage] = useState<any>("Hello, this is an SMS example!");
   return (
     <PageHeader
       title={"Add campaign"}
