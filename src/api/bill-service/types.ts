@@ -14,6 +14,7 @@ export interface IBill {
   Number: string;
   OperationType: number;
   OperatorCode: string;
+  Change: number;
   PaymantCode: number;
   PaymantType: string;
   ShiftNumber: string;
