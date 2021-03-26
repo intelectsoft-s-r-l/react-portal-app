@@ -76,14 +76,17 @@ const Licenses = ({ AppType }: { AppType: number }) => {
   };
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
-    const searchArray = value ? licenses : licensesToSearch;
-    const data = Utils.wildCardSearch(searchArray, value);
+    const data = Utils.wildCardSearch(licensesToSearch, value);
     setLicenses(data);
   };
   const tableColumns: ColumnsType<ILicenses> = [
     {
       title: TranslateText("app.licenses.licenseCode"),
       dataIndex: "LicenseCode",
+    },
+    {
+      title: TranslateText("app.devices.deviceName"),
+      dataIndex: "DeviceName",
     },
     {
       title: TranslateText("app.licenses.createDate"),

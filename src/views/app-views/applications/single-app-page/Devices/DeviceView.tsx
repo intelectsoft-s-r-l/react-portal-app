@@ -184,6 +184,10 @@ const DeviceView = ({ visible, data, close, licenseData }: IDeviceView) => {
               <td>Serial number</td>
               <td>{licenseData.SerialNumber ?? "--"}</td>
             </tr>
+            <tr>
+              <td>License code</td>
+              <td>{licenseData.LicenseCode ?? "--"}</td>
+            </tr>
           </tbody>
         </table>
       </div>

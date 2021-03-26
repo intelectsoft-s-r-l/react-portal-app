@@ -203,26 +203,29 @@ class Utils {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = (event: ProgressEvent<FileReader>) => {
-        const isCsvOrTxt = file.type === "text/csv" || file.type === "text/plain";
+        const isCsvOrTxt =
+          file.type === "text/csv" || file.type === "text/plain";
         const hasLetters = (): boolean => {
           if (isCsvOrTxt) {
-            return (/[a-z]/gi).test(event!.target!.result! as string);
+            return /[a-z]/gi.test(event!.target!.result! as string);
           }
           return false;
-        }
+        };
         if (hasLetters()) {
-          store.dispatch(showAuthMessage("The file should not contain letters!"))
+          store.dispatch(
+            showAuthMessage("The file should not contain letters!")
+          );
         }
         if (!isCsvOrTxt) {
-          store.dispatch(showAuthMessage("You can only upload CSV/TXT file!"))
+          store.dispatch(showAuthMessage("You can only upload CSV/TXT file!"));
         }
         if (!hasLetters() && isCsvOrTxt) {
           resolve(true);
         } else {
           reject();
         }
-      }
-    })
+      };
+    });
   }
 
   static dummyRequest({ onSuccess }: any) {
@@ -298,7 +301,7 @@ class Utils {
   }
 
   static padNumber(elem: any) {
-    return ("00000" + elem).substring(elem.length);
+    if (elem) return ("00000" + elem).substring(elem.length);
   }
 }
 
