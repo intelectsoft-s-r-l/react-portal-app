@@ -8,8 +8,9 @@ import CampaignList from "./CampaignList";
 import EditCampaignPage from "./EditCampaignPage";
 
 export enum send {
-  NOW = 0,
+  NOW = 2,
   DELAY = 1,
+  DRAFT = 0,
 }
 export const MAX_SMS = 160;
 export interface IPhoneNumbers {

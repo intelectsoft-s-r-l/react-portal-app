@@ -64,8 +64,7 @@ const Applications = ({
               placeholder={TranslateText("app.Search")}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = e.currentTarget!.value!;
-                const searchArray = value ? data : dataToSearch;
-                const apps = Utils.wildCardSearch(searchArray, value);
+                const apps = Utils.wildCardSearch(dataToSearch, value);
                 setData(apps);
               }}
             />

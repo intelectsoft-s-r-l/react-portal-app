@@ -89,15 +89,17 @@ export const authorizeUser = (
             if (SUBDIR_PATH === "/testclientportal") {
               dispatch(onHeaderNavColorChange("#DE4436"));
             }
-
             return data;
           } else if (ErrorCode === 102) {
             dispatch(showAuthMessage(ErrorMessage!.toString()));
+            return data;
           } else if (ErrorCode === 108) {
             handleAccountActivation(Token);
+            return data;
           } else {
             dispatch(hideLoading());
             dispatch(showAuthMessage(ErrorMessage!.toString()));
+            return data;
           }
         }
       })

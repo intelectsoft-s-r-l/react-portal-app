@@ -18,15 +18,13 @@ import TranslateText from "../../../../../../utils/translate";
 import Utils from "../../../../../../utils";
 import { SmsService } from "../../../../../../api/sms";
 
-enum EnSmsType {
+export enum EnSmsType {
   Draft = 0,
-  Verifying = 1,
+  Scheduled = 1,
   Instant = 2,
-  Scheduled = 3,
-  Hidden = 100,
 }
 // de la 9:00 pana la 18:00
-enum EnCampaignStatus {
+export enum EnCampaignStatus {
   INACTIVE = 0,
   ACTIVE = 1,
   DELETED = 2,
@@ -64,13 +62,11 @@ const SmsTable = (
       render: (Status: number) => (
         <div>
           <Tag className="mr-0">
-            {Status === EnSmsType.Verifying
-              ? "Verifying"
+            {Status === EnSmsType.Draft
+              ? "Draft"
               : Status === EnSmsType.Scheduled
               ? "Scheduled"
-              : Status === EnSmsType.Draft
-              ? "Waiting approval"
-              : "Declined"}
+              : "Executing"}
           </Tag>
         </div>
       ),

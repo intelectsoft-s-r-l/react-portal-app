@@ -10,6 +10,7 @@ import {
   Card,
   Button,
   Spin,
+  Modal,
 } from "antd";
 import { ROW_GUTTER } from "../../../../../../constants/ThemeConstant";
 import TranslateText from "../../../../../../utils/translate";
@@ -19,6 +20,8 @@ import moment from "moment";
 import { useDispatch } from "react-redux";
 import { SmsService } from "../../../../../../api/sms";
 import { EnErrorCode } from "../../../../../../api";
+import Utils from "../../../../../../utils";
+import { EnSmsType } from "./SmsCampaignTable";
 
 export const rules = {
   Name: [
@@ -78,17 +81,19 @@ const AddCampaignForm = ({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const [radioVal, setRadioVal] = useState<number>(0);
+  const [radioVal, setRadioVal] = useState<number>(2);
   const [date, setDate] = useState<any>();
   const [phoneNumbers, setPhoneNumbers] = useState<string>("");
   //const [isCsvOrTxt, setIsCsvOrTxt] = useState<boolean>(false);
 
-  const onFinish = async (values: any) => {
+  const createCampaign = async (status: number, values: any) => {
     setLoading(true);
     return await new SmsService()
       .SMS_UpdateCampaign({
         ...values,
-        ScheduledDate: getScheduledDate(date, radioVal),
+        ScheduledDate:
+          radioVal === send.NOW ? "" : Utils.handleDotNetDate(date),
+        Status: status,
       })
       .then((data) => {
         setLoading(false);
@@ -96,6 +101,9 @@ const AddCampaignForm = ({
           history.push(`${match.url}/success`);
         }
       });
+  };
+  const onFinish = async (values: any) => {
+    createCampaign(radioVal, values);
   };
   return (
     <Spin spinning={loading}>
@@ -179,12 +187,15 @@ const AddCampaignForm = ({
                   <Radio style={radioStyle} value={send.DELAY}>
                     {TranslateText("SMS.DelaySMSSend")}
                   </Radio>
+                  <Radio style={radioStyle} value={send.DRAFT}>
+                    Draft
+                  </Radio>
                 </Radio.Group>
                 <div>
                   <DatePicker
                     format={"DD/MM/YYYY"}
                     onChange={(e) => setDate(e)}
-                    className={`${radioVal === send.NOW ? "d-none" : ""}`}
+                    className={`${radioVal === send.DELAY ? "" : "d-none"}`}
                     disabledDate={(current) =>
                       current && current.valueOf() < Date.now()
                     }
@@ -192,11 +203,12 @@ const AddCampaignForm = ({
                 </div>
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  Send
-                </Button>
+                <div>
+                  <Button type="primary" htmlType="submit" className="mr-3">
+                    {radioVal === send.DRAFT ? "Draft campaign" : "Save"}
+                  </Button>
+                </div>
               </Form.Item>
-              Draft
             </Col>
           </Row>
         </Form>
