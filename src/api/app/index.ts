@@ -19,10 +19,6 @@ export class AppService extends HttpService {
   public constructor() {
     super(API_APP_URL);
   }
-  public GetProfileInfo = async () =>
-    this.instance.get<ApiDecorator<ApiResponse, "User", IUsers>>(
-      "/GetProfileInfo"
-    );
   public UpdateUser = async (data: any) =>
     this.instance.post<ApiResponse>("/UpdateUser", data);
 
