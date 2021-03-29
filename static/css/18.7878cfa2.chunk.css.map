@@ -1,1 +1,0 @@
-{"version":3,"sources":["add_user.scss"],"names":[],"mappings":"AAAA,UACI,cAAe,CACf,gBAAiB,CACjB,aAAc,CACd,WAAY,CAJhB,gBAOQ,cAAe","file":"18.7878cfa2.chunk.css","sourcesContent":[".add_user {\n    font-size: 36px;\n    position: \"fixed\";\n    bottom: \"10px\";\n    left: \"10px\";\n\n    &:hover {\n        cursor: pointer;\n    }\n}\n"]}

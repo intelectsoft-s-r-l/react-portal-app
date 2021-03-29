@@ -8,8 +8,8 @@ import { IAccount } from "../reducers/Account";
 import TranslateText from "../../utils/translate";
 import { DONE } from "../../constants/Messages";
 import { message } from "antd";
-import { SIGNOUT } from "../constants/Auth";
 import { EnErrorCode } from "../../api/";
+import { AuthService } from "../../api/auth";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -33,7 +33,7 @@ export const clearSettings = () => ({
 
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AppService().GetProfileInfo().then(async (data) => {
+    return new AuthService().GetProfileInfo().then(async (data) => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
         //let Company: string = "";

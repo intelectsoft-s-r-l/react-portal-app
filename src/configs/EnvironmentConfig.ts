@@ -9,7 +9,7 @@ const dev = {
   SUBDIR_PATH: "/clientportal",
 };
 
-const test = {
+const prod = {
   API_APP_URL: "https://api.edi.md/ISClientWebAppService/json",
   API_AUTH_URL: "https://api.edi.md/ISAuthService/json",
   API_SMS_URL: "https://api.edi.md/SMSService/json",
@@ -20,7 +20,7 @@ const test = {
   SUBDIR_PATH: "/clientportal",
 };
 
-const prod = {
+const test = {
   API_APP_URL: "https://dev.edi.md/ISClientWebAppService/json",
   API_AUTH_URL: "https://dev.edi.md/ISAuthService/json",
   API_SMS_URL: "https://dev.edi.md/SMSService/json",

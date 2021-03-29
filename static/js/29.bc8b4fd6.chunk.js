@@ -1,2 +1,0 @@
-(this["webpackJsonpclient-portal-app"]=this["webpackJsonpclient-portal-app"]||[]).push([[29],{889:function(t,n,e){"use strict";e.r(n);var p=e(0),a=e.n(p);n.default=function(){return a.a.createElement("div",null,"History component works!")}}}]);
-//# sourceMappingURL=29.bc8b4fd6.chunk.js.map
