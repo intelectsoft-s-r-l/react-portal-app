@@ -100,7 +100,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Invoice" />
         </span>
-        <Link to={match.url + "/templates"} />
+        <Link to={match.url + "/invoice"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/order`}
