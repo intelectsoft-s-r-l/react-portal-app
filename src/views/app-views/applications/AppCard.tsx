@@ -16,6 +16,7 @@ import Button from "antd/es/button";
 import { useSelector } from "react-redux";
 import { IState } from "../../../redux/reducers";
 import { IMarketAppList } from "../../../api/app/types";
+import Cookies from "js-cookie";
 
 interface IAppCard {
   data: IMarketAppList;
@@ -25,7 +26,7 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
   const { dispatch } = useContext(WizardContext);
   const history = useHistory();
   const locale = useSelector((state: IState) => state.theme?.locale) ?? "en";
-  const Token = useSelector((state: IState) => state.auth?.token);
+  const token = Cookies.get("Token");
   const appLink = `${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
     " "
   ).join("-")}`;
@@ -36,7 +37,7 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
           <div
             className="cursor-pointer app-avatar"
             onClick={() => {
-              window.open(`${SMS_URL_VALIDATE}?token=${Token}`);
+              window.open(`${SMS_URL_VALIDATE}?token=${token}`);
             }}
           >
             <Avatar
@@ -91,7 +92,7 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
       <div>
         {data.AppType === EnApp.SMS ? (
           <h3
-            onClick={() => window.open(`${SMS_URL_VALIDATE}?token=${Token}`)}
+            onClick={() => window.open(`${SMS_URL_VALIDATE}?token=${token}`)}
             className="app-link
 mb-0 cursor-pointer"
           >
