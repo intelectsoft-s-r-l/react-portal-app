@@ -6,6 +6,7 @@ const dev = {
   API_EDX_URL: "https://dev.edi.md/EDXService/json",
   API_MAIL_URL: "https://dev.edi.md/ISMailService/json",
   API_BILL_URL: "https://dev.edi.md/ISBillService/json",
+  SMS_URL_VALIDATE: "http://localhost:3002/auth/validate",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -17,6 +18,7 @@ const prod = {
   API_EDX_URL: "https://api.edi.md/EDXService/json",
   API_MAIL_URL: "https://api.edi.md/ISMailService/json",
   API_BILL_URL: "https://dev.edi.md/ISBillService/json",
+  SMS_URL_VALIDATE: "https://sms.eservicii.md/auth/validate",
   SUBDIR_PATH: "/clientportal",
 };
 
@@ -28,6 +30,7 @@ const test = {
   API_EDX_URL: "https://dev.edi.md/EDXService/json",
   API_MAIL_URL: "https://dev.edi.md/ISMailService/json",
   API_BILL_URL: "https://dev.edi.md/ISBillService/json",
+  SMS_URL_VALIDATE: "https://sms.eservicii.md/auth/validate",
   SUBDIR_PATH: "/testclientportal",
 };
 

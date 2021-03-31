@@ -14,6 +14,7 @@ export const API_MAIL_URL = env!.API_MAIL_URL;
 export const API_DISCOUNT_URL = env!.API_DISCOUNT_URL;
 export const API_EDX_URL = env!.API_EDX_URL;
 export const API_BILL_URL = env!.API_BILL_URL;
+export const SMS_URL_VALIDATE = env!.SMS_URL_VALIDATE;
 export const SUBDIR_PATH = env!.SUBDIR_PATH;
 export const APP_PREFIX_PATH = "/app";
 export const AUTH_PREFIX_PATH = "/auth";
