@@ -6,14 +6,13 @@ import {
 } from "@ant-design/icons";
 import { Card, Tag } from "antd";
 import Flex from "../../../components/shared-components/Flex";
-import { Link } from "react-router-dom";
-import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
+import { Link, useHistory } from "react-router-dom";
+import { APP_PREFIX_PATH, SMS_URL_VALIDATE } from "../../../configs/AppConfig";
 import Avatar from "antd/lib/avatar/avatar";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { WizardContext } from "./market/wizard/WizardContext";
-import { EnStatusApp } from "./single-app-page";
+import { EnApp, EnStatusApp } from "./single-app-page";
 import Button from "antd/es/button";
-import Utils from "../../../utils";
 import { useSelector } from "react-redux";
 import { IState } from "../../../redux/reducers";
 import { IMarketAppList } from "../../../api/app/types";
@@ -24,16 +23,22 @@ interface IAppCard {
 }
 const AppCard = ({ data, deactivateApp }: IAppCard) => {
   const { dispatch } = useContext(WizardContext);
+  const history = useHistory();
   const locale = useSelector((state: IState) => state.theme?.locale) ?? "en";
+  const Token = useSelector((state: IState) => state.auth?.token);
+  const appLink = `${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+    " "
+  ).join("-")}`;
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        <Link
-          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
-            " "
-          ).join("-")}`}
-        >
-          <div className="cursor-pointer app-avatar">
+        {data.AppType === 50 ? (
+          <div
+            className="cursor-pointer app-avatar"
+            onClick={() => {
+              window.open(`${SMS_URL_VALIDATE}?token=${Token}`);
+            }}
+          >
             <Avatar
               src={data.Photo}
               icon={<ExperimentOutlined />}
@@ -41,7 +46,22 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
               size={60}
             />
           </div>
-        </Link>
+        ) : (
+          <Link
+            to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+              " "
+            ).join("-")}`}
+          >
+            <div className="cursor-pointer app-avatar">
+              <Avatar
+                src={data.Photo}
+                icon={<ExperimentOutlined />}
+                shape="square"
+                size={60}
+              />
+            </div>
+          </Link>
+        )}
         {data.Status === EnStatusApp.DISABLED ? (
           <Tag
             className="text-capitalize cursor-pointer"
@@ -69,18 +89,28 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
         )}
       </Flex>
       <div>
-        <Link
-          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
-            " "
-          ).join("-")}`}
-        >
+        {data.AppType === EnApp.SMS ? (
           <h3
+            onClick={() => window.open(`${SMS_URL_VALIDATE}?token=${Token}`)}
             className="app-link
 mb-0 cursor-pointer"
           >
             {data.Name}
           </h3>
-        </Link>
+        ) : (
+          <Link
+            to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+              " "
+            ).join("-")}`}
+          >
+            <h3
+              className="app-link
+mb-0 cursor-pointer"
+            >
+              {data.Name}
+            </h3>
+          </Link>
+        )}
         <p className="text-muted">By IntelectSoft</p>
         {/*<div style={{ minHeight: "70px" }}>
           {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}
