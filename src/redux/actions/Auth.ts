@@ -17,10 +17,12 @@ import axios from "axios";
 import {
   API_AUTH_URL,
   APP_PREFIX_PATH,
+  DOMAIN,
   SUBDIR_PATH,
 } from "../../configs/AppConfig";
 import { onHeaderNavColorChange } from "./Theme";
 import history from "../../history";
+import Cookies from "js-cookie";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -84,8 +86,11 @@ export const authorizeUser = (
         if (data) {
           const { ErrorCode, ErrorMessage, Token } = data;
           if (ErrorCode === 0) {
-            dispatch(authenticated(Token));
-            dispatch(getProfileInfo());
+            Cookies.set("Token", Token, {
+              expires: 1,
+              domain: DOMAIN,
+              path: "/",
+            });
             if (SUBDIR_PATH === "/testclientportal") {
               dispatch(onHeaderNavColorChange("#DE4436"));
             }

@@ -5,19 +5,13 @@ import axios, {
   CancelTokenSource,
 } from "axios";
 import { message, notification } from "antd";
-import {
-  API_APP_URL,
-  API_AUTH_URL,
-  API_DISCOUNT_URL,
-  API_EDX_URL,
-  API_MAIL_URL,
-  API_SMS_URL,
-} from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
 import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
+import Cookies from "js-cookie";
+import { API_AUTH_URL, DOMAIN } from "../configs/AppConfig";
 
 export enum EnErrorCode {
   INTERNAL_ERROR = -1,
@@ -38,7 +32,7 @@ declare module "axios" {
 
 class HttpService {
   public readonly instance: AxiosInstance;
-  private _token: string;
+  private _token: string | undefined;
   public _source: CancelTokenSource;
 
   public constructor(baseURL: string) {
@@ -46,7 +40,7 @@ class HttpService {
       baseURL,
     });
     this._source = axios.CancelToken.source();
-    this._token = store.getState().auth.token;
+    this._token = Cookies.get("Token");
     this._initializeResponseInterceptor();
     this._initializeRequestInterceptor();
   }
@@ -63,6 +57,11 @@ class HttpService {
   };
   private setToken = (Token: string) => {
     this._token = Token;
+    Cookies.set("Token", Token, {
+      expires: 1,
+      domain: DOMAIN,
+      path: "/",
+    });
   };
   private _initializeRequestInterceptor = () => {
     this.instance.interceptors.request.use(
@@ -88,7 +87,6 @@ class HttpService {
         if (tokenData && tokenData.ErrorCode === 0) {
           const { Token } = tokenData;
           this.setToken(Token);
-          store.dispatch({ type: AUTHENTICATED, token: Token });
           if (response.config.method === "get") {
             response.config.params = {
               ...response.config.params,
