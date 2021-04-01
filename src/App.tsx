@@ -10,7 +10,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Provider store={store}>
-        <Router basename={SUBDIR_PATH}>
+        <Router>
           <Switch>
             <Route path="/" component={Views} />
           </Switch>
