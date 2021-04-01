@@ -11,7 +11,8 @@ import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
 import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
 import Cookies from "js-cookie";
-import { API_AUTH_URL, DOMAIN } from "../configs/AppConfig";
+import { API_AUTH_URL, AUTH_PREFIX_PATH, DOMAIN } from "../configs/AppConfig";
+import Utils from "../utils";
 
 export enum EnErrorCode {
   INTERNAL_ERROR = -1,
@@ -19,6 +20,7 @@ export enum EnErrorCode {
   APIKEY_NOT_EXIST = 10,
   EXPIRED_TOKEN = 118,
   INCORECT_AUTH_DATA = 102,
+  USER_NOT_ACTIVATED = 108,
 }
 export enum EnReqStatus {
   OK = 200,
@@ -32,15 +34,19 @@ declare module "axios" {
 
 class HttpService {
   public readonly instance: AxiosInstance;
-  private _token: string | undefined;
+  public token: string | undefined;
+  public company_id: any;
   public _source: CancelTokenSource;
 
-  public constructor(baseURL: string) {
+  public constructor(baseURL = "") {
     this.instance = axios.create({
       baseURL,
     });
     this._source = axios.CancelToken.source();
-    this._token = Cookies.get("Token");
+    this.company_id = sessionStorage.getItem("c_id");
+    this.token = this.company_id
+      ? Cookies.get(`ManageToken_${this.company_id}`)
+      : Cookies.get("Token");
     this._initializeResponseInterceptor();
     this._initializeRequestInterceptor();
   }
@@ -56,12 +62,11 @@ class HttpService {
     );
   };
   private setToken = (Token: string) => {
-    this._token = Token;
-    Cookies.set("Token", Token, {
-      expires: 1,
-      domain: DOMAIN,
-      path: "/",
-    });
+    this.token = Token;
+    // We verify by company_id because managetoken is a cookie and it's shared between tabs
+    this.company_id
+      ? Utils.setManageToken(`ManageToken_${this.company_id}`, Token)
+      : Utils.setToken(Token);
   };
   private _initializeRequestInterceptor = () => {
     this.instance.interceptors.request.use(
@@ -74,14 +79,15 @@ class HttpService {
     console.log(config);
     return {
       ...config,
-      data: { ...config.data, Token: this._token },
-      params: { ...config.params, Token: this._token },
+      data: { ...config.data, Token: this.token },
+      params: { ...config.params, Token: this.token },
       cancelToken: this._source.token,
     };
   };
 
   private _handleResponse = (response: AxiosResponse) => {
     console.log(response);
+
     if (response.data.ErrorCode === EnErrorCode.EXPIRED_TOKEN) {
       return this._RefreshToken().then(async (tokenData) => {
         if (tokenData && tokenData.ErrorCode === 0) {
@@ -118,7 +124,8 @@ class HttpService {
       response.data.ErrorCode !== EnErrorCode.NO_ERROR &&
       response.data.ErrorCode !== EnErrorCode.EXPIRED_TOKEN &&
       response.data.ErrorCode !== EnErrorCode.INCORECT_AUTH_DATA &&
-      response.data.ErrorCode !== EnErrorCode.APIKEY_NOT_EXIST
+      response.data.ErrorCode !== EnErrorCode.APIKEY_NOT_EXIST &&
+      response.data.ErrorCode !== EnErrorCode.USER_NOT_ACTIVATED
     ) {
       message.error({
         content: `Error: ${response.data.ErrorMessage}`,

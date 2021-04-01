@@ -91,9 +91,9 @@ export const authorizeUser = (
               domain: DOMAIN,
               path: "/",
             });
-            if (SUBDIR_PATH === "/testclientportal") {
+            if (window.location.origin.includes("test"))
               dispatch(onHeaderNavColorChange("#DE4436"));
-            }
+
             return data;
           } else if (ErrorCode === 102) {
             dispatch(showAuthMessage(ErrorMessage!.toString()));

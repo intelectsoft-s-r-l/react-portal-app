@@ -32,7 +32,7 @@ const prod = {
   API_EDX_URL: "https://dev.edi.md/EDXService/json",
   API_MAIL_URL: "https://dev.edi.md/ISMailService/json",
   API_BILL_URL: "https://dev.edi.md/ISBillService/json",
-  SMS_URL_VALIDATE: "https://sms.eservicii.md/auth/validate",
+  SMS_URL_VALIDATE: "https://testsms.eservicii.md/auth/validate",
   SUBDIR_PATH: "/testclientportal",
   DOMAIN: "eservicii.md",
 };

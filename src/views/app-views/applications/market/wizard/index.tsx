@@ -1,12 +1,18 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { Button, Modal } from "antd";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
-import { APP_PREFIX_PATH } from "../../../../../configs/AppConfig";
+import {
+  APP_PREFIX_PATH,
+  SMS_URL_VALIDATE,
+} from "../../../../../configs/AppConfig";
 import WithStringTranslate from "../../../../../utils/translate";
 import { WizardContext } from "./WizardContext";
 import InstallResult from "./InstallResult";
 import TermsModal from "./TermsWizard";
+import { EnApp } from "../../single-app-page";
+import Cookies from "js-cookie";
+import { appRedirect } from "../../AppCard";
 const steps = [
   {
     title: "Terms",
@@ -18,7 +24,13 @@ const steps = [
   },
 ];
 const InstallWizard = () => {
+  const history = useHistory();
   const { state, dispatch } = useContext(WizardContext);
+  useEffect(() => {
+    if (!steps[state.current]["content"]) {
+      dispatch("HIDE_WIZARD");
+    }
+  }, [state.current]);
 
   return (
     <Modal
@@ -47,20 +59,31 @@ const InstallWizard = () => {
           disabled={!state.isAccepted || state.wizLoading}
         >
           {state.termsAccepted ? (
-            <Link
-              to={`${APP_PREFIX_PATH}/id/${
-                state.selectedApp.AppType
-              }/${state.selectedApp.Name.split(" ").join("-")}`}
-            >
-              <IntlMessage id="wizard.go" />
-            </Link>
+            state.selectedApp.AppType === EnApp.SMS ? (
+              <div
+                onClick={() => {
+                  appRedirect(SMS_URL_VALIDATE);
+                  window.location.reload();
+                }}
+              >
+                <IntlMessage id="wizard.go" />
+              </div>
+            ) : (
+              <Link
+                to={`${APP_PREFIX_PATH}/id/${
+                  state.selectedApp.AppType
+                }/${state.selectedApp.Name.split(" ").join("-")}`}
+              >
+                <IntlMessage id="wizard.go" />
+              </Link>
+            )
           ) : (
             <IntlMessage id="wizard.next" />
           )}
         </Button>,
       ]}
     >
-      <div>{steps[state.current]["content"]}</div>
+      <div>{steps[state.current] && steps[state.current]["content"]}</div>
     </Modal>
   );
 };

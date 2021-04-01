@@ -22,22 +22,31 @@ interface IAppCard {
   data: IMarketAppList;
   deactivateApp: (AppID: number, AppName: string) => void;
 }
+export function appRedirect(appUrl: string) {
+  if (sessionStorage.getItem("c_id")) {
+    window.open(
+      `${appUrl}?token=${Cookies.get(
+        `ManageToken_${sessionStorage.getItem("c_id")}`
+      )}&company_id=${sessionStorage.getItem("c_id")}&isManage=true`
+    );
+  }
+  window.open(`${appUrl}?token=${Cookies.get("Token")}`);
+}
 const AppCard = ({ data, deactivateApp }: IAppCard) => {
   const { dispatch } = useContext(WizardContext);
   const history = useHistory();
   const locale = useSelector((state: IState) => state.theme?.locale) ?? "en";
-  const token = Cookies.get("Token");
   const appLink = `${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
     " "
   ).join("-")}`;
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        {data.AppType === 50 ? (
+        {data.AppType === EnApp.SMS && data.Status === EnStatusApp.ACTIVE ? (
           <div
             className="cursor-pointer app-avatar"
             onClick={() => {
-              window.open(`${SMS_URL_VALIDATE}?token=${token}`);
+              appRedirect(SMS_URL_VALIDATE);
             }}
           >
             <Avatar
@@ -90,9 +99,11 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
         )}
       </Flex>
       <div>
-        {data.AppType === EnApp.SMS ? (
+        {data.AppType === EnApp.SMS && data.Status === EnStatusApp.ACTIVE ? (
           <h3
-            onClick={() => window.open(`${SMS_URL_VALIDATE}?token=${token}`)}
+            onClick={() => {
+              appRedirect(SMS_URL_VALIDATE);
+            }}
             className="app-link
 mb-0 cursor-pointer"
           >

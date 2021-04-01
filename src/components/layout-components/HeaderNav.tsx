@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { connect, useSelector } from "react-redux";
 import { Menu, Layout } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
@@ -22,6 +23,7 @@ import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
 import { AppService } from "../../api/app";
 import { EnCompany } from "../../redux/actions/Account";
+import HttpService from "../../api";
 
 const { Header } = Layout;
 
@@ -95,9 +97,9 @@ const HeaderNav = (props: any) => {
             </Menu>
           </div>
           <div className="nav-left">
-            {!isNavTop &&
-            CompanyID === EnCompany.INTELECTSOFT &&
-            Company !== "INTELECTSOFT SRL" ? (
+            {/* If there is a company_id in the storage it means this company is administrated atm */}
+            {/* So we show an attention message to warn the admin that he administrated that/this company */}
+            {!isNavTop && new HttpService().company_id && (
               <div
                 className={`text-${
                   headerNavColor === "#ffffff" ? "dark" : "white"
@@ -106,7 +108,7 @@ const HeaderNav = (props: any) => {
               >
                 {`ATENTIE! Administrati: ${Company}`}
               </div>
-            ) : null}
+            )}
           </div>
           <div className="nav-right">
             <AppStoreNav />

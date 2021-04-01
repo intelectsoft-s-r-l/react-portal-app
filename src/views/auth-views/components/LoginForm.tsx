@@ -49,6 +49,7 @@ const LoginForm = ({
         await Utils.encryptInput(password, API_PUBLIC_KEY)
       );
       if (response.ErrorCode === EnErrorCode.NO_ERROR) {
+        sessionStorage.clear();
         history.push(APP_PREFIX_PATH);
       }
     }, 1000);

@@ -15,7 +15,10 @@ import {
   SET_TOKEN,
 } from "../constants/Auth";
 import Cookies from "js-cookie";
-import { DOMAIN } from "../../configs/AppConfig";
+import { AUTH_PREFIX_PATH, DOMAIN } from "../../configs/AppConfig";
+import { useHistory } from "react-router-dom";
+import Utils from "../../utils";
+import HttpService from "../../api";
 
 export interface IAuth {
   loading?: boolean;
@@ -60,11 +63,8 @@ const auth = (state = initState, action: any) => {
         showMessage: false,
       };
     case SIGNOUT:
-      Cookies.remove("Token", {
-        expires: 1,
-        domain: DOMAIN,
-        path: "/",
-      });
+      if (new HttpService().company_id) Utils.removeManageToken();
+      else Utils.removeToken();
       window.location.reload();
       return {
         ...state,
