@@ -20,7 +20,7 @@ const ValidateSuccess = () => {
         }
         title={<IntlMessage id="auth.validate.Success" />}
         extra={
-          <Link to="/app">
+          <Link to="/auth">
             <Button type="primary">
               <IntlMessage id="wizard.next" />
             </Button>

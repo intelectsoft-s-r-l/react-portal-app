@@ -11,7 +11,7 @@ const ValidateError = () => {
         title="Incorrect token"
         subTitle="Sorry, the token you have submitted is no longer available!"
         extra={
-          <Link to="/app">
+          <Link to="/auth">
             <Button type="primary">Find your way</Button>
           </Link>
         }
