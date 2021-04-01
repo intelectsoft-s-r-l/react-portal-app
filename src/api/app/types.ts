@@ -1,3 +1,4 @@
+import { EnStatusApp } from "../../views/app-views/applications/single-app-page";
 import { ApiRequest, ApiResponse } from "../types";
 
 export interface IUsers {
@@ -62,6 +63,7 @@ export interface ILocale {
   ru: string;
 }
 export interface IShortMarketAppList {
+  Status: EnStatusApp;
   AppType: number;
   ID: number;
   Name: string;
