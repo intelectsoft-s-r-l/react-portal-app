@@ -85,11 +85,11 @@ class HttpService {
     };
   };
 
-  private _handleResponse = (response: AxiosResponse) => {
+  private _handleResponse = async (response: AxiosResponse) => {
     console.log(response);
 
     if (response.data.ErrorCode === EnErrorCode.EXPIRED_TOKEN) {
-      return this._RefreshToken().then(async (tokenData) => {
+      return await this._RefreshToken().then(async (tokenData) => {
         if (tokenData && tokenData.ErrorCode === 0) {
           const { Token } = tokenData;
           this.setToken(Token);

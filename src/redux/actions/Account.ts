@@ -34,7 +34,7 @@ export const clearSettings = () => ({
 
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AuthService().GetProfileInfo().then(async (data) => {
+    return await new AuthService().GetProfileInfo().then(async (data) => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
         if (window.location.origin.includes("test"))
