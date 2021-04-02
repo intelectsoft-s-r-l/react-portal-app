@@ -65,6 +65,7 @@ const auth = (state = initState, action: any) => {
     case SIGNOUT:
       if (new HttpService().company_id) Utils.removeManageToken();
       else Utils.removeToken();
+      sessionStorage.clear();
       window.location.reload();
       return {
         ...state,
