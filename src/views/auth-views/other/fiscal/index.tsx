@@ -109,15 +109,21 @@ const Fiscal = ({ location }: RouteComponentProps) => {
                   ? "--"
                   : billInfo.FiscalNumber}{" "}
               </Text>
-              <span>{billInfo.FreeTextHeader}</span>
+              <span>{billInfo.FreeTextHeader.split("/")[0]}</span>
             </Flex>
             <Flex justifyContent="between" className="mb-3">
               <div>
-                <Text>{Utils.padNumber(billInfo!.ShiftNumber) ?? ""}</Text>
+                <Text>
+                  {Utils.padNumber(billInfo!.FreeTextHeader.split("/")[1]) ??
+                    ""}
+                </Text>
                 <br />
                 <Text>#-{billInfo.Workplace}</Text>
                 <br />
                 <Text>#-{billInfo.User}</Text>
+              </div>
+              <div>
+                <Text>{billInfo!.ShiftNumber}#</Text>
               </div>
             </Flex>
 

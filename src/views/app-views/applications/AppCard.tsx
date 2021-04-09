@@ -42,13 +42,12 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
-        {data.AppType === EnApp.SMS && data.Status === EnStatusApp.ACTIVE ? (
-          <div
-            className="cursor-pointer app-avatar"
-            onClick={() => {
-              appRedirect(SMS_URL_VALIDATE);
-            }}
-          >
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
+          <div className="cursor-pointer app-avatar">
             <Avatar
               src={data.Photo}
               icon={<ExperimentOutlined />}
@@ -56,22 +55,7 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
               size={60}
             />
           </div>
-        ) : (
-          <Link
-            to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
-              " "
-            ).join("-")}`}
-          >
-            <div className="cursor-pointer app-avatar">
-              <Avatar
-                src={data.Photo}
-                icon={<ExperimentOutlined />}
-                shape="square"
-                size={60}
-              />
-            </div>
-          </Link>
-        )}
+        </Link>
         {data.Status === EnStatusApp.DISABLED ? (
           <Tag
             className="text-capitalize cursor-pointer"
@@ -99,30 +83,18 @@ const AppCard = ({ data, deactivateApp }: IAppCard) => {
         )}
       </Flex>
       <div>
-        {data.AppType === EnApp.SMS && data.Status === EnStatusApp.ACTIVE ? (
+        <Link
+          to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+            " "
+          ).join("-")}`}
+        >
           <h3
-            onClick={() => {
-              appRedirect(SMS_URL_VALIDATE);
-            }}
             className="app-link
 mb-0 cursor-pointer"
           >
             {data.Name}
           </h3>
-        ) : (
-          <Link
-            to={`${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
-              " "
-            ).join("-")}`}
-          >
-            <h3
-              className="app-link
-mb-0 cursor-pointer"
-            >
-              {data.Name}
-            </h3>
-          </Link>
-        )}
+        </Link>
         <p className="text-muted">By IntelectSoft</p>
         {/*<div style={{ minHeight: "70px" }}>
           {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}

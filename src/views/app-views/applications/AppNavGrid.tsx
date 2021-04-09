@@ -19,40 +19,22 @@ const AppNavGrid = (props: IAppNavGrid) => {
     <>
       {props.apps.map((app) => (
         <Menu.Item key={app.AppType} {...props} className="app-list__item">
-          {app.AppType === EnApp.SMS && app.Status === EnStatusApp.ACTIVE ? (
-            <>
-              <div
-                className="text-center"
-                onClick={() => appRedirect(SMS_URL_VALIDATE)}
-              >
-                <Avatar
-                  src={app.Photo}
-                  icon={<ExperimentOutlined />}
-                  shape="square"
-                  alt={app.Name}
-                  style={{ marginBottom: "10px" }}
-                />
-              </div>
-              <p className="text-center">{app.Name}</p>
-            </>
-          ) : (
-            <Link
-              to={`${APP_PREFIX_PATH}/id/${app.AppType}/${app.Name.split(
-                " "
-              ).join("-")}`}
-            >
-              <div className="text-center">
-                <Avatar
-                  src={app.Photo}
-                  icon={<ExperimentOutlined />}
-                  shape="square"
-                  alt={app.Name}
-                  style={{ marginBottom: "10px" }}
-                />
-              </div>
-              <p className="text-center">{app.Name}</p>
-            </Link>
-          )}
+          <Link
+            to={`${APP_PREFIX_PATH}/id/${app.AppType}/${app.Name.split(
+              " "
+            ).join("-")}`}
+          >
+            <div className="text-center">
+              <Avatar
+                src={app.Photo}
+                icon={<ExperimentOutlined />}
+                shape="square"
+                alt={app.Name}
+                style={{ marginBottom: "10px" }}
+              />
+            </div>
+            <p className="text-center">{app.Name}</p>
+          </Link>
         </Menu.Item>
       ))}
     </>

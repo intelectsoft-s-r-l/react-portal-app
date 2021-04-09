@@ -5,6 +5,7 @@ import {
   HIDE_AUTH_MESSAGE,
   SHOW_LOADING,
   HIDE_LOADING,
+  REDIRECT,
 } from "../constants/Auth";
 import { message, Modal } from "antd";
 import { getProfileInfo } from "./Account";
@@ -23,6 +24,7 @@ import {
 import { onHeaderNavColorChange } from "./Theme";
 import history from "../../history";
 import Cookies from "js-cookie";
+import Utils from "../../utils";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -49,6 +51,11 @@ export const showLoading = () => ({
 });
 export const hideLoading = () => ({
   type: HIDE_LOADING,
+});
+
+export const redirectTo = (payload: string) => ({
+  type: REDIRECT,
+  payload,
 });
 
 const handleAccountActivation = (Token: string) => {
@@ -80,37 +87,23 @@ export const authorizeUser = (
   password: string
 ): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AuthService()
+    return await new AuthService()
       .Login(email, password)
       .then((data) => {
         if (data) {
           const { ErrorCode, ErrorMessage, Token } = data;
           if (ErrorCode === 0) {
-            Cookies.set("Token", Token, {
-              expires: 1,
-              domain: DOMAIN,
-              path: "/",
-            });
-            if (window.location.origin.includes("test"))
-              dispatch(onHeaderNavColorChange("#DE4436"));
-
-            return data;
-          } else if (ErrorCode === 102) {
-            dispatch(showAuthMessage(ErrorMessage!.toString()));
-            return data;
+            Utils.setToken(Token);
+            window.history.pushState(null, "", APP_PREFIX_PATH);
+            window.location.reload();
           } else if (ErrorCode === 108) {
             handleAccountActivation(Token);
-            return data;
           } else {
             dispatch(hideLoading());
             dispatch(showAuthMessage(ErrorMessage!.toString()));
-            return data;
           }
         }
       })
-      .then((data) => {
-        dispatch(hideLoading());
-        return data;
-      });
+      .catch(() => dispatch(hideLoading()));
   };
 };

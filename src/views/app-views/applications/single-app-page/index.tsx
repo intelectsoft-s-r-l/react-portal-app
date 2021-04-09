@@ -23,7 +23,7 @@ import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
-import { APP_NAME } from "../../../../configs/AppConfig";
+import { APP_NAME, SMS_URL_VALIDATE } from "../../../../configs/AppConfig";
 import { ILocale, IMarketAppList } from "../../../../api/app/types";
 import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
@@ -40,6 +40,7 @@ import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 import Templates from "./Mail/templates";
 import Dashboard from "../../dashboard";
 import { TOGGLE_COLLAPSED_NAV } from "../../../../redux/constants/Theme";
+import { appRedirect } from "../AppCard";
 
 export enum EnStatusApp {
   DISABLED = 0,
@@ -111,7 +112,7 @@ const Options = ({
         </span>
         <Link to={match.url + "/order"} />
       </Menu.Item>
-      <Menu.Item
+      {/* <Menu.Item
         key={`${match.url}/campaign`}
         className={AppType === EnApp.SMS ? "" : "d-none"}
       >
@@ -119,7 +120,7 @@ const Options = ({
           <IntlMessage id="app.Campaign" />
         </span>
         <Link to={match.url + "/campaign"} />
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item
         key={`${match.url}/news`}
         className={AppType === EnApp.MyDiscount ? "" : "d-none"}
@@ -305,6 +306,13 @@ const AboutItem = ({ appData }: any) => {
             )}
           </div>
         </Flex>
+        <div onClick={() => appRedirect(SMS_URL_VALIDATE)}>
+          <img
+            src={`${process.env.PUBLIC_URL}/img/external-link.svg`}
+            className="cursor-pointer"
+            alt="Redirect logo"
+          />
+        </div>
       </Flex>
     </Card>
   );

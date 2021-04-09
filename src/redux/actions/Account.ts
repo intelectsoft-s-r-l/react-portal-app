@@ -39,15 +39,7 @@ export const getProfileInfo = (): ThunkResult<void> => {
         const { User } = data;
         if (window.location.origin.includes("test"))
           dispatch(onHeaderNavColorChange("#DE4436"));
-        //let Company: string = "";
-        //// Call GetCompanyInfo only if the user is an Admin,
-        //// in order to show who are you managing at the moment
-        //if (User.CompanyID === EnCompany.INTELECTSOFT) {
-        //Company =
-        //(await new AppService()
-        //.GetCompanyInfo()
-        //.then((data) => data.Company.CommercialName)) ?? "";
-        //}
+
         dispatch({ type: UPDATE_SETTINGS, payload: User });
         switch (User.UiLanguage) {
           case EnLang.RO:

@@ -13,6 +13,7 @@ import {
   VALIDATE_USER,
   IS_USER_ACTIVATED,
   SET_TOKEN,
+  REDIRECT,
 } from "../constants/Auth";
 import Cookies from "js-cookie";
 import { AUTH_PREFIX_PATH, DOMAIN } from "../../configs/AppConfig";
@@ -125,6 +126,11 @@ const auth = (state = initState, action: any) => {
       return {
         ...state,
         token: action.token,
+      };
+    case REDIRECT:
+      return {
+        ...state,
+        redirect: action.payload,
       };
     default:
       return state;

@@ -34,7 +34,7 @@ declare module "axios" {
 
 class HttpService {
   public readonly instance: AxiosInstance;
-  public token: string | undefined;
+  public token: string;
   public company_id: any;
   public _source: CancelTokenSource;
 
@@ -45,8 +45,8 @@ class HttpService {
     this._source = axios.CancelToken.source();
     this.company_id = sessionStorage.getItem("c_id");
     this.token = this.company_id
-      ? Cookies.get(`ManageToken_${this.company_id}`)
-      : Cookies.get("Token");
+      ? Cookies.get(`ManageToken_${this.company_id}`)!
+      : Cookies.get("Token")!;
     this._initializeResponseInterceptor();
     this._initializeRequestInterceptor();
   }
