@@ -75,6 +75,8 @@ const Company = () => {
   }
   return (
     <Spin spinning={formLoading}>
+      {/* @ts-ignore */}
+
       <CompanyForm
         Company={Company}
         onChangeMask={onChangeMask}

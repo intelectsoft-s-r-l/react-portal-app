@@ -43,12 +43,8 @@ const LoginForm = ({
   const dispatch = useDispatch();
   const onLogin = async ({ email, password }: { [key: string]: string }) => {
     showLoading();
-    debugger;
     setTimeout(async () => {
-      await authorizeUser(
-        email,
-        Utils.encryptInput(password, API_PUBLIC_KEY)
-      ).then(() => hideLoading());
+      await authorizeUser(email, Utils.encryptInput(password, API_PUBLIC_KEY));
     }, 1000);
   };
   const onGoogleLogin = () => {
