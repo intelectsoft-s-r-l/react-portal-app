@@ -1,5 +1,6 @@
 export const SIGNIN = "SIGNIN";
 export const REDIRECT = "REDIRECT";
+export const SET_IS_REFRESHING = "SET_IS_REFRESHING";
 export const SET_TOKEN = "SET_TOKEN";
 export const AUTHENTICATED = "AUTHENTICATED";
 export const SIGNOUT = "SIGNOUT";

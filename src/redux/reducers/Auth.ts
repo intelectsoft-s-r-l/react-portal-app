@@ -14,6 +14,7 @@ import {
   IS_USER_ACTIVATED,
   SET_TOKEN,
   REDIRECT,
+  SET_IS_REFRESHING,
 } from "../constants/Auth";
 import Cookies from "js-cookie";
 import { AUTH_PREFIX_PATH, DOMAIN } from "../../configs/AppConfig";
@@ -29,6 +30,7 @@ export interface IAuth {
   token?: string;
   isAuth?: boolean;
   userActivated?: boolean;
+  isRefreshing: boolean;
 }
 const initState = {
   loading: false,
@@ -38,6 +40,7 @@ const initState = {
   token: "",
   isAuth: false,
   userActivated: false,
+  isRefreshing: false,
 };
 const auth = (state = initState, action: any) => {
   switch (action.type) {
@@ -132,6 +135,12 @@ const auth = (state = initState, action: any) => {
         ...state,
         redirect: action.payload,
       };
+    case SET_IS_REFRESHING:
+      return {
+        ...state,
+        isRefreshing: action.payload,
+      };
+
     default:
       return state;
   }

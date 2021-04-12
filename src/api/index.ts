@@ -9,7 +9,12 @@ import { EXPIRE_TIME } from "../constants/Messages";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
-import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
+import {
+  AUTHENTICATED,
+  HIDE_LOADING,
+  SET_IS_REFRESHING,
+  SIGNOUT,
+} from "../redux/constants/Auth";
 import Cookies from "js-cookie";
 import { API_AUTH_URL, AUTH_PREFIX_PATH, DOMAIN } from "../configs/AppConfig";
 import Utils from "../utils";
@@ -89,37 +94,7 @@ class HttpService {
     console.log(response);
 
     if (response.data.ErrorCode === EnErrorCode.EXPIRED_TOKEN) {
-      return await this._RefreshToken().then(async (tokenData) => {
-        if (tokenData && tokenData.ErrorCode === 0) {
-          const { Token } = tokenData;
-          this.setToken(Token);
-          if (response.config.method === "get") {
-            response.config.params = {
-              ...response.config.params,
-              Token,
-            };
-            return await this.instance.request(response.config);
-          }
-          if (response.config.method === "post") {
-            response.config.data = {
-              ...JSON.parse(response.config.data),
-              Token,
-            };
-            return await this.instance.request(response.config);
-          }
-        } else {
-          const key = "updatable";
-          message
-            .loading({
-              content: TranslateText(EXPIRE_TIME),
-              key,
-              duration: 1.5,
-            })
-            .then(() => {
-              store.dispatch({ type: SIGNOUT });
-            });
-        }
-      });
+      return this._handleExpireToken(response);
     } else if (
       response.data.ErrorCode !== EnErrorCode.NO_ERROR &&
       response.data.ErrorCode !== EnErrorCode.EXPIRED_TOKEN &&
@@ -142,6 +117,55 @@ class HttpService {
     }
 
     return response.data;
+  };
+
+  private _handleExpireToken = async (error: AxiosResponse) => {
+    const redirectToLogin = () => {
+      const key = "updatable";
+      message
+        .loading({
+          content: TranslateText(EXPIRE_TIME),
+          key,
+          duration: 1.5,
+        })
+        .then(() => {
+          store.dispatch({ type: SIGNOUT });
+        });
+    };
+
+    const config = error.config;
+    if (!store.getState().auth.isRefreshing) {
+      return new Promise((resolve, reject) => {
+        store.dispatch({ type: SET_IS_REFRESHING, payload: true });
+        axios
+          .get(`${API_AUTH_URL}/RefreshToken`, {
+            params: { Token: this.token },
+          })
+          .then(({ data }) => {
+            if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
+              this.setToken(data.Token);
+              resolve(this.instance(config));
+            } else {
+              redirectToLogin();
+            }
+          })
+          .catch(() => {
+            redirectToLogin();
+          })
+          .finally(() => {
+            store.dispatch({ type: SET_IS_REFRESHING, payload: false });
+          });
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+          if (!store.getState().auth.isRefreshing) {
+            clearInterval(intervalId);
+            resolve(axios(config));
+          }
+        }, 100);
+      });
+    }
   };
   private _handleError = async (error: AxiosResponse) => {
     store.dispatch({ type: HIDE_LOADING });
