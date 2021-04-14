@@ -161,7 +161,7 @@ class HttpService {
         const intervalId = setInterval(() => {
           if (!store.getState().auth.isRefreshing) {
             clearInterval(intervalId);
-            resolve(axios(config));
+            resolve(this.instance(config));
           }
         }, 100);
       });

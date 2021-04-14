@@ -97,18 +97,15 @@ const HeaderNav = (props: any) => {
             </Menu>
           </div>
           <div className="nav-left">
-            {/* If there is a company_id in the storage it means this company is administrated atm */}
-            {/* So we show an attention message to warn the admin that he administrated that/this company */}
-            {!isNavTop && new HttpService().company_id && (
-              <div
-                className={`text-${
-                  headerNavColor === "#ffffff" ? "dark" : "white"
-                } px-5`}
-                style={{ fontSize: "20px" }}
-              >
-                {`ATENTIE! Administrati: ${Company}`}
-              </div>
-            )}
+            {/* Show by default the name of the company */}
+            <div
+              className={`text-${
+                headerNavColor === "#ffffff" ? "dark" : "white"
+              } px-5`}
+              style={{ fontSize: "20px" }}
+            >
+              {Company}
+            </div>
           </div>
           <div className="nav-right">
             <AppStoreNav />
