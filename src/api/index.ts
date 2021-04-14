@@ -18,6 +18,7 @@ import {
 import Cookies from "js-cookie";
 import { API_AUTH_URL, AUTH_PREFIX_PATH, DOMAIN } from "../configs/AppConfig";
 import Utils from "../utils";
+import { MANAGE_TOKEN, TOKEN } from "../constants/ApiConstant";
 
 export enum EnErrorCode {
   INTERNAL_ERROR = -1,
@@ -50,8 +51,8 @@ class HttpService {
     this._source = axios.CancelToken.source();
     this.company_id = sessionStorage.getItem("c_id");
     this.token = this.company_id
-      ? Cookies.get(`ManageToken_${this.company_id}`)!
-      : Cookies.get("Token")!;
+      ? Cookies.get(`${MANAGE_TOKEN}_${this.company_id}`)!
+      : Cookies.get(TOKEN)!;
     this._initializeResponseInterceptor();
     this._initializeRequestInterceptor();
   }
@@ -70,7 +71,7 @@ class HttpService {
     this.token = Token;
     // We verify by company_id because managetoken is a cookie and it's shared between tabs
     this.company_id
-      ? Utils.setManageToken(`ManageToken_${this.company_id}`, Token)
+      ? Utils.setManageToken(`${MANAGE_TOKEN}_${this.company_id}`, Token)
       : Utils.setToken(Token);
   };
   private _initializeRequestInterceptor = () => {

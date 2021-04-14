@@ -10,6 +10,7 @@ import store from "../redux/store";
 import TranslateText from "./translate";
 import Cookies from "js-cookie";
 import HttpService from "../api";
+import { MANAGE_TOKEN, TOKEN } from "../constants/ApiConstant";
 
 class Utils {
   static getNameInitial(name: string) {
@@ -315,14 +316,14 @@ class Utils {
   }
 
   static setToken(value: any) {
-    Cookies.set("Token", value, { expires: 1, domain: DOMAIN, path: "/" });
+    Cookies.set(TOKEN, value, { expires: 1, domain: DOMAIN, path: "/" });
   }
 
   static removeToken() {
-    Cookies.remove("Token", { expires: 1, domain: DOMAIN, path: "/" });
+    Cookies.remove(TOKEN, { expires: 1, domain: DOMAIN, path: "/" });
   }
   static removeManageToken() {
-    Cookies.remove(`ManageToken_${new HttpService().company_id}`, {
+    Cookies.remove(`${MANAGE_TOKEN}_${new HttpService().company_id}`, {
       domain: DOMAIN,
       path: "/",
     });

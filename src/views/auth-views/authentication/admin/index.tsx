@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { APP_PREFIX_PATH } from "../../../../configs/AppConfig";
+import { MANAGE_TOKEN } from "../../../../constants/ApiConstant";
 import Utils from "../../../../utils";
 import { useQuery } from "../../../../utils/hooks/useQuery";
 
@@ -11,7 +12,7 @@ const Admin = (props: RouteComponentProps) => {
       // Pass company_id here ManageToken_{company_id}
       sessionStorage.setItem("c_id", query.get("company_id")!);
       Utils.setManageToken(
-        `ManageToken_${query.get("company_id")}`,
+        `${MANAGE_TOKEN}_${query.get("company_id")}`,
         query.get("token")
       );
       props.history.push(APP_PREFIX_PATH);
