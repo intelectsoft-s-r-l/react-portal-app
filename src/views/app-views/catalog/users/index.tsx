@@ -276,8 +276,7 @@ export class UserList extends Component<IUserListStoreProps> {
 
   onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;
-    const searchArray = value ? this.state.users : this.state.usersToSearch;
-    const data = Utils.wildCardSearch(searchArray, value);
+    const data = Utils.wildCardSearch(this.state.usersToSearch, value);
     this.setState({ users: data });
   };
 
@@ -298,6 +297,11 @@ export class UserList extends Component<IUserListStoreProps> {
             />
           </div>
         ),
+        sorter: (a, b) => {
+          if (a.FirstName < b.FirstName) return -1;
+          if (a.FirstName > b.FirstName) return 1;
+          return 0;
+        },
       },
       {
         title: <IntlMessage id={"users.table.Role"} />,

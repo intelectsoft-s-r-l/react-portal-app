@@ -1,2 +1,0 @@
-(this["webpackJsonpclient-portal-app"]=this["webpackJsonpclient-portal-app"]||[]).push([[30],{890:function(t,n,e){"use strict";e.r(n);var p=e(0),a=e.n(p);n.default=function(){return a.a.createElement("div",null,"Rules component works!")}}}]);
-//# sourceMappingURL=30.1c2167fd.chunk.js.map

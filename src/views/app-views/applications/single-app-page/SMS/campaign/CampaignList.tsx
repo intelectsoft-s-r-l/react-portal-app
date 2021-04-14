@@ -2,22 +2,20 @@ import * as React from "react";
 import { Button, Input, Table } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { AppService } from "../../../../../../api/app";
-import { ICampaignList } from "../../../../../../api/app/types";
 import Flex from "../../../../../../components/shared-components/Flex";
-import AddCampaign from "./AddCampaign";
 import SmsTable from "./SmsCampaignTable";
-import EditCampaign from "./EditCampaign";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import TranslateText from "../../../../../../utils/translate";
 import Utils from "../../../../../../utils";
+import { SmsService } from "../../../../../../api/sms";
+import { ICampaignList } from "../../../../../../api/sms/types";
 
 // 1.First, we create the campaign
 // Campaign Modal appears, (Default name is New campaign {number of campaigns})
 // after creating it, it appears in the list/table
 // 2.Then, we can edit/do stuff with it, by pressing the dots action menu
 const CampaignList = ({ match }: RouteComponentProps) => {
-  const instance = new AppService();
+  const instance = new SmsService();
   const [campaignInfo, setCampaignInfo] = useState<ICampaignList[]>([]);
   const [campaignListToSearch, setCampaignListToSearch] = useState<
     ICampaignList[]
@@ -61,18 +59,6 @@ const CampaignList = ({ match }: RouteComponentProps) => {
   }, []);
   return (
     <>
-      <AddCampaign
-        visible={isNewCampaignVisible}
-        close={() => setIsNewCampaignVisible(false)}
-        getCampaignList={getCampaignList}
-        amount={campaignInfo.length + 1}
-      />
-      <EditCampaign
-        visible={isEditCampaignVisible}
-        close={() => setEditCampaignVisible(false)}
-        getCampaignList={getCampaignList}
-        data={selectedCampaign}
-      />
       <h2>{TranslateText("app.Campaign")}</h2>
       <Flex
         justifyContent="between"
@@ -87,10 +73,11 @@ const CampaignList = ({ match }: RouteComponentProps) => {
             onChange={(e) => onSearch(e)}
           />
         </div>
-        <Button type="primary" onClick={() => setIsNewCampaignVisible(true)}>
-          <PlusOutlined />
-          <span>{TranslateText("SMS.NewCampaign")}</span>
-        </Button>
+        <Link to={`${match.url}/add`}>
+          <Button type="primary">
+            <PlusOutlined /> <span>{TranslateText("SMS.NewCampaign")}</span>
+          </Button>
+        </Link>
       </Flex>
       <Table
         loading={tableLoading}

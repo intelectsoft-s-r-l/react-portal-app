@@ -10,19 +10,15 @@ const InstallResult = () => {
   const [isInstalled, setIsInstalled] = useState<boolean>(true);
   useLayoutEffect(() => {
     dispatch({ type: "SHOW_LOADING" });
-    setTimeout(async () => {
-      return await new AppService()
-        .ActivateApp(state.selectedApp.ID)
-        .then(async (data) => {
-          if (data && data.ErrorCode === 0) {
-            dispatch({ type: "HIDE_LOADING" });
-            setIsInstalled(true);
-            await getMarketApps();
-          } else {
-            setIsInstalled(false);
-          }
-        });
-    }, 2500);
+    new AppService().ActivateApp(state.selectedApp.ID).then(async (data) => {
+      if (data && data.ErrorCode === 0) {
+        dispatch({ type: "HIDE_LOADING" });
+        setIsInstalled(true);
+        await getMarketApps();
+      } else {
+        setIsInstalled(false);
+      }
+    });
   }, []);
   if (state.wizLoading) return <Loading />;
   return (

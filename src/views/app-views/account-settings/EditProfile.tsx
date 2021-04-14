@@ -35,7 +35,7 @@ class EditProfile extends Component<IEditProfile> {
   };
   onFinish = (values: any) => {
     message.loading({ content: TranslateText(UPLOADING), key: "updatable" });
-    setProfileInfo({
+    this.props.setProfileInfo({
       User: {
         ...this.props.account,
         ...values,
@@ -51,7 +51,7 @@ class EditProfile extends Component<IEditProfile> {
     }
     if (info.file.status === "done") {
       Utils.getBase64(info.file.originFileObj, (imageUrl: string) => {
-        setProfileInfo({
+        this.props.setProfileInfo({
           User: { ...this.props.account, Photo: imageUrl },
         });
       });

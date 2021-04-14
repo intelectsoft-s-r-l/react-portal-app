@@ -31,3 +31,22 @@ export interface ISmsDetailPeriod extends ApiResponse {
   SMSList: ISmsList[];
   TotalSMS: number;
 }
+export interface ICampaignList extends ApiRequest {
+  Category?: number;
+  CompanyName?: string;
+  CreateDate?: any;
+  Description?: string;
+  ID?: number;
+  Message?: string;
+  Name: string;
+  PhoneList?: string;
+  ReviewedByUser?: string;
+  ReviewerComments?: string;
+  ScheduledDate?: any;
+  Status?: number;
+}
+export interface ICampaignConfirmation extends ApiRequest {
+  ID: number;
+  ReviewerComments: string;
+  Status?: number;
+}

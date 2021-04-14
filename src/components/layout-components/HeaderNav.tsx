@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { connect, useSelector } from "react-redux";
 import { Menu, Layout } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
@@ -22,6 +23,7 @@ import { IState } from "../../redux/reducers";
 import { IAccount } from "../../redux/reducers/Account";
 import { AppService } from "../../api/app";
 import { EnCompany } from "../../redux/actions/Account";
+import HttpService from "../../api";
 
 const { Header } = Layout;
 
@@ -95,18 +97,15 @@ const HeaderNav = (props: any) => {
             </Menu>
           </div>
           <div className="nav-left">
-            {!isNavTop &&
-            CompanyID === EnCompany.INTELECTSOFT &&
-            Company !== "INTELECTSOFT SRL" ? (
-              <div
-                className={`text-${
-                  headerNavColor === "#ffffff" ? "dark" : "white"
-                } px-5`}
-                style={{ fontSize: "20px" }}
-              >
-                {`ATENTIE! Administrati: ${Company}`}
-              </div>
-            ) : null}
+            {/* Show by default the name of the company */}
+            <div
+              className={`text-${
+                headerNavColor === "#ffffff" ? "dark" : "white"
+              } px-5`}
+              style={{ fontSize: "20px" }}
+            >
+              {Company}
+            </div>
           </div>
           <div className="nav-right">
             <AppStoreNav />

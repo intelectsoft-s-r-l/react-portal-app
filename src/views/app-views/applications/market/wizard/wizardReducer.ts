@@ -13,7 +13,12 @@ const wizardReducer = (state = wizardState, action: any) => {
     case "SHOW_WIZARD":
       return { ...state, visibleModal: true };
     case "HIDE_WIZARD":
-      return { ...state, visibleModal: false };
+      return {
+        ...state,
+        visibleModal: false,
+        termsAccepted: false,
+        isAccepted: false,
+      };
     case "SHOW_LOADING":
       return { ...state, wizLoading: true };
     case "HIDE_LOADING":

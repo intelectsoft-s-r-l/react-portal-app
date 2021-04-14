@@ -285,6 +285,8 @@
   "SMS.Scheduled.Singular": " день остался",
   "SMS.Status.Available": "Активная",
   "SMS.Status.NotAvailable": "Неактивная",
+  "SMS.Status.Scheduled": "Назначенная",
+  "SMS.Status.Declined": "Отклоненная",
   "SMS.NewCampaign": "Новая рассылка",
   "SMS.Description": "Описание",
   "SMS.Message": "Сообщение",

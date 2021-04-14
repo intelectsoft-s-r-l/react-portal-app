@@ -1,3 +1,4 @@
+import { EnStatusApp } from "../../views/app-views/applications/single-app-page";
 import { ApiRequest, ApiResponse } from "../types";
 
 export interface IUsers {
@@ -62,6 +63,7 @@ export interface ILocale {
   ru: string;
 }
 export interface IShortMarketAppList {
+  Status: EnStatusApp;
   AppType: number;
   ID: number;
   Name: string;
@@ -155,21 +157,6 @@ export interface IDiagnosticInformation {
   Date?: string;
 }
 
-export interface ICampaignList extends ApiRequest {
-  Category?: number;
-  CompanyName?: string;
-  CreateDate?: any;
-  Description?: string;
-  ID?: number;
-  Message?: string;
-  Name: string;
-  PhoneList?: string;
-  ReviewedByUser?: string;
-  ReviewerComments?: string;
-  ScheduledDate?: any;
-  Status?: number;
-}
-
 export interface IRsaKeys extends ApiResponse {
   EncryptionPublicKey: string;
   EncryptionPrivateKey: string;
@@ -178,11 +165,6 @@ export interface IRsaKeys extends ApiResponse {
 export interface ICreateAppPackage extends ApiRequest {
   AppPackage: IPackages;
   MarketAppID: number;
-}
-export interface ISMSReviewerUpdateRequest extends ApiRequest {
-  ID: number;
-  ReviewerComments: string;
-  Status?: number;
 }
 export interface IAppPackageRequest {
   ID: number;

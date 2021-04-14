@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import * as React from "react";
 import {
   Route,
   Switch,
@@ -12,13 +12,13 @@ import AuthLayout from "../layouts/auth-layout";
 import AppLocale from "../lang";
 import { IntlProvider } from "react-intl";
 import { ConfigProvider } from "antd";
-import { signOut } from "../redux/actions/Auth";
 import { APP_PREFIX_PATH, AUTH_PREFIX_PATH } from "../configs/AppConfig";
 import { IState } from "../redux/reducers";
 import { ITheme } from "../redux/reducers/Theme";
 import { IAuth } from "../redux/reducers/Auth";
+import Fiscal from "./auth-views/other/fiscal";
+import HttpService from "../api";
 interface IViews extends ITheme, IAuth, RouteComponentProps {}
-
 function RouteInterceptor({
   component: Component,
   isAuthenticated,
@@ -43,7 +43,7 @@ function RouteInterceptor({
   );
 }
 export const Views = (props: IViews) => {
-  const { locale, location, token, history } = props;
+  const { locale } = props;
   const currentAppLocale = locale ? AppLocale[locale] : "en";
   return (
     <IntlProvider
@@ -58,9 +58,12 @@ export const Views = (props: IViews) => {
           <Route path={AUTH_PREFIX_PATH}>
             <AuthLayout />
           </Route>
+          <Route exact path={"/fiscal"}>
+            <Fiscal {...props} />
+          </Route>
           <RouteInterceptor
             path={APP_PREFIX_PATH}
-            isAuthenticated={token}
+            isAuthenticated={new HttpService().token}
             component={AppLayout}
           />
         </Switch>
@@ -69,10 +72,9 @@ export const Views = (props: IViews) => {
   );
 };
 
-const mapStateToProps = ({ theme, auth }: IState) => {
+const mapStateToProps = ({ theme }: IState) => {
   const { locale } = theme as ITheme;
-  const { token } = auth as IAuth;
-  return { locale, token };
+  return { locale };
 };
 
 export default withRouter(connect(mapStateToProps, null)(Views));

@@ -2,11 +2,13 @@ import React from "react";
 import { Menu } from "antd";
 import { Avatar } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
-import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
+import { APP_PREFIX_PATH, SMS_URL_VALIDATE } from "../../../configs/AppConfig";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 import { IShortMarketAppList } from "../../../api/app/types";
 import { MenuItemProps } from "antd/lib/menu/MenuItem";
 import "./applications.scss";
+import { EnApp, EnStatusApp } from "./single-app-page";
+import { appRedirect } from "./AppCard";
 
 interface IAppNavGrid extends MenuItemProps, RouteComponentProps {
   apps: IShortMarketAppList[];

@@ -32,7 +32,7 @@ export const AuthViews = ({ match }: RouteComponentProps) => {
         />
 
         <Route
-          path={`${match.url}/admin/:Token`}
+          path={`${match.url}/admin`}
           component={lazy(() => import(`./authentication/admin`))}
         />
         <Route

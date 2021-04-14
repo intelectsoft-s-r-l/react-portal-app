@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Tooltip } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { Button, Input, Table, Tooltip } from "antd";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { AppService } from "../../../../../api/app";
 import { ILicenses } from "../../../../../api/app/types";
@@ -8,6 +8,7 @@ import Flex from "../../../../../components/shared-components/Flex";
 import IntlMessage from "../../../../../components/util-components/IntlMessage";
 import DeviceView from "./DeviceView";
 import TranslateText from "../../../../../utils/translate";
+import Utils from "../../../../../utils";
 export enum Health {
   _GOOD = 2,
   _COLD = 7,
@@ -39,6 +40,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
   const instance = new AppService();
   const [loading, setLoading] = useState<boolean>(true);
   const [devices, setDevices] = useState<any>();
+  const [devicesSearch, setDevicesSearch] = useState<any>();
   const [selectedDevice, setSelectedDevice] = useState<any>();
   const [selectedLicense, setSelectedLicense] = useState<any>();
   const [deviceViewVisible, setDeviceViewVisible] = useState<boolean>(false);
@@ -46,11 +48,19 @@ const Devices = ({ AppType }: { AppType: number }) => {
     return instance.GetAppLicenses(AppType).then((data) => {
       setLoading(false);
       if (data && data.ErrorCode === 0) {
-        setDevices(
-          data.LicenseList.filter((elm: ILicenses) => elm.Status !== 0)
+        const deviceData = data.LicenseList.filter(
+          (elm: ILicenses) => elm.Status !== 0
         );
+        setDevices(deviceData);
+        setDevicesSearch(deviceData);
       }
     });
+  };
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    const data = Utils.wildCardSearch(devicesSearch, value);
+    setDevices(data);
   };
   useEffect(() => {
     getDevices(AppType);
@@ -63,6 +73,13 @@ const Devices = ({ AppType }: { AppType: number }) => {
           <IntlMessage id="app.Devices" /> - {devices && devices.length}
         </h2>
       </Flex>
+      <div className="w-25 mb-3">
+        <Input
+          placeholder="Search"
+          prefix={<SearchOutlined />}
+          onChange={(e) => onSearch(e)}
+        />
+      </div>
       <Table
         columns={[
           {
@@ -75,7 +92,7 @@ const Devices = ({ AppType }: { AppType: number }) => {
             render: (OSType) => (
               <span>
                 {OSType === EnOsType.WINDOWS
-                  ? "Winows"
+                  ? "Windows"
                   : OSType === EnOsType.ANDROID
                   ? "Android"
                   : OSType === EnOsType.IOS
@@ -83,6 +100,14 @@ const Devices = ({ AppType }: { AppType: number }) => {
                   : "Linux"}
               </span>
             ),
+            filters: [
+              { text: "Windows", value: EnOsType.WINDOWS },
+              { text: "Android", value: EnOsType.ANDROID },
+              { text: "iOS", value: EnOsType.IOS },
+              { text: "Linux", value: EnOsType.LINUX },
+            ],
+            onFilter: (value, record) =>
+              record.OSType.toString().indexOf(value) == 0,
           },
           {
             title: TranslateText("app.devices.osVersion"),

@@ -4,9 +4,12 @@ import { RcFile } from "antd/lib/upload";
 import { JSEncrypt } from "jsencrypt";
 import moment from "moment";
 import { ILocale } from "../api/app/types";
+import { DOMAIN } from "../configs/AppConfig";
 import { showAuthMessage } from "../redux/actions/Auth";
 import store from "../redux/store";
 import TranslateText from "./translate";
+import Cookies from "js-cookie";
+import HttpService from "../api";
 
 class Utils {
   static getNameInitial(name: string) {
@@ -203,26 +206,29 @@ class Utils {
       const reader = new FileReader();
       reader.readAsText(file);
       reader.onload = (event: ProgressEvent<FileReader>) => {
-        const isCsvOrTxt = file.type === "text/csv" || file.type === "text/plain";
+        const isCsvOrTxt =
+          file.type === "text/csv" || file.type === "text/plain";
         const hasLetters = (): boolean => {
           if (isCsvOrTxt) {
-            return (/[a-z]/gi).test(event!.target!.result! as string);
+            return /[a-z]/gi.test(event!.target!.result! as string);
           }
           return false;
-        }
+        };
         if (hasLetters()) {
-          store.dispatch(showAuthMessage("The file should not contain letters!"))
+          store.dispatch(
+            showAuthMessage("The file should not contain letters!")
+          );
         }
         if (!isCsvOrTxt) {
-          store.dispatch(showAuthMessage("You can only upload CSV/TXT file!"))
+          store.dispatch(showAuthMessage("You can only upload CSV/TXT file!"));
         }
         if (!hasLetters() && isCsvOrTxt) {
           resolve(true);
         } else {
           reject();
         }
-      }
-    })
+      };
+    });
   }
 
   static dummyRequest({ onSuccess }: any) {
@@ -298,7 +304,33 @@ class Utils {
   }
 
   static padNumber(elem: any) {
-    return ("00000" + elem).substring(elem.length);
+    if (elem) return ("00000" + elem).substring(elem.length);
+  }
+
+  static setManageToken(manageToken: string, value: any) {
+    Cookies.set(manageToken, value, {
+      domain: DOMAIN,
+      path: "/",
+    });
+  }
+
+  static setToken(value: any) {
+    Cookies.set("Token", value, { expires: 1, domain: DOMAIN, path: "/" });
+  }
+
+  static removeToken() {
+    Cookies.remove("Token", { expires: 1, domain: DOMAIN, path: "/" });
+  }
+  static removeManageToken() {
+    Cookies.remove(`ManageToken_${new HttpService().company_id}`, {
+      domain: DOMAIN,
+      path: "/",
+    });
+  }
+
+  static removeAllTokens() {
+    Utils.removeToken();
+    Utils.removeManageToken();
   }
 }
 

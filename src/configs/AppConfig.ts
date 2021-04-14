@@ -7,6 +7,7 @@ import {
 import { env } from "./EnvironmentConfig";
 
 export const APP_NAME = "Client Portal App";
+export const DOMAIN = env!.DOMAIN;
 export const API_APP_URL = env!.API_APP_URL;
 export const API_AUTH_URL = env!.API_AUTH_URL;
 export const API_SMS_URL = env!.API_SMS_URL;
@@ -14,6 +15,7 @@ export const API_MAIL_URL = env!.API_MAIL_URL;
 export const API_DISCOUNT_URL = env!.API_DISCOUNT_URL;
 export const API_EDX_URL = env!.API_EDX_URL;
 export const API_BILL_URL = env!.API_BILL_URL;
+export const SMS_URL_VALIDATE = env!.SMS_URL_VALIDATE;
 export const SUBDIR_PATH = env!.SUBDIR_PATH;
 export const APP_PREFIX_PATH = "/app";
 export const AUTH_PREFIX_PATH = "/auth";

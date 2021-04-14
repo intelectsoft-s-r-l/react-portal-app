@@ -6,6 +6,7 @@ import { EXPIRE_TIME } from "../../constants/Messages";
 import { AUTHENTICATED, SIGNOUT } from "../../redux/constants/Auth";
 import store from "../../redux/store";
 import TranslateText from "../../utils/translate";
+import { IUsers } from "../app/types";
 import { ApiDecorator, ApiResponse } from "../types";
 import { IRegisterCompanyRequest, IRegisterUserRequest } from "./types";
 const publicIp = require("react-public-ip");
@@ -26,6 +27,11 @@ export class AuthService extends HttpService {
         Password,
         info: (await publicIp.v4()) || ("" as string),
       }
+    );
+
+  public GetProfileInfo = async () =>
+    this.instance.get<ApiDecorator<ApiResponse, "User", IUsers>>(
+      "/GetProfileInfo"
     );
 
   public RegisterCompany = async (data: IRegisterCompanyRequest) =>

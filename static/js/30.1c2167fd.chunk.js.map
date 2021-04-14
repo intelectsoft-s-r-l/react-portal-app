@@ -1,1 +1,0 @@
-{"version":3,"sources":["views/app-views/security/rules/index.tsx"],"names":["Rules"],"mappings":"+HAAA,2BAMeA,UAJD,WACZ,OAAO","file":"static/js/30.1c2167fd.chunk.js","sourcesContent":["import React from \"react\";\n\nconst Rules = () => {\n  return <div>Rules component works!</div>;\n};\n\nexport default Rules;\n"],"sourceRoot":""}

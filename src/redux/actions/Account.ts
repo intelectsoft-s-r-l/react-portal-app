@@ -8,8 +8,9 @@ import { IAccount } from "../reducers/Account";
 import TranslateText from "../../utils/translate";
 import { DONE } from "../../constants/Messages";
 import { message } from "antd";
-import { SIGNOUT } from "../constants/Auth";
 import { EnErrorCode } from "../../api/";
+import { AuthService } from "../../api/auth";
+import { onHeaderNavColorChange } from "./Theme";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -33,18 +34,12 @@ export const clearSettings = () => ({
 
 export const getProfileInfo = (): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AppService().GetProfileInfo().then(async (data) => {
+    return await new AuthService().GetProfileInfo().then(async (data) => {
       if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
         const { User } = data;
-        //let Company: string = "";
-        //// Call GetCompanyInfo only if the user is an Admin,
-        //// in order to show who are you managing at the moment
-        //if (User.CompanyID === EnCompany.INTELECTSOFT) {
-        //Company =
-        //(await new AppService()
-        //.GetCompanyInfo()
-        //.then((data) => data.Company.CommercialName)) ?? "";
-        //}
+        if (window.location.origin.includes("test"))
+          dispatch(onHeaderNavColorChange("#DE4436"));
+
         dispatch({ type: UPDATE_SETTINGS, payload: User });
         switch (User.UiLanguage) {
           case EnLang.RO:
@@ -63,7 +58,7 @@ export const getProfileInfo = (): ThunkResult<void> => {
 
 export const setProfileInfo = (accountInfo: {
   User: IAccount;
-}): ThunkResult<any> => {
+}): ThunkResult<void> => {
   return async (dispatch) => {
     return new AppService().UpdateUser(accountInfo).then((data) => {
       if (data && data.ErrorCode === 0) {

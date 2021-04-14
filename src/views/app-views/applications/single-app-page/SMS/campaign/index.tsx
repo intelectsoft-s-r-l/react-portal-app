@@ -2,13 +2,17 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 import Utils from "../../../../../../utils";
+import AddCampaignPage from "./AddCampaignPage";
+import AddCampaignSuccess from "./AddCampaignSuccess";
 import CampaignList from "./CampaignList";
 import EditCampaignPage from "./EditCampaignPage";
 
 export enum send {
-  NOW = 0,
+  NOW = 2,
   DELAY = 1,
+  DRAFT = 0,
 }
+export const MAX_SMS = 160;
 export interface IPhoneNumbers {
   name: string;
   value: string;
@@ -67,6 +71,12 @@ const SmsCampaign = (props: RouteComponentProps) => {
       </Route>
       <Route exact path={`${props.match.url}/edit`}>
         <EditCampaignPage {...props} />
+      </Route>
+      <Route exact path={`${props.match.url}/add`}>
+        <AddCampaignPage {...props} />
+      </Route>
+      <Route exact path={`${props.match.url}/success`}>
+        <AddCampaignSuccess {...props} />
       </Route>
     </Switch>
   );

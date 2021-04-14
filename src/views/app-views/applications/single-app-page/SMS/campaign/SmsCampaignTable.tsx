@@ -8,7 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { ColumnsType } from "antd/lib/table";
-import { ICampaignList } from "../../../../../../api/app/types";
+import { ICampaignList } from "../../../../../../api/sms/types";
 import moment from "moment";
 import EllipsisDropdown from "../../../../../../components/shared-components/EllipsisDropdown";
 import { Menu, Tag, Modal } from "antd";
@@ -16,17 +16,15 @@ import { AppService } from "../../../../../../api/app";
 import { Link } from "react-router-dom";
 import TranslateText from "../../../../../../utils/translate";
 import Utils from "../../../../../../utils";
+import { SmsService } from "../../../../../../api/sms";
 
-enum EnSmsType {
-  Draft,
-  Verifying,
-  Declined,
-  Scheduled,
-  Processing,
-  Done,
-  Hidden,
+export enum EnSmsType {
+  Draft = 0,
+  Scheduled = 1,
+  Instant = 2,
 }
-enum EnCampaignStatus {
+// de la 9:00 pana la 18:00
+export enum EnCampaignStatus {
   INACTIVE = 0,
   ACTIVE = 1,
   DELETED = 2,
@@ -42,6 +40,7 @@ const SmsTable = (
     const scheduledDate = moment(date);
     return Math.round(Math.abs((+today - +scheduledDate) / oneDay));
   };
+  const instance = new SmsService();
   const tableColumns: ColumnsType<ICampaignList> = [
     {
       title: TranslateText("SMS.CampaignName"),
@@ -62,10 +61,12 @@ const SmsTable = (
       dataIndex: "Status",
       render: (Status: number) => (
         <div>
-          <Tag className="mr-0" color={Status === 1 ? "cyan" : "volcano"}>
-            {Status === 1
-              ? TranslateText("SMS.Status.Available")
-              : TranslateText("SMS.Status.NotAvailable")}
+          <Tag className="mr-0">
+            {Status === EnSmsType.Draft
+              ? "Draft"
+              : Status === EnSmsType.Scheduled
+              ? "Scheduled"
+              : "Executing"}
           </Tag>
         </div>
       ),
@@ -73,9 +74,7 @@ const SmsTable = (
     {
       title: "Contacts",
       render: (_, elm) => (
-        <span>
-          {elm.PhoneList ? elm.PhoneList!.split(",").length : "Add contact"}
-        </span>
+        <span>{elm.PhoneList ? elm.PhoneList!.split(",").length : 0}</span>
       ),
     },
     {
@@ -92,7 +91,7 @@ const SmsTable = (
                       Modal.confirm({
                         title: TranslateText("SMS.campaign.activate.msg"),
                         onOk: async () => {
-                          return await new AppService()
+                          return await instance
                             .SMS_UpdateCampaign({
                               ...elm,
                               Status: EnCampaignStatus.ACTIVE,
@@ -114,7 +113,7 @@ const SmsTable = (
                       Modal.confirm({
                         title: TranslateText("SMS.campaign.deactivate.msg"),
                         onOk: async () => {
-                          return await new AppService()
+                          return await instance
                             .SMS_UpdateCampaign({
                               ...elm,
                               Status: EnCampaignStatus.INACTIVE,
@@ -146,7 +145,7 @@ const SmsTable = (
                 <Menu.Item
                   key="3"
                   onClick={async () => {
-                    return await new AppService()
+                    return await instance
                       .SMS_DeleteCampaign(elm.ID!)
                       .then((data) => {
                         if (data && data.ErrorCode === 0) {

@@ -5,6 +5,7 @@ import {
   HIDE_AUTH_MESSAGE,
   SHOW_LOADING,
   HIDE_LOADING,
+  REDIRECT,
 } from "../constants/Auth";
 import { message, Modal } from "antd";
 import { getProfileInfo } from "./Account";
@@ -17,10 +18,13 @@ import axios from "axios";
 import {
   API_AUTH_URL,
   APP_PREFIX_PATH,
+  DOMAIN,
   SUBDIR_PATH,
 } from "../../configs/AppConfig";
 import { onHeaderNavColorChange } from "./Theme";
 import history from "../../history";
+import Cookies from "js-cookie";
+import Utils from "../../utils";
 
 type ThunkResult<R> = ThunkAction<R, IState, undefined, any>;
 
@@ -47,6 +51,11 @@ export const showLoading = () => ({
 });
 export const hideLoading = () => ({
   type: HIDE_LOADING,
+});
+
+export const redirectTo = (payload: string) => ({
+  type: REDIRECT,
+  payload,
 });
 
 const handleAccountActivation = (Token: string) => {
@@ -78,21 +87,15 @@ export const authorizeUser = (
   password: string
 ): ThunkResult<void> => {
   return async (dispatch) => {
-    return new AuthService()
+    return await new AuthService()
       .Login(email, password)
       .then((data) => {
         if (data) {
           const { ErrorCode, ErrorMessage, Token } = data;
           if (ErrorCode === 0) {
-            dispatch(authenticated(Token));
-            dispatch(getProfileInfo());
-            if (SUBDIR_PATH === "/testclientportal") {
-              dispatch(onHeaderNavColorChange("#DE4436"));
-            }
-
-            return data;
-          } else if (ErrorCode === 102) {
-            dispatch(showAuthMessage(ErrorMessage!.toString()));
+            Utils.setToken(Token);
+            window.history.pushState(null, "", APP_PREFIX_PATH);
+            window.location.reload();
           } else if (ErrorCode === 108) {
             handleAccountActivation(Token);
           } else {
@@ -101,9 +104,6 @@ export const authorizeUser = (
           }
         }
       })
-      .then((data) => {
-        dispatch(hideLoading());
-        return data;
-      });
+      .catch(() => dispatch(hideLoading()));
   };
 };

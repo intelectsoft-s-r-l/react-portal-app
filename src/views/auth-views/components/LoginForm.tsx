@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { Button, Form, Input, Divider, Alert } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
@@ -12,18 +12,18 @@ import {
   hideAuthMessage,
   authenticated,
   authorizeUser,
+  redirectTo,
 } from "../../../redux/actions/Auth";
 import { updateSettings, getProfileInfo } from "../../../redux/actions/Account";
 import { motion } from "framer-motion";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { hideLoading } from "../../../redux/actions/Auth";
 import Utils from "../../../utils";
 import { API_PUBLIC_KEY } from "../../../constants/ApiConstant";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { IState } from "../../../redux/reducers";
 import { IAuth } from "../../../redux/reducers/Auth";
-import { EnErrorCode } from "../../../api";
-import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
+import { APP_PREFIX_PATH, AUTH_PREFIX_PATH } from "../../../configs/AppConfig";
 
 const LoginForm = ({
   otherSignIn,
@@ -40,17 +40,11 @@ const LoginForm = ({
   redirect,
   authorizeUser,
 }: any) => {
-  const history = useHistory();
+  const dispatch = useDispatch();
   const onLogin = async ({ email, password }: { [key: string]: string }) => {
     showLoading();
     setTimeout(async () => {
-      const response = await authorizeUser(
-        email,
-        await Utils.encryptInput(password, API_PUBLIC_KEY)
-      );
-      if (response.ErrorCode === EnErrorCode.NO_ERROR) {
-        history.push(APP_PREFIX_PATH);
-      }
+      await authorizeUser(email, Utils.encryptInput(password, API_PUBLIC_KEY));
     }, 1000);
   };
   const onGoogleLogin = () => {
@@ -68,6 +62,10 @@ const LoginForm = ({
       }, 3000);
     }
   }, [showMessage]);
+
+  useEffect(() => {
+    hideLoading();
+  }, []);
 
   const renderOtherSignIn = (
     <div>
@@ -166,26 +164,13 @@ const LoginForm = ({
         <NavLink to={"/auth/forgot-password"} className={"text-right"}>
           <IntlMessage id={"auth.ForgotPassword"} />
         </NavLink>
-        {/*{otherSignIn ? renderOtherSignIn : null}*/}
-        {otherSignIn || renderOtherSignIn}
         {extra}
       </Form>
     </>
   );
 };
 
-LoginForm.propTypes = {
-  otherSignIn: PropTypes.bool,
-  showForgetPassword: PropTypes.bool,
-  extra: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-};
-
-LoginForm.defaultProps = {
-  otherSignIn: true,
-  showForgetPassword: false,
-};
-
-const mapStateToProps = ({ auth, account }: IState) => {
+const mapStateToProps = ({ auth }: IState) => {
   const {
     loading,
     message,
@@ -194,7 +179,6 @@ const mapStateToProps = ({ auth, account }: IState) => {
     redirect,
     userActivated,
   } = auth as IAuth;
-  // const { avatar, name, userName, email, dateOfBirth, phoneNumber } = account;
   return {
     loading,
     message,
@@ -202,12 +186,6 @@ const mapStateToProps = ({ auth, account }: IState) => {
     token,
     redirect,
     userActivated,
-    // avatar,
-    // name,
-    // userName,
-    // email,
-    // dateOfBirth,
-    // phoneNumber,
   };
 };
 

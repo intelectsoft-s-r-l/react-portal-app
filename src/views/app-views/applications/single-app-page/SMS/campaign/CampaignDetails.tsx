@@ -1,17 +1,19 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import Flex from "../../../../../../components/shared-components/Flex";
-import { ICampaignList } from "../../../../../../api/app/types";
-import { AppService } from "../../../../../../api/app";
 import Loading from "../../../../../../components/shared-components/Loading";
 import { RouteComponentProps } from "react-router-dom";
 import { Card } from "antd";
+import { SmsService } from "../../../../../../api/sms";
+import { ICampaignList } from "../../../../../../api/sms/types";
 
 interface ICampaignDetails extends RouteComponentProps<{ ID: string }> {}
 const CampaignDetails = ({ history, match }: ICampaignDetails) => {
-  const instance = new AppService();
+  const instance = new SmsService();
   const { ID } = match.params;
-  const [currentCampaign, setCurrentCampaign] = useState<ICampaignList>();
+  const [currentCampaign, setCurrentCampaign] = useState<
+    ICampaignList | undefined
+  >(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const getCampaign = async () =>
     await instance.SMS_GetCampaign().then((data) => {

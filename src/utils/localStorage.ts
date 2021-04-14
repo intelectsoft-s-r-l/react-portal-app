@@ -1,8 +1,9 @@
 import { SUBDIR_PATH } from "../configs/AppConfig";
 import { IState } from "../redux/reducers";
+import { ITheme } from "../redux/reducers/Theme";
 
 // Pass in Redux store's state to save it to the user's browser local storage
-export const saveState = (state: IState) => {
+export const saveState = (state: ITheme) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem(`${SUBDIR_PATH}`, serializedState);

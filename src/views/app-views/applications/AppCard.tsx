@@ -6,25 +6,39 @@ import {
 } from "@ant-design/icons";
 import { Card, Tag } from "antd";
 import Flex from "../../../components/shared-components/Flex";
-import { Link } from "react-router-dom";
-import { APP_PREFIX_PATH } from "../../../configs/AppConfig";
+import { Link, useHistory } from "react-router-dom";
+import { APP_PREFIX_PATH, SMS_URL_VALIDATE } from "../../../configs/AppConfig";
 import Avatar from "antd/lib/avatar/avatar";
 import IntlMessage from "../../../components/util-components/IntlMessage";
 import { WizardContext } from "./market/wizard/WizardContext";
-import { EnStatusApp } from "./single-app-page";
+import { EnApp, EnStatusApp } from "./single-app-page";
 import Button from "antd/es/button";
-import Utils from "../../../utils";
 import { useSelector } from "react-redux";
 import { IState } from "../../../redux/reducers";
 import { IMarketAppList } from "../../../api/app/types";
+import Cookies from "js-cookie";
 
 interface IAppCard {
   data: IMarketAppList;
   deactivateApp: (AppID: number, AppName: string) => void;
 }
+export function appRedirect(appUrl: string) {
+  if (sessionStorage.getItem("c_id")) {
+    window.open(
+      `${appUrl}?token=${Cookies.get(
+        `ManageToken_${sessionStorage.getItem("c_id")}`
+      )}&company_id=${sessionStorage.getItem("c_id")}&isManage=true`
+    );
+  }
+  window.open(`${appUrl}?token=${Cookies.get("Token")}`);
+}
 const AppCard = ({ data, deactivateApp }: IAppCard) => {
   const { dispatch } = useContext(WizardContext);
+  const history = useHistory();
   const locale = useSelector((state: IState) => state.theme?.locale) ?? "en";
+  const appLink = `${APP_PREFIX_PATH}/id/${data.AppType}/${data.Name.split(
+    " "
+  ).join("-")}`;
   return (
     <Card style={{ maxHeight: 368 }}>
       <Flex className="mb-3 " justifyContent="between">
@@ -82,9 +96,9 @@ mb-0 cursor-pointer"
           </h3>
         </Link>
         <p className="text-muted">By IntelectSoft</p>
-        <div style={{ minHeight: "70px" }}>
+        {/*<div style={{ minHeight: "70px" }}>
           {Utils.decodeBase64Locale(data.ShortDescription)[locale] ?? ""}
-        </div>
+        </div> */}
       </div>
       <Flex justifyContent="between" alignItems="center">
         <div className="text-muted">Free</div>

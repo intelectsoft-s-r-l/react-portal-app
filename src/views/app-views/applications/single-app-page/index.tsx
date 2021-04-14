@@ -2,7 +2,7 @@ import React, { SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Button, Card, Empty, Menu } from "antd";
 import { ExperimentOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Flex from "../../../../components/shared-components/Flex";
 import Avatar from "antd/lib/avatar/avatar";
 import {
@@ -11,6 +11,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
+  withRouter,
 } from "react-router-dom";
 import Description from "./Description";
 import Licenses from "./Licenses/Licenses";
@@ -22,7 +23,7 @@ import News from "./news";
 import Loading from "../../../../components/shared-components/Loading";
 import IntlMessage from "../../../../components/util-components/IntlMessage";
 import { IState } from "../../../../redux/reducers";
-import { APP_NAME } from "../../../../configs/AppConfig";
+import { APP_NAME, SMS_URL_VALIDATE } from "../../../../configs/AppConfig";
 import { ILocale, IMarketAppList } from "../../../../api/app/types";
 import SmsCampaign from "./SMS/campaign";
 import Integration from "./Integration";
@@ -38,6 +39,8 @@ import InvoiceLines from "./ExchangeOfInvoice/invoice/InvoiceLines";
 import OrderLines from "./ExchangeOfOrder/order/OrderLines";
 import Templates from "./Mail/templates";
 import Dashboard from "../../dashboard";
+import { TOGGLE_COLLAPSED_NAV } from "../../../../redux/constants/Theme";
+import { appRedirect } from "../AppCard";
 
 export enum EnStatusApp {
   DISABLED = 0,
@@ -82,14 +85,14 @@ const Options = ({
         <span>
           <IntlMessage id="app.Dashboard" />
         </span>
-        <Link to={"dashboard"} />
+        <Link to={match.url + "/dashboard"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/templates`}
         className={AppType === EnApp.MailService ? "" : "d-none"}
       >
         <span>Templates</span>
-        <Link to={"templates"} />
+        <Link to={match.url + "/templates"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/invoice`}
@@ -98,7 +101,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Invoice" />
         </span>
-        <Link to={"invoice"} />
+        <Link to={match.url + "/invoice"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/order`}
@@ -107,17 +110,17 @@ const Options = ({
         <span>
           <IntlMessage id="app.Order" />
         </span>
-        <Link to={"order"} />
+        <Link to={match.url + "/order"} />
       </Menu.Item>
-      <Menu.Item
+      {/* <Menu.Item
         key={`${match.url}/campaign`}
         className={AppType === EnApp.SMS ? "" : "d-none"}
       >
         <span>
           <IntlMessage id="app.Campaign" />
         </span>
-        <Link to={"campaign"} />
-      </Menu.Item>
+        <Link to={match.url + "/campaign"} />
+      </Menu.Item> */}
       <Menu.Item
         key={`${match.url}/news`}
         className={AppType === EnApp.MyDiscount ? "" : "d-none"}
@@ -125,7 +128,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.News" />
         </span>
-        <Link to={"news"} />
+        <Link to={match.url + "/news"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/licenses`}
@@ -134,7 +137,7 @@ const Options = ({
         <span>
           <IntlMessage id="app.Licenses" />
         </span>
-        <Link to={"licenses"} />
+        <Link to={match.url + "/licenses"} />
       </Menu.Item>
       <Menu.Item
         key={`${match.url}/devices`}
@@ -143,25 +146,25 @@ const Options = ({
         <span>
           <IntlMessage id="app.Devices" />
         </span>
-        <Link to={"devices"} />
+        <Link to={match.url + "/devices"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/integration`}>
         <span>
           <IntlMessage id="app.Integration" />
         </span>
-        <Link to={"integration"} />
+        <Link to={match.url + "/integration"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/packages`}>
         <span>
           <IntlMessage id="app.Packages" />
         </span>
-        <Link to={"packages"} />
+        <Link to={match.url + "/packages"} />
       </Menu.Item>
       <Menu.Item key={`${match.url}/description`}>
         <span>
           <IntlMessage id="app.Description" />
         </span>
-        <Link to={"description"} />
+        <Link to={match.url + "/description"} />
       </Menu.Item>
     </Menu>
   );
@@ -171,9 +174,10 @@ const AppOption = (props: any) => {
 };
 interface IAppRoute {
   match: RouteComponentProps["match"];
+  location: RouteComponentProps["location"];
   app: any;
 }
-const AppRoute = ({ match, app }: IAppRoute) => {
+const AppRoute = ({ match, app, location }: IAppRoute) => {
   return (
     <Switch>
       <Redirect exact from={`${match.url}`} to={`${match.url}/dashboard`} />
@@ -303,6 +307,13 @@ const AboutItem = ({ appData }: any) => {
             )}
           </div>
         </Flex>
+        <div onClick={() => appRedirect(SMS_URL_VALIDATE)}>
+          <img
+            src={`${process.env.PUBLIC_URL}/img/external-link.svg`}
+            className="cursor-pointer"
+            alt="Redirect logo"
+          />
+        </div>
       </Flex>
     </Card>
   );
@@ -314,6 +325,7 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
   const instance = new AppService();
   const [app, setApp] = useState<Partial<IMarketAppList>>();
   const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     instance.GetMarketAppList().then(async (data) => {
@@ -330,6 +342,11 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
     return () => instance._source.cancel();
   }, [appID]);
 
+  useEffect(() => {
+    // Temporary fix
+    dispatch({ type: TOGGLE_COLLAPSED_NAV, navCollapsed: true });
+  }, [location.pathname]);
+
   if (loading) return <Loading />;
   if (!app) {
     return <Empty />;
@@ -337,26 +354,22 @@ const SingleAppPage = ({ match, location }: ISingleAppPage) => {
 
   return (
     <>
-      {app!.Status === 1 ? (
-        <>
-          <AboutItem appData={app} />
-          <InnerAppLayout
-            sideContent={
-              <AppOption
-                location={location}
-                match={match}
-                AppType={app!.AppType}
-                moduleSettings={app!.ModuleSettings}
-                AppName={app!.Name}
-              />
-            }
-            mainContent={<AppRoute match={match} app={app} />}
-          />
-        </>
-      ) : (
-        <AboutItem appData={app} />
+      <AboutItem appData={app} />
+      {app.Status === EnStatusApp.ACTIVE && (
+        <InnerAppLayout
+          sideContent={
+            <AppOption
+              location={location}
+              match={match}
+              AppType={app!.AppType}
+              moduleSettings={app!.ModuleSettings}
+              AppName={app!.Name}
+            />
+          }
+          mainContent={<AppRoute match={match} app={app} location={location} />}
+        />
       )}
     </>
   );
 };
-export default SingleAppPage;
+export default withRouter(SingleAppPage);

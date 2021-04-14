@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Layout, Grid, BackTop } from "antd";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import SideNav from "../../components/layout-components/SideNav";
 import TopNav from "../../components/layout-components/TopNav";
 import MobileNav from "../../components/layout-components/MobileNav";
@@ -20,6 +20,7 @@ import { ITheme } from "../../redux/reducers/Theme";
 import { IState } from "../../redux/reducers";
 import { IAuth } from "../../redux/reducers/Auth";
 import { AUTH_PREFIX_PATH } from "../../configs/AppConfig";
+import { TOGGLE_COLLAPSED_NAV } from "../../redux/constants/Theme";
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -30,11 +31,19 @@ export const AppLayout = ({
   location,
   token,
   history,
+  match,
 }: any) => {
   const currentRouteInfo = Utils.getRouteInfo(
     navigationConfig,
     location.pathname
   );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Temporary fix
+    if (!location.pathname.includes("id")) {
+      dispatch({ type: TOGGLE_COLLAPSED_NAV, action: false });
+    }
+  }, [location.pathname]);
   const screens = Utils.getBreakPoint(useBreakpoint());
   const isMobile = !screens.includes("lg");
   const isNavSide = navType === NAV_TYPE_SIDE;

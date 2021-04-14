@@ -1,9 +1,14 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
+import { connect } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Loading from "../../components/shared-components/Loading";
 import { APP_PREFIX_PATH } from "../../configs/AppConfig";
+import { getProfileInfo } from "../../redux/actions/Account";
 
-export const AppViews = () => {
+export const AppViews = ({ getProfileInfo }: any) => {
+  useEffect(() => {
+    getProfileInfo();
+  }, []);
   return (
     <Suspense fallback={<Loading cover="content" />}>
       <Switch>
@@ -78,4 +83,4 @@ export const AppViews = () => {
   );
 };
 
-export default React.memo(AppViews);
+export default React.memo(connect(null, { getProfileInfo })(AppViews));

@@ -5,19 +5,19 @@ import axios, {
   CancelTokenSource,
 } from "axios";
 import { message, notification } from "antd";
-import {
-  API_APP_URL,
-  API_AUTH_URL,
-  API_DISCOUNT_URL,
-  API_EDX_URL,
-  API_MAIL_URL,
-  API_SMS_URL,
-} from "../configs/AppConfig";
 import { EXPIRE_TIME } from "../constants/Messages";
 import store from "../redux/store";
 import TranslateText from "../utils/translate";
 import { ApiResponse, ApiDecorator } from "./types";
-import { AUTHENTICATED, HIDE_LOADING, SIGNOUT } from "../redux/constants/Auth";
+import {
+  AUTHENTICATED,
+  HIDE_LOADING,
+  SET_IS_REFRESHING,
+  SIGNOUT,
+} from "../redux/constants/Auth";
+import Cookies from "js-cookie";
+import { API_AUTH_URL, AUTH_PREFIX_PATH, DOMAIN } from "../configs/AppConfig";
+import Utils from "../utils";
 
 export enum EnErrorCode {
   INTERNAL_ERROR = -1,
@@ -25,6 +25,7 @@ export enum EnErrorCode {
   APIKEY_NOT_EXIST = 10,
   EXPIRED_TOKEN = 118,
   INCORECT_AUTH_DATA = 102,
+  USER_NOT_ACTIVATED = 108,
 }
 export enum EnReqStatus {
   OK = 200,
@@ -38,15 +39,19 @@ declare module "axios" {
 
 class HttpService {
   public readonly instance: AxiosInstance;
-  private _token: string;
+  public token: string;
+  public company_id: any;
   public _source: CancelTokenSource;
 
-  public constructor(baseURL: string) {
+  public constructor(baseURL = "") {
     this.instance = axios.create({
       baseURL,
     });
     this._source = axios.CancelToken.source();
-    this._token = store.getState().auth.token;
+    this.company_id = sessionStorage.getItem("c_id");
+    this.token = this.company_id
+      ? Cookies.get(`ManageToken_${this.company_id}`)!
+      : Cookies.get("Token")!;
     this._initializeResponseInterceptor();
     this._initializeRequestInterceptor();
   }
@@ -62,7 +67,11 @@ class HttpService {
     );
   };
   private setToken = (Token: string) => {
-    this._token = Token;
+    this.token = Token;
+    // We verify by company_id because managetoken is a cookie and it's shared between tabs
+    this.company_id
+      ? Utils.setManageToken(`ManageToken_${this.company_id}`, Token)
+      : Utils.setToken(Token);
   };
   private _initializeRequestInterceptor = () => {
     this.instance.interceptors.request.use(
@@ -75,52 +84,23 @@ class HttpService {
     console.log(config);
     return {
       ...config,
-      data: { ...config.data, Token: this._token },
-      params: { ...config.params, Token: this._token },
+      data: { ...config.data, Token: this.token },
+      params: { ...config.params, Token: this.token },
       cancelToken: this._source.token,
     };
   };
 
-  private _handleResponse = (response: AxiosResponse) => {
+  private _handleResponse = async (response: AxiosResponse) => {
     console.log(response);
+
     if (response.data.ErrorCode === EnErrorCode.EXPIRED_TOKEN) {
-      return this._RefreshToken().then(async (tokenData) => {
-        if (tokenData && tokenData.ErrorCode === 0) {
-          const { Token } = tokenData;
-          this.setToken(Token);
-          store.dispatch({ type: AUTHENTICATED, token: Token });
-          if (response.config.method === "get") {
-            response.config.params = {
-              ...response.config.params,
-              Token,
-            };
-            return await this.instance.request(response.config);
-          }
-          if (response.config.method === "post") {
-            response.config.data = {
-              ...JSON.parse(response.config.data),
-              Token,
-            };
-            return await this.instance.request(response.config);
-          }
-        } else {
-          const key = "updatable";
-          message
-            .loading({
-              content: TranslateText(EXPIRE_TIME),
-              key,
-              duration: 1.5,
-            })
-            .then(() => {
-              store.dispatch({ type: SIGNOUT });
-            });
-        }
-      });
+      return this._handleExpireToken(response);
     } else if (
       response.data.ErrorCode !== EnErrorCode.NO_ERROR &&
       response.data.ErrorCode !== EnErrorCode.EXPIRED_TOKEN &&
       response.data.ErrorCode !== EnErrorCode.INCORECT_AUTH_DATA &&
-      response.data.ErrorCode !== EnErrorCode.APIKEY_NOT_EXIST
+      response.data.ErrorCode !== EnErrorCode.APIKEY_NOT_EXIST &&
+      response.data.ErrorCode !== EnErrorCode.USER_NOT_ACTIVATED
     ) {
       message.error({
         content: `Error: ${response.data.ErrorMessage}`,
@@ -137,6 +117,55 @@ class HttpService {
     }
 
     return response.data;
+  };
+
+  private _handleExpireToken = async (error: AxiosResponse) => {
+    const redirectToLogin = () => {
+      const key = "updatable";
+      message
+        .loading({
+          content: TranslateText(EXPIRE_TIME),
+          key,
+          duration: 1.5,
+        })
+        .then(() => {
+          store.dispatch({ type: SIGNOUT });
+        });
+    };
+
+    const config = error.config;
+    if (!store.getState().auth.isRefreshing) {
+      return new Promise((resolve, reject) => {
+        store.dispatch({ type: SET_IS_REFRESHING, payload: true });
+        axios
+          .get(`${API_AUTH_URL}/RefreshToken`, {
+            params: { Token: this.token },
+          })
+          .then(({ data }) => {
+            if (data && data.ErrorCode === EnErrorCode.NO_ERROR) {
+              this.setToken(data.Token);
+              resolve(this.instance(config));
+            } else {
+              redirectToLogin();
+            }
+          })
+          .catch(() => {
+            redirectToLogin();
+          })
+          .finally(() => {
+            store.dispatch({ type: SET_IS_REFRESHING, payload: false });
+          });
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+          if (!store.getState().auth.isRefreshing) {
+            clearInterval(intervalId);
+            resolve(this.instance(config));
+          }
+        }, 100);
+      });
+    }
   };
   private _handleError = async (error: AxiosResponse) => {
     store.dispatch({ type: HIDE_LOADING });
