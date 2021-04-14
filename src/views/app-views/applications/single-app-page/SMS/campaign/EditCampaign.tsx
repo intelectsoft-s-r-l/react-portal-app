@@ -11,13 +11,7 @@ import { SmsService } from "../../../../../../api/sms";
 import { UploadChangeParam } from "antd/es/upload/interface";
 
 interface IEditCampaign {
-<<<<<<< HEAD
-  visible: boolean;
-  close: () => void;
-  getCampaignList: () => Promise<any>;
-=======
   getCampaignList: () => void;
->>>>>>> hotfix/company-name
   data: Partial<ICampaignList>;
 }
 const EditCampaignForm = ({ getCampaignList, data }: IEditCampaign) => {

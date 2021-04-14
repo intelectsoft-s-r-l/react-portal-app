@@ -42,7 +42,6 @@
   "auth.ConfirmRegistration.Msg1": "You are just one step away from activating your account on the",
   "auth.ConfirmRegistration.Msg2": "platform! Check your email inbox and confirm the registration by clicking the link that we've sent!",
   "auth.GoToLogin": "Go to login",
-
   "sidenav.home": "Home",
   "sidenav.dashboard": "Dashboard",
   "sidenav.news": "News",
@@ -53,32 +52,24 @@
   "sidenav.catalog.company": "Company",
   "sidenav.catalog.group": "Groups",
   "sidenav.catalog.users": "Users",
-
   "sidenav.security": "Security",
   "sidenav.security.history": "History",
   "sidenav.security.rules": "Rules",
-
   "sidenav.payment": "Payment",
   "sidenav.payment.invoices": "Invoices",
-
   "sidenav.settings": "Settings",
-
   "sidenav.audit": "Audit",
   "sidenav.audit.All": "All",
   "sidenav.audit.loginHistory": "Login History",
   "sidenav.audit.actions": "Actions",
-
   "sidenav.reports": "Reports",
   "sidenav.other": "Other",
-
   "header.logout.message": "Are you sure you want to log out?",
   "header.logout.button": "Log out",
   "header.applications": "Applications",
-
   "header.profile.AccountSettings": "Account Settings",
   "header.profile.HelpCenter": "Help Center",
   "header.profile.SignOut": "Sign Out",
-
   "message.language.success": "You've changed your language successfully!",
   "message.Uploading": "Uploading...",
   "message.Uploaded": "Uploaded!",
@@ -88,12 +79,10 @@
   "message.NewPassword": "New password has been sent to your email!",
   "message.EmailConfirmMsg": "Confirmation message was sent to the email!",
   "message.ExpireTime": "Time has expired! Redirecting you to login page...",
-
   "account.sidenav.EditProfile": "Edit Profile",
   "account.sidenav.ChangePassword": "Change Password",
   "account.sidenav.Billing": "Billing",
   "account.sidenav.Notification": "Notification",
-
   "account.EditProfile.FirstName": "First Name",
   "account.EditProfile.LastName": "Last Name",
   "account.EditProfile.Email": "Email",
@@ -106,7 +95,6 @@
   "account.EditProfile.SaveChange": "Save Change",
   "account.EditProfile.ChangeAvatar": "Change Avatar",
   "account.EditProfile.Remove": "Remove",
-
   "account.company.BIC": "BIC",
   "account.company.Bank": "Bank",
   "account.company.CommercialName": "Commercial Name",
@@ -123,7 +111,6 @@
   "account.company.PostalCode": "Postal Code",
   "account.company.WebSite": "Website",
   "account.company.ShortName": "Short name",
-
   "account.ChangePassword.CurrentPassword": "Current Password",
   "account.ChangePassword.Title": "Change Password",
   "account.ChangePassword.NewPassword": "New Password",
@@ -133,7 +120,6 @@
   "account.ChangePassword.Success": "Password Changed!",
   "account.ChangePassword.Error": "Something went wrong!",
   "account.ChangePassword.IncorrectPassword": "Incorrect password! Try again!",
-
   "account.Billing.Title": "Billing",
   "account.Billing.PleaseAddCreditCard": "Please add a credit card!",
   "account.Billing.CardType": "Card type",
@@ -146,7 +132,6 @@
   "account.Billing.Modal.ExpiryDate": "Expiry date",
   "account.Billing.Modal.CVVCode": "CVV code",
   "account.Billing.Modal.SaveCard": "Save card",
-
   "theme.Title": "Theme Config",
   "theme.Navigation": "Navigation",
   "theme.HeaderNavColor": "Header Nav Color",
@@ -160,7 +145,6 @@
   "theme.Dark": "Dark",
   "theme.Locale": "Locale",
   "theme.Language": "Language",
-
   "users.ViewDetails": "View details",
   "users.Edit": "Edit",
   "users.Disable": "Disable",
@@ -176,7 +160,6 @@
   "users.status.Active": "Active",
   "users.status.NotActivated": "Not Activated",
   "users.status.Disabled": "Disabled",
-
   "app.Invoice": "Invoices",
   "app.Order": "Order",
   "app.Delete": "Delete",
@@ -212,7 +195,6 @@
   "app.licenses.delete": "Delete",
   "app.licenses.add": "Add license",
   "app.licenses.quantity": "Quantity",
-
   "app.devices.network": "Network",
   "app.devices.connected": "Connected (Wi-Fi)",
   "app.devices.connected.true": "Yes",
@@ -251,7 +233,6 @@
   "app.devices.plugged.notConnected": "Not connected",
   "app.devices.deviceInformation": "Device Information",
   "app.devices.view": "View",
-
   "SMS.Latest": "Latest SMS Transactions",
   "SMS.List": "SMS Transactions List",
   "SMS.Today": "Today",
@@ -281,15 +262,10 @@
   "SMS.State.Success": "Success",
   "SMS.Scheduled.Plural": " days left",
   "SMS.Scheduled.Singular": " day left",
-<<<<<<< HEAD
-  "SMS.Status.Available": "Active",
-  "SMS.Status.NotAvailable": "Inactive",
-=======
   "SMS.Status.Available": "Available",
   "SMS.Status.NotAvailable": "Not Available",
   "SMS.Status.Scheduled": "Scheduled",
   "SMS.Status.Declined": "Declined",
->>>>>>> hotfix/company-name
   "SMS.NewCampaign": "New campaign",
   "SMS.Description": "Description",
   "SMS.Message": "Message",
@@ -305,11 +281,9 @@
   "SMS.campaign.deactivate.msg": "Are you sure you want to deactivate this campaign?",
   "SMS.message": "Message",
   "SMS.default.name": "My campaign",
-
   "news.title": "News",
   "news.create.messsage": "You have successfully created a new article!",
   "news.create.message2": "You can publish your article!",
-
   "wizard.title": "Install application",
   "wizard.terms": "I have read and agree to the Terms and Conditions",
   "wizard.next": "Next",
