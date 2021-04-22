@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { IState } from "../../../redux/reducers";
 import { IMarketAppList } from "../../../api/app/types";
 import Cookies from "js-cookie";
+import { MANAGE_TOKEN, TOKEN } from "../../../constants/ApiConstant";
 
 interface IAppCard {
   data: IMarketAppList;
@@ -26,11 +27,11 @@ export function appRedirect(appUrl: string) {
   if (sessionStorage.getItem("c_id")) {
     window.open(
       `${appUrl}?token=${Cookies.get(
-        `ManageToken_${sessionStorage.getItem("c_id")}`
+        `${MANAGE_TOKEN}_${sessionStorage.getItem("c_id")}`
       )}&company_id=${sessionStorage.getItem("c_id")}&isManage=true`
     );
   }
-  window.open(`${appUrl}?token=${Cookies.get("Token")}`);
+  window.open(`${appUrl}?token=${Cookies.get(TOKEN)}`);
 }
 const AppCard = ({ data, deactivateApp }: IAppCard) => {
   const { dispatch } = useContext(WizardContext);

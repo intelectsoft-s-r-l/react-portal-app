@@ -307,13 +307,15 @@ const AboutItem = ({ appData }: any) => {
             )}
           </div>
         </Flex>
-        <div onClick={() => appRedirect(SMS_URL_VALIDATE)}>
-          <img
-            src={`${process.env.PUBLIC_URL}/img/external-link.svg`}
-            className="cursor-pointer"
-            alt="Redirect logo"
-          />
-        </div>
+        {appData.AppType === 50 && (
+          <div onClick={() => appRedirect(SMS_URL_VALIDATE)}>
+            <img
+              src={`${process.env.PUBLIC_URL}/img/external-link.svg`}
+              className="cursor-pointer"
+              alt="Redirect logo"
+            />
+          </div>
+        )}
       </Flex>
     </Card>
   );
